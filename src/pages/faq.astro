@@ -1,0 +1,229 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="First-Principles SWP & Retirement FAQs — SWP Intelligence Engine">
+	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
+		
+		<!-- Hero Header Section -->
+		<section class="max-w-4xl mx-auto text-center space-y-4">
+			<div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-slate-100 dark:bg-zinc-900 text-slate-900 dark:text-zinc-100 text-xs font-semibold tracking-wider uppercase border border-slate-200 dark:border-white/10 shadow-xs">
+				<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+				<span>SWP KNOWLEDGE BASE</span>
+			</div>
+			<h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 dark:text-zinc-100 font-sans leading-tight">
+				First-Principles SWP & Retirement FAQs
+			</h1>
+			<p class="text-base sm:text-lg text-slate-600 dark:text-zinc-400 font-normal leading-relaxed max-w-2xl mx-auto font-sans">
+				Master the mathematics of Systematic Withdrawal Plans (SWP), purchasing power preservation, Sequence of Returns Risk, LTCG taxation, and dynamic capital guardrails.
+			</p>
+		</section>
+
+		<!-- Main FAQ Container -->
+		<section class="bg-white dark:bg-zinc-950 border border-slate-200 dark:border-white/10 rounded-xl p-6 sm:p-8 space-y-6 shadow-xs transition-all duration-200 ease-geist max-w-6xl mx-auto">
+			
+			<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-white/10">
+				<div>
+					<h2 class="text-lg font-bold tracking-tight text-slate-900 dark:text-zinc-100 font-sans">
+						Categorized Knowledge Base
+					</h2>
+					<p class="text-xs text-slate-500 dark:text-zinc-400 font-sans mt-0.5">
+						Select a category to filter technical explanations and key takeaways.
+					</p>
+				</div>
+
+				<!-- Category Filter Segmented Control Bar -->
+				<div id="faqFilterContainer" class="p-1 bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-lg inline-flex items-center gap-1 self-start md:self-auto overflow-x-auto max-w-full shrink-0">
+					<button type="button" data-faq-cat="all" class="faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 bg-slate-900 text-white dark:bg-white dark:text-black cursor-pointer shadow-xs whitespace-nowrap">
+						ALL
+					</button>
+					<button type="button" data-faq-cat="econ" class="faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 bg-transparent text-slate-600 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-zinc-200 cursor-pointer whitespace-nowrap">
+						ECONOMIC FOUNDATIONS
+					</button>
+					<button type="button" data-faq-cat="swp" class="faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 bg-transparent text-slate-600 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-zinc-200 cursor-pointer whitespace-nowrap">
+						SWP MECHANICS
+					</button>
+					<button type="button" data-faq-cat="tax" class="faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 bg-transparent text-slate-600 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-zinc-200 cursor-pointer whitespace-nowrap">
+						TAXATION & RISKS
+					</button>
+				</div>
+			</div>
+
+			<!-- FAQ Cards Grid Architecture -->
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="faqCardGrid">
+				
+				<!-- Card 1: Purchasing Power -->
+				<div class="faq-card bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl p-5 sm:p-6 space-y-3.5 hover:border-slate-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between" data-category="econ">
+					<div class="space-y-2">
+						<div class="flex items-center justify-between">
+							<span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-widest bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+								ECONOMIC THEORY
+							</span>
+							<span class="text-xs font-mono text-slate-400 dark:text-zinc-500 font-semibold">Q01</span>
+						</div>
+						<h3 class="text-base font-bold text-slate-900 dark:text-zinc-100 font-sans leading-snug">
+							What is Purchasing Power and why does nominal money deceive retirees?
+						</h3>
+						<p class="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-sans">
+							Purchasing power measures the actual volume of goods and services a fixed sum can buy today. Over a 20–30 year retirement, a ₹5 Crore nominal balance sounds vast, but at 6% annual inflation, it buys the exact same lifestyle as ₹1.16 Crore today. Evaluating retirement cashflows in Present Value (PV) prevents catastrophic undersaving.
+						</p>
+					</div>
+					<div class="pt-2 border-t border-slate-200/80 dark:border-white/10 bg-emerald-500/5 dark:bg-emerald-500/10 p-3 rounded-lg border-l-2 border-emerald-500">
+						<div class="text-[11px] font-mono font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide">💡 Key Takeaway</div>
+						<div class="text-xs text-slate-700 dark:text-zinc-300 font-sans mt-0.5">Always measure your retirement runway in real purchasing power (PV) rather than inflated future rupees.</div>
+					</div>
+				</div>
+
+				<!-- Card 2: Inflation Leakage -->
+				<div class="faq-card bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl p-5 sm:p-6 space-y-3.5 hover:border-slate-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between" data-category="econ">
+					<div class="space-y-2">
+						<div class="flex items-center justify-between">
+							<span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-widest bg-slate-200 text-slate-800 dark:bg-zinc-800 dark:text-zinc-200 border border-slate-300 dark:border-white/10">
+								INFLATION MATH
+							</span>
+							<span class="text-xs font-mono text-slate-400 dark:text-zinc-500 font-semibold">Q02</span>
+						</div>
+						<h3 class="text-base font-bold text-slate-900 dark:text-zinc-100 font-sans leading-snug">
+							How does annual inflation compounding drain retirement capital?
+						</h3>
+						<p class="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-sans">
+							Inflation acts like a compounding tax on your living expenses. If your monthly expenses are ₹50,000 today, a 6% annual inflation rate escalates your required monthly paycheck to ₹89,500 in 10 years and ₹1,60,000 in 20 years just to buy the exact same groceries and pay the exact same utility bills.
+						</p>
+						<div class="p-2.5 bg-white dark:bg-zinc-950 rounded border border-slate-200 dark:border-white/10 font-mono text-[11px] text-slate-900 dark:text-zinc-100 text-center font-bold">
+							Required Paycheck = Expense × (1 + Inflation)^Years
+						</div>
+					</div>
+					<div class="pt-2 border-t border-slate-200/80 dark:border-white/10 bg-slate-100/80 dark:bg-zinc-950 p-3 rounded-lg border-l-2 border-slate-400 dark:border-zinc-500">
+						<div class="text-[11px] font-mono font-bold text-slate-800 dark:text-zinc-200 uppercase tracking-wide">💡 Key Takeaway</div>
+						<div class="text-xs text-slate-700 dark:text-zinc-300 font-sans mt-0.5">Your monthly SWP withdrawal must escalate annually to keep pace with lifestyle inflation.</div>
+					</div>
+				</div>
+
+				<!-- Card 3: What is SWP -->
+				<div class="faq-card bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl p-5 sm:p-6 space-y-3.5 hover:border-slate-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between" data-category="swp">
+					<div class="space-y-2">
+						<div class="flex items-center justify-between">
+							<span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-widest bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+								SWP MECHANICS
+							</span>
+							<span class="text-xs font-mono text-slate-400 dark:text-zinc-500 font-semibold">Q03</span>
+						</div>
+						<h3 class="text-base font-bold text-slate-900 dark:text-zinc-100 font-sans leading-snug">
+							What is a Systematic Withdrawal Plan (SWP) and how does it create a monthly paycheck?
+						</h3>
+						<p class="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-sans">
+							An SWP automatically redeems a precise rupee amount from your mutual fund portfolio on a scheduled monthly date. It mimics an automated monthly employment salary, while leaving your unredeemed principal invested in market-linked equity and debt assets to continue compounding.
+						</p>
+					</div>
+					<div class="pt-2 border-t border-slate-200/80 dark:border-white/10 bg-emerald-500/5 dark:bg-emerald-500/10 p-3 rounded-lg border-l-2 border-emerald-500">
+						<div class="text-[11px] font-mono font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide">💡 Key Takeaway</div>
+						<div class="text-xs text-slate-700 dark:text-zinc-300 font-sans mt-0.5">SWPs convert volatile equity assets into predictable, automated monthly retirement income.</div>
+					</div>
+				</div>
+
+				<!-- Card 4: SWP vs Annuities & FDs -->
+				<div class="faq-card bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl p-5 sm:p-6 space-y-3.5 hover:border-slate-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between" data-category="swp">
+					<div class="space-y-2">
+						<div class="flex items-center justify-between">
+							<span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-widest bg-slate-200 text-slate-800 dark:bg-zinc-800 dark:text-zinc-200 border border-slate-300 dark:border-white/10">
+								ASSET COMPARISON
+							</span>
+							<span class="text-xs font-mono text-slate-400 dark:text-zinc-500 font-semibold">Q04</span>
+						</div>
+						<h3 class="text-base font-bold text-slate-900 dark:text-zinc-100 font-sans leading-snug">
+							How does an SWP outperform traditional Bank FDs, Annuities, and Pensions?
+						</h3>
+						<p class="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-sans">
+							Traditional annuities lock in rigid fixed returns (5%–6%) with 0% inflation escalation and full income slab taxation (up to 30%). An SWP provides 100% liquidity, annual withdrawal customization, superior LTCG tax efficiency (12.5%), and equity market upside participation.
+						</p>
+					</div>
+					<div class="pt-2 border-t border-slate-200/80 dark:border-white/10 bg-slate-100/80 dark:bg-zinc-950 p-3 rounded-lg border-l-2 border-slate-400 dark:border-zinc-500">
+						<div class="text-[11px] font-mono font-bold text-slate-800 dark:text-zinc-200 uppercase tracking-wide">💡 Key Takeaway</div>
+						<div class="text-xs text-slate-700 dark:text-zinc-300 font-sans mt-0.5">Fixed annuities leave you vulnerable to lifestyle inflation; SWPs adapt dynamically over time.</div>
+					</div>
+				</div>
+
+				<!-- Card 5: Sequence of Returns Risk -->
+				<div class="faq-card bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl p-5 sm:p-6 space-y-3.5 hover:border-slate-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between" data-category="tax">
+					<div class="space-y-2">
+						<div class="flex items-center justify-between">
+							<span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-widest bg-rose-100 text-rose-800 dark:bg-rose-950/80 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
+								RISK MANAGEMENT
+							</span>
+							<span class="text-xs font-mono text-slate-400 dark:text-zinc-500 font-semibold">Q05</span>
+						</div>
+						<h3 class="text-base font-bold text-slate-900 dark:text-zinc-100 font-sans leading-snug">
+							What is Sequence of Returns Risk and why is it fatal to early retirees?
+						</h3>
+						<p class="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-sans">
+							If severe market drawdowns (-30%) occur during your initial 3–5 years of retirement while you are actively withdrawing cash, you are forced to liquidate equity units at depressed prices. This permanently damages your portfolio's compounding engine, leading to premature capital bankruptcy even if market returns average 12% over 30 years.
+						</p>
+					</div>
+					<div class="pt-2 border-t border-slate-200/80 dark:border-white/10 bg-rose-500/5 dark:bg-rose-500/10 p-3 rounded-lg border-l-2 border-rose-500">
+						<div class="text-[11px] font-mono font-bold text-rose-800 dark:text-rose-300 uppercase tracking-wide">💡 Key Takeaway</div>
+						<div class="text-xs text-slate-700 dark:text-zinc-300 font-sans mt-0.5">Sequence risk requires stochastic Monte Carlo stress testing rather than relying on average returns.</div>
+					</div>
+				</div>
+
+				<!-- Card 6: LTCG Taxation Mechanics -->
+				<div class="faq-card bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl p-5 sm:p-6 space-y-3.5 hover:border-slate-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between" data-category="tax">
+					<div class="space-y-2">
+						<div class="flex items-center justify-between">
+							<span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-widest bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+								INDIAN TAX LAWS
+							</span>
+							<span class="text-xs font-mono text-slate-400 dark:text-zinc-500 font-semibold">Q06</span>
+						</div>
+						<h3 class="text-base font-bold text-slate-900 dark:text-zinc-100 font-sans leading-snug">
+							How are equity SWP withdrawals taxed under India's 12.5% LTCG tax regime?
+						</h3>
+						<p class="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-sans">
+							Unlike Bank FD interest which is 100% taxable at your slab rate, an SWP redemption consists primarily of returned capital (0% tax) and capital gains. Only the capital gain component exceeding the annual ₹1.25 Lakh exemption threshold is taxed at 12.5% LTCG.
+						</p>
+						<div class="p-2.5 bg-white dark:bg-zinc-950 rounded border border-slate-200 dark:border-white/10 font-mono text-[11px] text-slate-900 dark:text-zinc-100 text-center font-bold">
+							LTCG Tax = Max(0, Gains - ₹1,25,000) × 12.5%
+						</div>
+					</div>
+					<div class="pt-2 border-t border-slate-200/80 dark:border-white/10 bg-emerald-500/5 dark:bg-emerald-500/10 p-3 rounded-lg border-l-2 border-emerald-500">
+						<div class="text-[11px] font-mono font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide">💡 Key Takeaway</div>
+						<div class="text-xs text-slate-700 dark:text-zinc-300 font-sans mt-0.5">SWPs offer unmatched tax efficiency compared to traditional interest income streams.</div>
+					</div>
+				</div>
+
+			</div>
+
+		</section>
+	</main>
+</Layout>
+
+<script>
+	// FAQ Category Filter Handler
+	document.addEventListener('DOMContentLoaded', () => {
+		const filterContainer = document.getElementById('faqFilterContainer');
+		if (!filterContainer) return;
+
+		const filterBtns = filterContainer.querySelectorAll('.faq-filter-btn');
+		const faqCards = document.querySelectorAll('.faq-card');
+
+		filterBtns.forEach(btn => {
+			btn.addEventListener('click', () => {
+				const category = btn.getAttribute('data-faq-cat');
+
+				filterBtns.forEach(b => {
+					b.className = 'faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 bg-transparent text-slate-600 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-zinc-200 cursor-pointer whitespace-nowrap';
+				});
+
+				btn.className = 'faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 bg-slate-900 text-white dark:bg-white dark:text-black cursor-pointer shadow-xs whitespace-nowrap';
+
+				faqCards.forEach(card => {
+					const cardCat = card.getAttribute('data-category');
+					if (category === 'all' || cardCat === category) {
+						(card as HTMLElement).style.display = 'flex';
+					} else {
+						(card as HTMLElement).style.display = 'none';
+					}
+				});
+			});
+		});
+	});
+</script>

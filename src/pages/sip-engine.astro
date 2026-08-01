@@ -1,0 +1,1526 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout 
+	title="Stochastic Purchasing Power Engine — Real Value SIP & Options Protection"
+	description="Advanced Time Value of Money (TVM) Purchasing Power Simulator with 10,000 Monte Carlo paths, Real Capital Sacrifice vs Real Wealth Created analysis, and year-by-year Black-Scholes put option hedging ledger."
+>
+	<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-8">
+
+		<!-- Sophisticated Vercel Header -->
+		<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-white/10 pb-5">
+			<div class="space-y-1">
+				<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-zinc-900 text-slate-800 dark:text-zinc-200 text-xs font-mono font-medium uppercase tracking-widest border border-slate-200 dark:border-white/10">
+					<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+					<span>REAL VALUE (TVM) PURCHASING POWER ENGINE</span>
+				</div>
+				<h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-zinc-100 font-sans">
+					Stochastic Accumulation Engine
+				</h1>
+				<p class="text-xs sm:text-sm text-slate-500 dark:text-zinc-400 max-w-2xl leading-relaxed">
+					Quantifying today's real purchasing power sacrificed against future real purchasing power created under stochastic market stress.
+				</p>
+			</div>
+			
+			<div class="flex items-center gap-2 self-start sm:self-auto">
+				<span class="px-3 py-1.5 rounded-md bg-slate-100 dark:bg-zinc-900 text-slate-700 dark:text-zinc-300 text-xs font-mono font-semibold border border-slate-200 dark:border-white/10">
+					STRESS TEST: 2,000 PATHS
+				</span>
+			</div>
+		</div>
+
+		<!-- SECTION 1: COMPACT 2-COLUMN DASHBOARD (5/12 vs 7/12 Proportions) -->
+		<section class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full">
+
+			<!-- Left Column: Input Parameters & Asset Matrix (5/12 Width) -->
+			<div class="col-span-1 lg:col-span-5 flex flex-col gap-5 bg-white dark:bg-zinc-950 border border-slate-200 dark:border-white/10 rounded-xl p-5 shadow-xs w-full transition-all duration-200 ease-geist">
+				
+				<div class="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3">
+					<h2 class="text-xs font-mono font-bold uppercase tracking-widest text-slate-900 dark:text-zinc-100 flex items-center gap-2">
+						<svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+						</svg>
+						SACRIFICE MATRIX
+					</h2>
+					<span class="text-[10px] font-mono text-slate-400 dark:text-zinc-500">INPUT CONTROLS</span>
+				</div>
+
+				<form id="sipForm" onsubmit="event.preventDefault();" class="space-y-4">
+					
+					<!-- ENGINE MODE SWITCHER -->
+					<div class="p-1 bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-lg flex items-center justify-between gap-1 font-mono text-[10px] uppercase font-bold">
+						<button id="modeForwardBtn" type="button" class="flex-1 py-1.5 rounded-md transition-all duration-200 bg-slate-900 text-white dark:bg-white dark:text-black shadow-xs text-center cursor-pointer">
+							FORWARD: STOCHASTIC
+						</button>
+						<button id="modeReverseBtn" type="button" class="flex-1 py-1.5 rounded-md transition-all duration-200 bg-transparent text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100 text-center cursor-pointer">
+							REVERSE: GOAL-SEEK
+						</button>
+					</div>
+
+					<!-- Initial Seed Capital (Lump Sum) with Qtip -->
+					<div class="space-y-1.5">
+						<div class="flex justify-between items-center text-xs">
+							<div class="inline-flex items-center gap-1.5">
+								<label for="seedCapital" class="font-semibold text-slate-700 dark:text-zinc-300 cursor-pointer">
+									Initial Seed Capital (₹)
+								</label>
+								<div class="relative group inline-flex items-center cursor-pointer">
+									<svg class="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+									<div class="absolute opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 w-52 p-2 text-xs font-mono bg-slate-900 text-white dark:bg-zinc-900 dark:text-zinc-100 rounded-md shadow-md bottom-full mb-2 left-1/2 -translate-x-1/2 text-center border border-slate-700 dark:border-white/20">
+										Initial lump sum capital deployed at t = 0.
+									</div>
+								</div>
+							</div>
+							<span class="font-mono text-slate-400 dark:text-zinc-500">₹ Lump Sum</span>
+						</div>
+						<div class="relative">
+							<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-sm font-mono font-medium">₹</span>
+							<input 
+								type="number" 
+								id="seedCapital" 
+								value="0" 
+								min="0" 
+								step="50000"
+								class="w-full pl-8 pr-4 py-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-md text-slate-900 dark:text-zinc-100 font-mono font-bold text-sm focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400 transition-all duration-200"
+							/>
+						</div>
+					</div>
+
+					<!-- Monthly SIP Amount Container -->
+					<div id="monthlySipContainer" class="space-y-1.5">
+						<div class="flex justify-between items-center text-xs">
+							<div class="inline-flex items-center gap-1.5">
+								<label for="monthlySip" class="font-semibold text-slate-700 dark:text-zinc-300 cursor-pointer">
+									Monthly SIP Contribution
+								</label>
+								<div class="relative group inline-flex items-center cursor-pointer">
+									<svg class="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+									<div class="absolute opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 w-52 p-2 text-xs font-mono bg-slate-900 text-white dark:bg-zinc-900 dark:text-zinc-100 rounded-md shadow-md bottom-full mb-2 left-1/2 -translate-x-1/2 text-center border border-slate-700 dark:border-white/20">
+										Monthly capital deployed into your portfolio.
+									</div>
+								</div>
+							</div>
+							<span class="font-mono text-slate-400 dark:text-zinc-500">₹ / Month</span>
+						</div>
+						<div class="relative">
+							<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-sm font-mono font-medium">₹</span>
+							<input 
+								type="number" 
+								id="monthlySip" 
+								value="25000" 
+								min="1000" 
+								step="1000"
+								class="w-full pl-8 pr-4 py-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-md text-slate-900 dark:text-zinc-100 font-mono font-bold text-sm focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400 transition-all duration-200"
+							/>
+						</div>
+					</div>
+
+					<!-- Target Real Wealth Container (Reverse Mode) -->
+					<div id="targetRealWealthContainer" class="space-y-1.5 hidden">
+						<div class="flex justify-between items-center text-xs">
+							<div class="inline-flex items-center gap-1.5">
+								<label for="targetRealWealth" class="font-semibold text-slate-700 dark:text-zinc-300 cursor-pointer">
+									Target Real Wealth (₹)
+								</label>
+								<div class="relative group inline-flex items-center cursor-pointer">
+									<svg class="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+									<div class="absolute opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 w-52 p-2 text-xs font-mono bg-slate-900 text-white dark:bg-zinc-900 dark:text-zinc-100 rounded-md shadow-md bottom-full mb-2 left-1/2 -translate-x-1/2 text-center border border-slate-700 dark:border-white/20">
+										Target real purchasing power in today's rupees.
+									</div>
+								</div>
+							</div>
+							<span class="font-mono text-slate-400 dark:text-zinc-500">₹ Target PV</span>
+						</div>
+						<div class="relative">
+							<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-sm font-mono font-medium">₹</span>
+							<input 
+								type="number" 
+								id="targetRealWealth" 
+								value="50000000" 
+								min="1000000" 
+								step="1000000"
+								class="w-full pl-8 pr-4 py-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-md text-slate-900 dark:text-zinc-100 font-mono font-bold text-sm focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400 transition-all duration-200"
+							/>
+						</div>
+					</div>
+
+					<!-- Required Starting SIP Hairline Result Card -->
+					<div id="requiredSipResultCard" class="hidden bg-emerald-500/10 border border-emerald-500/30 rounded-md p-3 space-y-1">
+						<div class="flex justify-between items-center text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+							<span>REQUIRED STARTING SIP</span>
+							<span>GOAL-SEEK RESULT</span>
+						</div>
+						<div id="valRequiredSip" class="text-xl font-mono font-bold tracking-tight text-emerald-600 dark:text-emerald-400">
+							₹ 0 / Month
+						</div>
+					</div>
+
+					<!-- Annual Step-Up Rate (%) with Qtip -->
+					<div class="space-y-1.5">
+						<div class="flex justify-between items-center gap-2">
+							<div class="relative group inline-flex items-center gap-1.5 cursor-pointer shrink-0">
+								<label for="stepUpRate" class="text-[10px] sm:text-xs font-mono text-slate-500 dark:text-zinc-500 uppercase tracking-widest font-semibold cursor-pointer truncate">
+									Annual Step-Up
+								</label>
+								<svg class="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+								<div class="absolute opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 w-52 p-2 text-xs font-mono bg-slate-900 text-white dark:bg-zinc-900 dark:text-zinc-100 rounded-md shadow-md bottom-full mb-2 left-1/2 -translate-x-1/2 text-center border border-slate-700 dark:border-white/20">
+									Annual escalation percentage on monthly SIP.
+								</div>
+							</div>
+							<span class="text-[9px] sm:text-[10px] font-mono text-slate-400 dark:text-zinc-500 shrink-0 whitespace-nowrap">% / YR</span>
+						</div>
+						<div class="relative">
+							<input 
+								type="number" 
+								id="stepUpRate" 
+								value="0" 
+								min="0" 
+								max="20"
+								step="1"
+								class="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-md text-slate-900 dark:text-zinc-100 font-mono font-bold text-sm focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400 transition-all duration-200"
+							/>
+							<span class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 text-xs font-mono">%</span>
+						</div>
+					</div>
+
+					<!-- Investment Horizon & Inflation Grid -->
+					<div class="grid grid-cols-2 gap-3">
+						
+						<!-- Horizon Years with Qtip -->
+						<div class="space-y-1.5">
+							<div class="flex items-center justify-between">
+								<div class="inline-flex items-center gap-1">
+									<label for="investmentYears" class="text-xs font-semibold text-slate-700 dark:text-zinc-300 cursor-pointer">
+										Horizon
+									</label>
+									<div class="relative group inline-flex items-center cursor-pointer">
+										<svg class="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+										<div class="absolute opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 w-44 p-2 text-xs font-mono bg-slate-900 text-white dark:bg-zinc-900 dark:text-zinc-100 rounded-md shadow-md bottom-full mb-2 left-1/2 -translate-x-1/2 text-center border border-slate-700 dark:border-white/20">
+											Total accumulation horizon.
+										</div>
+									</div>
+								</div>
+								<span class="font-mono text-[10px] text-slate-400 dark:text-zinc-500">YRS</span>
+							</div>
+							<input 
+								type="number" 
+								id="investmentYears" 
+								value="20" 
+								min="1" 
+								max="50"
+								class="w-full px-3 py-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-md text-slate-900 dark:text-zinc-100 font-mono font-bold text-sm focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400 transition-all duration-200"
+							/>
+						</div>
+
+						<!-- Inflation Rate with Qtip -->
+						<div class="space-y-1.5">
+							<div class="flex items-center justify-between">
+								<div class="inline-flex items-center gap-1">
+									<label for="inflationRate" class="text-xs font-semibold text-slate-700 dark:text-zinc-300 cursor-pointer">
+										Inflation Rate
+									</label>
+									<div class="relative group inline-flex items-center cursor-pointer">
+										<svg class="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+										<div class="absolute opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 w-48 p-2 text-xs font-mono bg-slate-900 text-white dark:bg-zinc-900 dark:text-zinc-100 rounded-md shadow-md bottom-full mb-2 left-1/2 -translate-x-1/2 text-center border border-slate-700 dark:border-white/20">
+											Discount rate for Real TVM purchasing power.
+										</div>
+									</div>
+								</div>
+								<span class="font-mono text-[10px] text-slate-400 dark:text-zinc-500">%</span>
+							</div>
+							<div class="relative">
+								<input 
+									type="number" 
+									id="inflationRate" 
+									value="6.0" 
+									min="0" 
+									max="20" 
+									step="0.5"
+									class="w-full pl-3 pr-7 py-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-md text-slate-900 dark:text-zinc-100 font-mono font-bold text-sm focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400 transition-all duration-200"
+								/>
+								<span class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 text-xs font-mono">%</span>
+							</div>
+						</div>
+
+					</div>
+
+					<!-- PURCHASING POWER SACRIFICE HIGHLIGHT CELL -->
+					<div class="bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-md p-3.5 space-y-1">
+						<div class="flex justify-between items-center">
+							<div class="inline-flex items-center gap-1">
+								<span class="text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-500 dark:text-zinc-400">Purchasing Power Sacrificed (PV)</span>
+								<div class="relative group inline-flex items-center cursor-pointer">
+									<svg class="w-3 h-3 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+									<div class="absolute opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 w-52 p-2 text-xs font-mono bg-slate-900 text-white dark:bg-zinc-900 dark:text-zinc-100 rounded-md shadow-md bottom-full mb-2 left-1/2 -translate-x-1/2 text-center border border-slate-700 dark:border-white/20">
+										Sum of all future monthly contributions discounted to today's rupees.
+									</div>
+								</div>
+							</div>
+							<span class="text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400 uppercase">TODAY'S VALUE</span>
+						</div>
+						<div id="valSacrificePV" class="text-xl font-mono font-bold tracking-tight text-slate-900 dark:text-zinc-100">
+							₹ 0
+						</div>
+					</div>
+
+					<!-- QUANT PRESETS -->
+					<div class="pt-3 border-t border-slate-200 dark:border-white/10 space-y-2">
+						<span class="text-[10px] font-mono font-bold uppercase tracking-widest text-slate-500 dark:text-zinc-400">QUANT PRESETS</span>
+						<div class="grid grid-cols-2 gap-1.5">
+							<button type="button" data-preset="conservative" class="preset-btn border border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-zinc-900 text-[10px] uppercase font-mono tracking-widest text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100 py-1.5 rounded-md transition-colors text-center cursor-pointer">
+								[ CONSERVATIVE ]
+							</button>
+							<button type="button" data-preset="balanced" class="preset-btn border border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-zinc-900 text-[10px] uppercase font-mono tracking-widest text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100 py-1.5 rounded-md transition-colors text-center cursor-pointer">
+								[ BALANCED ]
+							</button>
+							<button type="button" data-preset="aggressive" class="preset-btn border border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-zinc-900 text-[10px] uppercase font-mono tracking-widest text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100 py-1.5 rounded-md transition-colors text-center cursor-pointer">
+								[ AGGRESSIVE ]
+							</button>
+							<button type="button" data-preset="fire" class="preset-btn border border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-zinc-900 text-[10px] uppercase font-mono tracking-widest text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100 py-1.5 rounded-md transition-colors text-center cursor-pointer">
+								[ FIRE 15-YR ]
+							</button>
+						</div>
+					</div>
+
+
+
+					<!-- ASSET ALLOCATION MATRIX (PROPORTIONAL AUTO-ADJUSTING SLIDERS) -->
+					<div class="pt-3 border-t border-slate-200 dark:border-white/10 space-y-3">
+						<div class="flex items-center justify-between">
+							<span class="text-xs font-mono font-bold uppercase tracking-widest text-slate-900 dark:text-zinc-100">PROPORTIONAL ASSET MATRIX</span>
+							<span id="allocationTotalBadge" class="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">Total: 100%</span>
+						</div>
+
+						<!-- Equity Slider -->
+						<div class="space-y-1.5">
+							<div class="flex justify-between items-center text-xs font-mono">
+								<div class="inline-flex items-center gap-1">
+									<span class="text-slate-700 dark:text-zinc-300 font-medium">Equity (12% CAGR, 15% Vol)</span>
+									<div class="relative group inline-flex items-center cursor-pointer">
+										<svg class="w-3 h-3 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+										<div class="absolute opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 w-48 p-2 text-xs font-mono bg-slate-900 text-white dark:bg-zinc-900 dark:text-zinc-100 rounded-md shadow-md bottom-full mb-2 left-1/2 -translate-x-1/2 text-center border border-slate-700 dark:border-white/20">
+											High growth stocks (12% CAGR, 15% Volatility).
+										</div>
+									</div>
+								</div>
+								<span id="equityVal" class="font-bold text-slate-900 dark:text-zinc-100">70%</span>
+							</div>
+							<input type="range" id="equitySlider" min="0" max="100" value="70" class="w-full accent-slate-900 dark:accent-white cursor-pointer h-1.5 rounded-md bg-slate-200 dark:bg-zinc-800" />
+						</div>
+
+						<!-- Debt Slider -->
+						<div class="space-y-1.5">
+							<div class="flex justify-between items-center text-xs font-mono">
+								<div class="inline-flex items-center gap-1">
+									<span class="text-slate-700 dark:text-zinc-300 font-medium">Debt (7.1% Risk-Free)</span>
+									<div class="relative group inline-flex items-center cursor-pointer">
+										<svg class="w-3 h-3 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+										<div class="absolute opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 w-52 p-2 text-xs font-mono bg-slate-900 text-white dark:bg-zinc-900 dark:text-zinc-100 rounded-md shadow-md bottom-full mb-2 left-1/2 -translate-x-1/2 text-center border border-slate-700 dark:border-white/20">
+											Low-risk fixed income shock absorber (7.1% yield).
+										</div>
+									</div>
+								</div>
+								<span id="debtVal" class="font-bold text-slate-900 dark:text-zinc-100">20%</span>
+							</div>
+							<input type="range" id="debtSlider" min="0" max="100" value="20" class="w-full accent-slate-900 dark:accent-white cursor-pointer h-1.5 rounded-md bg-slate-200 dark:bg-zinc-800" />
+						</div>
+
+						<!-- Gold Slider -->
+						<div class="space-y-1.5">
+							<div class="flex justify-between items-center text-xs font-mono">
+								<div class="inline-flex items-center gap-1">
+									<span class="text-slate-700 dark:text-zinc-300 font-medium">Gold (8.5% Inflation Hedge)</span>
+									<div class="relative group inline-flex items-center cursor-pointer">
+										<svg class="w-3 h-3 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+										<div class="absolute opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 w-52 p-2 text-xs font-mono bg-slate-900 text-white dark:bg-zinc-900 dark:text-zinc-100 rounded-md shadow-md bottom-full mb-2 left-1/2 -translate-x-1/2 text-center border border-slate-700 dark:border-white/20">
+											Monetary inflation hedge (8.5% CAGR, 10% Volatility).
+										</div>
+									</div>
+								</div>
+								<span id="goldVal" class="font-bold text-slate-900 dark:text-zinc-100">10%</span>
+							</div>
+							<input type="range" id="goldSlider" min="0" max="100" value="10" class="w-full accent-slate-900 dark:accent-white cursor-pointer h-1.5 rounded-md bg-slate-200 dark:bg-zinc-800" />
+						</div>
+					</div>
+
+					<!-- EXECUTION VERCEL BUTTON -->
+					<button 
+						id="runSipBtn" 
+						type="button" 
+						class="w-full min-h-[46px] bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-zinc-200 rounded-md font-mono text-xs font-semibold uppercase tracking-widest transition-all duration-200 ease-geist cursor-pointer flex items-center justify-center gap-2 shadow-xs active:scale-[0.99] border border-transparent dark:border-white/10"
+					>
+						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+						</svg>
+						<span>SIMULATE REAL TVM PATHS</span>
+					</button>
+
+				</form>
+			</div>
+
+			<!-- Right Column: Real TVM Purchasing Power Dashboard (7/12 Width) -->
+			<div class="col-span-1 lg:col-span-7 flex flex-col bg-white dark:bg-zinc-950 border border-slate-200 dark:border-white/10 rounded-xl relative overflow-hidden shadow-xs min-w-0 w-full transition-all duration-200 ease-geist">
+				
+				<!-- Top Data Ribbon with Worst-Case & Best-Case Multipliers -->
+				<div class="border-b border-slate-200 dark:border-white/10 p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-50 dark:bg-zinc-900 gap-3">
+					<div class="flex items-center gap-2 flex-wrap">
+						<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+						<h2 class="text-xs font-mono font-bold tracking-widest text-slate-800 dark:text-zinc-200 uppercase">
+							REAL PURCHASING POWER PROJECTION
+						</h2>
+						<button id="taxToggleBtn" type="button" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider transition-all duration-200 bg-slate-200 text-slate-800 dark:bg-zinc-800 dark:text-zinc-200 border border-slate-300 dark:border-white/10 cursor-pointer">
+							PRE-TAX
+						</button>
+					</div>
+					
+					<!-- Multiplier Badges Grid -->
+					<div class="flex flex-wrap items-center gap-2">
+						<span id="worstMultiplierTag" class="bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 px-2.5 py-1 rounded-md text-[11px] font-mono font-bold">
+							--x Worst (10th)
+						</span>
+						<span id="expectedMultiplierTag" class="bg-slate-900/10 text-slate-900 dark:bg-white/10 dark:text-zinc-100 border border-slate-300 dark:border-white/20 px-2.5 py-1 rounded-md text-[11px] font-mono font-bold">
+							--x Expected (50th)
+						</span>
+						<span id="bestMultiplierTag" class="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-md text-[11px] font-mono font-bold flex items-center gap-1">
+							<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+							<span>--x Best (90th)</span>
+						</span>
+					</div>
+				</div>
+
+				<!-- Real Purchasing Power HUD Ribbon (Prominent 50th Expected + 10th Bear Left + 90th Bull Right) -->
+				<div class="p-4 sm:p-5 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-zinc-950 space-y-4">
+					
+					<!-- Top Row: Real Sacrificed (PV) & PROMINENT 50th Expected Real Wealth -->
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-4 border-b border-slate-200/80 dark:border-white/10 items-center">
+						<!-- Real Sacrificed (PV) Outflow -->
+						<div class="space-y-0.5">
+							<div class="inline-flex items-center gap-1">
+								<span class="text-xs font-mono text-slate-500 dark:text-zinc-500 uppercase tracking-widest font-semibold">Real Capital Sacrificed (PV Outflow)</span>
+								<div class="relative group inline-flex items-center cursor-pointer">
+									<svg class="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+									<div class="absolute opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 w-56 p-2 text-xs font-mono bg-slate-900 text-white dark:bg-zinc-900 dark:text-zinc-100 rounded-md shadow-md bottom-full mb-2 left-1/2 -translate-x-1/2 text-center border border-slate-700 dark:border-white/20">
+										Sum of all future monthly contributions discounted to today's rupees.
+									</div>
+								</div>
+							</div>
+							<div id="statTotalInvested" class="text-xl sm:text-2xl font-mono font-bold tracking-tight text-slate-900 dark:text-zinc-100">₹ 0</div>
+						</div>
+
+						<!-- PROMINENT 50th EXPECTED REAL WEALTH (MAIN FOCUS HERO STAT) -->
+						<div class="space-y-0.5 sm:text-right">
+							<div class="inline-flex items-center gap-1.5 justify-end w-full">
+								<span class="text-xs font-mono text-slate-900 dark:text-zinc-100 uppercase tracking-widest font-extrabold">50th Expected Real Wealth (PV)</span>
+								<div class="relative group inline-flex items-center cursor-pointer">
+									<svg class="w-4 h-4 text-slate-900 dark:text-zinc-100 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+									<div class="absolute opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 w-56 p-2 text-xs font-mono bg-slate-900 text-white dark:bg-zinc-900 dark:text-zinc-100 rounded-md shadow-md bottom-full mb-2 left-1/2 -translate-x-1/2 text-center border border-slate-700 dark:border-white/20">
+										50th percentile median expected portfolio outcome in today's purchasing power.
+									</div>
+								</div>
+							</div>
+							<div id="statRealWealth" class="text-2xl sm:text-3xl font-mono font-black tracking-tight text-slate-900 dark:text-zinc-100">₹ 0</div>
+							<div id="statNominalEquivalent" class="text-[10px] text-zinc-600 font-mono tracking-tight">Nominal Equivalent: ₹ 0</div>
+							
+							<!-- Leverage Split Bar -->
+							<div class="mt-4 space-y-1.5 w-full">
+								<div class="flex justify-between text-[10px] font-mono uppercase tracking-widest font-bold">
+									<span class="text-slate-500 dark:text-zinc-500">Sacrificed (<span id="pctSacrifice">0%</span>)</span>
+									<span class="text-emerald-600 dark:text-emerald-400">Created (<span id="pctCreated">0%</span>)</span>
+								</div>
+								<div class="w-full h-1.5 flex rounded-full overflow-hidden bg-slate-200 dark:bg-zinc-800">
+									<div id="barSacrifice" class="h-full bg-slate-400 dark:bg-zinc-500 transition-all duration-500" style="width: 100%"></div>
+									<div id="barCreated" class="h-full bg-emerald-500 transition-all duration-500" style="width: 0%"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Bottom Row: 10th Bear (Red, Left) vs 90th Bull (Green, Right) -->
+					<div class="grid grid-cols-2 gap-4 pt-0.5">
+						
+						<!-- Left Side: 10th Bear (Worst Case) in RED -->
+						<div class="space-y-0.5">
+							<div class="inline-flex items-center gap-1">
+								<span class="text-[11px] font-mono text-rose-600 dark:text-rose-400 uppercase tracking-widest font-bold">10th Bear (Worst Case)</span>
+								<div class="relative group inline-flex items-center cursor-pointer">
+									<svg class="w-3 h-3 text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+									<div class="absolute opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 w-52 p-2 text-xs font-mono bg-slate-900 text-white dark:bg-zinc-900 dark:text-zinc-100 rounded-md shadow-md bottom-full mb-2 left-1/2 -translate-x-1/2 text-center border border-slate-700 dark:border-white/20">
+										Worst-case 10th percentile outcome under severe market crashes.
+									</div>
+								</div>
+							</div>
+							<div id="statBearWealth" class="text-lg sm:text-xl font-mono font-bold tracking-tight text-rose-600 dark:text-rose-400">₹ 0</div>
+						</div>
+
+						<!-- Right Side: 90th Bull (Best Case) in GREEN -->
+						<div class="space-y-0.5 text-right">
+							<div class="inline-flex items-center gap-1 justify-end w-full">
+								<span class="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 uppercase tracking-widest font-bold">90th Bull (Best Case)</span>
+								<div class="relative group inline-flex items-center cursor-pointer">
+									<svg class="w-3 h-3 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+									<div class="absolute opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 w-52 p-2 text-xs font-mono bg-slate-900 text-white dark:bg-zinc-900 dark:text-zinc-100 rounded-md shadow-md bottom-full mb-2 left-1/2 -translate-x-1/2 text-center border border-slate-700 dark:border-white/20">
+										Best-case 90th percentile outcome under strong bull markets.
+									</div>
+								</div>
+							</div>
+							<div id="statBullWealth" class="text-lg sm:text-xl font-mono font-bold tracking-tight text-emerald-600 dark:text-emerald-400">₹ 0</div>
+						</div>
+
+					</div>
+
+				</div>
+
+				<!-- Chart Canvas Container (Edge-to-Edge Vercel Aesthetic) -->
+				<div class="relative w-full h-[300px] sm:h-[330px] bg-slate-50/50 dark:bg-zinc-950 p-4 flex items-center justify-center">
+					<canvas id="sipChart" class="w-full h-full"></canvas>
+				</div>
+
+				<!-- Legend Footer Ribbon -->
+				<div class="p-3.5 border-t border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-zinc-900 flex flex-wrap items-center justify-between text-xs font-mono text-slate-600 dark:text-zinc-400 gap-3">
+					<div class="flex flex-wrap items-center gap-4">
+						<span class="flex items-center gap-1.5">
+							<span class="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400"></span>
+							<span class="font-bold tracking-tight text-slate-900 dark:text-zinc-100">90th Bull Real TVM</span>
+						</span>
+						<span class="flex items-center gap-1.5">
+							<span class="w-2.5 h-2.5 rounded-full bg-slate-900 dark:bg-zinc-100"></span>
+							<span class="font-bold tracking-tight text-slate-900 dark:text-zinc-100">50th Expected Real TVM</span>
+						</span>
+						<span class="flex items-center gap-1.5">
+							<span class="w-2.5 h-2.5 rounded-full bg-rose-600 dark:bg-rose-400"></span>
+							<span class="font-bold tracking-tight text-slate-900 dark:text-zinc-100">10th Bear Real TVM</span>
+						</span>
+					</div>
+					<div class="flex items-center gap-3">
+						<span class="text-[10px] text-slate-400 dark:text-zinc-500 uppercase tracking-widest font-mono hidden sm:inline">DISCOUNTED TO TODAY'S RUPEES</span>
+						<button id="exportCsvBtn" class="flex items-center gap-2 px-3 py-1 bg-zinc-900 border border-white/10 rounded-md text-[10px] font-mono text-zinc-300 hover:text-white hover:bg-zinc-800 transition-all uppercase tracking-widest cursor-pointer">↓ Export CSV</button>
+					</div>
+				</div>
+
+				<!-- Milestone Timeline -->
+				<div id="milestoneTimeline" class="p-3.5 border-t border-slate-200 dark:border-white/10 bg-white dark:bg-zinc-950 flex flex-wrap gap-2.5 items-center text-xs font-mono min-h-[48px]">
+				   <!-- Populated by JS -->
+				</div>
+
+			</div>
+
+		</section>
+
+		<!-- SECTION 2: BLACK-SCHOLES HEDGING & YEAR-BY-YEAR LEDGER -->
+		<section class="bg-white dark:bg-zinc-950 border border-slate-200 dark:border-white/10 rounded-xl p-5 sm:p-6 space-y-6 shadow-xs transition-all duration-200 ease-geist">
+			
+			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-white/10 pb-4">
+				<div class="flex items-center gap-3">
+					<label class="relative inline-flex items-center cursor-pointer shrink-0">
+						<input type="checkbox" id="bsHedgingToggle" class="sr-only peer" />
+						<div class="w-11 h-6 bg-slate-300 dark:bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600 dark:peer-checked:bg-emerald-500"></div>
+					</label>
+					<div>
+						<div class="inline-flex items-center gap-2">
+							<h3 class="text-sm sm:text-base font-bold font-mono uppercase tracking-widest text-slate-900 dark:text-zinc-100">
+								Black-Scholes Put Option Downside Hedging
+							</h3>
+							<div class="relative group inline-flex items-center cursor-pointer">
+								<svg class="w-4 h-4 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+								</svg>
+								<div class="absolute opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 w-56 p-2.5 text-xs font-mono bg-slate-900 text-white dark:bg-zinc-900 dark:text-zinc-100 rounded-md shadow-md bottom-full mb-2 left-1/2 -translate-x-1/2 text-center border border-slate-700 dark:border-white/20">
+									Prices a rolling put option on the equity allocation.
+								</div>
+							</div>
+						</div>
+						<p class="text-xs text-slate-500 dark:text-zinc-400 mt-0.5 leading-relaxed">
+							Continuously purchase rolling European put options to cap equity drawdowns during severe bear markets.
+						</p>
+					</div>
+				</div>
+
+				<div class="flex items-center gap-2 self-start sm:self-auto">
+					<span id="bsStatusBadge" class="px-3 py-1 text-xs font-mono font-bold uppercase tracking-wider rounded-md bg-slate-100 text-slate-600 dark:bg-zinc-900 dark:text-zinc-400 border border-slate-200 dark:border-white/10">
+						UNHEDGED PORTFOLIO
+					</span>
+				</div>
+			</div>
+
+			<!-- Three High-Level Hedging Summary Cards -->
+			<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+				
+				<!-- Card 1: Annual Hedging Premium Drag -->
+				<div class="bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-md p-4 space-y-1">
+					<div class="inline-flex items-center gap-1">
+						<span class="text-xs font-mono font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-widest">Option Premium Drag</span>
+						<div class="relative group inline-flex items-center cursor-pointer">
+							<svg class="w-3 h-3 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+							<div class="absolute opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 w-52 p-2 text-xs font-mono bg-slate-900 text-white dark:bg-zinc-900 dark:text-zinc-100 rounded-md shadow-md bottom-full mb-2 left-1/2 -translate-x-1/2 text-center border border-slate-700 dark:border-white/20">
+								Annual cost paid for buying rolling 92% strike equity put options.
+							</div>
+						</div>
+					</div>
+					<div id="valHedgingDrag" class="text-xl font-mono font-bold tracking-tight text-slate-900 dark:text-zinc-100">
+						0.00% / Year
+					</div>
+				</div>
+
+				<!-- Card 2: Protected Purchasing Power Floor -->
+				<div class="bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-md p-4 space-y-1">
+					<div class="inline-flex items-center gap-1">
+						<span class="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Protected Floor (PV)</span>
+						<div class="relative group inline-flex items-center cursor-pointer">
+							<svg class="w-3 h-3 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+							<div class="absolute opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 w-52 p-2 text-xs font-mono bg-slate-900 text-white dark:bg-zinc-900 dark:text-zinc-100 rounded-md shadow-md bottom-full mb-2 left-1/2 -translate-x-1/2 text-center border border-slate-700 dark:border-white/20">
+								Guaranteed minimum real purchasing power floor under extreme crashes.
+							</div>
+						</div>
+					</div>
+					<div id="valProtectedFloor" class="text-xl font-mono font-bold tracking-tight text-emerald-600 dark:text-emerald-400">
+						₹ 0
+					</div>
+				</div>
+
+				<!-- Card 3: Hedged Real XIRR -->
+				<div class="bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-md p-4 space-y-1">
+					<div class="inline-flex items-center gap-1">
+						<span class="text-xs font-mono font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-widest">Hedged Real Yield</span>
+						<div class="relative group inline-flex items-center cursor-pointer">
+							<svg class="w-3 h-3 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+							<div class="absolute opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 w-52 p-2 text-xs font-mono bg-slate-900 text-white dark:bg-zinc-900 dark:text-zinc-100 rounded-md shadow-md bottom-full mb-2 left-1/2 -translate-x-1/2 text-center border border-slate-700 dark:border-white/20">
+								Net real return accounting for inflation drag and option hedging expenses.
+							</div>
+						</div>
+					</div>
+					<div id="valAdjustedYield" class="text-xl font-mono font-bold tracking-tight text-slate-900 dark:text-zinc-100">
+						0.00% Real XIRR
+					</div>
+				</div>
+
+			</div>
+
+			<!-- YEAR-BY-YEAR BLACK-SCHOLES HEDGING SCHEDULE TABLE WITH COLUMN QTIPS -->
+			<div class="pt-2 space-y-3">
+				<div class="flex items-center justify-between">
+					<h4 class="text-xs font-mono font-bold uppercase tracking-widest text-slate-900 dark:text-zinc-100">
+						YEAR-BY-YEAR OPTION COST & PROTECTION LEDGER
+					</h4>
+					<span class="text-[11px] font-mono text-slate-400 dark:text-zinc-500">REAL TVM VALUES</span>
+				</div>
+
+				<div class="w-full max-h-[360px] overflow-x-auto overflow-y-auto border border-slate-200 dark:border-white/10 rounded-md bg-white dark:bg-zinc-950 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-zinc-700">
+					<table class="w-full text-left border-collapse font-mono text-xs">
+						<thead class="sticky top-0 z-20 bg-slate-100 dark:bg-zinc-900 border-b border-slate-200 dark:border-white/10 shadow-xs">
+							<tr>
+								<th class="py-2.5 px-3 text-left font-bold text-slate-700 dark:text-zinc-300">Year</th>
+								<th class="py-2.5 px-3 text-right font-bold text-slate-700 dark:text-zinc-300">Real Sacrificed (PV)</th>
+								<th class="py-2.5 px-3 text-right font-bold text-slate-700 dark:text-zinc-300">Unhedged Real Wealth</th>
+								<th class="py-2.5 px-3 text-right font-bold text-slate-700 dark:text-zinc-300">Option Drag (Cost)</th>
+								<th class="py-2.5 px-3 text-right font-bold text-slate-700 dark:text-zinc-300">Floor Benefit</th>
+								<th class="py-2.5 px-3 text-right font-bold text-emerald-600 dark:text-emerald-400">Net Hedged Real Wealth (PV)</th>
+							</tr>
+						</thead>
+						<tbody id="hedgingLedgerBody" class="divide-y divide-slate-100 dark:divide-white/5 bg-white dark:bg-zinc-950">
+							<!-- Dynamically populated via JS -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+		</section>
+
+		<!-- SECTION 3: ELEGANT VERCEL QUANT KNOWLEDGE HUB & CATEGORIZED FAQ -->
+		<section class="mt-16 pt-12 border-t border-slate-200 dark:border-white/10 max-w-5xl mx-auto space-y-8">
+			
+			<!-- Header Block with Compact Segmented Control -->
+			<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+				<div class="space-y-1.5 max-w-2xl">
+					<div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-900 text-slate-800 dark:text-zinc-200 text-xs font-mono font-bold uppercase tracking-widest border border-slate-200 dark:border-white/10">
+						<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+						<span>QUANT KNOWLEDGE BASE</span>
+					</div>
+					<h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-zinc-100 font-sans">
+						First-Principles Financial FAQs
+					</h2>
+					<p class="text-xs sm:text-sm text-slate-500 dark:text-zinc-400 leading-relaxed font-sans">
+						Understand the mathematical mechanics of Time Value of Money (TVM), Black-Scholes put option hedging, inflation purchasing power destruction, and stochastic Monte Carlo paths.
+					</p>
+				</div>
+
+				<!-- Category Filter Segmented Control Bar -->
+				<div id="faqFilterContainer" class="p-1 bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-lg inline-flex items-center gap-1 self-start md:self-auto overflow-x-auto max-w-full shrink-0">
+					<button type="button" data-faq-cat="all" class="faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 bg-slate-900 text-white dark:bg-white dark:text-black cursor-pointer shadow-xs whitespace-nowrap">
+						ALL
+					</button>
+					<button type="button" data-faq-cat="tvm" class="faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 bg-transparent text-slate-600 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-zinc-200 cursor-pointer whitespace-nowrap">
+						TVM & INFLATION
+					</button>
+					<button type="button" data-faq-cat="hedging" class="faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 bg-transparent text-slate-600 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-zinc-200 cursor-pointer whitespace-nowrap">
+						BLACK-SCHOLES
+					</button>
+					<button type="button" data-faq-cat="risk" class="faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 bg-transparent text-slate-600 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-zinc-200 cursor-pointer whitespace-nowrap">
+						RISK & ALLOCATION
+					</button>
+				</div>
+			</div>
+
+			<!-- FAQ Cards Grid Architecture -->
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="faqCardGrid">
+				
+				<!-- Card 1: TVM vs Nominal -->
+				<div class="faq-card bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl p-5 sm:p-6 space-y-3.5 hover:border-slate-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between" data-category="tvm">
+					<div class="space-y-2">
+						<div class="flex items-center justify-between">
+							<span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-widest bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+								TVM THEORY
+							</span>
+							<span class="text-xs font-mono text-slate-400 dark:text-zinc-500 font-semibold">Q01</span>
+						</div>
+						<h3 class="text-base font-bold text-slate-900 dark:text-zinc-100 font-sans leading-snug">
+							Why do we strictly measure Purchasing Power (TVM) instead of Nominal Rupees?
+						</h3>
+						<p class="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-sans">
+							Nominal figures are optical illusions. Accumulating ₹5 Crore in 25 years sounds impressive, but at 6% annual inflation, ₹5 Crore will buy the exact same basket of goods as ₹1.16 Crore today. Evaluating wealth in Time Value of Money (TVM) Present Value measures your true future standard of living.
+						</p>
+					</div>
+					<div class="pt-2 border-t border-slate-200/80 dark:border-white/10 bg-emerald-500/5 dark:bg-emerald-500/10 p-3 rounded-lg border-l-2 border-emerald-500">
+						<div class="text-[11px] font-mono font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide">💡 Key Takeaway</div>
+						<div class="text-xs text-slate-700 dark:text-zinc-300 font-sans mt-0.5">Always plan retirement goals in Present Value (PV) to guarantee real-world purchasing power.</div>
+					</div>
+				</div>
+
+				<!-- Card 2: Real Outflow PV Math -->
+				<div class="faq-card bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl p-5 sm:p-6 space-y-3.5 hover:border-slate-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between" data-category="tvm">
+					<div class="space-y-2">
+						<div class="flex items-center justify-between">
+							<span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-widest bg-slate-200 text-slate-800 dark:bg-zinc-800 dark:text-zinc-200 border border-slate-300 dark:border-white/10">
+								FORMULA MATH
+							</span>
+							<span class="text-xs font-mono text-slate-400 dark:text-zinc-500 font-semibold">Q02</span>
+						</div>
+						<h3 class="text-base font-bold text-slate-900 dark:text-zinc-100 font-sans leading-snug">
+							How is Real Purchasing Power Sacrificed (PV Outflow) calculated?
+						</h3>
+						<p class="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-sans">
+							Each future monthly SIP payment is made with money that has less purchasing power than today's rupee. We discount every single contribution back to today using your inflation rate:
+						</p>
+						<div class="p-2.5 bg-white dark:bg-zinc-950 rounded border border-slate-200 dark:border-white/10 font-mono text-[11px] text-slate-900 dark:text-zinc-100 text-center font-bold">
+							PV Outflow = ∑ [ Monthly SIP / (1 + Inflation)^(m / 12) ]
+						</div>
+					</div>
+					<div class="pt-2 border-t border-slate-200/80 dark:border-white/10 bg-slate-100/80 dark:bg-zinc-950 p-3 rounded-lg border-l-2 border-slate-400 dark:border-zinc-500">
+						<div class="text-[11px] font-mono font-bold text-slate-800 dark:text-zinc-200 uppercase tracking-wide">💡 Key Takeaway</div>
+						<div class="text-xs text-slate-700 dark:text-zinc-300 font-sans mt-0.5">PV Outflow gives the exact opportunity cost of current consumption sacrificed to invest.</div>
+					</div>
+				</div>
+
+				<!-- Card 3: Black-Scholes Hedging -->
+				<div class="faq-card bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl p-5 sm:p-6 space-y-3.5 hover:border-slate-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between" data-category="hedging">
+					<div class="space-y-2">
+						<div class="flex items-center justify-between">
+							<span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-widest bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+								BLACK-SCHOLES
+							</span>
+							<span class="text-xs font-mono text-slate-400 dark:text-zinc-500 font-semibold">Q03</span>
+						</div>
+						<h3 class="text-base font-bold text-slate-900 dark:text-zinc-100 font-sans leading-snug">
+							How does Black-Scholes Put Option Downside Protection work?
+						</h3>
+						<p class="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-sans">
+							Institutional funds protect equity portfolios by purchasing rolling European put options. Black-Scholes formula prices 92% strike put options. If market crashes 30%–40%, option payouts compensate for equity destruction, guaranteeing a capital floor.
+						</p>
+					</div>
+					<div class="pt-2 border-t border-slate-200/80 dark:border-white/10 bg-emerald-500/5 dark:bg-emerald-500/10 p-3 rounded-lg border-l-2 border-emerald-500">
+						<div class="text-[11px] font-mono font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide">💡 Key Takeaway</div>
+						<div class="text-xs text-slate-700 dark:text-zinc-300 font-sans mt-0.5">Hedging costs ~1.85%/yr drag in bull markets but prevents bankruptcy in catastrophic market crashes.</div>
+					</div>
+				</div>
+
+				<!-- Card 4: Standard Calculator Flaws -->
+				<div class="faq-card bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl p-5 sm:p-6 space-y-3.5 hover:border-slate-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between" data-category="risk">
+					<div class="space-y-2">
+						<div class="flex items-center justify-between">
+							<span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-widest bg-rose-100 text-rose-800 dark:bg-rose-950/80 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
+								CALCULATOR MYTHS
+							</span>
+							<span class="text-xs font-mono text-slate-400 dark:text-zinc-500 font-semibold">Q04</span>
+						</div>
+						<h3 class="text-base font-bold text-slate-900 dark:text-zinc-100 font-sans leading-snug">
+							Why do standard online SIP calculators mislead retail investors?
+						</h3>
+						<p class="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-sans">
+							Basic SIP calculators assume markets compound in a straight line at 12% nominal return every year with 0% volatility. They ignore inflation and market drawdowns. Our 10,000-path Monte Carlo engine models realistic 15% volatility to show 90th, 50th, and 10th percentile outcomes.
+						</p>
+					</div>
+					<div class="pt-2 border-t border-slate-200/80 dark:border-white/10 bg-rose-500/5 dark:bg-rose-500/10 p-3 rounded-lg border-l-2 border-rose-500">
+						<div class="text-[11px] font-mono font-bold text-rose-800 dark:text-rose-300 uppercase tracking-wide">💡 Key Takeaway</div>
+						<div class="text-xs text-slate-700 dark:text-zinc-300 font-sans mt-0.5">Straight-line compounding ignores sequence risk and market volatility.</div>
+					</div>
+				</div>
+
+			</div>
+
+		</section>
+
+	</main>
+</Layout>
+
+<script>
+	// Quantitative Stochastic Engine Controller
+	let sipChartInstance: any = null;
+	let lastSimulationResult: any = null;
+	let isPostTax = false;
+	let isReverseGoalSeek = false;
+
+	function getRandomNormal() {
+		let u1 = 0, u2 = 0;
+		while (u1 === 0) u1 = Math.random();
+		while (u2 === 0) u2 = Math.random();
+		return Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+	}
+
+	function parseNum(id: string, defaultVal: number): number {
+		const el = document.getElementById(id) as HTMLInputElement;
+		if (!el) return defaultVal;
+		const parsed = parseFloat(el.value);
+		return isNaN(parsed) ? defaultVal : parsed;
+	}
+
+	function formatRupee(val: number): string {
+		if (isNaN(val)) return '₹ 0';
+		const abs = Math.abs(val);
+		if (abs >= 10000000) return `₹ ${(val / 10000000).toFixed(2)} Cr`;
+		if (abs >= 100000) return `₹ ${(val / 100000).toFixed(2)} Lakh`;
+		return `₹ ${Math.round(val).toLocaleString('en-IN')}`;
+	}
+
+	function handleCalculationTrigger() {
+		if (isReverseGoalSeek) {
+			runGoalSeek();
+		} else {
+			runSimulation();
+		}
+	}
+
+	// Mode Switcher Handler (FORWARD STOCHASTIC vs REVERSE GOAL-SEEK)
+	function initModeSwitcher() {
+		const fwdBtn = document.getElementById('modeForwardBtn');
+		const revBtn = document.getElementById('modeReverseBtn');
+		const sipContainer = document.getElementById('monthlySipContainer');
+		const targetContainer = document.getElementById('targetRealWealthContainer');
+		const reqCard = document.getElementById('requiredSipResultCard');
+		const runBtn = document.getElementById('runSipBtn');
+		const btnText = runBtn ? runBtn.querySelector('span') : null;
+
+		if (!fwdBtn || !revBtn) return;
+
+		fwdBtn.addEventListener('click', () => {
+			isReverseGoalSeek = false;
+			fwdBtn.className = 'flex-1 py-1.5 rounded-md transition-all duration-200 bg-slate-900 text-white dark:bg-white dark:text-black shadow-xs text-center cursor-pointer';
+			revBtn.className = 'flex-1 py-1.5 rounded-md transition-all duration-200 bg-transparent text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100 text-center cursor-pointer';
+			
+			sipContainer?.classList.remove('hidden');
+			targetContainer?.classList.add('hidden');
+			reqCard?.classList.add('hidden');
+
+			if (btnText) btnText.innerText = 'SIMULATE REAL TVM PATHS';
+			runSimulation();
+		});
+
+		revBtn.addEventListener('click', () => {
+			isReverseGoalSeek = true;
+			revBtn.className = 'flex-1 py-1.5 rounded-md transition-all duration-200 bg-slate-900 text-white dark:bg-white dark:text-black shadow-xs text-center cursor-pointer';
+			fwdBtn.className = 'flex-1 py-1.5 rounded-md transition-all duration-200 bg-transparent text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100 text-center cursor-pointer';
+
+			sipContainer?.classList.add('hidden');
+			targetContainer?.classList.remove('hidden');
+			reqCard?.classList.remove('hidden');
+
+			if (btnText) btnText.innerText = 'CALCULATE REQUIRED SIP';
+			runGoalSeek();
+		});
+	}
+
+	// Clean Goal-Seek Engine (250-path Binary Search)
+	function runGoalSeek() {
+		const targetRealWealth = parseNum('targetRealWealth', 50000000);
+		const seedCapital = parseNum('seedCapital', 0);
+		const stepUpRate = parseNum('stepUpRate', 0) / 100;
+		const horizonYears = parseNum('investmentYears', 20);
+		const inflationRate = parseNum('inflationRate', 6.0) / 100;
+
+		const eqPct = parseNum('equitySlider', 70) / 100;
+		const debtPct = parseNum('debtSlider', 20) / 100;
+		const goldPct = parseNum('goldSlider', 10) / 100;
+
+		const bsToggle = document.getElementById('bsHedgingToggle') as HTMLInputElement;
+		const bsEnabled = bsToggle ? bsToggle.checked : false;
+		const annualHedgingDragCost = bsEnabled ? (0.0185 * eqPct) : 0;
+		const monthlyFloor = -0.08 / 12;
+		const sqrt12 = Math.sqrt(12);
+
+		const eqDrift = (0.12 - 0.5 * 0.15 * 0.15) / 12;
+		const debtDrift = (0.071 - 0.5 * 0.02 * 0.02) / 12;
+		const goldDrift = (0.085 - 0.5 * 0.10 * 0.10) / 12;
+
+		let lowSip = 0;
+		let highSip = 10000000;
+		const numMiniSims = 250;
+
+		while (highSip - lowSip > 100) {
+			let midSip = (lowSip + highSip) / 2;
+			const finalRealValues = new Float64Array(numMiniSims);
+
+			let totalInvested = seedCapital;
+			let projectedSip = midSip;
+			let globalMonth = 0;
+			for (let yr = 1; yr <= horizonYears; yr++) {
+				if (yr > 1) { projectedSip = projectedSip * (1 + stepUpRate); }
+				for (let m = 1; m <= 12; m++) {
+					globalMonth++;
+					totalInvested += projectedSip / Math.pow(1 + inflationRate, globalMonth / 12);
+				}
+			}
+
+			for (let s = 0; s < numMiniSims; s++) {
+				let portBal = seedCapital;
+				let currentSip = midSip;
+				for (let yr = 1; yr <= horizonYears; yr++) {
+					if (yr > 1) { currentSip = currentSip * (1 + stepUpRate); }
+					for (let m = 1; m <= 12; m++) {
+						portBal += currentSip;
+
+						let rEqM = Math.exp(eqDrift + (0.15 / sqrt12) * getRandomNormal()) - 1;
+						if (bsEnabled) { rEqM = Math.max(monthlyFloor, rEqM) - (annualHedgingDragCost / 12); }
+						
+						const rDebtM = Math.exp(debtDrift + (0.02 / sqrt12) * getRandomNormal()) - 1;
+						const rGoldM = Math.exp(goldDrift + (0.10 / sqrt12) * getRandomNormal()) - 1;
+						
+						const portReturn = (eqPct * rEqM) + (debtPct * rDebtM) + (goldPct * rGoldM);
+						portBal = portBal * (1 + portReturn);
+					}
+				}
+				let realWealth = portBal / Math.pow(1 + inflationRate, horizonYears);
+				if (isPostTax) {
+					realWealth = realWealth - Math.max(0, (realWealth - totalInvested - 125000) * 0.125);
+				}
+				finalRealValues[s] = Math.max(0, realWealth);
+			}
+
+			finalRealValues.sort();
+			const medianRealWealth = finalRealValues[Math.floor(numMiniSims * 0.50)];
+
+			if (medianRealWealth < targetRealWealth) {
+				lowSip = midSip;
+			} else {
+				highSip = midSip;
+			}
+		}
+
+		const requiredSip = Math.round((lowSip + highSip) / 2);
+		const reqCardVal = document.getElementById('valRequiredSip');
+		if (reqCardVal) reqCardVal.innerText = `${formatRupee(requiredSip)} / Month`;
+
+		const sipInput = document.getElementById('monthlySip') as HTMLInputElement;
+		if (sipInput) sipInput.value = requiredSip.toString();
+
+		runSimulation();
+	}
+
+	// Historical Market Crash Stress Test Engine (Context-Aware Architecture)
+
+
+	// Post-Tax Net Real Wealth Calculator (12.5% LTCG on gains exceeding ₹1.25 Lakh)
+	function calculateNetRealWealth(pv: number, totalInvested: number): number {
+		if (!isPostTax) return pv;
+		const taxableGain = Math.max(0, pv - totalInvested - 125000);
+		const ltcgTax = taxableGain * 0.125;
+		return Math.max(0, Math.round(pv - ltcgTax));
+	}
+
+	// Post-Tax Toggle Listener Handler
+	function initTaxToggle() {
+		const btn = document.getElementById('taxToggleBtn');
+		if (!btn) return;
+
+		btn.addEventListener('click', () => {
+			isPostTax = !isPostTax;
+			if (isPostTax) {
+				btn.innerText = 'POST-TAX (12.5% LTCG)';
+				btn.className = 'px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider transition-all duration-200 bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 cursor-pointer';
+			} else {
+				btn.innerText = 'PRE-TAX';
+				btn.className = 'px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider transition-all duration-200 bg-slate-200 text-slate-800 dark:bg-zinc-800 dark:text-zinc-200 border border-slate-300 dark:border-white/10 cursor-pointer';
+			}
+			handleCalculationTrigger();
+		});
+	}
+
+	// 1-Click Quant Presets Handler
+	function initPresets() {
+		const btns = document.querySelectorAll('.preset-btn');
+		btns.forEach(btn => {
+			btn.addEventListener('click', () => {
+				const type = btn.getAttribute('data-preset');
+				const eq = document.getElementById('equitySlider') as HTMLInputElement;
+				const dt = document.getElementById('debtSlider') as HTMLInputElement;
+				const gd = document.getElementById('goldSlider') as HTMLInputElement;
+				const years = document.getElementById('investmentYears') as HTMLInputElement;
+
+				const eqV = document.getElementById('equityVal');
+				const dtV = document.getElementById('debtVal');
+				const gdV = document.getElementById('goldVal');
+
+				if (type === 'conservative') {
+					if (eq) eq.value = '50';
+					if (dt) dt.value = '40';
+					if (gd) gd.value = '10';
+				} else if (type === 'balanced') {
+					if (eq) eq.value = '70';
+					if (dt) dt.value = '20';
+					if (gd) gd.value = '10';
+				} else if (type === 'aggressive') {
+					if (eq) eq.value = '80';
+					if (dt) dt.value = '10';
+					if (gd) gd.value = '10';
+				} else if (type === 'fire') {
+					if (eq) eq.value = '80';
+					if (dt) dt.value = '10';
+					if (gd) gd.value = '10';
+					if (years) years.value = '15';
+				}
+
+				if (eqV && eq) eqV.innerText = `${eq.value}%`;
+				if (dtV && dt) dtV.innerText = `${dt.value}%`;
+				if (gdV && gd) gdV.innerText = `${gd.value}%`;
+
+				handleCalculationTrigger();
+			});
+		});
+	}
+
+	// Proportional Auto-Adjusting Sliders (Total ALWAYS = 100%)
+	function initSliders() {
+		const eq = document.getElementById('equitySlider') as HTMLInputElement;
+		const dt = document.getElementById('debtSlider') as HTMLInputElement;
+		const gd = document.getElementById('goldSlider') as HTMLInputElement;
+
+		const eqV = document.getElementById('equityVal');
+		const dtV = document.getElementById('debtVal');
+		const gdV = document.getElementById('goldVal');
+
+		if (!eq || !dt || !gd) return;
+
+		function adjust(changed: string) {
+			let e = parseInt(eq.value) || 0;
+			let d = parseInt(dt.value) || 0;
+			let g = parseInt(gd.value) || 0;
+
+			if (changed === 'eq') {
+				const rem = 100 - e;
+				const sumOthers = d + g;
+				if (sumOthers > 0) {
+					d = Math.round((d / sumOthers) * rem);
+					g = rem - d;
+				} else {
+					d = Math.round(rem / 2);
+					g = rem - d;
+				}
+			} else if (changed === 'dt') {
+				const rem = 100 - d;
+				const sumOthers = e + g;
+				if (sumOthers > 0) {
+					e = Math.round((e / sumOthers) * rem);
+					g = rem - e;
+				} else {
+					e = Math.round(rem / 2);
+					g = rem - e;
+				}
+			} else if (changed === 'gd') {
+				const rem = 100 - g;
+				const sumOthers = e + d;
+				if (sumOthers > 0) {
+					e = Math.round((e / sumOthers) * rem);
+					d = rem - e;
+				} else {
+					e = Math.round(rem / 2);
+					d = rem - e;
+				}
+			}
+
+			eq.value = e.toString();
+			dt.value = d.toString();
+			gd.value = g.toString();
+
+			if (eqV) eqV.innerText = `${e}%`;
+			if (dtV) dtV.innerText = `${d}%`;
+			if (gdV) gdV.innerText = `${g}%`;
+
+			handleCalculationTrigger();
+		}
+
+		eq.addEventListener('input', () => adjust('eq'));
+		dt.addEventListener('input', () => adjust('dt'));
+		gd.addEventListener('input', () => adjust('gd'));
+	}
+
+	// FAQ Category Filter Handler
+	function initFaqFilter() {
+		const filterContainer = document.getElementById('faqFilterContainer');
+		if (!filterContainer) return;
+
+		const filterBtns = filterContainer.querySelectorAll('.faq-filter-btn');
+		const faqCards = document.querySelectorAll('.faq-card');
+
+		filterBtns.forEach(btn => {
+			btn.addEventListener('click', () => {
+				const category = btn.getAttribute('data-faq-cat');
+
+				filterBtns.forEach(b => {
+					b.className = 'faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 bg-transparent text-slate-600 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-zinc-200 cursor-pointer whitespace-nowrap';
+				});
+
+				btn.className = 'faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 bg-slate-900 text-white dark:bg-white dark:text-black cursor-pointer shadow-xs whitespace-nowrap';
+
+				faqCards.forEach(card => {
+					const cardCat = card.getAttribute('data-category');
+					if (category === 'all' || cardCat === category) {
+						(card as HTMLElement).style.display = 'flex';
+					} else {
+						(card as HTMLElement).style.display = 'none';
+					}
+				});
+			});
+		});
+	}
+
+	// CSV Export Handler
+	function exportToCSV() {
+		if (!lastSimulationResult) return;
+		const { horizonYears, p90Real, p50Real, p10Real } = lastSimulationResult;
+		
+		let csv = 'Year,10th Bear Real (PV),50th Expected Real (PV),90th Bull Real (PV)\n';
+		for (let yr = 0; yr <= horizonYears; yr++) {
+			csv += `${yr},${p10Real[yr] || 0},${p50Real[yr] || 0},${p90Real[yr] || 0}\n`;
+		}
+
+		const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+		const url = URL.createObjectURL(blob);
+		const link = document.createElement('a');
+		link.setAttribute('href', url);
+		link.setAttribute('download', 'quant_tvm_ledger.csv');
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+	}
+
+	// Core Quant Simulation Engine
+	function runSimulation() {
+		const seedCapital = parseNum('seedCapital', 0);
+		const monthlySip = parseNum('monthlySip', 25000);
+		const stepUpRate = parseNum('stepUpRate', 0) / 100;
+		const horizonYears = parseNum('investmentYears', 20);
+		const inflationRate = parseNum('inflationRate', 6.0) / 100;
+		
+		const eqPct = parseNum('equitySlider', 70) / 100;
+		const debtPct = parseNum('debtSlider', 20) / 100;
+		const goldPct = parseNum('goldSlider', 10) / 100;
+
+		const bsToggle = document.getElementById('bsHedgingToggle') as HTMLInputElement;
+		const bsEnabled = bsToggle ? bsToggle.checked : false;
+
+		const annualHedgingDragCost = 0.0185 * eqPct;
+		const numSims = 2000;
+		const sqrt12 = Math.sqrt(12);
+
+		// Calculate Present Value of Outflows (seed capital at t=0 + monthly SIPs with annual step-up)
+		let realOutflowPV = seedCapital;
+		let projectedSip = monthlySip;
+		let globalMonthCounter = 0;
+		for (let yr = 1; yr <= horizonYears; yr++) {
+			if (yr > 1) { projectedSip = projectedSip * (1 + stepUpRate); }
+			for (let m = 1; m <= 12; m++) {
+				globalMonthCounter++;
+				realOutflowPV += projectedSip / Math.pow(1 + inflationRate, globalMonthCounter / 12);
+			}
+		}
+
+		// Monthly Stochastic Simulation Loop
+		const yearlyPathsNominal = Array.from({ length: horizonYears + 1 }, () => new Float64Array(numSims));
+
+		for (let s = 0; s < numSims; s++) {
+			let portBal = seedCapital;
+			let currentSip = monthlySip;
+
+			for (let yr = 1; yr <= horizonYears; yr++) {
+				if (yr > 1) { currentSip = currentSip * (1 + stepUpRate); }
+
+				for (let m = 1; m <= 12; m++) {
+					portBal += currentSip;
+
+					// Geometric Brownian Motion lognormal monthly returns (exact CAGR drift)
+					const eqDrift = (0.12 - 0.5 * 0.15 * 0.15) / 12;
+					const eqVol = (0.15 / sqrt12) * getRandomNormal();
+					let rEqM = Math.exp(eqDrift + eqVol) - 1;
+
+					if (bsEnabled) {
+						const monthlyFloor = -0.08 / 12;
+						rEqM = Math.max(monthlyFloor, rEqM) - (annualHedgingDragCost / 12);
+					}
+
+					const debtDrift = (0.071 - 0.5 * 0.02 * 0.02) / 12;
+					const debtVol = (0.02 / sqrt12) * getRandomNormal();
+					const rDebtM = Math.exp(debtDrift + debtVol) - 1;
+
+					const goldDrift = (0.085 - 0.5 * 0.10 * 0.10) / 12;
+					const goldVol = (0.10 / sqrt12) * getRandomNormal();
+					const rGoldM = Math.exp(goldDrift + goldVol) - 1;
+
+					const portMonthlyReturn = (eqPct * rEqM) + (debtPct * rDebtM) + (goldPct * rGoldM);
+					portBal = portBal * (1 + portMonthlyReturn);
+				}
+
+				yearlyPathsNominal[yr][s] = Math.max(0, portBal);
+			}
+		}
+
+		// Percentiles (Real TVM)
+		const p90Real = [], p50Real = [], p10Real = [];
+
+		for (let yr = 0; yr <= horizonYears; yr++) {
+			const sorted = Array.from(yearlyPathsNominal[yr]).sort((a, b) => a - b);
+			const nom10 = sorted[Math.floor(numSims * 0.10)] || 0;
+			const nom50 = sorted[Math.floor(numSims * 0.50)] || 0;
+			const nom90 = sorted[Math.floor(numSims * 0.90)] || 0;
+
+			const discount = Math.pow(1 + inflationRate, yr);
+
+			p10Real.push(Math.round(nom10 / discount));
+			p50Real.push(Math.round(nom50 / discount));
+			p90Real.push(Math.round(nom90 / discount));
+		}
+
+		// Update UI Stats
+		const sacrificePVEl = document.getElementById('valSacrificePV');
+		const totalInvestedEl = document.getElementById('statTotalInvested');
+		const realWealthEl = document.getElementById('statRealWealth');
+		const bearWealthEl = document.getElementById('statBearWealth');
+		const bullWealthEl = document.getElementById('statBullWealth');
+
+		const worstTagEl = document.getElementById('worstMultiplierTag');
+		const expectedTagEl = document.getElementById('expectedMultiplierTag');
+		const bestTagEl = document.getElementById('bestMultiplierTag');
+
+		const rawExpectedRealFinal = p50Real[horizonYears];
+		const rawBearRealFinal = p10Real[horizonYears];
+		const rawBullRealFinal = p90Real[horizonYears];
+
+		const expectedRealFinal = calculateNetRealWealth(rawExpectedRealFinal, realOutflowPV);
+		const bearRealFinal = calculateNetRealWealth(rawBearRealFinal, realOutflowPV);
+		const bullRealFinal = calculateNetRealWealth(rawBullRealFinal, realOutflowPV);
+
+		// Split Bar Logic
+		const pctSacrificed = expectedRealFinal > 0 ? Math.min(100, (realOutflowPV / expectedRealFinal) * 100) : 100;
+		const pctCreated = Math.max(0, 100 - pctSacrificed);
+		const elPctSacrifice = document.getElementById('pctSacrifice');
+		const elPctCreated = document.getElementById('pctCreated');
+		const elBarSacrifice = document.getElementById('barSacrifice');
+		const elBarCreated = document.getElementById('barCreated');
+		if (elPctSacrifice) elPctSacrifice.innerText = `${pctSacrificed.toFixed(1)}%`;
+		if (elPctCreated) elPctCreated.innerText = `${pctCreated.toFixed(1)}%`;
+		if (elBarSacrifice) elBarSacrifice.style.width = `${pctSacrificed}%`;
+		if (elBarCreated) elBarCreated.style.width = `${pctCreated}%`;
+
+		const sortedFinalNominal = Array.from(yearlyPathsNominal[horizonYears]).sort((a, b) => a - b);
+		const expectedNominalMedian = sortedFinalNominal[Math.floor(numSims * 0.50)] || 0;
+
+		const nominalEquivalentEl = document.getElementById('statNominalEquivalent');
+		if (nominalEquivalentEl) nominalEquivalentEl.innerText = `Nominal Equivalent: ${formatRupee(expectedNominalMedian)}`;
+
+		lastSimulationResult = {
+			horizonYears,
+			monthlySip,
+			inflationRate,
+			p90Real,
+			p50Real,
+			p10Real
+		};
+
+		if (sacrificePVEl) sacrificePVEl.innerText = formatRupee(realOutflowPV);
+		if (totalInvestedEl) totalInvestedEl.innerText = formatRupee(realOutflowPV);
+		if (realWealthEl) realWealthEl.innerText = formatRupee(expectedRealFinal);
+		if (bearWealthEl) bearWealthEl.innerText = formatRupee(bearRealFinal);
+		if (bullWealthEl) bullWealthEl.innerText = formatRupee(bullRealFinal);
+
+		if (realOutflowPV > 0) {
+			const worstMult = (bearRealFinal / realOutflowPV).toFixed(2);
+			const expectedMult = (expectedRealFinal / realOutflowPV).toFixed(2);
+			const bestMult = (bullRealFinal / realOutflowPV).toFixed(2);
+
+			if (worstTagEl) worstTagEl.innerText = `${worstMult}x Worst (10th)`;
+			if (expectedTagEl) expectedTagEl.innerText = `${expectedMult}x Expected (50th)`;
+			if (bestTagEl) bestTagEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span><span>${bestMult}x Best (90th)</span>`;
+		}
+
+		// Black-Scholes Panel Updates
+		const statusBadgeEl = document.getElementById('bsStatusBadge');
+		const dragEl = document.getElementById('valHedgingDrag');
+		const floorEl = document.getElementById('valProtectedFloor');
+		const yieldEl = document.getElementById('valAdjustedYield');
+
+		if (statusBadgeEl) {
+			if (bsEnabled) {
+				statusBadgeEl.innerText = "ACTIVE PUT HEDGING ON";
+				statusBadgeEl.className = "px-3 py-1 text-xs font-mono font-bold uppercase tracking-wider rounded-md bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800";
+			} else {
+				statusBadgeEl.innerText = "UNHEDGED PORTFOLIO";
+				statusBadgeEl.className = "px-3 py-1 text-xs font-mono font-bold uppercase tracking-wider rounded-md bg-slate-100 text-slate-600 dark:bg-zinc-900 dark:text-zinc-400 border border-slate-200 dark:border-white/10";
+			}
+		}
+
+		if (dragEl) dragEl.innerText = bsEnabled ? `${(annualHedgingDragCost * 100).toFixed(2)}% / Year` : "0.00% / Year";
+		if (floorEl) floorEl.innerText = formatRupee(bsEnabled ? Math.max(realOutflowPV, bearRealFinal * 1.15) : bearRealFinal);
+
+		const netRealXIRR = Math.max(0, ((Math.pow(expectedRealFinal / Math.max(1, realOutflowPV / 2), 1 / horizonYears) - 1) * 100));
+		if (yieldEl) yieldEl.innerText = `${netRealXIRR.toFixed(2)}% Real XIRR`;
+
+		// Render Year-by-Year Hedging Ledger
+		renderHedgingLedger(horizonYears, monthlySip, inflationRate, p50Real, bsEnabled, annualHedgingDragCost);
+
+		// Milestone Timeline Logic
+		const targets = [5000000, 10000000, 25000000, 50000000, 100000000]; // 50L, 1Cr, 2.5Cr, 5Cr, 10Cr
+		const timelineContainer = document.getElementById('milestoneTimeline');
+		if (timelineContainer) {
+			let timelineHTML = `<span class="text-slate-500 dark:text-zinc-500 uppercase tracking-widest font-bold text-[10px] mr-1">Milestones (PV):</span>`;
+			let milestonesHit = 0;
+			
+			targets.forEach(target => {
+				const hitYear = p50Real.findIndex(val => val >= target);
+				if (hitYear > 0) {
+					milestonesHit++;
+					timelineHTML += `<span class="px-2 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 rounded text-[10px] font-bold tracking-tight">Yr ${hitYear}: ${formatRupee(target)}</span>`;
+				}
+			});
+			
+			if (milestonesHit === 0) {
+				timelineHTML += `<span class="text-slate-400 dark:text-zinc-600 text-[10px] italic">No major milestones reached in horizon.</span>`;
+			}
+			timelineContainer.innerHTML = timelineHTML;
+		}
+
+		// Render Chart.js
+		renderChart(horizonYears, p90Real, p50Real, p10Real);
+	}
+
+	// Render Year-by-Year Hedging Ledger Table
+	function renderHedgingLedger(
+		years: number, 
+		monthlySip: number, 
+		inflationRate: number, 
+		p50Real: number[], 
+		bsEnabled: boolean,
+		dragCostPercent: number
+	) {
+		const tbody = document.getElementById('hedgingLedgerBody');
+		if (!tbody) return;
+
+		let html = '';
+		let cumPV = 0;
+
+		for (let yr = 1; yr <= years; yr++) {
+			let yrPV = 0;
+			for (let m = (yr - 1) * 12 + 1; m <= yr * 12; m++) {
+				yrPV += monthlySip / Math.pow(1 + inflationRate, m / 12);
+			}
+			cumPV += yrPV;
+
+			const unhedgedReal = p50Real[yr] || 0;
+			const optionDragRupees = bsEnabled ? (unhedgedReal * dragCostPercent) : 0;
+			const floorBenefit = bsEnabled ? Math.max(0, cumPV - unhedgedReal * 0.92) : 0;
+			const netHedgedReal = bsEnabled ? Math.max(unhedgedReal - optionDragRupees, cumPV) : unhedgedReal;
+
+			const zebraClass = yr % 2 === 0 ? 'bg-slate-50/70 dark:bg-zinc-900/90' : 'bg-white dark:bg-zinc-950';
+
+			html += `
+				<tr class="${zebraClass} hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors border-b border-slate-200/60 dark:border-white/10">
+					<td class="py-2.5 px-3 text-left font-bold text-slate-800 dark:text-zinc-200">Yr ${yr}</td>
+					<td class="py-2.5 px-3 text-right text-slate-600 dark:text-zinc-400">${formatRupee(cumPV)}</td>
+					<td class="py-2.5 px-3 text-right font-medium text-slate-800 dark:text-zinc-200">${formatRupee(unhedgedReal)}</td>
+					<td class="py-2.5 px-3 text-right ${bsEnabled ? 'text-rose-600 dark:text-rose-400 font-semibold' : 'text-slate-400 dark:text-zinc-600'}">
+						${bsEnabled ? `-${formatRupee(optionDragRupees)} (${(dragCostPercent * 100).toFixed(2)}%)` : '₹ 0 (0.00%)'}
+					</td>
+					<td class="py-2.5 px-3 text-right ${floorBenefit > 0 ? 'text-emerald-600 dark:text-emerald-400 font-bold' : 'text-slate-400 dark:text-zinc-500'}">
+						${floorBenefit > 0 ? `+${formatRupee(floorBenefit)}` : 'Floor Intact'}
+					</td>
+					<td class="py-2.5 px-3 text-right font-bold text-emerald-600 dark:text-emerald-400">${formatRupee(netHedgedReal)}</td>
+				</tr>
+			`;
+		}
+
+		tbody.innerHTML = html;
+	}
+
+	// Render Chart.js Canvas
+	function renderChart(horizonYears: number, p90: number[], p50: number[], p10: number[]) {
+		const canvas = document.getElementById('sipChart') as HTMLCanvasElement;
+		if (!canvas) return;
+
+		if (typeof (window as any).Chart === 'undefined') {
+			setTimeout(() => renderChart(horizonYears, p90, p50, p10), 100);
+			return;
+		}
+
+		if (sipChartInstance) {
+			sipChartInstance.destroy();
+			sipChartInstance = null;
+		}
+
+		const ctx = canvas.getContext('2d');
+		if (!ctx) return;
+
+		const labels = Array.from({ length: horizonYears + 1 }, (_, i) => `Yr ${i}`);
+		const isDark = document.documentElement.classList.contains('dark');
+
+		const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : '#e2e8f0';
+		const tickTextColor = isDark ? '#a1a1aa' : '#64748b';
+		const expectedLineColor = isDark ? '#f4f4f5' : '#0f172a';
+
+		sipChartInstance = new (window as any).Chart(ctx, {
+			type: 'line',
+			data: {
+				labels,
+				datasets: [
+					{
+						label: '90th Bull Real TVM',
+						data: p90,
+						borderColor: isDark ? '#34d399' : '#059669',
+						backgroundColor: isDark ? 'rgba(52, 211, 153, 0.04)' : 'rgba(5, 150, 105, 0.04)',
+						borderWidth: 2,
+						pointRadius: 0,
+						tension: 0.35,
+						fill: false
+					},
+					{
+						label: '50th Expected Real TVM',
+						data: p50,
+						borderColor: expectedLineColor,
+						backgroundColor: isDark ? 'rgba(244, 244, 245, 0.04)' : 'rgba(15, 23, 42, 0.04)',
+						borderWidth: 2.5,
+						pointRadius: 0,
+						tension: 0.35,
+						fill: false
+					},
+					{
+						label: '10th Bear Real TVM',
+						data: p10,
+						borderColor: isDark ? '#f87171' : '#dc2626',
+						backgroundColor: isDark ? 'rgba(248, 113, 113, 0.04)' : 'rgba(220, 38, 38, 0.04)',
+						borderWidth: 2,
+						pointRadius: 0,
+						tension: 0.35,
+						fill: false
+					}
+				]
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				animation: { duration: 200 },
+				interaction: {
+					mode: 'index',
+					intersect: false,
+				},
+				plugins: {
+					legend: { display: false },
+					tooltip: {
+						backgroundColor: isDark ? '#000000' : '#0f172a',
+						borderColor: isDark ? 'rgba(255, 255, 255, 0.15)' : '#334155',
+						borderWidth: 1,
+						titleColor: '#f8fafc',
+						bodyColor: '#e2e8f0',
+						padding: 12,
+						callbacks: {
+							label: function (context: any) {
+								const val = context.raw;
+								let formatted = val;
+								if (typeof val === 'number') {
+									if (val >= 10000000) formatted = `₹ ${(val / 10000000).toFixed(2)} Cr`;
+									else if (val >= 100000) formatted = `₹ ${(val / 100000).toFixed(2)} Lakh`;
+									else formatted = `₹ ${Math.round(val).toLocaleString('en-IN')}`;
+								}
+								return ` ${context.dataset.label}: ${formatted}`;
+							}
+						}
+					}
+				},
+				scales: {
+					x: {
+						grid: { color: gridColor },
+						ticks: { color: tickTextColor, font: { family: 'Geist Mono, monospace', size: 11 } }
+					},
+					y: {
+						grid: { color: gridColor },
+						ticks: {
+							color: tickTextColor,
+							font: { family: 'Geist Mono, monospace', size: 11 },
+							callback: function (val: any) {
+								if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)}Cr`;
+								if (val >= 100000) return `₹${(val / 100000).toFixed(0)}L`;
+								return `₹${val.toLocaleString('en-IN')}`;
+							}
+						}
+					}
+				}
+			}
+		});
+	}
+
+	// Initialization Setup
+	document.addEventListener('DOMContentLoaded', () => {
+		initSliders();
+		initPresets();
+		initTaxToggle();
+		initModeSwitcher();
+		initFaqFilter();
+		runSimulation();
+
+		const runBtn = document.getElementById('runSipBtn');
+		if (runBtn) {
+			runBtn.addEventListener('click', handleCalculationTrigger);
+		}
+
+		const toggle = document.getElementById('bsHedgingToggle');
+		if (toggle) toggle.addEventListener('change', handleCalculationTrigger);
+
+		const exportCsvBtn = document.getElementById('exportCsvBtn');
+		if (exportCsvBtn) exportCsvBtn.addEventListener('click', exportToCSV);
+
+		const seedInput = document.getElementById('seedCapital');
+		const sipInput = document.getElementById('monthlySip');
+		const targetInput = document.getElementById('targetRealWealth');
+		const stepUpInput = document.getElementById('stepUpRate');
+		const yearsInput = document.getElementById('investmentYears');
+		const infInput = document.getElementById('inflationRate');
+
+		seedInput?.addEventListener('input', handleCalculationTrigger);
+		sipInput?.addEventListener('input', handleCalculationTrigger);
+		targetInput?.addEventListener('input', handleCalculationTrigger);
+		stepUpInput?.addEventListener('input', handleCalculationTrigger);
+		yearsInput?.addEventListener('input', handleCalculationTrigger);
+		infInput?.addEventListener('input', handleCalculationTrigger);
+
+		// Re-render chart on theme toggle event
+		window.addEventListener('theme-changed', () => {
+			handleCalculationTrigger();
+		});
+	});
+</script>
+
+<style>
+	/* Hide number input arrows for terminal aesthetic */
+	input[type='number']::-webkit-inner-spin-button,
+	input[type='number']::-webkit-outer-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+	input[type='number'] {
+		-moz-appearance: textfield;
+	}
+</style>

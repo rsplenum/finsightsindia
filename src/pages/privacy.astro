@@ -1,0 +1,62 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Privacy Policy — SWP Intelligence Engine" description="Privacy Policy for SWP Intelligence Engine including Google AdSense cookie disclaimers and opt-out instructions.">
+	<main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-slate-700 dark:text-zinc-300 space-y-6">
+		<div class="border-b border-slate-200 dark:border-white/10 pb-6 mb-8">
+			<h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-zinc-100">
+				Privacy Policy
+			</h1>
+			<p class="text-xs text-slate-400 dark:text-zinc-500 mt-2 font-mono">
+				Last Updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+			</p>
+		</div>
+
+		<section class="space-y-4">
+			<h2 class="text-xl font-semibold text-slate-900 dark:text-zinc-100">1. Overview</h2>
+			<p class="leading-relaxed">
+				At <strong>SWP Intelligence Engine</strong>, accessible from our primary domain, your privacy is one of our top priorities. This Privacy Policy document outlines the types of information that is collected and recorded by our platform and how we utilize it.
+			</p>
+		</section>
+
+		<section class="space-y-4">
+			<h2 class="text-xl font-semibold text-slate-900 dark:text-zinc-100">2. Google AdSense & Third-Party Cookies</h2>
+			<p class="leading-relaxed">
+				This site uses third-party vendors, including <strong>Google AdSense</strong>, which use cookies to serve ads based on a user's prior visits to this website or other websites across the Internet.
+			</p>
+			<ul class="list-disc pl-6 space-y-2">
+				<li>
+					Google's use of advertising cookies enables it and its partners to serve personalized advertisements to users based on their visit to our site and/or other sites on the Internet.
+				</li>
+				<li>
+					Users may opt out of personalized advertising by visiting 
+					<a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" class="text-indigo-600 dark:text-indigo-400 underline font-medium hover:text-indigo-800 dark:hover:text-indigo-300">
+						Google Ads Settings
+					</a>.
+				</li>
+				<li>
+					Alternatively, users can opt out of a third-party vendor's use of cookies for personalized advertising by visiting 
+					<a href="https://www.aboutads.info" target="_blank" rel="noopener noreferrer" class="text-indigo-600 dark:text-indigo-400 underline font-medium hover:text-indigo-800 dark:hover:text-indigo-300">
+						www.aboutads.info
+					</a>.
+				</li>
+			</ul>
+		</section>
+
+		<section class="space-y-4">
+			<h2 class="text-xl font-semibold text-slate-900 dark:text-zinc-100">3. Log Files & Client-Side Calculation Storage</h2>
+			<p class="leading-relaxed">
+				Our Systematic Withdrawal Plan (SWP) Monte Carlo engine runs 100% client-side inside your browser via HTML5 Web Workers. All numerical parameters you input (savings corpus, monthly withdrawal amount, expected returns, volatility, tax rates) are processed directly in your device's memory. We do not store or transmit your private financial parameters to remote servers.
+			</p>
+		</section>
+
+		<section class="space-y-4">
+			<h2 class="text-xl font-semibold text-slate-900 dark:text-zinc-100">4. Contact Information</h2>
+			<p class="leading-relaxed">
+				If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us at 
+				<a href="/contact" class="text-indigo-600 dark:text-indigo-400 underline font-medium">our Contact Page</a> or via email at <code class="bg-slate-100 dark:bg-zinc-900 px-2 py-1 rounded text-slate-800 dark:text-zinc-200">support@swpplanner.com</code>.
+			</p>
+		</section>
+	</main>
+</Layout>
