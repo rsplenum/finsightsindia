@@ -24,8 +24,7 @@ const {
 		<title>{title}</title>
 		<meta name="description" content={description} />
 
-		<!-- Google AdSense Script Placeholder -->
-		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+		<!-- Google AdSense Script Placeholder removed -->
 
 		<!-- Prevent Flash of Unstyled Theme -->
 		<script is:inline>
@@ -46,8 +45,7 @@ const {
 			window.localStorage.setItem('theme', theme);
 		</script>
 
-		<!-- Chart.js CDN -->
-		<script is:inline src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<!-- Chart.js moved to dynamic import -->
 	</head>
 	<body class="bg-white text-slate-900 dark:bg-black dark:text-zinc-100 min-h-screen font-sans flex flex-col selection:bg-slate-900 selection:text-white dark:selection:bg-white dark:selection:text-black antialiased transition-colors duration-200">
 		

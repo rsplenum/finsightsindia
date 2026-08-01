@@ -595,6 +595,9 @@ import Layout from '../layouts/Layout.astro';
 		maximumFractionDigits: 0 
 	});
 
+	// Debounce helper
+	function debounce(fn: any, ms = 300) { let t: any; return (...a: any[]) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+
 	// Client-side JavaScript with Natural Proportional Column Spacing (No Artificial Gap Stretching)
 	let worker: Worker | null = null;
 	let chartInstance: any = null;
@@ -717,13 +720,13 @@ import Layout from '../layouts/Layout.astro';
 			}
 		});
 
-		inputEl.addEventListener('input', updateFn);
+		inputEl.addEventListener('input', debounce(updateFn));
 	}
 
 	// Web Worker Initialization
 	function initWorker() {
 		if (window.Worker) {
-			worker = new Worker('/worker.js');
+			worker = new Worker(new URL('../workers/swpWorker.ts', import.meta.url), { type: 'module' });
 
 			worker.onmessage = function (e: MessageEvent) {
 				lastWorkerResponse = e.data;
@@ -875,7 +878,7 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	// Render Interactive Micro-Chart (Paycheck Growth vs Savings Balance)
-	function renderMicroCashflowChart(data: any) {
+	async function renderMicroCashflowChart(data: any) {
 		const canvas = document.getElementById('cashflowMicroChart') as HTMLCanvasElement;
 		if (!canvas) return;
 
@@ -886,6 +889,8 @@ import Layout from '../layouts/Layout.astro';
 
 		const ctx = canvas.getContext('2d');
 		if (!ctx) return;
+
+		const { Chart } = await import('chart.js/auto');
 
 		const initialMonthly = parseRawNumber((document.getElementById('monthlyWithdrawal') as HTMLInputElement)?.value || 50000);
 		const expectedInflation = parseFloat((document.getElementById('expectedInflation') as HTMLInputElement)?.value || '6');
@@ -930,7 +935,7 @@ import Layout from '../layouts/Layout.astro';
 		const isDark = document.documentElement.classList.contains('dark');
 		const tickColor = isDark ? '#94a3b8' : '#64748b';
 
-		microChartInstance = new (window as any).Chart(ctx, {
+		microChartInstance = new Chart(ctx, {
 			type: 'line',
 			data: {
 				labels,
@@ -1343,7 +1348,7 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	// Render Dynamic Light/Dark Theme Adaptable Chart.js Line Chart with Friendly Labels
-	function renderConsumerChart(data: any) {
+	async function renderConsumerChart(data: any) {
 		const canvas = document.getElementById('swpChart') as HTMLCanvasElement;
 		if (!canvas) return;
 
@@ -1354,6 +1359,8 @@ import Layout from '../layouts/Layout.astro';
 
 		const ctx = canvas.getContext('2d');
 		if (!ctx) return;
+
+		const { Chart } = await import('chart.js/auto');
 
 		const labels = data.years.map((y: number) => `Year ${y}`);
 		const isDark = document.documentElement.classList.contains('dark');
@@ -1416,7 +1423,7 @@ import Layout from '../layouts/Layout.astro';
 			}));
 		}
 
-		chartInstance = new (window as any).Chart(ctx, {
+		chartInstance = new Chart(ctx, {
 			type: 'line',
 			data: {
 				labels,

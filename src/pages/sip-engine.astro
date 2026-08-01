@@ -769,12 +769,27 @@ import Layout from '../layouts/Layout.astro';
 	let isPostTax = false;
 	let isReverseGoalSeek = false;
 
-	function getRandomNormal() {
-		let u1 = 0, u2 = 0;
-		while (u1 === 0) u1 = Math.random();
-		while (u2 === 0) u2 = Math.random();
-		return Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+	let sipWorker: Worker | null = null;
+	if (typeof window !== 'undefined' && window.Worker) {
+		sipWorker = new Worker(new URL('../workers/sipWorker.ts', import.meta.url), { type: 'module' });
 	}
+
+	function runWorkerTask(type: string, params: any): Promise<any> {
+		return new Promise((resolve) => {
+			if (!sipWorker) return resolve(null);
+			const handler = (e: MessageEvent) => {
+				if (e.data.type === type + '_RESULT') {
+					sipWorker?.removeEventListener('message', handler);
+					resolve(e.data.result);
+				}
+			};
+			sipWorker.addEventListener('message', handler);
+			sipWorker.postMessage({ type, params });
+		});
+	}
+
+	function debounce(fn: Function, ms = 300) { let t: any; return (...a: any) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+
 
 	function parseNum(id: string, defaultVal: number): number {
 		const el = document.getElementById(id) as HTMLInputElement;
@@ -839,7 +854,11 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	// Clean Goal-Seek Engine (250-path Binary Search)
-	function runGoalSeek() {
+	async function runGoalSeek() {
+		const btnText = document.querySelector('#runSipBtn span') as HTMLElement;
+		const originalText = btnText ? btnText.innerText : '';
+		if (btnText) btnText.innerText = 'CALCULATING...';
+
 		const targetRealWealth = parseNum('targetRealWealth', 50000000);
 		const seedCapital = parseNum('seedCapital', 0);
 		const stepUpRate = parseNum('stepUpRate', 0) / 100;
@@ -853,74 +872,19 @@ import Layout from '../layouts/Layout.astro';
 		const bsToggle = document.getElementById('bsHedgingToggle') as HTMLInputElement;
 		const bsEnabled = bsToggle ? bsToggle.checked : false;
 		const annualHedgingDragCost = bsEnabled ? (0.0185 * eqPct) : 0;
-		const monthlyFloor = -0.08 / 12;
-		const sqrt12 = Math.sqrt(12);
 
-		const eqDrift = (0.12 - 0.5 * 0.15 * 0.15) / 12;
-		const debtDrift = (0.071 - 0.5 * 0.02 * 0.02) / 12;
-		const goldDrift = (0.085 - 0.5 * 0.10 * 0.10) / 12;
+		const reqSip = await runWorkerTask('GOAL_SEEK', {
+			targetRealWealth, seedCapital, stepUpRate, horizonYears, inflationRate,
+			eqPct, debtPct, goldPct, bsEnabled, annualHedgingDragCost, isPostTax
+		});
 
-		let lowSip = 0;
-		let highSip = 10000000;
-		const numMiniSims = 250;
-
-		while (highSip - lowSip > 100) {
-			let midSip = (lowSip + highSip) / 2;
-			const finalRealValues = new Float64Array(numMiniSims);
-
-			let totalInvested = seedCapital;
-			let projectedSip = midSip;
-			let globalMonth = 0;
-			for (let yr = 1; yr <= horizonYears; yr++) {
-				if (yr > 1) { projectedSip = projectedSip * (1 + stepUpRate); }
-				for (let m = 1; m <= 12; m++) {
-					globalMonth++;
-					totalInvested += projectedSip / Math.pow(1 + inflationRate, globalMonth / 12);
-				}
-			}
-
-			for (let s = 0; s < numMiniSims; s++) {
-				let portBal = seedCapital;
-				let currentSip = midSip;
-				for (let yr = 1; yr <= horizonYears; yr++) {
-					if (yr > 1) { currentSip = currentSip * (1 + stepUpRate); }
-					for (let m = 1; m <= 12; m++) {
-						portBal += currentSip;
-
-						let rEqM = Math.exp(eqDrift + (0.15 / sqrt12) * getRandomNormal()) - 1;
-						if (bsEnabled) { rEqM = Math.max(monthlyFloor, rEqM) - (annualHedgingDragCost / 12); }
-						
-						const rDebtM = Math.exp(debtDrift + (0.02 / sqrt12) * getRandomNormal()) - 1;
-						const rGoldM = Math.exp(goldDrift + (0.10 / sqrt12) * getRandomNormal()) - 1;
-						
-						const portReturn = (eqPct * rEqM) + (debtPct * rDebtM) + (goldPct * rGoldM);
-						portBal = portBal * (1 + portReturn);
-					}
-				}
-				let realWealth = portBal / Math.pow(1 + inflationRate, horizonYears);
-				if (isPostTax) {
-					realWealth = realWealth - Math.max(0, (realWealth - totalInvested - 125000) * 0.125);
-				}
-				finalRealValues[s] = Math.max(0, realWealth);
-			}
-
-			finalRealValues.sort();
-			const medianRealWealth = finalRealValues[Math.floor(numMiniSims * 0.50)];
-
-			if (medianRealWealth < targetRealWealth) {
-				lowSip = midSip;
-			} else {
-				highSip = midSip;
-			}
-		}
-
-		const requiredSip = Math.round((lowSip + highSip) / 2);
 		const reqCardVal = document.getElementById('valRequiredSip');
-		if (reqCardVal) reqCardVal.innerText = `${formatRupee(requiredSip)} / Month`;
+		if (reqCardVal) reqCardVal.innerText = `${formatRupee(reqSip)} / Month`;
 
 		const sipInput = document.getElementById('monthlySip') as HTMLInputElement;
-		if (sipInput) sipInput.value = requiredSip.toString();
+		if (sipInput) sipInput.value = reqSip.toString();
 
+		if (btnText) btnText.innerText = originalText;
 		runSimulation();
 	}
 
@@ -1112,7 +1076,11 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	// Core Quant Simulation Engine
-	function runSimulation() {
+	async function runSimulation() {
+		const btnText = document.querySelector('#runSipBtn span') as HTMLElement;
+		const originalText = btnText ? btnText.innerText : '';
+		if (btnText) btnText.innerText = 'SIMULATING...';
+
 		const seedCapital = parseNum('seedCapital', 0);
 		const monthlySip = parseNum('monthlySip', 25000);
 		const stepUpRate = parseNum('stepUpRate', 0) / 100;
@@ -1127,75 +1095,16 @@ import Layout from '../layouts/Layout.astro';
 		const bsEnabled = bsToggle ? bsToggle.checked : false;
 
 		const annualHedgingDragCost = 0.0185 * eqPct;
-		const numSims = 2000;
-		const sqrt12 = Math.sqrt(12);
 
-		// Calculate Present Value of Outflows (seed capital at t=0 + monthly SIPs with annual step-up)
-		let realOutflowPV = seedCapital;
-		let projectedSip = monthlySip;
-		let globalMonthCounter = 0;
-		for (let yr = 1; yr <= horizonYears; yr++) {
-			if (yr > 1) { projectedSip = projectedSip * (1 + stepUpRate); }
-			for (let m = 1; m <= 12; m++) {
-				globalMonthCounter++;
-				realOutflowPV += projectedSip / Math.pow(1 + inflationRate, globalMonthCounter / 12);
-			}
-		}
+		const simResult = await runWorkerTask('SIMULATE', {
+			seedCapital, monthlySip, stepUpRate, horizonYears, inflationRate,
+			eqPct, debtPct, goldPct, bsEnabled, annualHedgingDragCost
+		});
 
-		// Monthly Stochastic Simulation Loop
-		const yearlyPathsNominal = Array.from({ length: horizonYears + 1 }, () => new Float64Array(numSims));
+		if (btnText) btnText.innerText = originalText;
+		if (!simResult) return;
 
-		for (let s = 0; s < numSims; s++) {
-			let portBal = seedCapital;
-			let currentSip = monthlySip;
-
-			for (let yr = 1; yr <= horizonYears; yr++) {
-				if (yr > 1) { currentSip = currentSip * (1 + stepUpRate); }
-
-				for (let m = 1; m <= 12; m++) {
-					portBal += currentSip;
-
-					// Geometric Brownian Motion lognormal monthly returns (exact CAGR drift)
-					const eqDrift = (0.12 - 0.5 * 0.15 * 0.15) / 12;
-					const eqVol = (0.15 / sqrt12) * getRandomNormal();
-					let rEqM = Math.exp(eqDrift + eqVol) - 1;
-
-					if (bsEnabled) {
-						const monthlyFloor = -0.08 / 12;
-						rEqM = Math.max(monthlyFloor, rEqM) - (annualHedgingDragCost / 12);
-					}
-
-					const debtDrift = (0.071 - 0.5 * 0.02 * 0.02) / 12;
-					const debtVol = (0.02 / sqrt12) * getRandomNormal();
-					const rDebtM = Math.exp(debtDrift + debtVol) - 1;
-
-					const goldDrift = (0.085 - 0.5 * 0.10 * 0.10) / 12;
-					const goldVol = (0.10 / sqrt12) * getRandomNormal();
-					const rGoldM = Math.exp(goldDrift + goldVol) - 1;
-
-					const portMonthlyReturn = (eqPct * rEqM) + (debtPct * rDebtM) + (goldPct * rGoldM);
-					portBal = portBal * (1 + portMonthlyReturn);
-				}
-
-				yearlyPathsNominal[yr][s] = Math.max(0, portBal);
-			}
-		}
-
-		// Percentiles (Real TVM)
-		const p90Real = [], p50Real = [], p10Real = [];
-
-		for (let yr = 0; yr <= horizonYears; yr++) {
-			const sorted = Array.from(yearlyPathsNominal[yr]).sort((a, b) => a - b);
-			const nom10 = sorted[Math.floor(numSims * 0.10)] || 0;
-			const nom50 = sorted[Math.floor(numSims * 0.50)] || 0;
-			const nom90 = sorted[Math.floor(numSims * 0.90)] || 0;
-
-			const discount = Math.pow(1 + inflationRate, yr);
-
-			p10Real.push(Math.round(nom10 / discount));
-			p50Real.push(Math.round(nom50 / discount));
-			p90Real.push(Math.round(nom90 / discount));
-		}
+		const { p90Real, p50Real, p10Real, realOutflowPV, expectedNominalMedian } = simResult;
 
 		// Update UI Stats
 		const sacrificePVEl = document.getElementById('valSacrificePV');
@@ -1228,8 +1137,7 @@ import Layout from '../layouts/Layout.astro';
 		if (elBarSacrifice) elBarSacrifice.style.width = `${pctSacrificed}%`;
 		if (elBarCreated) elBarCreated.style.width = `${pctCreated}%`;
 
-		const sortedFinalNominal = Array.from(yearlyPathsNominal[horizonYears]).sort((a, b) => a - b);
-		const expectedNominalMedian = sortedFinalNominal[Math.floor(numSims * 0.50)] || 0;
+		if (elBarCreated) elBarCreated.style.width = `${pctCreated}%`;
 
 		const nominalEquivalentEl = document.getElementById('statNominalEquivalent');
 		if (nominalEquivalentEl) nominalEquivalentEl.innerText = `Nominal Equivalent: ${formatRupee(expectedNominalMedian)}`;
@@ -1358,14 +1266,11 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	// Render Chart.js Canvas
-	function renderChart(horizonYears: number, p90: number[], p50: number[], p10: number[]) {
+	async function renderChart(horizonYears: number, p90: number[], p50: number[], p10: number[]) {
 		const canvas = document.getElementById('sipChart') as HTMLCanvasElement;
 		if (!canvas) return;
 
-		if (typeof (window as any).Chart === 'undefined') {
-			setTimeout(() => renderChart(horizonYears, p90, p50, p10), 100);
-			return;
-		}
+		const { Chart } = await import('chart.js/auto');
 
 		if (sipChartInstance) {
 			sipChartInstance.destroy();
@@ -1382,7 +1287,7 @@ import Layout from '../layouts/Layout.astro';
 		const tickTextColor = isDark ? '#a1a1aa' : '#64748b';
 		const expectedLineColor = isDark ? '#f4f4f5' : '#0f172a';
 
-		sipChartInstance = new (window as any).Chart(ctx, {
+		sipChartInstance = new Chart(ctx, {
 			type: 'line',
 			data: {
 				labels,
@@ -1481,13 +1386,15 @@ import Layout from '../layouts/Layout.astro';
 		initFaqFilter();
 		runSimulation();
 
+		const debouncedHandleCalculationTrigger = debounce(handleCalculationTrigger, 300);
+
 		const runBtn = document.getElementById('runSipBtn');
 		if (runBtn) {
-			runBtn.addEventListener('click', handleCalculationTrigger);
+			runBtn.addEventListener('click', debouncedHandleCalculationTrigger);
 		}
 
 		const toggle = document.getElementById('bsHedgingToggle');
-		if (toggle) toggle.addEventListener('change', handleCalculationTrigger);
+		if (toggle) toggle.addEventListener('change', debouncedHandleCalculationTrigger);
 
 		const exportCsvBtn = document.getElementById('exportCsvBtn');
 		if (exportCsvBtn) exportCsvBtn.addEventListener('click', exportToCSV);
@@ -1499,16 +1406,16 @@ import Layout from '../layouts/Layout.astro';
 		const yearsInput = document.getElementById('investmentYears');
 		const infInput = document.getElementById('inflationRate');
 
-		seedInput?.addEventListener('input', handleCalculationTrigger);
-		sipInput?.addEventListener('input', handleCalculationTrigger);
-		targetInput?.addEventListener('input', handleCalculationTrigger);
-		stepUpInput?.addEventListener('input', handleCalculationTrigger);
-		yearsInput?.addEventListener('input', handleCalculationTrigger);
-		infInput?.addEventListener('input', handleCalculationTrigger);
+		seedInput?.addEventListener('input', debouncedHandleCalculationTrigger);
+		sipInput?.addEventListener('input', debouncedHandleCalculationTrigger);
+		targetInput?.addEventListener('input', debouncedHandleCalculationTrigger);
+		stepUpInput?.addEventListener('input', debouncedHandleCalculationTrigger);
+		yearsInput?.addEventListener('input', debouncedHandleCalculationTrigger);
+		infInput?.addEventListener('input', debouncedHandleCalculationTrigger);
 
 		// Re-render chart on theme toggle event
 		window.addEventListener('theme-changed', () => {
-			handleCalculationTrigger();
+			debouncedHandleCalculationTrigger();
 		});
 	});
 </script>
