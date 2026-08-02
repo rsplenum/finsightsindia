@@ -70,7 +70,7 @@ const articlesList = allArticles;
 
 						<div class="space-y-3 pt-3 border-t border-navy-200 dark:border-navy-800">
 							<a 
-								href={`/direct-tax/${art.id}`} 
+								href={`/tax-code/${art.id}`} 
 								class="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-md btn-gold text-center text-xs mt-2"
 							>
 								Read Full Interactive Whitepaper →
@@ -85,57 +85,3 @@ const articlesList = allArticles;
 	</main>
 </Layout>
 
-<script>
-	import { calculateIndiaTaxEngine } from '../utils/tax.js';
-	import { parseFormattedNumber, tableFormatter, setupFormattingField } from '../utils/formatters.js';
-
-	function formatRupee(val: number): string {
-		if (isNaN(val)) return '₹0';
-		return `₹${tableFormatter.format(Math.round(val))}`;
-	}
-
-	function calculateIndiaTax() {
-		const grossSalary = parseFormattedNumber((document.getElementById('inIndiaSalary') as HTMLInputElement)?.value || '1500000');
-		const userDeductions = parseFormattedNumber((document.getElementById('inIndiaDeductions') as HTMLInputElement)?.value || '250000');
-
-		const oldDedText = document.getElementById('valOldDeductionsText');
-		if (oldDedText) oldDedText.innerText = formatRupee(userDeductions);
-
-		const result = calculateIndiaTaxEngine(grossSalary, userDeductions);
-
-		// Update UI DOM
-		const newTaxEl = document.getElementById('valNewTax');
-		const oldTaxEl = document.getElementById('valOldTax');
-		const newEffEl = document.getElementById('valNewEffectiveRate');
-		const oldEffEl = document.getElementById('valOldEffectiveRate');
-		const badgeEl = document.getElementById('indiaSavingsBadge');
-
-		if (newTaxEl) newTaxEl.innerText = formatRupee(result.newTax);
-		if (oldTaxEl) oldTaxEl.innerText = formatRupee(result.oldTax);
-
-		if (newEffEl) newEffEl.innerText = `Effective Rate: ${result.newEffectiveRate}%`;
-		if (oldEffEl) oldEffEl.innerText = `Effective Rate: ${result.oldEffectiveRate}%`;
-
-		if (badgeEl) {
-			if (result.isNewBetter) {
-				badgeEl.innerText = `New Regime Saves ${formatRupee(result.savingsAmount)}`;
-				badgeEl.className = "badge-safe px-3 py-1.5 text-[10px] font-bold self-start sm:self-auto";
-			} else if (result.isOldBetter) {
-				badgeEl.innerText = `Old Regime Saves ${formatRupee(result.savingsAmount)}`;
-				badgeEl.className = "badge-warning px-3 py-1.5 text-[10px] font-bold self-start sm:self-auto";
-			} else {
-				badgeEl.innerText = "Both Regimes Equal Tax";
-				badgeEl.className = "px-3 py-1.5 text-[10px] font-bold self-start sm:self-auto rounded bg-navy-200 dark:bg-navy-800 text-navy-600 dark:text-navy-400 border border-navy-300 dark:border-white/10 uppercase tracking-widest";
-			}
-		}
-	}
-
-	document.addEventListener('DOMContentLoaded', () => {
-		['inIndiaSalary', 'inIndiaDeductions'].forEach(id => {
-			const el = document.getElementById(id);
-			if (el) setupFormattingField(el as HTMLInputElement, calculateIndiaTax);
-		});
-
-		calculateIndiaTax();
-	});
-</script>

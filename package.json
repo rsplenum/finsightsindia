@@ -9,7 +9,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "integrity:snapshot": "node scripts/verify-integrity.js snapshot",
+    "integrity:verify": "node scripts/verify-integrity.js verify"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.5",
