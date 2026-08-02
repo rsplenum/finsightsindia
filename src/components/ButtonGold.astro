@@ -1,0 +1,15 @@
+---
+export interface Props {
+	id?: string;
+	type?: "button" | "submit" | "reset";
+	class?: string;
+}
+const { id, type = "button", class: className = '' } = Astro.props;
+---
+<button
+	id={id}
+	type={type}
+	class={`btn-gold w-full text-center flex items-center justify-center gap-2 ${className}`}
+>
+	<slot />
+</button>

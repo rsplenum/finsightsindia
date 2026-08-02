@@ -1,0 +1,134 @@
+---
+import InputGroup from '../InputGroup.astro';
+
+interface Props {
+  defaultGrossReceipts?: number;
+  instruction?: string;
+}
+
+const { 
+  defaultGrossReceipts = 4000000, 
+  instruction = 'Enter your total freelance gross receipts (foreign and domestic) below to simulate your Section 44ADA presumptive tax vs normal accounting.' 
+} = Astro.props;
+---
+
+<div class="p-6 bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-xl space-y-6 shadow-sm my-8 not-prose">
+	<p class="text-xs text-navy-600 dark:text-navy-400 font-sans">
+		{instruction}
+	</p>
+
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+		<InputGroup 
+			id="wbFreelanceGross"
+			label="Total Gross Receipts (Turnover)"
+			tooltip="Total invoiced amount before any expenses. Limit for Sec 44ADA is ₹75 Lakhs."
+			prefix="₹"
+			suffix="Gross"
+			value={defaultGrossReceipts.toString()}
+		/>
+        <InputGroup 
+			id="wbActualExpenses"
+			label="Estimated Actual Expenses"
+			tooltip="Software, servers, internet, coworking space, etc."
+			prefix="₹"
+			suffix="Expenses"
+			value={(defaultGrossReceipts * 0.1).toString()}
+		/>
+	</div>
+
+	<!-- Workbench Live Results Display -->
+	<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-navy-200 dark:border-navy-800">
+		<div class="p-4 bg-white dark:bg-navy-950 rounded-lg border border-emerald-500/30 space-y-2">
+			<div class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">SEC 44ADA (PRESUMPTIVE)</div>
+            <div class="flex justify-between text-xs text-navy-600 dark:text-navy-400">
+                <span>Presumed Profit (50%):</span>
+                <span id="wb44adaProfit" class="font-bold">₹0</span>
+            </div>
+			<div class="pt-2 border-t border-navy-100 dark:border-navy-800">
+                <div class="text-[10px] font-bold text-navy-500 dark:text-navy-400 uppercase">Estimated Tax</div>
+                <div id="wb44adaTax" class="text-2xl font-black text-navy-900 dark:text-navy-100">₹ 0</div>
+            </div>
+		</div>
+
+		<div class="p-4 bg-white dark:bg-navy-950 rounded-lg border border-navy-200 dark:border-navy-800 space-y-2">
+			<div class="text-[10px] font-bold text-navy-500 dark:text-navy-400 uppercase tracking-widest">NORMAL ACCOUNTING (ITR-3)</div>
+            <div class="flex justify-between text-xs text-navy-600 dark:text-navy-400">
+                <span>Actual Profit:</span>
+                <span id="wbNormalProfit" class="font-bold">₹0</span>
+            </div>
+			<div class="pt-2 border-t border-navy-100 dark:border-navy-800">
+                <div class="text-[10px] font-bold text-navy-500 dark:text-navy-400 uppercase">Estimated Tax</div>
+                <div id="wbNormalTax" class="text-2xl font-bold text-navy-900 dark:text-navy-100">₹ 0</div>
+            </div>
+		</div>
+	</div>
+
+	<div id="wbRecommendation" class="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-xs font-bold text-emerald-700 dark:text-emerald-400 text-center tracking-wide">
+		Calculating simulation...
+	</div>
+</div>
+
+<script>
+	import { calculateIndiaTaxEngine } from '../../utils/tax.js';
+	import { parseFormattedNumber, tableFormatter, setupFormattingField } from '../../utils/formatters.js';
+
+	function formatRupee(val: number): string {
+		if (isNaN(val)) return '₹0';
+		return `₹${tableFormatter.format(Math.round(val))}`;
+	}
+
+	function runFreelanceCalc() {
+		const gross = parseFormattedNumber((document.getElementById('wbFreelanceGross') as HTMLInputElement)?.value || '0');
+		const expenses = parseFormattedNumber((document.getElementById('wbActualExpenses') as HTMLInputElement)?.value || '0');
+
+        // Sec 44ADA Calculation
+        const profit44ADA = gross * 0.5;
+        // Normal Calculation
+        const normalProfit = Math.max(0, gross - expenses);
+
+        // We use the New Regime (0 deductions) for simple comparison on the profit
+		const result44ADA = calculateIndiaTaxEngine(profit44ADA, 0);
+        const resultNormal = calculateIndiaTaxEngine(normalProfit, 0);
+
+        const el44adaProfit = document.getElementById('wb44adaProfit');
+        const el44adaTax = document.getElementById('wb44adaTax');
+        const elNormalProfit = document.getElementById('wbNormalProfit');
+        const elNormalTax = document.getElementById('wbNormalTax');
+		const recEl = document.getElementById('wbRecommendation');
+
+        if (elNormalProfit) elNormalProfit.innerText = formatRupee(normalProfit);
+        if (elNormalTax) elNormalTax.innerText = formatRupee(resultNormal.newTax);
+
+        if (gross > 7500000) {
+            if (el44adaProfit) el44adaProfit.innerText = 'N/A';
+            if (el44adaTax) el44adaTax.innerText = 'N/A (Ineligible)';
+            if (recEl) {
+                recEl.className = "p-4 bg-rose-500/10 border border-rose-500/20 rounded-lg text-xs font-bold text-rose-700 dark:text-rose-400 text-center tracking-wide";
+                recEl.innerText = "⚠️ Limit Exceeded: Gross receipts exceed ₹75 Lakhs limit. You MUST maintain normal accounting books and undergo tax audit.";
+            }
+        } else {
+            if (el44adaProfit) el44adaProfit.innerText = formatRupee(profit44ADA);
+            if (el44adaTax) el44adaTax.innerText = formatRupee(result44ADA.newTax);
+
+            if (recEl) {
+                if (result44ADA.newTax <= resultNormal.newTax) {
+                    recEl.className = "p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-xs font-bold text-emerald-700 dark:text-emerald-400 text-center tracking-wide";
+                    recEl.innerText = `💡 Section 44ADA is optimal! You pay less tax and avoid maintaining complex accounting books.`;
+                } else {
+                    recEl.className = "p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-xs font-bold text-emerald-700 dark:text-emerald-400 text-center tracking-wide";
+                    recEl.innerText = `💡 Normal Accounting is optimal! Because your actual expenses are very high (>50%), you should file ITR-3 and maintain books to save ${formatRupee(result44ADA.newTax - resultNormal.newTax)} in tax.`;
+                }
+            }
+        }
+	}
+
+	document.addEventListener('DOMContentLoaded', () => {
+		['wbFreelanceGross', 'wbActualExpenses'].forEach(id => {
+			const el = document.getElementById(id);
+			if (el) setupFormattingField(el as HTMLInputElement, runFreelanceCalc);
+		});
+
+		const elInit = document.getElementById('wbFreelanceGross');
+		if(elInit) runFreelanceCalc();
+	});
+</script>

@@ -1,0 +1,22 @@
+---
+export interface Props {
+	label: string;
+	id?: string;
+	value?: string;
+	valueClass?: string;
+	last?: boolean;
+}
+
+const { 
+	label, 
+	id, 
+	value, 
+	valueClass = "text-sm font-bold text-navy-900 dark:text-navy-100 font-mono", 
+	last = false 
+} = Astro.props;
+---
+
+<div class={`flex justify-between items-baseline py-2.5 ${!last ? 'border-b border-navy-100 dark:border-navy-800/50' : ''}`}>
+	<span class="text-sm text-navy-500 dark:text-navy-400">{label}</span>
+	<span class={valueClass} id={id}>{value}</span>
+</div>

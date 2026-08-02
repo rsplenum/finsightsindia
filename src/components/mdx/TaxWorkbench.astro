@@ -1,0 +1,112 @@
+---
+import InputGroup from '../InputGroup.astro';
+
+interface Props {
+  defaultSalary?: number;
+  defaultDeductions?: number;
+  instruction?: string;
+}
+
+const { 
+  defaultSalary = 1500000, 
+  defaultDeductions = 250000, 
+  instruction = 'Plug in your exact Gross Salary and total Old Regime deductions below to run a real-time mathematical simulation.' 
+} = Astro.props;
+---
+
+<div class="p-6 bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-xl space-y-6 shadow-sm my-8 not-prose">
+	<p class="text-xs text-navy-600 dark:text-navy-400 font-sans">
+		{instruction}
+	</p>
+
+	<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+		<InputGroup 
+			id="wbSalary"
+			label="Gross Annual Salary"
+			tooltip="Total pre-tax income for the year."
+			prefix="₹"
+			suffix="Gross Salary"
+			value={defaultSalary.toString()}
+		/>
+		<InputGroup 
+			id="wbDeductions"
+			label="Total Old Regime Deductions"
+			tooltip="Combine 80C, 80D, HRA, and Home Loan interest."
+			prefix="₹"
+			suffix="Deductions"
+			value={defaultDeductions.toString()}
+		/>
+	</div>
+
+	<!-- Workbench Live Results Display -->
+	<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-navy-200 dark:border-navy-800">
+		<div class="p-4 bg-white dark:bg-navy-950 rounded-lg border border-emerald-500/30 space-y-1">
+			<div class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">NEW TAX REGIME LIABILITY</div>
+			<div id="wbResultNew" class="text-2xl font-black text-navy-900 dark:text-navy-100">₹ 0</div>
+			<div id="wbResultNewRate" class="text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400 mt-2">Effective: 0.0%</div>
+		</div>
+
+		<div class="p-4 bg-white dark:bg-navy-950 rounded-lg border border-navy-200 dark:border-navy-800 space-y-1">
+			<div class="text-[10px] font-bold text-navy-500 dark:text-navy-400 uppercase tracking-widest">OLD TAX REGIME LIABILITY</div>
+			<div id="wbResultOld" class="text-2xl font-bold text-navy-900 dark:text-navy-100">₹ 0</div>
+			<div id="wbResultOldRate" class="text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400 mt-2">Effective: 0.0%</div>
+		</div>
+	</div>
+
+	<div id="wbRecommendation" class="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-xs font-bold text-emerald-700 dark:text-emerald-400 text-center tracking-wide">
+		Calculating live simulation...
+	</div>
+</div>
+
+<script>
+	import { calculateIndiaTaxEngine } from '../../utils/tax.js';
+	import { parseFormattedNumber, tableFormatter, setupFormattingField } from '../../utils/formatters.js';
+
+	function formatRupee(val: number): string {
+		if (isNaN(val)) return '₹0';
+		return `₹${tableFormatter.format(Math.round(val))}`;
+	}
+
+	function runWorkbenchCalc() {
+		const grossSalary = parseFormattedNumber((document.getElementById('wbSalary') as HTMLInputElement)?.value || '0');
+		const userDeductions = parseFormattedNumber((document.getElementById('wbDeductions') as HTMLInputElement)?.value || '0');
+
+		const result = calculateIndiaTaxEngine(grossSalary, userDeductions);
+
+		const resNewEl = document.getElementById('wbResultNew');
+		const resOldEl = document.getElementById('wbResultOld');
+		const resNewRateEl = document.getElementById('wbResultNewRate');
+		const resOldRateEl = document.getElementById('wbResultOldRate');
+		const recEl = document.getElementById('wbRecommendation');
+
+		if (resNewEl) resNewEl.innerText = formatRupee(result.newTax);
+		if (resOldEl) resOldEl.innerText = formatRupee(result.oldTax);
+
+		if (resNewRateEl) resNewRateEl.innerText = `Effective Rate: ${result.newEffectiveRate}%`;
+		if (resOldRateEl) resOldRateEl.innerText = `Effective Rate: ${result.oldEffectiveRate}%`;
+
+		if (recEl) {
+			if (result.isNewBetter) {
+				recEl.innerText = `💡 Simulation Result: New Tax Regime is mathematically optimal! You save ${formatRupee(result.savingsAmount)} annually.`;
+			} else if (result.isOldBetter) {
+				recEl.innerText = `💡 Simulation Result: Old Tax Regime is mathematically optimal! You save ${formatRupee(result.savingsAmount)} annually.`;
+			} else {
+				recEl.innerText = `💡 Simulation Result: Both regimes result in identical tax liability.`;
+			}
+		}
+	}
+
+	// Because Astro components might be used multiple times on a page, 
+    // it's safer to scope event listeners or use querySelectorAll, but given this is ID-based,
+    // we assume one workbench per article for now.
+	document.addEventListener('DOMContentLoaded', () => {
+		['wbSalary', 'wbDeductions'].forEach(id => {
+			const el = document.getElementById(id);
+			if (el) setupFormattingField(el as HTMLInputElement, runWorkbenchCalc);
+		});
+
+		// Trigger initial calculation
+		const elSalary = document.getElementById('wbSalary');
+		if(elSalary) runWorkbenchCalc();
+	});
+</script>

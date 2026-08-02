@@ -1,0 +1,115 @@
+---
+import InputGroup from '../InputGroup.astro';
+
+interface Props {
+  defaultSalePrice?: number;
+  defaultPurchasePrice?: number;
+  instruction?: string;
+}
+
+const { 
+  defaultSalePrice = 10000000, 
+  defaultPurchasePrice = 5000000, 
+  instruction = 'Calculate your Capital Gains Tax on property or equity sold under the new July 2024 tax rules.' 
+} = Astro.props;
+---
+
+<div class="p-6 bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-xl space-y-6 shadow-sm my-8 not-prose">
+	<p class="text-xs text-navy-600 dark:text-navy-400 font-sans">
+		{instruction}
+	</p>
+
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+		<InputGroup 
+			id="wbSalePrice"
+			label="Total Sale Value (Consideration)"
+			tooltip="The final price at which the asset was sold."
+			prefix="₹"
+			value={defaultSalePrice.toString()}
+		/>
+        <InputGroup 
+			id="wbPurchasePrice"
+			label="Original Purchase Price"
+			tooltip="The price at which you acquired the asset."
+			prefix="₹"
+			value={defaultPurchasePrice.toString()}
+		/>
+	</div>
+
+	<!-- Workbench Live Results Display -->
+	<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-navy-200 dark:border-navy-800">
+		
+        <div class="p-4 bg-white dark:bg-navy-950 rounded-lg border border-navy-200 dark:border-navy-800 space-y-1">
+			<div class="text-[10px] font-bold text-navy-500 dark:text-navy-400 uppercase tracking-widest">GROSS CAPITAL GAIN</div>
+			<div id="wbGrossGain" class="text-xl font-bold text-navy-900 dark:text-navy-100">₹ 0</div>
+		</div>
+        
+        <div class="p-4 bg-white dark:bg-navy-950 rounded-lg border border-emerald-500/30 space-y-1">
+			<div class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">EQUITY LTCG (12.5%)</div>
+			<div id="wbEquityTax" class="text-xl font-black text-navy-900 dark:text-navy-100">₹ 0</div>
+			<div class="text-[10px] font-bold text-navy-500 dark:text-navy-400 mt-2">After ₹1.25L Exemption</div>
+		</div>
+
+		<div class="p-4 bg-white dark:bg-navy-950 rounded-lg border border-rose-500/30 space-y-1">
+			<div class="text-[10px] font-bold text-rose-500 dark:text-rose-400 uppercase tracking-widest">REAL ESTATE LTCG (12.5%)</div>
+			<div id="wbPropertyTax" class="text-xl font-bold text-navy-900 dark:text-navy-100">₹ 0</div>
+			<div class="text-[10px] font-bold text-navy-500 dark:text-navy-400 mt-2">No Indexation Benefit</div>
+		</div>
+	</div>
+
+	<div id="wbGainRecommendation" class="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-xs font-bold text-emerald-700 dark:text-emerald-400 text-center tracking-wide">
+		Calculating capital gains...
+	</div>
+</div>
+
+<script>
+	import { parseFormattedNumber, tableFormatter, setupFormattingField } from '../../utils/formatters.js';
+
+	function formatRupee(val: number): string {
+		if (isNaN(val) || val < 0) return '₹0';
+		return `₹${tableFormatter.format(Math.round(val))}`;
+	}
+
+	function runGainCalc() {
+		const sale = parseFormattedNumber((document.getElementById('wbSalePrice') as HTMLInputElement)?.value || '0');
+		const purchase = parseFormattedNumber((document.getElementById('wbPurchasePrice') as HTMLInputElement)?.value || '0');
+
+        const grossGain = Math.max(0, sale - purchase);
+        
+        // Equity LTCG: 12.5% above ₹1.25 Lakhs
+        const taxableEquity = Math.max(0, grossGain - 125000);
+        const equityTax = taxableEquity * 0.125 * 1.04; // including 4% cess
+
+        // Property LTCG: Flat 12.5% under new rules (No indexation, No 1.25L limit)
+        const propertyTax = grossGain * 0.125 * 1.04; // including 4% cess
+
+        const elGrossGain = document.getElementById('wbGrossGain');
+        const elEquityTax = document.getElementById('wbEquityTax');
+        const elPropertyTax = document.getElementById('wbPropertyTax');
+		const recEl = document.getElementById('wbGainRecommendation');
+
+        if (elGrossGain) elGrossGain.innerText = formatRupee(grossGain);
+        if (elEquityTax) elEquityTax.innerText = formatRupee(equityTax);
+        if (elPropertyTax) elPropertyTax.innerText = formatRupee(propertyTax);
+
+		if (recEl) {
+            if (grossGain === 0) {
+                recEl.className = "p-4 bg-navy-100 dark:bg-navy-800 rounded-lg text-xs font-bold text-navy-700 dark:text-navy-300 text-center tracking-wide";
+                recEl.innerText = "No Capital Gains incurred. You sold the asset at a loss or at par.";
+            } else {
+                recEl.className = "p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-xs font-bold text-emerald-700 dark:text-emerald-400 text-center tracking-wide";
+				recEl.innerText = `💡 To save ₹${tableFormatter.format(Math.round(propertyTax))} in property tax, you can reinvest the gains under Section 54 (New House) or Section 54EC (Bonds).`;
+			}
+		}
+	}
+
+	document.addEventListener('DOMContentLoaded', () => {
+		['wbSalePrice', 'wbPurchasePrice'].forEach(id => {
+			const el = document.getElementById(id);
+			if (el) setupFormattingField(el as HTMLInputElement, runGainCalc);
+		});
+
+		const elInit = document.getElementById('wbSalePrice');
+		if(elInit) runGainCalc();
+	});
+</script>

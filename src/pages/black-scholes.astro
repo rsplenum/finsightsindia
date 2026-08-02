@@ -1,469 +1,251 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import CardPremium from '../components/CardPremium.astro';
+import InputGroup from '../components/InputGroup.astro';
+import SectionTitle from '../components/SectionTitle.astro';
 ---
 
 <Layout title="Black-Scholes Options Pricing Engine — SWP Intelligence">
-	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-		
-		<!-- Centered Funnel Hero Header -->
-		<section class="max-w-4xl mx-auto px-4 flex flex-col items-center text-center hero-glow reveal mb-12">
-			<span class="inline-block text-xs font-semibold tracking-wider text-navy-900 dark:text-navy-100 uppercase px-3.5 py-1 bg-navy-100 dark:bg-navy-900 rounded-md border border-navy-200 dark:border-navy-800">
-				Derivative Risk & Options Analytics
-			</span>
-			<h1 class="text-hero text-navy-900 dark:text-navy-100 mt-4">
-				Black-Scholes Options Pricing Engine
-			</h1>
-			<p class="text-base sm:text-lg text-navy-500 dark:text-navy-400 font-normal leading-relaxed max-w-2xl mt-3">
-				Evaluate call and put option premiums, implied volatility sensitivity (Vega), time decay drag (Theta), and delta hedging parameters in real-time.
-			</p>
-		</section>
+	<Hero 
+		badge="Derivative Risk & Options Analytics"
+		title="Black-Scholes Options Pricing Engine"
+		description="Evaluate call and put option premiums, implied volatility sensitivity (Vega), time decay drag (Theta), and delta hedging parameters in real-time."
+	/>
 
+	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-16 sm:pt-6 sm:pb-24 space-y-8">
+		
 		<!-- Main 2-Column Grid Layout -->
 		<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start max-w-7xl mx-auto">
 			
 			<!-- Left Column: Input Control Panel (5 Cols) -->
-			<div class="lg:col-span-5 card-premium rounded-2xl p-6 space-y-6">
+			<CardPremium class="lg:col-span-5 space-y-6">
 				
 				<div class="border-b border-navy-200 dark:border-navy-800 pb-4">
-					<h2 class="text-lg font-bold tracking-tight text-navy-900 dark:text-navy-100">Option Contract Parameters</h2>
-					<p class="text-xs text-navy-500 dark:text-navy-400 mt-0.5">Adjust market variables to price derivatives and compute sensitivities.</p>
+					<SectionTitle title="Option Contract Parameters" />
+					<p class="text-xs text-navy-500 dark:text-navy-400 mt-1">Adjust market variables to price derivatives and compute sensitivities.</p>
 				</div>
 
 				<div class="space-y-4">
-					<!-- Spot Price (S) -->
-					<div>
-						<div class="flex justify-between items-center mb-1">
-							<label for="bsSpot" class="text-xs font-semibold text-navy-700 dark:text-navy-300">
-								Spot Price (S)
-							</label>
-							<span class="text-xs text-navy-500 dark:text-navy-400 font-mono">Current Asset Price</span>
-						</div>
-						<div class="relative">
-							<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-navy-400 text-sm">₹</span>
-							<input 
-								type="number" 
-								id="bsSpot" 
-								value="100" 
-								min="1" 
-								step="1"
-								class="input-premium pl-8"
-							/>
-						</div>
-					</div>
-
-					<!-- Strike Price (K) -->
-					<div>
-						<div class="flex justify-between items-center mb-1">
-							<label for="bsStrike" class="text-xs font-semibold text-navy-700 dark:text-navy-300">
-								Strike Price (K)
-							</label>
-							<span class="text-xs text-navy-500 dark:text-navy-400 font-mono">Exercise Price</span>
-						</div>
-						<div class="relative">
-							<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-navy-400 text-sm">₹</span>
-							<input 
-								type="number" 
-								id="bsStrike" 
-								value="100" 
-								min="1" 
-								step="1"
-								class="input-premium pl-8"
-							/>
-						</div>
-					</div>
-
-					<!-- Days to Expiration (D) -->
-					<div>
-						<div class="flex justify-between items-center mb-1">
-							<label for="bsDays" class="text-xs font-semibold text-navy-700 dark:text-navy-300">
-								Days to Expiration (D)
-							</label>
-							<span id="bsTimeYears" class="text-xs text-navy-900 dark:text-navy-100 font-mono font-medium">0.082 Yrs</span>
-						</div>
-						<input 
-							type="number" 
-							id="bsDays" 
-							value="30" 
-							min="1" 
-							max="3650"
-							step="1"
-							class="input-premium"
+					<InputGroup 
+						id="bsSpot"
+						label="Spot Price (S)"
+						tooltip="Current Asset Price in the spot market."
+						prefix="₹"
+						suffix="Current Asset Price"
+						value="100"
+					/>
+					<InputGroup 
+						id="bsStrike"
+						label="Strike Price (K)"
+						tooltip="The price at which the option can be exercised."
+						prefix="₹"
+						suffix="Exercise Price"
+						value="100"
+					/>
+					<div class="space-y-4">
+						<InputGroup 
+							id="bsDays"
+							label="Days to Expiration (D)"
+							tooltip="Calendar days remaining until option expiration."
+							suffix="Days"
+							type="number"
+							value="30"
 						/>
-					</div>
-
-					<!-- Risk-Free Interest Rate (r) -->
-					<div>
-						<div class="flex justify-between items-center mb-1">
-							<label for="bsRate" class="text-xs font-semibold text-navy-700 dark:text-navy-300">
-								Risk-Free Interest Rate (r)
-							</label>
-							<span class="text-xs text-navy-500 dark:text-navy-400 font-mono">% Annual</span>
+						<div class="flex justify-between items-center text-xs px-1">
+							<span class="text-navy-500 dark:text-navy-400">Time to Expiry:</span>
+							<span id="bsTimeYears" class="font-bold text-navy-900 dark:text-navy-100">0.082 Yrs</span>
 						</div>
-						<input 
-							type="number" 
-							id="bsRate" 
-							value="7.0" 
-							min="0" 
-							max="50"
-							step="0.1"
-							class="input-premium"
-						/>
 					</div>
-
-					<!-- Implied Volatility (v) -->
-					<div>
-						<div class="flex justify-between items-center mb-1">
-							<label for="bsVol" class="text-xs font-semibold text-navy-700 dark:text-navy-300">
-								Implied Volatility (v)
-							</label>
-							<span class="text-xs text-navy-500 dark:text-navy-400 font-mono">% Volatility</span>
-						</div>
-						<input 
-							type="number" 
-							id="bsVol" 
-							value="20.0" 
-							min="0.1" 
-							max="300"
-							step="0.5"
-							class="input-premium"
-						/>
-					</div>
+					<InputGroup 
+						id="bsRate"
+						label="Risk-Free Interest Rate (r)"
+						tooltip="Annualized risk-free interest rate."
+						suffix="% Annual"
+						type="number"
+						value="7.0"
+					/>
+					<InputGroup 
+						id="bsVol"
+						label="Implied Volatility (v)"
+						tooltip="Annualized implied volatility (standard deviation)."
+						suffix="% Volatility"
+						type="number"
+						value="20.0"
+					/>
 				</div>
-			</div>
+			</CardPremium>
 
 			<!-- Right Column: Outputs Dashboard (7 Cols) -->
 			<div class="lg:col-span-7 space-y-6">
 				
 				<!-- Top Half: Dual-Theme Option Premium Card -->
-				<div class="card-premium rounded-2xl p-6 sm:p-7 space-y-6 animate-slide-up-fade hover:-translate-y-[1px] hover:shadow-sm active:translate-y-[0px] active:scale-[0.99] transition-all duration-200 ease-geist">
+				<CardPremium class="space-y-6">
 					
 					<div class="flex items-center justify-between border-b border-navy-200 dark:border-navy-800 pb-4">
 						<div>
-							<span class="text-xs font-semibold uppercase tracking-wider text-navy-900 dark:text-navy-100">Theoretical Option Premiums</span>
-							<div class="text-xs text-navy-500 dark:text-navy-400 mt-0.5">Fair value calculated via Black-Scholes continuous pricing model</div>
+							<h3 class="text-xs font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Theoretical Option Premiums</h3>
+							<div class="text-xs text-navy-500 dark:text-navy-400 mt-1">Fair value calculated via Black-Scholes continuous pricing model</div>
 						</div>
-						<div class="text-xs font-mono text-navy-600 dark:text-navy-400 bg-navy-100 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 px-3 py-1 rounded-md">
-							d1: <span id="valD1" class="text-navy-900 dark:text-navy-100 font-semibold">0.00</span> | d2: <span id="valD2" class="text-navy-900 dark:text-navy-100 font-semibold">0.00</span>
+						<div class="text-[10px] font-bold tracking-widest text-navy-600 dark:text-navy-400 bg-navy-100 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 px-3 py-1.5 rounded-md">
+							d1: <span id="valD1" class="text-navy-900 dark:text-navy-100">0.00</span> | d2: <span id="valD2" class="text-navy-900 dark:text-navy-100">0.00</span>
 						</div>
 					</div>
 
 					<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 						<!-- Call Option Premium -->
 						<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-5 flex flex-col justify-between">
-							<div class="flex items-center justify-between text-xs font-medium text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-1">
-								<span>Call Option Premium</span>
-								<span class="text-[10px] font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 rounded-md">Bullish</span>
+							<div class="flex items-center justify-between text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-1">
+								<span>Call Premium</span>
+								<span class="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 rounded-md">Bullish</span>
 							</div>
-							<div id="valCallPrice" class="text-3xl sm:text-4xl font-extrabold text-emerald-600 dark:text-emerald-400 font-sans tracking-tight mt-1 stat-value">
+							<div id="valCallPrice" class="text-3xl sm:text-4xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-2">
 								₹0.00
 							</div>
-							<div class="text-xs text-navy-500 dark:text-navy-400 mt-2">Right to BUY at ₹<span id="callStrikeLabel" class="font-semibold text-navy-900 dark:text-navy-100">100</span></div>
+							<div class="text-xs text-navy-500 dark:text-navy-400 mt-3">Right to BUY at ₹<span id="callStrikeLabel" class="font-bold text-navy-900 dark:text-navy-100">100</span></div>
 						</div>
 
 						<!-- Put Option Premium -->
 						<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-5 flex flex-col justify-between">
-							<div class="flex items-center justify-between text-xs font-medium text-rose-600 dark:text-rose-400 uppercase tracking-wider mb-1">
-								<span>Put Option Premium</span>
-								<span class="text-[10px] font-bold bg-rose-50 text-rose-700 dark:bg-rose-950/80 dark:text-rose-300 border border-rose-200 dark:border-rose-800 px-2 py-0.5 rounded-md">Bearish / Hedge</span>
+							<div class="flex items-center justify-between text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-widest mb-1">
+								<span>Put Premium</span>
+								<span class="bg-rose-50 text-rose-700 dark:bg-rose-950/80 dark:text-rose-300 border border-rose-200 dark:border-rose-800 px-2 py-0.5 rounded-md">Bearish / Hedge</span>
 							</div>
-							<div id="valPutPrice" class="text-3xl sm:text-4xl font-extrabold text-rose-600 dark:text-rose-400 font-sans tracking-tight mt-1 stat-value">
+							<div id="valPutPrice" class="text-3xl sm:text-4xl font-extrabold text-rose-600 dark:text-rose-400 mt-2">
 								₹0.00
 							</div>
-							<div class="text-xs text-navy-500 dark:text-navy-400 mt-2">Right to SELL at ₹<span id="putStrikeLabel" class="font-semibold text-navy-900 dark:text-navy-100">100</span></div>
+							<div class="text-xs text-navy-500 dark:text-navy-400 mt-3">Right to SELL at ₹<span id="putStrikeLabel" class="font-bold text-navy-900 dark:text-navy-100">100</span></div>
 						</div>
 					</div>
-				</div>
+				</CardPremium>
 
 				<!-- Bottom Half: The Greeks Sensitivity Grid -->
-				<div class="card-premium rounded-2xl p-6 space-y-4">
+				<CardPremium class="space-y-4">
 					
-					<div class="border-b border-navy-200 dark:border-navy-800 pb-3 flex items-center justify-between">
-						<div>
-							<h3 class="text-base font-bold tracking-tight text-navy-900 dark:text-navy-100">Option Risk Sensitivities (The Greeks)</h3>
-							<p class="text-xs text-navy-500 dark:text-navy-400">First and second-order partial derivatives relative to price, time, and volatility.</p>
-						</div>
+					<div class="border-b border-navy-200 dark:border-navy-800 pb-3">
+						<SectionTitle title="Option Risk Sensitivities (The Greeks)" />
+						<p class="text-xs text-navy-500 dark:text-navy-400 mt-1">First and second-order partial derivatives relative to price, time, and volatility.</p>
 					</div>
 
 					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-						
 						<!-- Delta (Call & Put) -->
 						<div class="p-4 bg-navy-50 dark:bg-navy-900 rounded-lg border border-navy-200 dark:border-navy-800">
-							<div class="flex justify-between items-baseline mb-1">
-								<span class="text-xs font-bold text-navy-900 dark:text-navy-100">Delta (Δ) — Price Velocity</span>
-								<span class="text-[11px] text-navy-500 dark:text-navy-400">∂V / ∂S</span>
+							<div class="flex justify-between items-baseline mb-2">
+								<span class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Delta (Δ) — Price Velocity</span>
+								<span class="text-[9px] font-bold text-navy-500 dark:text-navy-400">∂V / ∂S</span>
 							</div>
-							<div class="space-y-1 text-xs text-navy-600 dark:text-navy-400 mt-2 font-mono">
-								<div class="flex justify-between">
+							<div class="space-y-1.5 text-xs text-navy-600 dark:text-navy-400 mt-2">
+								<div class="flex justify-between border-b border-navy-200 dark:border-navy-800 pb-1">
 									<span>Call Delta (Δc):</span>
 									<span id="valDeltaCall" class="font-bold text-emerald-600 dark:text-emerald-400">+0.0000</span>
 								</div>
-								<div class="flex justify-between">
+								<div class="flex justify-between pt-0.5">
 									<span>Put Delta (Δp):</span>
 									<span id="valDeltaPut" class="font-bold text-rose-600 dark:text-rose-400">-0.0000</span>
 								</div>
 							</div>
-							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-2 leading-tight">
+							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-3 leading-tight">
 								Change in option price per ₹1 move in spot price.
 							</div>
 						</div>
 
 						<!-- Gamma -->
-						<div class="p-4 bg-navy-50 dark:bg-navy-900 rounded-lg border border-navy-200 dark:border-navy-800">
-							<div class="flex justify-between items-baseline mb-1">
-								<span class="text-xs font-bold text-navy-900 dark:text-navy-100">Gamma (Γ) — Acceleration</span>
-								<span class="text-[11px] text-navy-500 dark:text-navy-400">∂²V / ∂S²</span>
+						<div class="p-4 bg-navy-50 dark:bg-navy-900 rounded-lg border border-navy-200 dark:border-navy-800 flex flex-col justify-between">
+							<div class="flex justify-between items-baseline mb-2">
+								<span class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Gamma (Γ) — Acceleration</span>
+								<span class="text-[9px] font-bold text-navy-500 dark:text-navy-400">∂²V / ∂S²</span>
 							</div>
-							<div class="text-xl font-extrabold text-navy-900 dark:text-navy-100 font-mono mt-1">
+							<div class="text-xl font-extrabold text-navy-900 dark:text-navy-100 mt-1">
 								<span id="valGamma">0.000000</span>
 							</div>
-							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-2 leading-tight">
+							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-3 leading-tight">
 								Rate of change in Delta per ₹1 move in spot price.
 							</div>
 						</div>
 
 						<!-- Theta (Daily Decay) -->
 						<div class="p-4 bg-navy-50 dark:bg-navy-900 rounded-lg border border-navy-200 dark:border-navy-800">
-							<div class="flex justify-between items-baseline mb-1">
-								<span class="text-xs font-bold text-navy-900 dark:text-navy-100">Theta (Θ) — Time Decay / Day</span>
-								<span class="text-[11px] text-navy-500 dark:text-navy-400">∂V / ∂t</span>
+							<div class="flex justify-between items-baseline mb-2">
+								<span class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Theta (Θ) — Time Decay</span>
+								<span class="text-[9px] font-bold text-navy-500 dark:text-navy-400">∂V / ∂t</span>
 							</div>
-							<div class="space-y-1 text-xs text-navy-600 dark:text-navy-400 mt-2 font-mono">
-								<div class="flex justify-between">
+							<div class="space-y-1.5 text-xs text-navy-600 dark:text-navy-400 mt-2">
+								<div class="flex justify-between border-b border-navy-200 dark:border-navy-800 pb-1">
 									<span>Call Theta:</span>
 									<span id="valThetaCall" class="font-bold text-amber-600 dark:text-amber-400">-₹0.0000</span>
 								</div>
-								<div class="flex justify-between">
+								<div class="flex justify-between pt-0.5">
 									<span>Put Theta:</span>
 									<span id="valThetaPut" class="font-bold text-amber-600 dark:text-amber-400">-₹0.0000</span>
 								</div>
 							</div>
-							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-2 leading-tight">
+							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-3 leading-tight">
 								Daily rupee erosion in option value as time passes.
 							</div>
 						</div>
 
 						<!-- Vega -->
-						<div class="p-4 bg-navy-50 dark:bg-navy-900 rounded-lg border border-navy-200 dark:border-navy-800">
-							<div class="flex justify-between items-baseline mb-1">
-								<span class="text-xs font-bold text-navy-900 dark:text-navy-100">Vega (ν) — Volatility Sensitivity</span>
-								<span class="text-[11px] text-navy-500 dark:text-navy-400">∂V / ∂σ</span>
+						<div class="p-4 bg-navy-50 dark:bg-navy-900 rounded-lg border border-navy-200 dark:border-navy-800 flex flex-col justify-between">
+							<div class="flex justify-between items-baseline mb-2">
+								<span class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Vega (ν) — Volatility Sens.</span>
+								<span class="text-[9px] font-bold text-navy-500 dark:text-navy-400">∂V / ∂σ</span>
 							</div>
-							<div class="text-xl font-extrabold text-cyan-600 dark:text-cyan-400 font-mono mt-1">
-								₹<span id="valVega">0.0000</span> <span class="text-xs text-navy-500 dark:text-navy-400 font-normal">/ 1% IV</span>
+							<div class="text-xl font-extrabold text-cyan-600 dark:text-cyan-400 mt-1">
+								₹<span id="valVega">0.0000</span> <span class="text-[10px] uppercase font-bold tracking-widest text-navy-500 dark:text-navy-400">/ 1% IV</span>
 							</div>
-							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-2 leading-tight">
+							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-3 leading-tight">
 								Price change per 1 percentage point change in Implied Volatility.
 							</div>
 						</div>
 
 					</div>
-				</div>
+				</CardPremium>
 
 			</div>
 		</div>
-
-		<!-- SECTION: BLACK-SCHOLES QUANT KNOWLEDGE BASE FAQs -->
-		<section class="bg-white dark:bg-navy-950 border border-navy-200 dark:border-white/10 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xs transition-all duration-200 ease-geist max-w-7xl mx-auto mt-12 reveal">
-			
-			<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-navy-200 dark:border-white/10">
-				<div class="space-y-1">
-					<div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-navy-100 dark:bg-navy-900 text-navy-900 dark:text-navy-100 text-xs font-semibold tracking-wider uppercase border border-navy-200 dark:border-white/10 shadow-xs">
-						<span class="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse"></span>
-						<span>QUANT OPTIONS KNOWLEDGE BASE</span>
-					</div>
-					<h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-navy-900 dark:text-navy-100 font-sans">
-						First-Principles Options & Greeks FAQs
-					</h2>
-					<p class="text-xs sm:text-sm text-navy-500 dark:text-navy-400 leading-relaxed font-sans">
-						Understand Black-Scholes partial differential equations, lognormal asset drift, option sensitivity Greeks, and downside put hedging mechanics.
-					</p>
-				</div>
-
-				<!-- Category Filter Segmented Control Bar -->
-				<div id="faqFilterContainer" class="p-1 bg-navy-100 dark:bg-navy-900 border border-navy-200 dark:border-white/10 rounded-lg inline-flex items-center gap-1 self-start md:self-auto overflow-x-auto max-w-full shrink-0">
-					<button type="button" data-faq-cat="all" class="faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 btn-gold cursor-pointer shadow-xs whitespace-nowrap">
-						ALL
-					</button>
-					<button type="button" data-faq-cat="bsmath" class="faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 btn-ghost cursor-pointer whitespace-nowrap">
-						BLACK-SCHOLES MATH
-					</button>
-					<button type="button" data-faq-cat="greeks" class="faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 btn-ghost cursor-pointer whitespace-nowrap">
-						GREEKS & VOLATILITY
-					</button>
-					<button type="button" data-faq-cat="hedging" class="faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 btn-ghost cursor-pointer whitespace-nowrap">
-						PORTFOLIO HEDGING
-					</button>
-				</div>
-			</div>
-
-			<!-- FAQ Cards Grid Architecture -->
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="faqCardGrid">
-				
-				<!-- Card 1: Black-Scholes Mechanics -->
-				<div class="faq-card bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-white/10 rounded-2xl p-5 sm:p-6 space-y-3.5 hover:border-navy-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between" data-category="bsmath">
-					<div class="space-y-2">
-						<div class="flex items-center justify-between">
-							<span class="badge-gold">
-								BLACK-SCHOLES FORMULA
-							</span>
-							<span class="text-xs font-mono text-navy-400 dark:text-navy-500 font-semibold">Q01</span>
-						</div>
-						<h3 class="text-base font-bold text-navy-900 dark:text-navy-100 font-sans leading-snug">
-							How does the Black-Scholes PDE price European call and put options?
-						</h3>
-						<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans">
-							The Black-Scholes model assumes stock prices follow Geometric Brownian Motion (GBM) with constant volatility. It calculates the theoretical fair value by discounting the risk-neutral expected payoff at maturity:
-						</p>
-						<div class="p-2.5 bg-white dark:bg-navy-950 rounded border border-navy-200 dark:border-white/10 font-mono text-[11px] text-navy-900 dark:text-navy-100 text-center font-bold">
-							Call = S·N(d1) - K·e^(-rT)·N(d2)
-						</div>
-					</div>
-					<div class="pt-2 border-t border-navy-200/80 dark:border-white/10 bg-cyan-500/5 dark:bg-cyan-500/10 p-3 rounded-lg border-l-2 border-cyan-500">
-						<div class="text-[11px] font-mono font-bold text-cyan-800 dark:text-cyan-300 uppercase tracking-wide">💡 Key Takeaway</div>
-						<div class="text-xs text-navy-700 dark:text-navy-300 font-sans mt-0.5">Black-Scholes calculates the exact risk-neutral probability density of option exercising.</div>
-					</div>
-				</div>
-
-				<!-- Card 2: Implied Volatility -->
-				<div class="faq-card bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-white/10 rounded-2xl p-5 sm:p-6 space-y-3.5 hover:border-navy-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between" data-category="greeks">
-					<div class="space-y-2">
-						<div class="flex items-center justify-between">
-							<span class="badge-gold">
-								VOLATILITY METRICS
-							</span>
-							<span class="text-xs font-mono text-navy-400 dark:text-navy-500 font-semibold">Q02</span>
-						</div>
-						<h3 class="text-base font-bold text-navy-900 dark:text-navy-100 font-sans leading-snug">
-							What is Implied Volatility (IV) and why is it the primary pricing engine?
-						</h3>
-						<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans">
-							Implied Volatility represents the market's forward-looking expectation of annual price fluctuation. Unlike historical volatility, IV is derived directly from live option market prices. When IV increases, option premiums expand for both call and put options.
-						</p>
-					</div>
-					<div class="pt-2 border-t border-navy-200/80 dark:border-white/10 bg-navy-100/80 dark:bg-navy-950 p-3 rounded-lg border-l-2 border-navy-400 dark:border-navy-500">
-						<div class="text-[11px] font-mono font-bold text-navy-800 dark:text-navy-200 uppercase tracking-wide">💡 Key Takeaway</div>
-						<div class="text-xs text-navy-700 dark:text-navy-300 font-sans mt-0.5">Implied Volatility reflects market uncertainty; higher IV equals higher option time value.</div>
-					</div>
-				</div>
-
-				<!-- Card 3: The Greeks -->
-				<div class="faq-card bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-white/10 rounded-2xl p-5 sm:p-6 space-y-3.5 hover:border-navy-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between" data-category="greeks">
-					<div class="space-y-2">
-						<div class="flex items-center justify-between">
-							<span class="badge-gold">
-								RISK SENSITIVITY
-							</span>
-							<span class="text-xs font-mono text-navy-400 dark:text-navy-500 font-semibold">Q03</span>
-						</div>
-						<h3 class="text-base font-bold text-navy-900 dark:text-navy-100 font-sans leading-snug">
-							What do Delta, Gamma, Theta, and Vega measure in options risk management?
-						</h3>
-						<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans">
-							The Greeks measure partial derivatives of the option price: Delta (rate of change with spot price), Gamma (rate of change of Delta), Theta (daily time decay erosion), and Vega (sensitivity to 1% shift in Implied Volatility).
-						</p>
-					</div>
-					<div class="pt-2 border-t border-navy-200/80 dark:border-white/10 bg-cyan-500/5 dark:bg-cyan-500/10 p-3 rounded-lg border-l-2 border-cyan-500">
-						<div class="text-[11px] font-mono font-bold text-cyan-800 dark:text-cyan-300 uppercase tracking-wide">💡 Key Takeaway</div>
-						<div class="text-xs text-navy-700 dark:text-navy-300 font-sans mt-0.5">The Greeks allow quant traders to delta-hedge portfolios and isolate volatility exposure.</div>
-					</div>
-				</div>
-
-				<!-- Card 4: Put Option Protection -->
-				<div class="faq-card bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-white/10 rounded-2xl p-5 sm:p-6 space-y-3.5 hover:border-navy-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between" data-category="hedging">
-					<div class="space-y-2">
-						<div class="flex items-center justify-between">
-							<span class="badge-safe">
-								DOWNED PROTECTION
-							</span>
-							<span class="text-xs font-mono text-navy-400 dark:text-navy-500 font-semibold">Q04</span>
-						</div>
-						<h3 class="text-base font-bold text-navy-900 dark:text-navy-100 font-sans leading-snug">
-							How do institutional quant funds use Put Options to construct capital protection floors?
-						</h3>
-						<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans">
-							By purchasing out-of-the-money put options on equity allocations, institutions set a strict downside stop floor (e.g. max -8% loss). If market panics by -40%, put option intrinsic value explodes to compensate for equity drawdowns.
-						</p>
-					</div>
-					<div class="pt-2 border-t border-navy-200/80 dark:border-white/10 bg-emerald-500/5 dark:bg-emerald-500/10 p-3 rounded-lg border-l-2 border-emerald-500">
-						<div class="text-[11px] font-mono font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide">💡 Key Takeaway</div>
-						<div class="text-xs text-navy-700 dark:text-navy-300 font-sans mt-0.5">Put option hedging incurs a ~1.85%/yr drag cost in exchange for absolute crash immunity.</div>
-					</div>
-				</div>
-
-			</div>
-
-		</section>
 
 	</main>
 </Layout>
 
 <script>
 	import { calculateBlackScholes } from '../utils/blackScholes.js';
+	import { parseFormattedNumber, setupFormattingField } from '../utils/formatters.js';
 
-	// FAQ Category Filter Handler
-	function initFaqFilter() {
-		const filterContainer = document.getElementById('faqFilterContainer');
-		if (!filterContainer) return;
-
-		const filterBtns = filterContainer.querySelectorAll('.faq-filter-btn');
-		const faqCards = document.querySelectorAll('.faq-card');
-
-		filterBtns.forEach(btn => {
-			btn.addEventListener('click', () => {
-				const category = btn.getAttribute('data-faq-cat');
-
-				filterBtns.forEach(b => {
-					b.className = 'faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 btn-ghost cursor-pointer whitespace-nowrap';
-				});
-
-				btn.className = 'faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 btn-gold cursor-pointer shadow-xs whitespace-nowrap';
-
-				faqCards.forEach(card => {
-					const cardCat = card.getAttribute('data-category');
-					if (category === 'all' || cardCat === category) {
-						(card as HTMLElement).style.display = 'flex';
-					} else {
-						(card as HTMLElement).style.display = 'none';
-					}
-				});
-			});
-		});
+	function getNumValue(id: string, defaultVal: number): number {
+		const el = document.getElementById(id) as HTMLInputElement;
+		if (!el) return defaultVal;
+		const parsed = parseFormattedNumber(el.value);
+		return isNaN(parsed) ? defaultVal : parsed;
 	}
 
 	function updateBlackScholesUI() {
-		const spot = parseFloat((document.getElementById('bsSpot') as HTMLInputElement)?.value || '100');
-		const strike = parseFloat((document.getElementById('bsStrike') as HTMLInputElement)?.value || '100');
+		const spot = getNumValue('bsSpot', 100);
+		const strike = getNumValue('bsStrike', 100);
 		const days = parseFloat((document.getElementById('bsDays') as HTMLInputElement)?.value || '30');
 		const rate = parseFloat((document.getElementById('bsRate') as HTMLInputElement)?.value || '7.0');
 		const vol = parseFloat((document.getElementById('bsVol') as HTMLInputElement)?.value || '20.0');
 
 		const timeYears = Math.max(0.0001, days / 365);
 		const timeYearsEl = document.getElementById('bsTimeYears');
-		if (timeYearsEl) {
-			timeYearsEl.innerText = `${timeYears.toFixed(3)} Yrs`;
-		}
+		if (timeYearsEl) timeYearsEl.innerText = `${timeYears.toFixed(3)} Yrs`;
 
 		const result = calculateBlackScholes(spot, strike, timeYears, rate, vol);
 
-		// Update Call & Put Prices
 		const callEl = document.getElementById('valCallPrice');
 		const putEl = document.getElementById('valPutPrice');
 		if (callEl) callEl.innerText = `₹${result.callPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 		if (putEl) putEl.innerText = `₹${result.putPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-		// Update Strike Labels
 		const callStrikeLabel = document.getElementById('callStrikeLabel');
 		const putStrikeLabel = document.getElementById('putStrikeLabel');
-		if (callStrikeLabel) callStrikeLabel.innerText = strike.toString();
-		if (putStrikeLabel) putStrikeLabel.innerText = strike.toString();
+		if (callStrikeLabel) callStrikeLabel.innerText = strike.toLocaleString('en-IN');
+		if (putStrikeLabel) putStrikeLabel.innerText = strike.toLocaleString('en-IN');
 
-		// Update Probability Parameters (d1, d2)
 		const d1El = document.getElementById('valD1');
 		const d2El = document.getElementById('valD2');
 		if (d1El) d1El.innerText = result.d1.toFixed(3);
 		if (d2El) d2El.innerText = result.d2.toFixed(3);
 
-		// Update Greeks
 		const deltaCallEl = document.getElementById('valDeltaCall');
 		const deltaPutEl = document.getElementById('valDeltaPut');
 		if (deltaCallEl) deltaCallEl.innerText = `${result.deltaCall >= 0 ? '+' : ''}${result.deltaCall.toFixed(4)}`;
@@ -474,27 +256,28 @@ import Layout from '../layouts/Layout.astro';
 
 		const thetaCallEl = document.getElementById('valThetaCall');
 		const thetaPutEl = document.getElementById('valThetaPut');
-		if (thetaCallEl) thetaCallEl.innerText = `₹${result.thetaCallDaily.toFixed(4)}`;
-		if (thetaPutEl) thetaPutEl.innerText = `₹${result.thetaPutDaily.toFixed(4)}`;
+		if (thetaCallEl) thetaCallEl.innerText = `-₹${Math.abs(result.thetaCallDaily).toFixed(4)}`;
+		if (thetaPutEl) thetaPutEl.innerText = `-₹${Math.abs(result.thetaPutDaily).toFixed(4)}`;
 
 		const vegaEl = document.getElementById('valVega');
 		if (vegaEl) vegaEl.innerText = result.vegaPerPercent.toFixed(4);
 	}
 
-	// Add input event listeners to all control inputs
-	const inputIds = ['bsSpot', 'bsStrike', 'bsDays', 'bsRate', 'bsVol'];
-	inputIds.forEach(id => {
-		const el = document.getElementById(id);
-		if (el) {
-			el.addEventListener('input', updateBlackScholesUI);
-			el.addEventListener('change', updateBlackScholesUI);
-		}
-	});
-
-	// Run initial calculation on page load
 	document.addEventListener('DOMContentLoaded', () => {
-		initFaqFilter();
+		const bsSpotEl = document.getElementById('bsSpot') as HTMLInputElement;
+		const bsStrikeEl = document.getElementById('bsStrike') as HTMLInputElement;
+		
+		if (bsSpotEl) setupFormattingField(bsSpotEl, updateBlackScholesUI);
+		if (bsStrikeEl) setupFormattingField(bsStrikeEl, updateBlackScholesUI);
+
+		['bsDays', 'bsRate', 'bsVol'].forEach(id => {
+			const el = document.getElementById(id);
+			if (el) {
+				el.addEventListener('input', updateBlackScholesUI);
+				el.addEventListener('change', updateBlackScholesUI);
+			}
+		});
+
 		updateBlackScholesUI();
 	});
-	updateBlackScholesUI();
 </script>

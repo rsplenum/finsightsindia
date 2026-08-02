@@ -69,9 +69,9 @@ export const TAX_ARTICLES: Record<string, TaxArticle> = {
 			`
 		},
 
-		// 2. First-Principles Mathematical Breakdown
+		// 2. Detailed Mathematical Breakdown
 		sec2_MathematicalBreakdown: {
-			headline: '2. First-Principles Mathematical Breakdown',
+			headline: '2. Detailed Mathematical Breakdown',
 			formulas: [
 				{
 					label: 'New Tax Regime Taxable Income Equation',
@@ -237,9 +237,9 @@ export const TAX_ARTICLES: Record<string, TaxArticle> = {
 			`
 		},
 
-		// 2. First-Principles Mathematical Breakdown
+		// 2. Detailed Mathematical Breakdown
 		sec2_MathematicalBreakdown: {
-			headline: '2. First-Principles Mathematical Breakdown',
+			headline: '2. Detailed Mathematical Breakdown',
 			formulas: [
 				{
 					label: 'Gross Salary to Net Taxable Income Equation',
@@ -394,9 +394,9 @@ export const TAX_ARTICLES: Record<string, TaxArticle> = {
 			`
 		},
 
-		// 2. First-Principles Mathematical Breakdown
+		// 2. Detailed Mathematical Breakdown
 		sec2_MathematicalBreakdown: {
-			headline: '2. First-Principles Mathematical Breakdown',
+			headline: '2. Detailed Mathematical Breakdown',
 			formulas: [
 				{
 					label: 'Piecewise Slab Tax Formula',
@@ -550,9 +550,9 @@ export const TAX_ARTICLES: Record<string, TaxArticle> = {
 			`
 		},
 
-		// 2. First-Principles Mathematical Breakdown
+		// 2. Detailed Mathematical Breakdown
 		sec2_MathematicalBreakdown: {
-			headline: '2. First-Principles Mathematical Breakdown',
+			headline: '2. Detailed Mathematical Breakdown',
 			formulas: [
 				{
 					label: 'Net Taxable Salary Formula',
@@ -698,9 +698,9 @@ export const TAX_ARTICLES: Record<string, TaxArticle> = {
 			`
 		},
 
-		// 2. First-Principles Mathematical Breakdown
+		// 2. Detailed Mathematical Breakdown
 		sec2_MathematicalBreakdown: {
-			headline: '2. First-Principles Mathematical Breakdown',
+			headline: '2. Detailed Mathematical Breakdown',
 			formulas: [
 				{
 					label: 'Salaried Regime Selection Flexibility Rule',

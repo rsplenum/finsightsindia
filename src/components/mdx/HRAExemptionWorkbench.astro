@@ -1,0 +1,130 @@
+---
+import InputGroup from '../InputGroup.astro';
+
+interface Props {
+  defaultBasicSalary?: number;
+  defaultHraReceived?: number;
+  defaultRentPaid?: number;
+  instruction?: string;
+}
+
+const { 
+  defaultBasicSalary = 500000, 
+  defaultHraReceived = 240000, 
+  defaultRentPaid = 300000,
+  instruction = 'Enter your exact salary components and rent paid to calculate your precise HRA exemption under Section 10(13A).' 
+} = Astro.props;
+---
+
+<div class="p-6 bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-xl space-y-6 shadow-sm my-8 not-prose">
+	<p class="text-xs text-navy-600 dark:text-navy-400 font-sans">
+		{instruction}
+	</p>
+
+	<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+		<InputGroup 
+			id="wbBasicSalary"
+			label="Annual Basic Salary"
+			tooltip="Only Basic Salary + DA (if applicable). Do not include special allowances."
+			prefix="₹"
+			value={defaultBasicSalary.toString()}
+		/>
+        <InputGroup 
+			id="wbHraReceived"
+			label="Annual HRA Received"
+			tooltip="Check your payslip or Form 16 for this exact component."
+			prefix="₹"
+			value={defaultHraReceived.toString()}
+		/>
+        <InputGroup 
+			id="wbRentPaid"
+			label="Total Rent Paid (Annual)"
+			tooltip="The total rent you paid via bank transfer to your landlord."
+			prefix="₹"
+			value={defaultRentPaid.toString()}
+		/>
+	</div>
+    
+    <div class="flex items-center gap-3">
+        <label class="text-xs font-semibold text-navy-800 dark:text-navy-200 cursor-pointer flex items-center gap-2">
+            <input type="checkbox" id="wbIsMetro" class="rounded border-navy-300 text-emerald-600 focus:ring-emerald-600" checked />
+            I live in a Metro City (Mumbai, Delhi, Chennai, Kolkata)
+        </label>
+    </div>
+
+	<!-- Workbench Live Results Display -->
+	<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-navy-200 dark:border-navy-800">
+		<div class="p-4 bg-white dark:bg-navy-950 rounded-lg border border-emerald-500/30 space-y-2">
+			<div class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">TAX EXEMPT HRA</div>
+			<div class="pt-2 border-t border-navy-100 dark:border-navy-800">
+                <div id="wbExemptHra" class="text-2xl font-black text-emerald-700 dark:text-emerald-400">₹ 0</div>
+                <div class="text-[10px] font-bold text-navy-500 dark:text-navy-400 uppercase mt-1">Deducted from Taxable Income</div>
+            </div>
+		</div>
+
+		<div class="p-4 bg-white dark:bg-navy-950 rounded-lg border border-rose-500/30 space-y-2">
+			<div class="text-[10px] font-bold text-rose-500 dark:text-rose-400 uppercase tracking-widest">TAXABLE HRA</div>
+			<div class="pt-2 border-t border-navy-100 dark:border-navy-800">
+                <div id="wbTaxableHra" class="text-2xl font-bold text-rose-700 dark:text-rose-400">₹ 0</div>
+                <div class="text-[10px] font-bold text-navy-500 dark:text-navy-400 uppercase mt-1">Added to Taxable Income</div>
+            </div>
+		</div>
+	</div>
+
+    <div class="space-y-1 mt-4">
+        <div class="text-xs text-navy-500 dark:text-navy-400 font-bold uppercase tracking-widest">Rule of Three Calculation:</div>
+        <ul class="text-xs text-navy-600 dark:text-navy-400 list-disc list-inside font-mono">
+            <li>Actual HRA Received: <span id="val1">₹0</span></li>
+            <li>Rent Paid minus 10% Basic: <span id="val2">₹0</span></li>
+            <li>40%/50% of Basic Salary: <span id="val3">₹0</span></li>
+        </ul>
+    </div>
+</div>
+
+<script>
+	import { parseFormattedNumber, tableFormatter, setupFormattingField } from '../../utils/formatters.js';
+
+	function formatRupee(val: number): string {
+		if (isNaN(val) || val < 0) return '₹0';
+		return `₹${tableFormatter.format(Math.round(val))}`;
+	}
+
+	function runHraCalc() {
+		const basic = parseFormattedNumber((document.getElementById('wbBasicSalary') as HTMLInputElement)?.value || '0');
+		const hraReceived = parseFormattedNumber((document.getElementById('wbHraReceived') as HTMLInputElement)?.value || '0');
+        const rent = parseFormattedNumber((document.getElementById('wbRentPaid') as HTMLInputElement)?.value || '0');
+        const isMetro = (document.getElementById('wbIsMetro') as HTMLInputElement)?.checked ?? false;
+
+        const val1 = hraReceived;
+        const val2 = Math.max(0, rent - (basic * 0.10));
+        const val3 = isMetro ? basic * 0.50 : basic * 0.40;
+
+        const exemptHra = Math.min(val1, val2, val3);
+        const taxableHra = Math.max(0, hraReceived - exemptHra);
+
+        const elExempt = document.getElementById('wbExemptHra');
+        const elTaxable = document.getElementById('wbTaxableHra');
+
+        if (elExempt) elExempt.innerText = formatRupee(exemptHra);
+        if (elTaxable) elTaxable.innerText = formatRupee(taxableHra);
+
+        document.getElementById('val1')!.innerText = formatRupee(val1);
+        document.getElementById('val2')!.innerText = formatRupee(val2);
+        document.getElementById('val3')!.innerText = formatRupee(val3);
+	}
+
+	document.addEventListener('DOMContentLoaded', () => {
+		['wbBasicSalary', 'wbHraReceived', 'wbRentPaid'].forEach(id => {
+			const el = document.getElementById(id);
+			if (el) setupFormattingField(el as HTMLInputElement, runHraCalc);
+		});
+        
+        const metroCheckbox = document.getElementById('wbIsMetro');
+        if (metroCheckbox) {
+            metroCheckbox.addEventListener('change', runHraCalc);
+        }
+
+		const elInit = document.getElementById('wbBasicSalary');
+		if(elInit) runHraCalc();
+	});
+</script>

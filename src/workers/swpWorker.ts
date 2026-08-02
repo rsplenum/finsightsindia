@@ -18,11 +18,18 @@ self.onmessage = function (e) {
   const horizonYears = Number(data.horizonYears) || 30;
   const numSimulations = Number(data.numSimulations) || 10000;
   const useGuardrails = Boolean(data.useGuardrails);
+  
+  // Black-Scholes Hedging Params
+  const bsEnabled = Boolean(data.bsEnabled);
+  const hedgingDragCost = Number(data.hedgingDragCost) || 1.85; // %
+  const hedgingFloorLimit = Number(data.hedgingFloorLimit) || -10; // %
 
   // Rate conversions
   const mu = expectedReturn / 100;
   const sigma = annualVolatility / 100;
   const taxRate = ltcgTax / 100;
+  const dragCost = hedgingDragCost / 100;
+  const floorLimit = hedgingFloorLimit / 100;
 
   // Compounded annual escalation factor: (1 + expectedInflation/100) * (1 + annualStepUp/100)
   const escalationFactor = (1 + expectedInflation / 100) * (1 + annualStepUp / 100);
@@ -119,7 +126,10 @@ self.onmessage = function (e) {
         trialMinPurchasingPower = Math.min(trialMinPurchasingPower, retentionRatio);
       }
 
-      const randomReturn = mu + sigma * getRandomNormal();
+      let randomReturn = mu + sigma * getRandomNormal();
+      if (bsEnabled) {
+          randomReturn = Math.max(floorLimit, randomReturn) - dragCost;
+      }
       const grownBalance = currentBalance * (1 + randomReturn);
 
       const capitalGain = Math.max(0, grownBalance - costBasis);
@@ -266,6 +276,9 @@ self.onmessage = function (e) {
     lifestyleSacrificeAmount,
     rockBottomRealValue,
     useGuardrails,
+    bsEnabled,
+    dragCostPercent: dragCost,
+    floorLimit,
     samplePaths: plainSamplePaths,
     numSimulations,
   });

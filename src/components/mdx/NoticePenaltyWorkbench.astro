@@ -1,0 +1,109 @@
+---
+import InputGroup from '../InputGroup.astro';
+
+interface Props {
+  defaultIncome?: number;
+  instruction?: string;
+}
+
+const { 
+  defaultIncome = 700000, 
+  instruction = 'Calculate your exact Section 234F late filing penalty and estimated Section 234A interest.' 
+} = Astro.props;
+---
+
+<div class="p-6 bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-xl space-y-6 shadow-sm my-8 not-prose">
+	<p class="text-xs text-navy-600 dark:text-navy-400 font-sans">
+		{instruction}
+	</p>
+
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+		<InputGroup 
+			id="wbNetIncome"
+			label="Net Taxable Income"
+			tooltip="Your total income after all deductions."
+			prefix="₹"
+			value={defaultIncome.toString()}
+		/>
+        <InputGroup 
+			id="wbTaxDue"
+			label="Unpaid Tax Due"
+			tooltip="Tax amount pending to be paid to the government."
+			prefix="₹"
+			value="0"
+		/>
+	</div>
+    
+    <div class="flex items-center gap-4 text-xs font-semibold text-navy-800 dark:text-navy-200">
+        <span>Months delayed after July 31st:</span>
+        <input type="range" id="wbMonthsDelay" min="1" max="12" value="1" class="w-1/2 accent-rose-600" />
+        <span id="delayDisplay" class="font-mono text-rose-600">1 Month</span>
+    </div>
+
+	<!-- Workbench Live Results Display -->
+	<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-navy-200 dark:border-navy-800">
+		<div class="p-4 bg-white dark:bg-navy-950 rounded-lg border border-navy-200 dark:border-navy-800 space-y-1">
+			<div class="text-[10px] font-bold text-navy-500 dark:text-navy-400 uppercase tracking-widest">SEC 234F PENALTY</div>
+			<div id="wb234F" class="text-xl font-bold text-navy-900 dark:text-navy-100">₹ 0</div>
+		</div>
+        
+        <div class="p-4 bg-white dark:bg-navy-950 rounded-lg border border-navy-200 dark:border-navy-800 space-y-1">
+			<div class="text-[10px] font-bold text-navy-500 dark:text-navy-400 uppercase tracking-widest">SEC 234A INTEREST (1%/mo)</div>
+			<div id="wb234A" class="text-xl font-bold text-navy-900 dark:text-navy-100">₹ 0</div>
+		</div>
+
+		<div class="p-4 bg-rose-50 dark:bg-rose-950/20 rounded-lg border border-rose-500/30 space-y-1">
+			<div class="text-[10px] font-bold text-rose-500 dark:text-rose-400 uppercase tracking-widest">TOTAL AMOUNT DUE</div>
+			<div id="wbTotalPenalty" class="text-xl font-black text-rose-700 dark:text-rose-400">₹ 0</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	import { parseFormattedNumber, tableFormatter, setupFormattingField } from '../../utils/formatters.js';
+
+	function formatRupee(val: number): string {
+		if (isNaN(val) || val < 0) return '₹0';
+		return `₹${tableFormatter.format(Math.round(val))}`;
+	}
+
+	function runPenaltyCalc() {
+		const income = parseFormattedNumber((document.getElementById('wbNetIncome') as HTMLInputElement)?.value || '0');
+		const taxDue = parseFormattedNumber((document.getElementById('wbTaxDue') as HTMLInputElement)?.value || '0');
+        const months = parseInt((document.getElementById('wbMonthsDelay') as HTMLInputElement)?.value || '1');
+
+        document.getElementById('delayDisplay')!.innerText = `${months} Month${months > 1 ? 's' : ''}`;
+
+        // Section 234F Penalty
+        let penalty234F = 0;
+        if (income > 250000) {
+            if (income <= 500000) {
+                penalty234F = 1000;
+            } else {
+                penalty234F = 5000;
+            }
+        }
+
+        // Section 234A Interest (1% per month on unpaid tax)
+        const interest234A = taxDue * 0.01 * months;
+
+        const totalPenalty = penalty234F + interest234A + taxDue;
+
+        document.getElementById('wb234F')!.innerText = formatRupee(penalty234F);
+        document.getElementById('wb234A')!.innerText = formatRupee(interest234A);
+        document.getElementById('wbTotalPenalty')!.innerText = formatRupee(totalPenalty);
+	}
+
+	document.addEventListener('DOMContentLoaded', () => {
+		['wbNetIncome', 'wbTaxDue'].forEach(id => {
+			const el = document.getElementById(id);
+			if (el) setupFormattingField(el as HTMLInputElement, runPenaltyCalc);
+		});
+        
+        const slider = document.getElementById('wbMonthsDelay');
+        if (slider) slider.addEventListener('input', runPenaltyCalc);
+
+		const elInit = document.getElementById('wbNetIncome');
+		if(elInit) runPenaltyCalc();
+	});
+</script>

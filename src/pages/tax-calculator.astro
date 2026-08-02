@@ -1,0 +1,158 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import CardPremium from '../components/CardPremium.astro';
+import InputGroup from '../components/InputGroup.astro';
+import SectionTitle from '../components/SectionTitle.astro';
+
+// Fetch all MDX articles from the Content Collection
+const allArticles = await getCollection('direct-tax');
+// Optional: We can group them by bucket or sort them if needed. 
+const articlesList = allArticles;
+---
+
+<Layout title="India Direct Tax Code 2025 & Calculators — SWP Intelligence">
+	
+	<Hero 
+		badge="AUTHENTIC INDIA DIRECT TAX CODE (FY 2025-26)"
+		title="India Direct Tax Intelligence Hub"
+		description="Step-by-step tax guidance, interactive slab calculators, capital gains rules, and quantitative master whitepapers under the Income Tax Act, 2025."
+	/>
+
+	<hr class="section-divider" />
+	
+	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 space-y-10">
+		
+		<!-- INTERACTIVE INDIA TAX REGIME CALCULATOR PANEL -->
+		<CardPremium class="max-w-6xl mx-auto space-y-6">
+			
+			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-navy-200 dark:border-white/10 pb-4">
+				<div>
+					<span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">INTERACTIVE SLAB ENGINE</span>
+					<SectionTitle title="India Income Tax Calculator (FY 2025-26)" className="mt-1" />
+				</div>
+				<div id="indiaSavingsBadge" class="badge-safe px-3 py-1.5 text-[10px] font-bold self-start sm:self-auto">
+					New Regime Recommended
+				</div>
+			</div>
+
+			<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+				<!-- Inputs Column (5/12) -->
+				<div class="lg:col-span-5 space-y-4">
+					<InputGroup 
+						id="inIndiaSalary"
+						label="Gross Annual Income / Salary"
+						tooltip="Your total yearly income before any tax deductions or exemptions."
+						prefix="₹"
+						suffix="Gross Income"
+						value="15,00,000"
+					/>
+					<InputGroup 
+						id="inIndiaDeductions"
+						label="Old Regime Deductions (80C, 80D, HRA)"
+						tooltip="Total exemptions claimed under the Old Tax Regime (e.g., ₹1.5L 80C + ₹50k 80D + HRA/Home Loan Interest)."
+						prefix="₹"
+						suffix="Total Deductions"
+						value="2,50,000"
+					/>
+					<p class="text-[11px] text-navy-500 dark:text-navy-400 font-mono px-1">Includes ₹1.5L 80C + ₹50k 80D + HRA/Interest.</p>
+				</div>
+
+				<!-- Outputs Column (7/12) -->
+				<div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+					<!-- New Tax Regime Card -->
+					<div class="p-5 card-premium border-emerald-500/30 rounded-lg space-y-3">
+						<div class="flex justify-between items-center text-[10px] font-bold tracking-widest">
+							<span class="text-emerald-600 dark:text-emerald-400 uppercase">NEW REGIME (DEFAULT)</span>
+							<span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 text-[9px] uppercase">FY 25-26</span>
+						</div>
+						<div class="space-y-1">
+							<div class="text-[10px] uppercase font-bold tracking-widest text-navy-500 dark:text-navy-400">Total Tax Payable:</div>
+							<div id="valNewTax" class="text-2xl font-black text-navy-900 dark:text-navy-100">₹ 0</div>
+						</div>
+						<div class="pt-3 border-t border-navy-200 dark:border-white/10 text-[10px] text-navy-500 dark:text-navy-400 space-y-1.5 uppercase font-bold tracking-widest">
+							<div>Std Deduction: ₹75,000</div>
+							<div>Sec 87A: Up to ₹12.75L Free</div>
+							<div id="valNewEffectiveRate" class="font-bold text-navy-800 dark:text-navy-200 mt-2">Effective Rate: 0.0%</div>
+						</div>
+					</div>
+
+					<!-- Old Tax Regime Card -->
+					<div class="p-5 card-premium rounded-lg space-y-3">
+						<div class="flex justify-between items-center text-[10px] font-bold tracking-widest">
+							<span class="text-navy-500 dark:text-navy-400 uppercase">OLD REGIME (OPTIONAL)</span>
+							<span class="px-2 py-0.5 rounded bg-navy-200 dark:bg-navy-800 text-navy-600 dark:text-navy-400 text-[9px] uppercase">WITH DEDUCTIONS</span>
+						</div>
+						<div class="space-y-1">
+							<div class="text-[10px] uppercase font-bold tracking-widest text-navy-500 dark:text-navy-400">Total Tax Payable:</div>
+							<div id="valOldTax" class="text-2xl font-bold text-navy-900 dark:text-navy-100">₹ 0</div>
+						</div>
+						<div class="pt-3 border-t border-navy-200 dark:border-white/10 text-[10px] text-navy-500 dark:text-navy-400 space-y-1.5 uppercase font-bold tracking-widest">
+							<div>Std Deduction: ₹50,000</div>
+							<div>Deductions: <span id="valOldDeductionsText">₹2,50,000</span></div>
+							<div id="valOldEffectiveRate" class="font-bold text-navy-800 dark:text-navy-200 mt-2">Effective Rate: 0.0%</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</CardPremium>
+
+	</main>
+</Layout>
+
+<script>
+	import { calculateIndiaTaxEngine } from '../utils/tax.js';
+	import { parseFormattedNumber, tableFormatter, setupFormattingField } from '../utils/formatters.js';
+
+	function formatRupee(val: number): string {
+		if (isNaN(val)) return '₹0';
+		return `₹${tableFormatter.format(Math.round(val))}`;
+	}
+
+	function calculateIndiaTax() {
+		const grossSalary = parseFormattedNumber((document.getElementById('inIndiaSalary') as HTMLInputElement)?.value || '1500000');
+		const userDeductions = parseFormattedNumber((document.getElementById('inIndiaDeductions') as HTMLInputElement)?.value || '250000');
+
+		const oldDedText = document.getElementById('valOldDeductionsText');
+		if (oldDedText) oldDedText.innerText = formatRupee(userDeductions);
+
+		const result = calculateIndiaTaxEngine(grossSalary, userDeductions);
+
+		// Update UI DOM
+		const newTaxEl = document.getElementById('valNewTax');
+		const oldTaxEl = document.getElementById('valOldTax');
+		const newEffEl = document.getElementById('valNewEffectiveRate');
+		const oldEffEl = document.getElementById('valOldEffectiveRate');
+		const badgeEl = document.getElementById('indiaSavingsBadge');
+
+		if (newTaxEl) newTaxEl.innerText = formatRupee(result.newTax);
+		if (oldTaxEl) oldTaxEl.innerText = formatRupee(result.oldTax);
+
+		if (newEffEl) newEffEl.innerText = `Effective Rate: ${result.newEffectiveRate}%`;
+		if (oldEffEl) oldEffEl.innerText = `Effective Rate: ${result.oldEffectiveRate}%`;
+
+		if (badgeEl) {
+			if (result.isNewBetter) {
+				badgeEl.innerText = `New Regime Saves ${formatRupee(result.savingsAmount)}`;
+				badgeEl.className = "badge-safe px-3 py-1.5 text-[10px] font-bold self-start sm:self-auto";
+			} else if (result.isOldBetter) {
+				badgeEl.innerText = `Old Regime Saves ${formatRupee(result.savingsAmount)}`;
+				badgeEl.className = "badge-warning px-3 py-1.5 text-[10px] font-bold self-start sm:self-auto";
+			} else {
+				badgeEl.innerText = "Both Regimes Equal Tax";
+				badgeEl.className = "px-3 py-1.5 text-[10px] font-bold self-start sm:self-auto rounded bg-navy-200 dark:bg-navy-800 text-navy-600 dark:text-navy-400 border border-navy-300 dark:border-white/10 uppercase tracking-widest";
+			}
+		}
+	}
+
+	document.addEventListener('DOMContentLoaded', () => {
+		['inIndiaSalary', 'inIndiaDeductions'].forEach(id => {
+			const el = document.getElementById(id);
+			if (el) setupFormattingField(el as HTMLInputElement, calculateIndiaTax);
+		});
+
+		calculateIndiaTax();
+	});
+</script>

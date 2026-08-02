@@ -1,513 +1,277 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import CardPremium from '../components/CardPremium.astro';
+import InputGroup from '../components/InputGroup.astro';
+import SectionTitle from '../components/SectionTitle.astro';
 ---
 
 <Layout title="Guaranteed Income ROI Analyzer — SWP Intelligence">
-	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-		
-		<!-- Centered Funnel Hero Header -->
-		<section class="max-w-4xl mx-auto px-4 flex flex-col items-center text-center hero-glow reveal mb-12">
-			<div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-navy-100 dark:bg-navy-900 text-navy-900 dark:text-navy-100 text-xs font-semibold tracking-wider uppercase mb-6 border border-navy-200 dark:border-navy-800">
-				Smart Policy Reality Check
-			</div>
-			<h1 class="text-hero text-navy-900 dark:text-navy-100 mt-4">
-				Guaranteed Income ROI Analyzer
-			</h1>
-			<p class="text-base sm:text-lg text-navy-500 dark:text-navy-400 font-normal leading-relaxed max-w-2xl mt-3">
-				Unmask the true annualized yield (XIRR), inflation-adjusted real purchasing power, and DIY term replication arbitrage of traditional insurance policies.
-			</p>
-		</section>
+	<Hero 
+		badge="Smart Policy Reality Check"
+		title="Guaranteed Income ROI Analyzer"
+		description="Unmask the true annualized yield (XIRR), inflation-adjusted real purchasing power, and DIY term replication arbitrage of traditional insurance policies."
+	/>
 
+	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-16 sm:pt-6 sm:pb-24 space-y-8">
+		
 		<!-- How This Intelligence Engine Works - 3-Step Explainer Guide -->
-		<div class="card-premium rounded-2xl p-6 md:p-8 mb-10 max-w-7xl mx-auto">
-			<div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-				<div class="flex items-center gap-2">
-					<div class="w-2 h-2 rounded-full bg-navy-900 dark:bg-white"></div>
-					<h2 class="text-lg font-bold tracking-tight text-navy-900 dark:text-navy-100">How This Intelligence Engine Works</h2>
-				</div>
-				<!-- Fixed Contrast on Subtitle -->
-				<span class="text-xs font-mono text-navy-500 dark:text-navy-400 tracking-wider uppercase">3-Step Breakdown</span>
+		<CardPremium class="mb-10 max-w-7xl mx-auto">
+			<div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 border-b border-navy-200 dark:border-navy-800 pb-4">
+				<SectionTitle title="How This Intelligence Engine Works" />
+				<span class="text-[10px] font-bold text-navy-500 dark:text-navy-400 tracking-widest uppercase">3-Step Breakdown</span>
 			</div>
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 				<!-- Step 1 -->
-				<div class="bg-navy-50 dark:bg-navy-900 rounded-lg p-5 border border-navy-200 dark:border-navy-800">
-					<div class="flex items-center gap-3 mb-3">
-						<span class="px-2 py-0.5 rounded-md bg-navy-200 dark:bg-navy-800 text-navy-900 dark:text-navy-100 text-xs font-bold font-mono">01</span>
-						<h3 class="text-sm font-bold tracking-tight text-navy-900 dark:text-navy-100 uppercase">Map the Cash Flow</h3>
+				<div class="bg-navy-50 dark:bg-navy-900 rounded-lg p-6 border border-navy-200 dark:border-navy-800">
+					<div class="flex items-center gap-3 mb-4">
+						<span class="px-2.5 py-1 rounded-md bg-navy-200 dark:bg-navy-800 text-navy-900 dark:text-navy-100 text-xs font-bold font-mono">01</span>
+						<h3 class="text-sm font-bold tracking-widest text-navy-900 dark:text-navy-100 uppercase">Map the Cash Flow</h3>
 					</div>
-					<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed">You input the premiums you pay and the payouts you are promised. We strip away the marketing jargon to build a raw timeline.</p>
+					<p class="text-sm text-navy-600 dark:text-navy-300 leading-relaxed">You input the premiums you pay and the payouts you are promised. We strip away the marketing jargon to build a raw timeline.</p>
 				</div>
 				<!-- Step 2 -->
-				<div class="bg-navy-50 dark:bg-navy-900 rounded-lg p-5 border border-navy-200 dark:border-navy-800">
-					<div class="flex items-center gap-3 mb-3">
-						<span class="px-2 py-0.5 rounded-md bg-navy-200 dark:bg-navy-800 text-navy-900 dark:text-navy-100 text-xs font-bold font-mono">02</span>
-						<h3 class="text-sm font-bold tracking-tight text-navy-900 dark:text-navy-100 uppercase">Calculate Real Value</h3>
+				<div class="bg-navy-50 dark:bg-navy-900 rounded-lg p-6 border border-navy-200 dark:border-navy-800">
+					<div class="flex items-center gap-3 mb-4">
+						<span class="px-2.5 py-1 rounded-md bg-navy-200 dark:bg-navy-800 text-navy-900 dark:text-navy-100 text-xs font-bold font-mono">02</span>
+						<h3 class="text-sm font-bold tracking-widest text-navy-900 dark:text-navy-100 uppercase">Calculate Real Value</h3>
 					</div>
-					<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed">We discount future payouts against inflation (NPV). A ₹10 Lakh payout in 20 years is mathematically worth far less today. We show you the true purchasing power.</p>
+					<p class="text-sm text-navy-600 dark:text-navy-300 leading-relaxed">We discount future payouts against inflation (NPV). A ₹10 Lakh payout in 20 years is mathematically worth far less today. We show you the true purchasing power.</p>
 				</div>
 				<!-- Step 3 -->
-				<div class="bg-navy-50 dark:bg-navy-900 rounded-lg p-5 border border-navy-200 dark:border-navy-800">
-					<div class="flex items-center gap-3 mb-3">
-						<span class="px-2 py-0.5 rounded-md bg-navy-200 dark:bg-navy-800 text-navy-900 dark:text-navy-100 text-xs font-bold font-mono">03</span>
-						<h3 class="text-sm font-bold tracking-tight text-navy-900 dark:text-navy-100 uppercase">Unbundle & Replicate</h3>
+				<div class="bg-navy-50 dark:bg-navy-900 rounded-lg p-6 border border-navy-200 dark:border-navy-800">
+					<div class="flex items-center gap-3 mb-4">
+						<span class="px-2.5 py-1 rounded-md bg-navy-200 dark:bg-navy-800 text-navy-900 dark:text-navy-100 text-xs font-bold font-mono">03</span>
+						<h3 class="text-sm font-bold tracking-widest text-navy-900 dark:text-navy-100 uppercase">Unbundle & Replicate</h3>
 					</div>
-					<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed">We unbundle the life cover from the investment. We mathematically test if it's cheaper to buy pure term insurance and invest the rest yourself in PPF or Equity.</p>
+					<p class="text-sm text-navy-600 dark:text-navy-300 leading-relaxed">We unbundle the life cover from the investment. We mathematically test if it's cheaper to buy pure term insurance and invest the rest yourself in PPF or Equity.</p>
 				</div>
 			</div>
-		</div>
+		</CardPremium>
 
 		<!-- Main 2-Column Grid Layout -->
 		<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start max-w-7xl mx-auto">
 			
 			<!-- Left Column: Input Control Panel (5 Cols) -->
-			<div class="lg:col-span-5 card-premium rounded-2xl p-6 space-y-6">
+			<CardPremium class="lg:col-span-5 space-y-6">
 				
 				<div class="border-b border-navy-200 dark:border-navy-800 pb-4">
-					<h2 class="text-lg font-bold tracking-tight text-navy-900 dark:text-navy-100">Policy & Risk Inputs</h2>
-					<p class="text-sm text-navy-500 dark:text-navy-400 mt-1 leading-relaxed">Enter premium schedules, payout parameters, and term cover proxies.</p>
+					<SectionTitle title="Policy & Risk Inputs" />
+					<p class="text-xs text-navy-500 dark:text-navy-400 mt-1 leading-relaxed">Enter premium schedules, payout parameters, and term cover proxies.</p>
 				</div>
 
 				<div class="space-y-4">
+					<InputGroup 
+						id="inPremium"
+						label="Annual Premium Paid"
+						tooltip="The exact gross amount leaving your bank account every year. Include GST if applicable."
+						prefix="₹"
+						suffix="Policy Outflow"
+						value="1,00,000"
+					/>
 
-					<!-- Input 1: Annual Premium Paid (₹) -->
-					<div>
-						<div class="flex justify-between items-center mb-1">
-							<div class="relative group inline-flex items-center gap-1.5 cursor-pointer">
-								<label for="inPremium" class="text-xs font-semibold text-navy-700 dark:text-navy-300 cursor-pointer">
-									Annual Premium Paid (₹)
-								</label>
-								<svg class="w-3.5 h-3.5 text-navy-400 dark:text-navy-500 hover:text-navy-600 dark:hover:text-navy-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-								<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-800 text-white text-xs rounded-lg p-3 w-64 shadow-xl transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-normal">
-									The exact gross amount leaving your bank account every year. Include GST if applicable.
-								</div>
-							</div>
-							<span class="text-xs font-semibold uppercase tracking-wider text-navy-400 dark:text-navy-500">Policy Outflow</span>
-						</div>
-						<div class="relative">
-							<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-navy-400 text-sm">₹</span>
-							<input 
-								type="number" 
-								id="inPremium" 
-								value="100000" 
-								min="1000" 
-								step="5000"
-								class="input-premium pl-8"
-							/>
-						</div>
-					</div>
-
-					<!-- Input 2: Premium Payment Term (PPT) -->
-					<div>
-						<div class="flex justify-between items-center mb-1">
-							<div class="relative group inline-flex items-center gap-1.5 cursor-pointer">
-								<label for="inPPT" class="text-xs font-semibold text-navy-700 dark:text-navy-300 cursor-pointer">
-									Premium Payment Term (Years)
-								</label>
-								<svg class="w-3.5 h-3.5 text-navy-400 dark:text-navy-500 hover:text-navy-600 dark:hover:text-navy-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-								<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-normal">
-									The total number of years you are contractually required to pay premiums (e.g., 10 or 12 years).
-								</div>
-							</div>
-							<span class="text-xs font-semibold uppercase tracking-wider text-navy-400 dark:text-navy-500">PPT</span>
-						</div>
-						<input 
-							type="number" 
-							id="inPPT" 
-							value="10" 
-							min="1" 
-							max="50"
-							class="input-premium"
+					<div class="grid grid-cols-2 gap-4">
+						<InputGroup 
+							id="inPPT"
+							label="Premium Payment Term"
+							tooltip="The total number of years you are contractually required to pay premiums (e.g., 10 or 12 years)."
+							suffix="Years"
+							type="number"
+							value="10"
+						/>
+						<InputGroup 
+							id="inPayoutStart"
+							label="Payout Start Year"
+							tooltip="The exact policy year when money starts flowing back into your bank account."
+							suffix="Policy Yr"
+							type="number"
+							value="11"
 						/>
 					</div>
 
-					<!-- Input 3: Income Payout Start Year -->
-					<div>
-						<div class="flex justify-between items-center mb-1">
-							<div class="relative group inline-flex items-center gap-1.5 cursor-pointer">
-								<label for="inPayoutStart" class="text-xs font-semibold text-navy-700 dark:text-navy-300 cursor-pointer">
-									Payout Start Year (Policy Year)
-								</label>
-								<svg class="w-3.5 h-3.5 text-navy-400 dark:text-navy-500 hover:text-navy-600 dark:hover:text-navy-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-								<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-normal">
-									The exact policy year when money starts flowing back into your bank account. For immediate income, set to 1. For deferred income, set to PPT + 1.
-								</div>
-							</div>
-							<span class="text-xs font-semibold uppercase tracking-wider text-navy-400 dark:text-navy-500">Deferral</span>
-						</div>
-						<input 
-							type="number" 
-							id="inPayoutStart" 
-							value="11" 
-							min="1" 
-							max="50"
-							step="1"
-							class="input-premium"
+					<div class="grid grid-cols-2 gap-4">
+						<InputGroup 
+							id="inPayoutYears"
+							label="Income Payout Duration"
+							tooltip="The total number of years you will receive the guaranteed regular income stream."
+							suffix="Years"
+							type="number"
+							value="20"
 						/>
-						<p class="text-[10px] text-navy-400 dark:text-navy-500 mt-1">The exact year the income payouts begin (e.g., Type '2' if cashbacks start in the 2nd year).</p>
-					</div>
-
-					<!-- Income Payout Duration (Years) -->
-					<div>
-						<div class="flex justify-between items-center mb-1">
-							<div class="relative group inline-flex items-center gap-1.5 cursor-pointer">
-								<label for="inPayoutYears" class="text-xs font-semibold text-navy-700 dark:text-navy-300 cursor-pointer">
-									Income Payout Duration
-								</label>
-								<svg class="w-3.5 h-3.5 text-navy-400 hover:text-navy-600 dark:hover:text-navy-200 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-								</svg>
-								<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-normal">
-									The total number of years you will receive the guaranteed regular income stream.
-								</div>
-							</div>
-							<span class="text-xs font-semibold uppercase tracking-wider text-navy-400 dark:text-navy-500">Payout Years</span>
-						</div>
-						<input 
-							type="number" 
-							id="inPayoutYears" 
-							value="20" 
-							min="1" 
-							max="50"
-							step="1"
-							class="input-premium"
+						<InputGroup 
+							id="inInflation"
+							label="Inflation Rate"
+							tooltip="The expected annual increase in the cost of living."
+							suffix="%"
+							type="number"
+							value="6.0"
 						/>
 					</div>
 
-					<!-- Annual Income Received (₹) -->
-					<div>
-						<div class="flex justify-between items-center mb-1">
-							<div class="relative group inline-flex items-center gap-1.5 cursor-pointer">
-								<label for="inPayout" class="text-xs font-semibold text-navy-700 dark:text-navy-300 cursor-pointer">
-									Annual Income Received (₹)
-								</label>
-								<svg class="w-3.5 h-3.5 text-navy-400 hover:text-navy-600 dark:hover:text-navy-200 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-								</svg>
-								<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-normal">
-									The recurring yearly payout amount promised by the policy.
-								</div>
-							</div>
-							<span class="text-xs font-semibold uppercase tracking-wider text-navy-400 dark:text-navy-500">Inflow / Year</span>
-						</div>
-						<div class="relative">
-							<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-navy-400 text-sm">₹</span>
-							<input 
-								type="number" 
-								id="inPayout" 
-								value="120000" 
-								min="0" 
-								step="5000"
-								class="input-premium pl-8"
-							/>
-						</div>
-					</div>
+					<InputGroup 
+						id="inPayout"
+						label="Annual Income Received"
+						tooltip="The recurring yearly payout amount promised by the policy."
+						prefix="₹"
+						suffix="Inflow / Year"
+						value="1,20,000"
+					/>
 
-					<!-- Terminal Maturity Benefit (₹) -->
-					<div>
-						<div class="flex justify-between items-center mb-1">
-							<div class="relative group inline-flex items-center gap-1.5 cursor-pointer">
-								<label for="inMaturity" class="text-xs font-semibold text-navy-700 dark:text-navy-300 cursor-pointer">
-									Terminal Maturity Benefit (₹)
-								</label>
-								<svg class="w-3.5 h-3.5 text-navy-400 hover:text-navy-600 dark:hover:text-navy-200 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-								</svg>
-								<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-normal">
-									The final lump-sum bonus paid at the very end of the policy. (Often framed as 'Return of Premium'). Type 0 if there is no final bonus.
-								</div>
-							</div>
-							<span class="text-xs font-semibold uppercase tracking-wider text-navy-400 dark:text-navy-500">Lump-Sum at End</span>
-						</div>
-						<div class="relative">
-							<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-navy-400 text-sm">₹</span>
-							<input 
-								type="number" 
-								id="inMaturity" 
-								value="1000000" 
-								min="0" 
-								step="50000"
-								class="input-premium pl-8"
-							/>
-						</div>
-					</div>
+					<InputGroup 
+						id="inMaturity"
+						label="Terminal Maturity Benefit"
+						tooltip="The final lump-sum bonus paid at the very end of the policy. Type 0 if there is no final bonus."
+						prefix="₹"
+						suffix="Lump-Sum at End"
+						value="10,00,000"
+					/>
 
-					<!-- Inflation Rate (%) -->
-					<div>
-						<div class="flex justify-between items-center mb-1">
-							<div class="relative group inline-flex items-center gap-1.5 cursor-pointer">
-								<label for="inInflation" class="text-xs font-semibold text-navy-700 dark:text-navy-300 cursor-pointer">
-									Inflation Rate (%)
-								</label>
-								<svg class="w-3.5 h-3.5 text-navy-400 hover:text-navy-600 dark:hover:text-navy-200 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-								</svg>
-								<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-normal">
-									The expected annual increase in the cost of living. The engine uses this to discount future payouts, revealing exactly what that money will buy in today's purchasing power.
-								</div>
-							</div>
-							<span class="text-xs font-semibold uppercase tracking-wider text-navy-400 dark:text-navy-500">Purchasing Power Drag</span>
-						</div>
-						<input 
-							type="number" 
-							id="inInflation" 
-							value="6.0" 
-							min="0" 
-							max="20"
-							step="0.5"
-							class="input-premium"
-						/>
-					</div>
+					<hr class="section-divider" />
 
 					<!-- Hybrid Input: Unbundle Insurance Costs Section -->
-					<div class="border-t border-navy-200 dark:border-navy-800 pt-4 space-y-4">
-						
-						<!-- Master Toggle Header & Advanced Gear Button -->
+					<div class="space-y-4">
 						<div class="flex items-center justify-between bg-navy-50 dark:bg-navy-900 p-4 rounded-lg border border-navy-200 dark:border-navy-800 gap-3">
 							<div class="flex items-center gap-3 min-w-0">
 								<label class="relative inline-flex items-center cursor-pointer shrink-0">
 									<input type="checkbox" id="unbundleToggle" class="sr-only peer" checked>
 									<div class="w-11 h-6 bg-navy-300 dark:bg-navy-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-navy-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-navy-900 dark:peer-checked:bg-white"></div>
 								</label>
-								<!-- Removed truncate, added min-w-0 to allow text wrapping -->
 								<div class="flex flex-col min-w-0">
 									<span class="text-sm font-bold tracking-tight text-navy-900 dark:text-navy-100">Unbundle Costs</span>
-									<span class="text-xs sm:text-sm text-navy-500 dark:text-navy-400 leading-snug mt-0.5">Deduct pure term & rider premiums</span>
+									<span class="text-xs text-navy-500 dark:text-navy-400 mt-0.5">Deduct pure term & rider premiums</span>
 								</div>
 							</div>
-							<button type="button" id="advancedToggleBtn" class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-navy-700 dark:text-navy-300 bg-transparent hover:bg-navy-200/60 dark:hover:bg-navy-800 rounded-md transition-all duration-200 ease-geist border border-navy-200 dark:border-navy-800 cursor-pointer">
+							<button type="button" id="advancedToggleBtn" class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-navy-700 dark:text-navy-300 bg-transparent hover:bg-navy-200/60 dark:hover:bg-navy-800 rounded transition-all duration-200 border border-navy-200 dark:border-navy-800 cursor-pointer">
 								<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
 								Advanced
 							</button>
 						</div>
 
-						<!-- Simple View (Visible when Unbundle toggle is ON) -->
-						<div id="simpleRiskView" class="space-y-3.5">
-							<!-- Life Cover Amount (₹) -->
-							<div>
-								<div class="flex justify-between items-center mb-1">
-									<label for="inTermCover" class="text-xs font-semibold text-navy-700 dark:text-navy-300">
-										Life Cover Amount (₹)
-									</label>
-									<span class="text-xs font-semibold uppercase tracking-wider text-navy-400 dark:text-navy-500">Death Benefit</span>
-								</div>
-								<div class="relative">
-									<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-navy-400 text-sm">₹</span>
-									<input 
-										type="number" 
-										id="inTermCover" 
-										value="10000000" 
-										min="0" 
-										step="1000000"
-										class="input-premium pl-8"
-									/>
-								</div>
-							</div>
-
-							<!-- Accident Cover Amount (₹) -->
-							<div>
-								<div class="flex justify-between items-center mb-1">
-									<label for="inAccidentCover" class="text-xs font-semibold text-navy-700 dark:text-navy-300">
-										Accident Cover Amount (₹)
-									</label>
-									<span class="text-xs font-semibold uppercase tracking-wider text-navy-400 dark:text-navy-500">Rider</span>
-								</div>
-								<div class="relative">
-									<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-navy-400 text-sm">₹</span>
-									<input 
-										type="number" 
-										id="inAccidentCover" 
-										value="5000000" 
-										min="0" 
-										step="1000000"
-										class="input-premium pl-8"
-									/>
-								</div>
-							</div>
+						<div id="simpleRiskView" class="space-y-4">
+							<InputGroup 
+								id="inTermCover"
+								label="Life Cover Amount"
+								tooltip="The death benefit promised by the insurance policy."
+								prefix="₹"
+								suffix="Death Benefit"
+								value="1,00,00,000"
+							/>
+							<InputGroup 
+								id="inAccidentCover"
+								label="Accident Cover Amount"
+								tooltip="The accidental death or disability rider amount."
+								prefix="₹"
+								suffix="Rider"
+								value="50,00,000"
+							/>
 						</div>
 
-						<!-- Advanced Override View (Visible when Gear button is clicked) -->
-						<div id="advancedRiskView" class="hidden p-3.5 bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg space-y-3.5">
-							<div class="text-[11px] font-bold text-navy-900 dark:text-navy-100 uppercase tracking-wider">
+						<div id="advancedRiskView" class="hidden p-4 bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg space-y-4">
+							<div class="text-[10px] font-bold text-navy-900 dark:text-navy-100 uppercase tracking-widest">
 								Actuarial Premium Overrides
 							</div>
-							
-							<!-- Annual Term Life Premium (₹) -->
-							<div>
-								<div class="flex justify-between items-center mb-1">
-									<label for="inTermCostOverride" class="text-xs font-semibold text-navy-700 dark:text-navy-300">
-										Annual Term Premium (₹)
-									</label>
-									<span class="text-xs font-semibold uppercase tracking-wider text-navy-400 dark:text-navy-500">Term Cost</span>
-								</div>
-								<div class="relative">
-									<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-navy-400 text-sm">₹</span>
-									<input 
-										type="number" 
-										id="inTermCostOverride" 
-										value="12000" 
-										min="0" 
-										step="500"
-										class="input-premium pl-8"
-									/>
-								</div>
-							</div>
-
-							<!-- Annual Accident Premium (₹) -->
-							<div>
-								<div class="flex justify-between items-center mb-1">
-									<label for="inAccidentCostOverride" class="text-xs font-semibold text-navy-700 dark:text-navy-300">
-										Annual Accident Premium (₹)
-									</label>
-									<span class="text-xs font-semibold uppercase tracking-wider text-navy-400 dark:text-navy-500">Rider Cost</span>
-								</div>
-								<div class="relative">
-									<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-navy-400 text-sm">₹</span>
-									<input 
-										type="number" 
-										id="inAccidentCostOverride" 
-										value="5000" 
-										min="0" 
-										step="500"
-										class="input-premium pl-8"
-									/>
-								</div>
-							</div>
+							<InputGroup 
+								id="inTermCostOverride"
+								label="Annual Term Premium"
+								tooltip="The open market cost of pure term insurance for this cover amount."
+								prefix="₹"
+								suffix="Term Cost"
+								value="12,000"
+							/>
+							<InputGroup 
+								id="inAccidentCostOverride"
+								label="Annual Accident Premium"
+								tooltip="The open market cost of an accident rider."
+								prefix="₹"
+								suffix="Rider Cost"
+								value="5,000"
+							/>
 						</div>
 
 					</div>
 
 				</div>
-			</div>
+			</CardPremium>
 
 			<!-- Right Column: Dashboard (7 Cols) -->
 			<div class="lg:col-span-7 space-y-6">
 				
-				<!-- Main Dashboard Header -->
-				<div class="border-b border-navy-200 dark:border-navy-800 pb-4">
-					<h2 class="text-xl font-bold tracking-tight text-navy-900 dark:text-navy-100">Smart Policy Reality Check</h2>
-					<p class="text-sm text-navy-500 dark:text-navy-400 mt-1 leading-relaxed">Comparing what the insurance company promised vs. building the same safety net yourself.</p>
-				</div>
-
 				<!-- Engine A: The Insurance Policy's Promise -->
-				<div class="relative overflow-hidden card-premium rounded-2xl p-6 sm:p-7 space-y-5 animate-slide-up-fade hover:-translate-y-[1px] hover:shadow-sm active:translate-y-[0px] active:scale-[0.99] transition-all duration-200 ease-geist">
-					
+				<CardPremium class="space-y-5">
 					<div class="flex items-center justify-between border-b border-navy-200 dark:border-navy-800 pb-4">
 						<div>
-							<h3 class="text-base font-bold tracking-tight text-navy-900 dark:text-navy-100 uppercase">1. The Insurance Policy's Promise</h3>
-							<p class="text-sm text-navy-500 dark:text-navy-400 mt-1 leading-relaxed">What you actually get after accounting for inflation.</p>
+							<h3 class="text-xs font-bold tracking-widest text-navy-900 dark:text-navy-100 uppercase">1. The Insurance Policy's Promise</h3>
+							<p class="text-xs text-navy-500 dark:text-navy-400 mt-1 leading-relaxed">What you actually get after accounting for inflation.</p>
 						</div>
-						<div id="xirrHealthBadge" class="badge-warning">
-							EVALUATING
-						</div>
+						<div id="xirrHealthBadge" class="badge-warning">EVALUATING</div>
 					</div>
 
 					<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-						<div>
-							<div class="text-sm font-semibold text-navy-500 dark:text-navy-400 stat-label">True Yield (XIRR)</div>
-							<div id="engineAXIRR" class="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 font-sans tracking-tight mt-1 stat-value">
-								0.00%
-							</div>
+						<div class="bg-navy-50 dark:bg-navy-900 rounded-lg p-4 border border-navy-200 dark:border-navy-800">
+							<div class="text-xs font-semibold text-navy-500 dark:text-navy-400 uppercase tracking-widest">True Yield (XIRR)</div>
+							<div id="engineAXIRR" class="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 font-sans tracking-tight mt-1">0.00%</div>
 						</div>
-						<div>
-							<div class="text-sm font-semibold text-navy-500 dark:text-navy-400 stat-label">Total Nominal Payout</div>
-							<div id="engineANominal" class="text-2xl font-bold text-navy-900 dark:text-navy-100 font-sans mt-1 stat-value">
-								₹0
-							</div>
+						<div class="bg-navy-50 dark:bg-navy-900 rounded-lg p-4 border border-navy-200 dark:border-navy-800">
+							<div class="text-xs font-semibold text-navy-500 dark:text-navy-400 uppercase tracking-widest">Nominal Payout</div>
+							<div id="engineANominal" class="text-xl font-bold text-navy-900 dark:text-navy-100 font-sans mt-2">₹0</div>
 						</div>
-						<div>
-							<div class="text-sm font-semibold text-amber-600 dark:text-amber-400">Inflation Real Value</div>
-							<div id="engineAReal" class="text-2xl font-bold text-amber-600 dark:text-amber-400 font-sans mt-1 stat-value">
-								₹0
-							</div>
-							<p class="text-sm text-navy-500 dark:text-navy-400 mt-2 leading-relaxed">
-								What your final total nominal payout will actually buy in today's money due to inflation.
-							</p>
+						<div class="bg-navy-50 dark:bg-navy-900 rounded-lg p-4 border border-navy-200 dark:border-navy-800">
+							<div class="text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-widest">Inflation Real Value</div>
+							<div id="engineAReal" class="text-xl font-bold text-amber-600 dark:text-amber-400 font-sans mt-2">₹0</div>
 						</div>
 					</div>
-
-				</div>
+				</CardPremium>
 
 				<!-- Engine B & Engine C: Synthetic Arbitrage Replication Pillars -->
 				<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 					
 					<!-- Engine B: The Safe DIY Route -->
-					<div class="card-premium rounded-2xl p-6 flex flex-col h-full space-y-4 animate-slide-up-fade [animation-delay:100ms] opacity-0 hover:-translate-y-[1px] hover:shadow-sm active:translate-y-[0px] active:scale-[0.99] transition-all duration-200 ease-geist">
+					<CardPremium class="flex flex-col h-full space-y-4">
 						<div class="flex items-start justify-between mb-4 border-b border-navy-100 dark:border-navy-800 pb-3">
 							<div>
-								<div class="flex items-center gap-2">
-									<h3 class="text-base font-bold tracking-tight text-navy-900 dark:text-navy-100 uppercase">2. The Safe DIY Route (Term Life + Govt Bonds)</h3>
-									<!-- Inline Tooltip -->
-									<div class="relative group inline-flex cursor-pointer">
-										<svg class="w-4 h-4 text-navy-400 dark:text-navy-500 hover:text-navy-600 dark:hover:text-navy-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-										<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-relaxed">
-											Synthetic Replication: We mathematically split your premium. We buy pure term life and accident cover at open-market rates, then invest the leftover cash into a risk-free 7.1% government bond. This reveals if the insurer is overcharging for safety.
-										</div>
-									</div>
-								</div>
-								<p class="text-sm text-navy-500 dark:text-navy-400 mt-1 leading-relaxed">We buy pure term insurance and invest the rest in safe 7.1% PPF. Does the policy beat government bonds?</p>
+								<h3 class="text-xs font-bold tracking-widest text-navy-900 dark:text-navy-100 uppercase">2. The Safe DIY Route</h3>
+								<p class="text-[10px] uppercase font-bold tracking-widest text-navy-500 dark:text-navy-400 mt-1">Term Life + Govt Bonds</p>
 							</div>
-							<div id="badgeContainerB" class="shrink-0 ml-3">
-								<div id="engineBBadge" class="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md shrink-0 mt-0.5">
-									--
-								</div>
-							</div>
+							<div id="engineBBadge" class="px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest rounded bg-navy-100 dark:bg-navy-800 text-navy-600 dark:text-navy-400">--</div>
 						</div>
 						<div>
-							<div class="text-sm font-semibold text-navy-500 dark:text-navy-400 stat-label">Surplus Wealth / Deficit</div>
-							<div id="engineBSurplus" class="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 font-sans mt-1">
-								₹0
-							</div>
-							<p id="engineBText" class="text-sm text-navy-600 dark:text-navy-400 mt-3 leading-relaxed">
-								Evaluating risk-free arbitrage...
-							</p>
+							<div class="text-xs font-semibold text-navy-500 dark:text-navy-400 uppercase tracking-widest">Surplus Wealth / Deficit</div>
+							<div id="engineBSurplus" class="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">₹0</div>
+							<p id="engineBText" class="text-xs text-navy-600 dark:text-navy-400 mt-3 leading-relaxed">Evaluating risk-free arbitrage...</p>
 						</div>
-						<div class="mt-auto pt-4 border-t border-navy-100 dark:border-navy-800/60 w-full">
+						<div class="mt-auto pt-4 border-t border-navy-100 dark:border-navy-800 w-full">
 							<div class="flex items-center justify-between w-full">
 								<span class="text-xs font-medium text-navy-500 dark:text-navy-400">Term Insurance Paid:</span>
-								<span class="text-xs font-bold text-rose-600 dark:text-rose-400 font-mono" id="valRiskCostB">₹0.00</span>
+								<span class="text-xs font-bold text-rose-600 dark:text-rose-400" id="valRiskCostB">₹0</span>
 							</div>
 						</div>
-					</div>
+					</CardPremium>
 
 					<!-- Engine C: The Growth DIY Route -->
-					<div class="card-premium rounded-2xl p-6 flex flex-col h-full space-y-4 animate-slide-up-fade [animation-delay:200ms] opacity-0 hover:-translate-y-[1px] hover:shadow-sm active:translate-y-[0px] active:scale-[0.99] transition-all duration-200 ease-geist">
+					<CardPremium class="flex flex-col h-full space-y-4">
 						<div class="flex items-start justify-between mb-4 border-b border-navy-100 dark:border-navy-800 pb-3">
 							<div>
-								<div class="flex items-center gap-2">
-									<h3 class="text-base font-bold tracking-tight text-navy-900 dark:text-navy-100 uppercase">3. The Growth DIY Route (Term Life + Index Funds)</h3>
-									<!-- Inline Tooltip -->
-									<div class="relative group inline-flex cursor-pointer">
-										<svg class="w-4 h-4 text-navy-400 dark:text-navy-500 hover:text-navy-600 dark:hover:text-navy-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-										<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-relaxed">
-											The Opportunity Cost: We buy the exact same pure term and accident cover, but invest the remaining cash into a volatile 12% Equity Index Fund. This exposes the massive wealth sacrificed by refusing to take market risk.
-										</div>
-									</div>
-								</div>
-								<p class="text-sm text-navy-500 dark:text-navy-400 mt-1 leading-relaxed">What happens if you take market risk instead of locking cash into low-yield insurance?</p>
+								<h3 class="text-xs font-bold tracking-widest text-navy-900 dark:text-navy-100 uppercase">3. The Growth DIY Route</h3>
+								<p class="text-[10px] uppercase font-bold tracking-widest text-navy-500 dark:text-navy-400 mt-1">Term Life + Index Funds</p>
 							</div>
 						</div>
 						<div>
-							<div class="text-sm font-semibold text-navy-500 dark:text-navy-400 stat-label">Surplus Wealth / Deficit</div>
-							<div id="engineCSurplus" class="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400 font-sans mt-1">
-								₹0
-							</div>
-							<p id="engineCText" class="text-sm text-navy-600 dark:text-navy-400 mt-3 leading-relaxed">
-								Evaluating equity volatility arbitrage...
-							</p>
+							<div class="text-xs font-semibold text-navy-500 dark:text-navy-400 uppercase tracking-widest">Surplus Wealth / Deficit</div>
+							<div id="engineCSurplus" class="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400 mt-1">₹0</div>
+							<p id="engineCText" class="text-xs text-navy-600 dark:text-navy-400 mt-3 leading-relaxed">Evaluating equity volatility arbitrage...</p>
 						</div>
-						<div class="mt-auto pt-4 border-t border-navy-100 dark:border-navy-800/60 w-full">
+						<div class="mt-auto pt-4 border-t border-navy-100 dark:border-navy-800 w-full">
 							<div class="flex items-center justify-between w-full">
 								<span class="text-xs font-medium text-navy-500 dark:text-navy-400">Term Insurance Paid:</span>
-								<span class="text-xs font-bold text-rose-600 dark:text-rose-400 font-mono" id="valRiskCostC">₹0.00</span>
+								<span class="text-xs font-bold text-rose-600 dark:text-rose-400" id="valRiskCostC">₹0</span>
 							</div>
 						</div>
-					</div>
+					</CardPremium>
 
 				</div>
 
-				<!-- Summary Arbitrage Note -->
-				<div class="p-4 bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-2xl text-sm text-navy-600 dark:text-navy-400 leading-relaxed space-y-1">
-					<strong class="font-bold text-navy-900 dark:text-navy-100 block">The Bottom Line:</strong>
+				<div class="p-4 bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg text-xs text-navy-600 dark:text-navy-400 leading-relaxed space-y-1">
+					<strong class="font-bold text-navy-900 dark:text-navy-100 block uppercase tracking-widest text-[10px]">The Bottom Line:</strong>
 					<span id="replicationTakeaway">
 						By unbundling insurance from investment, purchasing pure Term Life + Accident cover, and investing the rest, you fund the exact same income payouts while keeping substantial surplus wealth.
 					</span>
@@ -517,274 +281,85 @@ import Layout from '../layouts/Layout.astro';
 		</div>
 
 		<!-- Hidden Frictions X-Ray Panel -->
-		<div class="mt-8 card-premium rounded-2xl p-6">
-			<div class="flex items-center justify-between mb-6">
-				<div>
-					<h3 class="text-base font-bold tracking-tight text-navy-900 dark:text-navy-100 uppercase">Hidden Policy Frictions (The X-Ray)</h3>
-					<p class="text-sm text-navy-500 dark:text-navy-400 mt-1">Exposing the invisible taxes, commissions, and lock-in delays sapping your capital.</p>
-				</div>
-			</div>
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+		<CardPremium class="max-w-7xl mx-auto mt-8">
+			<SectionTitle title="Hidden Policy Frictions (The X-Ray)" />
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
 				<!-- Card 1: GST Capital Leakage -->
 				<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-4 flex flex-col justify-between">
 					<div>
-						<span class="text-xs font-semibold uppercase tracking-wider text-navy-500 dark:text-navy-500">Total GST Tax Drag</span>
-						<div id="frictionalGst" class="text-2xl font-bold font-mono text-rose-600 dark:text-rose-400 mt-2">₹0.00</div>
+						<span class="text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">Total GST Tax Drag</span>
+						<div id="frictionalGst" class="text-xl font-bold text-rose-600 dark:text-rose-400 mt-2">₹0</div>
 					</div>
-					<p class="text-sm text-navy-500 dark:text-navy-400 mt-2 leading-relaxed">Government tax deducted from gross premiums (~4.5% Year 1, ~2.25% thereafter).</p>
+					<p class="text-xs text-navy-500 dark:text-navy-400 mt-2 leading-relaxed">Government tax deducted from gross premiums (~4.5% Year 1, ~2.25% thereafter).</p>
 				</div>
 				<!-- Card 2: Real Break-Even Year -->
 				<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-4 flex flex-col justify-between">
 					<div>
-						<span class="text-xs font-semibold uppercase tracking-wider text-navy-500 dark:text-navy-500">Real Break-Even Year</span>
-						<div id="frictionalBreakEven" class="text-2xl font-bold font-mono text-amber-600 dark:text-amber-400 mt-2">Year --</div>
+						<span class="text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">Real Break-Even Year</span>
+						<div id="frictionalBreakEven" class="text-xl font-bold text-amber-600 dark:text-amber-400 mt-2">Year --</div>
 					</div>
-					<p class="text-sm text-navy-500 dark:text-navy-400 mt-2 leading-relaxed">The exact year inflation-adjusted purchasing power crosses back into positive territory.</p>
+					<p class="text-xs text-navy-500 dark:text-navy-400 mt-2 leading-relaxed">The exact year inflation-adjusted purchasing power crosses back into positive territory.</p>
 				</div>
 				<!-- Card 3: Agent Commission Estimate -->
 				<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-4 flex flex-col justify-between">
 					<div>
-						<span class="text-xs font-semibold uppercase tracking-wider text-navy-500 dark:text-navy-500">Est. Agent Commission</span>
-						<div id="frictionalCommission" class="text-2xl font-bold font-mono text-purple-600 dark:text-purple-400 mt-2">₹0.00</div>
+						<span class="text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">Est. Agent Commission</span>
+						<div id="frictionalCommission" class="text-xl font-bold text-purple-600 dark:text-purple-400 mt-2">₹0</div>
 					</div>
-					<p class="text-sm text-navy-500 dark:text-navy-400 mt-2 leading-relaxed">Estimated first-year distribution kickback built into traditional policy structures (~20%).</p>
+					<p class="text-xs text-navy-500 dark:text-navy-400 mt-2 leading-relaxed">Estimated first-year distribution kickback built into traditional policy structures (~20%).</p>
 				</div>
 			</div>
-		</div>
-
-		<!-- SECTION: INSURANCE QUANT KNOWLEDGE BASE FAQs -->
-		<section class="bg-white dark:bg-navy-950 border border-navy-200 dark:border-white/10 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xs transition-all duration-200 ease-geist max-w-7xl mx-auto mt-12 reveal">
-			
-			<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-navy-200 dark:border-white/10">
-				<div class="space-y-1">
-					<div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-navy-100 dark:bg-navy-900 text-navy-900 dark:text-navy-100 text-xs font-semibold tracking-wider uppercase border border-navy-200 dark:border-white/10 shadow-xs">
-						<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-						<span>INSURANCE KNOWLEDGE BASE</span>
-					</div>
-					<h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-navy-900 dark:text-navy-100 font-sans">
-						Deconstructing Guaranteed Income Mechanics
-					</h2>
-					<p class="text-xs sm:text-sm text-navy-500 dark:text-navy-400 leading-relaxed font-sans">
-						Unmask true annualized XIRR yield, inflation purchasing power destruction, unbundled term replication, and surrender charge frictions.
-					</p>
-				</div>
-
-				<!-- Category Filter Segmented Control Bar -->
-				<div id="faqFilterContainer" class="p-1 bg-navy-100 dark:bg-navy-900 border border-navy-200 dark:border-white/10 rounded-lg inline-flex items-center gap-1 self-start md:self-auto overflow-x-auto max-w-full shrink-0">
-					<button type="button" data-faq-cat="all" class="faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 btn-gold cursor-pointer shadow-xs whitespace-nowrap">
-						ALL
-					</button>
-					<button type="button" data-faq-cat="xirr" class="faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 btn-ghost cursor-pointer whitespace-nowrap">
-						REAL XIRR YIELD
-					</button>
-					<button type="button" data-faq-cat="inflation" class="faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 btn-ghost cursor-pointer whitespace-nowrap">
-						INFLATION DESTRUCTION
-					</button>
-					<button type="button" data-faq-cat="replication" class="faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 btn-ghost cursor-pointer whitespace-nowrap">
-						TERM REPLICATION
-					</button>
-				</div>
-			</div>
-
-			<!-- FAQ Cards Grid Architecture -->
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="faqCardGrid">
-				
-				<!-- Card 1: Inflation Real Value -->
-				<div class="faq-card bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-white/10 rounded-2xl p-5 sm:p-6 space-y-3.5 hover:border-navy-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between" data-category="inflation">
-					<div class="space-y-2">
-						<div class="flex items-center justify-between">
-							<span class="badge-safe">
-								NOMINAL ILLUSION
-							</span>
-							<span class="text-xs font-mono text-navy-400 dark:text-navy-500 font-semibold">Q01</span>
-						</div>
-						<h3 class="text-base font-bold text-navy-900 dark:text-navy-100 font-sans leading-snug">
-							Why is the 'Inflation Real Value' so much lower than promised insurance payouts?
-						</h3>
-						<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans">
-							Promising ₹34 Lakhs over 20 years creates a nominal illusion. Inflation acts like a slow leak in a tire. At 6% inflation, ₹100 next year buys only ₹94 of goods. Decades later, the physical purchasing power of those payouts is decimated.
-						</p>
-					</div>
-					<div class="pt-2 border-t border-navy-200/80 dark:border-white/10 bg-emerald-500/5 dark:bg-emerald-500/10 p-3 rounded-lg border-l-2 border-emerald-500">
-						<div class="text-[11px] font-mono font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide">💡 Key Takeaway</div>
-						<div class="text-xs text-navy-700 dark:text-navy-300 font-sans mt-0.5">Always evaluate future insurance payouts in Present Value purchasing power.</div>
-					</div>
-				</div>
-
-				<!-- Card 2: The Cashback Trap -->
-				<div class="faq-card bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-white/10 rounded-2xl p-5 sm:p-6 space-y-3.5 hover:border-navy-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between" data-category="xirr">
-					<div class="space-y-2">
-						<div class="flex items-center justify-between">
-							<span class="badge-gold">
-								CASHBACK TRAP
-							</span>
-							<span class="text-xs font-mono text-navy-400 dark:text-navy-500 font-semibold">Q02</span>
-						</div>
-						<h3 class="text-base font-bold text-navy-900 dark:text-navy-100 font-sans leading-snug">
-							My policy pays 'cashbacks' while I pay premiums. How is XIRR calculated?
-						</h3>
-						<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans">
-							Receiving a ₹30,000 survival cashback in Year 4 while paying a ₹1,00,000 premium creates a false sense of earning. Our engine nets these overlapping timelines, registering a net outflow of ₹70,000 to reveal the true low XIRR.
-						</p>
-					</div>
-					<div class="pt-2 border-t border-navy-200/80 dark:border-white/10 bg-navy-100/80 dark:bg-navy-950 p-3 rounded-lg border-l-2 border-navy-400 dark:border-navy-500">
-						<div class="text-[11px] font-mono font-bold text-navy-800 dark:text-navy-200 uppercase tracking-wide">💡 Key Takeaway</div>
-						<div class="text-xs text-navy-700 dark:text-navy-300 font-sans mt-0.5">XIRR nets all cashflow dates strictly to expose true underlying annualized returns.</div>
-					</div>
-				</div>
-
-				<!-- Card 3: Synthetic Replication -->
-				<div class="faq-card bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-white/10 rounded-2xl p-5 sm:p-6 space-y-3.5 hover:border-navy-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between" data-category="replication">
-					<div class="space-y-2">
-						<div class="flex items-center justify-between">
-							<span class="badge-safe">
-								UNBUNDLED ARBITRAGE
-							</span>
-							<span class="text-xs font-mono text-navy-400 dark:text-navy-500 font-semibold">Q03</span>
-						</div>
-						<h3 class="text-base font-bold text-navy-900 dark:text-navy-100 font-sans leading-snug">
-							What is 'Synthetic Replication' and how does Term + PPF unbundling work?
-						</h3>
-						<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans">
-							Synthetic Replication unbundles insurance from investment. We buy pure cheap Term Life cover on the open market and invest the remaining savings in risk-free sovereign PPF or Mutual Funds, exposing hidden policy fee drag.
-						</p>
-					</div>
-					<div class="pt-2 border-t border-navy-200/80 dark:border-white/10 bg-emerald-500/5 dark:bg-emerald-500/10 p-3 rounded-lg border-l-2 border-emerald-500">
-						<div class="text-[11px] font-mono font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide">💡 Key Takeaway</div>
-						<div class="text-xs text-navy-700 dark:text-navy-300 font-sans mt-0.5">Unbundling term life cover from investments creates substantial wealth arbitrage.</div>
-					</div>
-				</div>
-
-				<!-- Card 4: Doubling Money Myth -->
-				<div class="faq-card bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-white/10 rounded-2xl p-5 sm:p-6 space-y-3.5 hover:border-navy-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between" data-category="xirr">
-					<div class="space-y-2">
-						<div class="flex items-center justify-between">
-							<span class="badge-danger">
-								TIME BLINDNESS
-							</span>
-							<span class="text-xs font-mono text-navy-400 dark:text-navy-500 font-semibold">Q04</span>
-						</div>
-						<h3 class="text-base font-bold text-navy-900 dark:text-navy-100 font-sans leading-snug">
-							The agent promised to double my money. Why is the XIRR yield so low?
-						</h3>
-						<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans">
-							Doubling money sounds attractive, but time is the critical variable. Doubling money over 20 years yields only ~3.5% CAGR—which completely loses to 6% inflation. Always judge an investment by XIRR speed, never absolute payouts.
-						</p>
-					</div>
-					<div class="pt-2 border-t border-navy-200/80 dark:border-white/10 bg-rose-500/5 dark:bg-rose-500/10 p-3 rounded-lg border-l-2 border-rose-500">
-						<div class="text-[11px] font-mono font-bold text-rose-800 dark:text-rose-300 uppercase tracking-wide">💡 Key Takeaway</div>
-						<div class="text-xs text-navy-700 dark:text-navy-300 font-sans mt-0.5">Doubling money over 20 years yields a negative real return after inflation.</div>
-					</div>
-				</div>
-
-				<!-- Card 5: Corporate vs Sovereign Risk -->
-				<div class="faq-card bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-white/10 rounded-2xl p-5 sm:p-6 space-y-3.5 hover:border-navy-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between" data-category="replication">
-					<div class="space-y-2">
-						<div class="flex items-center justify-between">
-							<span class="badge-gold">
-								RISK PROFILES
-							</span>
-							<span class="text-xs font-mono text-navy-400 dark:text-navy-500 font-semibold">Q05</span>
-						</div>
-						<h3 class="text-base font-bold text-navy-900 dark:text-navy-100 font-sans leading-snug">
-							Are private insurance company guarantees as safe as Government Bonds?
-						</h3>
-						<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans">
-							Government PPF and Bonds are sovereign-backed. Insurance policy guarantees rest on private corporate balance sheets. Since you accept corporate credit risk, you should demand higher returns than sovereign bonds, not lower.
-						</p>
-					</div>
-					<div class="pt-2 border-t border-navy-200/80 dark:border-white/10 bg-navy-100/80 dark:bg-navy-950 p-3 rounded-lg border-l-2 border-navy-400 dark:border-navy-500">
-						<div class="text-[11px] font-mono font-bold text-navy-800 dark:text-navy-200 uppercase tracking-wide">💡 Key Takeaway</div>
-						<div class="text-xs text-navy-700 dark:text-navy-300 font-sans mt-0.5">Never accept lower returns on corporate insurance policies than risk-free PPF.</div>
-					</div>
-				</div>
-
-				<!-- Card 6: Surrender Penalties & Inflation Treadmill -->
-				<div class="faq-card bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-white/10 rounded-2xl p-5 sm:p-6 space-y-3.5 hover:border-navy-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between" data-category="inflation">
-					<div class="space-y-2">
-						<div class="flex items-center justify-between">
-							<span class="badge-danger">
-								LIQUIDITY FRICTIONS
-							</span>
-							<span class="text-xs font-mono text-navy-400 dark:text-navy-500 font-semibold">Q06</span>
-						</div>
-						<h3 class="text-base font-bold text-navy-900 dark:text-navy-100 font-sans leading-snug">
-							What happens if I miss a premium payment, and what is the Treadmill Effect?
-						</h3>
-						<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans">
-							Stopping premium payments early triggers heavy surrender penalties (losing 50%–70% of capital). Furthermore, earning 6% yield against 6% inflation is running on a treadmill—locking up capital for 20 years to stay in the exact same place.
-						</p>
-					</div>
-					<div class="pt-2 border-t border-navy-200/80 dark:border-white/10 bg-rose-500/5 dark:bg-rose-500/10 p-3 rounded-lg border-l-2 border-rose-500">
-						<div class="text-[11px] font-mono font-bold text-rose-800 dark:text-rose-300 uppercase tracking-wide">💡 Key Takeaway</div>
-						<div class="text-xs text-navy-700 dark:text-navy-300 font-sans mt-0.5">Insurance lock-ins penalize early exit; always maintain flexible liquid investments.</div>
-					</div>
-				</div>
-
-			</div>
-
-		</section>
+		</CardPremium>
 
 	</main>
 </Layout>
 
 <script>
 	import { calculateXIRR } from '../utils/xirr.js';
+	import { 
+		parseFormattedNumber, 
+		formatShortRupee, 
+		tableFormatter, 
+		setupFormattingField 
+	} from '../utils/formatters.js';
 
-	function formatRupeeShort(val: number) {
-		if (isNaN(val)) return '₹0';
-		const absVal = Math.abs(val);
-		if (absVal >= 10000000) return `₹${(val / 10000000).toFixed(2)} Cr`;
-		if (absVal >= 100000) return `₹${(val / 100000).toFixed(2)} Lakh`;
-		return `₹${Math.round(val).toLocaleString('en-IN')}`;
-	}
-
-	// Auto-calculation: Sync risk costs from cover amounts
 	function syncRiskCostsFromCover() {
-		const termCover = parseFloat((document.getElementById('inTermCover') as HTMLInputElement)?.value || '0');
-		const accidentCover = parseFloat((document.getElementById('inAccidentCover') as HTMLInputElement)?.value || '0');
+		const termCover = parseFormattedNumber((document.getElementById('inTermCover') as HTMLInputElement)?.value || '0');
+		const accidentCover = parseFormattedNumber((document.getElementById('inAccidentCover') as HTMLInputElement)?.value || '0');
 
 		const termCostEl = document.getElementById('inTermCostOverride') as HTMLInputElement;
 		const accidentCostEl = document.getElementById('inAccidentCostOverride') as HTMLInputElement;
 
-		if (termCostEl) {
-			termCostEl.value = Math.round((termCover / 1000000) * 1200).toString();
-		}
-		if (accidentCostEl) {
-			accidentCostEl.value = Math.round((accidentCover / 1000000) * 1000).toString();
-		}
+		if (termCostEl) termCostEl.value = Math.round((termCover / 1000000) * 1200).toLocaleString('en-IN');
+		if (accidentCostEl) accidentCostEl.value = Math.round((accidentCover / 1000000) * 1000).toLocaleString('en-IN');
 	}
 
-	// Core Analytical Engine: 3-Way Synthetic Replication
 	function runReplicationAnalysis() {
-		const toggleUnbundle = ((document.getElementById('unbundleToggle') || document.getElementById('toggleUnbundle')) as HTMLInputElement)?.checked ?? true;
+		const toggleUnbundle = ((document.getElementById('unbundleToggle')) as HTMLInputElement)?.checked ?? true;
 
-		// 1. Gather Inputs
 		const inputs = {
-			premium: parseFloat((document.getElementById('inPremium') as HTMLInputElement)?.value) || 100000,
+			premium: parseFormattedNumber((document.getElementById('inPremium') as HTMLInputElement)?.value) || 100000,
 			ppt: parseInt((document.getElementById('inPPT') as HTMLInputElement)?.value) || 10,
 			payoutStartYear: parseInt((document.getElementById('inPayoutStart') as HTMLInputElement)?.value) || 11,
 			payoutYears: parseInt((document.getElementById('inPayoutYears') as HTMLInputElement)?.value) || 20,
-			payoutAmount: parseFloat((document.getElementById('inPayout') as HTMLInputElement)?.value) || 120000,
-			maturityBenefit: parseFloat((document.getElementById('inMaturity') as HTMLInputElement)?.value) || 1000000,
+			payoutAmount: parseFormattedNumber((document.getElementById('inPayout') as HTMLInputElement)?.value) || 120000,
+			maturityBenefit: parseFormattedNumber((document.getElementById('inMaturity') as HTMLInputElement)?.value) || 1000000,
 			inflationRate: parseFloat((document.getElementById('inInflation') as HTMLInputElement)?.value) || 6.0,
 			safeRate: 7.1,
 			equityRate: 12.0
 		};
 
-		// 2. Calculate Institutional Pure Insurance Costs
 		let termCost = 0;
 		let accidentCost = 0;
 
 		if (toggleUnbundle) {
-			termCost = parseFloat((document.getElementById('inTermCostOverride') as HTMLInputElement)?.value) || 0;
-			accidentCost = parseFloat((document.getElementById('inAccidentCostOverride') as HTMLInputElement)?.value) || 0;
+			termCost = parseFormattedNumber((document.getElementById('inTermCostOverride') as HTMLInputElement)?.value) || 0;
+			accidentCost = parseFormattedNumber((document.getElementById('inAccidentCostOverride') as HTMLInputElement)?.value) || 0;
 		}
 
 		const totalRiskCost = termCost + accidentCost;
 		const investableCapital = Math.max(0, inputs.premium - totalRiskCost);
 
-		// 3. Build the 100-Year Unified Master Ledger (Resolving Overlaps)
 		const payoutStartYear = inputs.payoutStartYear;
 		const payoutEndYear = payoutStartYear + inputs.payoutYears - 1;
 		const totalYears = Math.max(inputs.ppt, payoutEndYear);
@@ -800,13 +375,9 @@ import Layout from '../layouts/Layout.astro';
 			let yearPremium = (yr <= inputs.ppt) ? inputs.premium : 0;
 			let yearPayout = (yr >= payoutStartYear && yr <= payoutEndYear) ? inputs.payoutAmount : 0;
 			
-			if (yr === payoutEndYear) {
-				yearPayout += inputs.maturityBenefit;
-			}
+			if (yr === payoutEndYear) yearPayout += inputs.maturityBenefit;
 
 			let netCash = yearPayout - yearPremium;
-			
-			// NPV: Discounting for Purchasing Power
 			let discountFactor = Math.pow(1 + (inputs.inflationRate / 100), yr);
 			let realPayoutValue = yearPayout / discountFactor;
 
@@ -814,26 +385,17 @@ import Layout from '../layouts/Layout.astro';
 			totalRealPayout += realPayoutValue;
 
 			ledger.push({
-				year: yr,
-				premiumOut: yearPremium,
-				payoutIn: yearPayout,
-				net: netCash,
-				realValue: realPayoutValue
+				year: yr, premiumOut: yearPremium, payoutIn: yearPayout, net: netCash, realValue: realPayoutValue
 			});
 
-			// Push to XIRR Array
 			let cfDate = new Date(startDate);
 			cfDate.setFullYear(startDate.getFullYear() + (yr - 1));
-			if (netCash !== 0) {
-				cashFlowsForXirr.push({ amount: netCash, date: cfDate });
-			}
+			if (netCash !== 0) cashFlowsForXirr.push({ amount: netCash, date: cfDate });
 		}
 
-		// 4. Engine A: The Bundled Reality (Calculating True XIRR)
 		const bundledXirrRaw = calculateXIRR(cashFlowsForXirr);
 		const bundledXirr = bundledXirrRaw !== null ? bundledXirrRaw : 0; 
 
-		// 5. Engine B & C: The Synthetic Arbitrage Simulators
 		let balanceSafe = 0;
 		let balanceEquity = 0;
 
@@ -841,249 +403,154 @@ import Layout from '../layouts/Layout.astro';
 			let investableThisYear = (yr <= inputs.ppt) ? investableCapital : 0;
 			let payoutDemandedThisYear = ledger[yr-1].payoutIn;
 
-			// Grow start-of-year balance
 			balanceSafe = balanceSafe * (1 + (inputs.safeRate / 100));
 			balanceEquity = balanceEquity * (1 + (inputs.equityRate / 100));
 
-			// Add new capital, subtract demanded payouts
 			balanceSafe = balanceSafe + investableThisYear - payoutDemandedThisYear;
 			balanceEquity = balanceEquity + investableThisYear - payoutDemandedThisYear;
 		}
 
 		return {
-			engineA: {
-				name: "The Bundled Policy",
-				totalNominalPayout: totalNominalPayout,
-				totalRealPayout: totalRealPayout,
-				xirr: bundledXirr.toFixed(2) + '%'
-			},
-			engineB: {
-				name: "DIY Safe (Term + PPF)",
-				finalArbitrageProfit: balanceSafe,
-				riskCostPaid: totalRiskCost * inputs.ppt
-			},
-			engineC: {
-				name: "DIY Growth (Term + Equity)",
-				finalArbitrageProfit: balanceEquity,
-				riskCostPaid: totalRiskCost * inputs.ppt
-			},
-			ledger: ledger
+			engineA: { xirr: bundledXirr.toFixed(2) + '%', totalNominalPayout, totalRealPayout },
+			engineB: { finalArbitrageProfit: balanceSafe, riskCostPaid: totalRiskCost * inputs.ppt },
+			engineC: { finalArbitrageProfit: balanceEquity, riskCostPaid: totalRiskCost * inputs.ppt },
+			ledger
 		};
 	}
 
 	function updateDashboardUI() {
 		const results = runReplicationAnalysis();
 
-		// Engine A DOM Updates
 		const engineAXirrEl = document.getElementById('engineAXIRR');
 		const engineANominalEl = document.getElementById('engineANominal');
 		const engineARealEl = document.getElementById('engineAReal');
 		const xirrBadgeEl = document.getElementById('xirrHealthBadge');
 
 		if (engineAXirrEl) engineAXirrEl.innerText = results.engineA.xirr;
-		if (engineANominalEl) engineANominalEl.innerText = formatRupeeShort(results.engineA.totalNominalPayout);
-		if (engineARealEl) engineARealEl.innerText = formatRupeeShort(results.engineA.totalRealPayout);
+		if (engineANominalEl) engineANominalEl.innerText = formatShortRupee(results.engineA.totalNominalPayout);
+		if (engineARealEl) engineARealEl.innerText = formatShortRupee(results.engineA.totalRealPayout);
 
 		const xirrNum = parseFloat(results.engineA.xirr);
 		if (xirrBadgeEl) {
 			if (xirrNum < 6.0) {
 				xirrBadgeEl.innerText = 'LAGGING INFLATION';
-				xirrBadgeEl.className = 'px-3 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-full bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-700/50';
+				xirrBadgeEl.className = 'badge-danger';
 			} else if (xirrNum < 9.0) {
 				xirrBadgeEl.innerText = 'MODERATE YIELD';
-				xirrBadgeEl.className = 'px-3 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-full bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-700/50';
+				xirrBadgeEl.className = 'badge-warning';
 			} else {
 				xirrBadgeEl.innerText = 'HIGH YIELD';
-				xirrBadgeEl.className = 'px-3 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-700/50';
+				xirrBadgeEl.className = 'badge-safe';
 			}
 		}
 
-		// Engine B DOM Updates
 		const engineBSurplusEl = document.getElementById('engineBSurplus');
-		const engineBRiskCostEl = document.getElementById('valRiskCostB') || document.getElementById('engineBRiskCost');
+		const engineBRiskCostEl = document.getElementById('valRiskCostB');
 		const engineBBadgeEl = document.getElementById('engineBBadge');
 		const engineBTextEl = document.getElementById('engineBText');
-
 		const safeProfit = results.engineB.finalArbitrageProfit;
 
-		if (engineBSurplusEl) engineBSurplusEl.innerText = formatRupeeShort(safeProfit);
-		if (engineBRiskCostEl) engineBRiskCostEl.innerText = formatRupeeShort(results.engineB.riskCostPaid);
+		if (engineBSurplusEl) engineBSurplusEl.innerText = formatShortRupee(safeProfit);
+		if (engineBRiskCostEl) engineBRiskCostEl.innerText = formatShortRupee(results.engineB.riskCostPaid);
 
 		if (engineBBadgeEl && engineBTextEl) {
 			if (safeProfit > 0) {
 				engineBBadgeEl.innerText = 'DIY WINS';
-				engineBBadgeEl.className = 'px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full shrink-0 mt-0.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700/50';
-				engineBTextEl.innerHTML = `By unbundling, you fund the exact same payouts and keep an extra <strong class="font-bold text-emerald-700 dark:text-emerald-300">${formatRupeeShort(safeProfit)}</strong> in surplus wealth.`;
+				engineBBadgeEl.className = 'badge-safe';
+				engineBTextEl.innerHTML = `By unbundling, you fund the exact same payouts and keep an extra <strong class="font-bold text-emerald-600 dark:text-emerald-400">${formatShortRupee(safeProfit)}</strong> in surplus wealth.`;
 			} else {
 				engineBBadgeEl.innerText = 'POLICY WINS';
-				engineBBadgeEl.className = 'px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full shrink-0 mt-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-700/50';
-				engineBTextEl.innerHTML = `This policy's yield beats the 7.1% safe government rate. DIY replication fails by <strong class="font-bold text-amber-700 dark:text-amber-300">${formatRupeeShort(Math.abs(safeProfit))}</strong>.`;
+				engineBBadgeEl.className = 'badge-warning';
+				engineBTextEl.innerHTML = `This policy's yield beats the 7.1% safe government rate. DIY replication fails by <strong class="font-bold text-amber-600 dark:text-amber-400">${formatShortRupee(Math.abs(safeProfit))}</strong>.`;
 			}
 		}
 
-		// Engine C DOM Updates
 		const engineCSurplusEl = document.getElementById('engineCSurplus');
-		const engineCRiskCostEl = document.getElementById('valRiskCostC') || document.getElementById('engineCRiskCost');
+		const engineCRiskCostEl = document.getElementById('valRiskCostC');
 		const engineCTextEl = document.getElementById('engineCText');
-
 		const equityProfit = results.engineC.finalArbitrageProfit;
 
-		if (engineCSurplusEl) engineCSurplusEl.innerText = formatRupeeShort(equityProfit);
-		if (engineCRiskCostEl) engineCRiskCostEl.innerText = formatRupeeShort(results.engineC.riskCostPaid);
+		if (engineCSurplusEl) engineCSurplusEl.innerText = formatShortRupee(equityProfit);
+		if (engineCRiskCostEl) engineCRiskCostEl.innerText = formatShortRupee(results.engineC.riskCostPaid);
 
 		if (engineCTextEl) {
 			if (equityProfit > 0) {
-				engineCTextEl.innerHTML = `By accepting equity volatility, you fund the exact same payouts and generate <strong class="font-bold text-indigo-700 dark:text-indigo-300">${formatRupeeShort(equityProfit)}</strong> in massive surplus wealth.`;
+				engineCTextEl.innerHTML = `By accepting equity volatility, you fund the exact same payouts and generate <strong class="font-bold text-indigo-600 dark:text-indigo-400">${formatShortRupee(equityProfit)}</strong> in massive surplus wealth.`;
 			} else {
-				engineCTextEl.innerHTML = `The payouts demand too much cash too early. Sequence risk breaks the equity portfolio by <strong class="font-bold text-rose-600 dark:text-rose-400">${formatRupeeShort(Math.abs(equityProfit))}</strong>.`;
+				engineCTextEl.innerHTML = `The payouts demand too much cash too early. Sequence risk breaks the equity portfolio by <strong class="font-bold text-rose-600 dark:text-rose-400">${formatShortRupee(Math.abs(equityProfit))}</strong>.`;
 			}
 		}
 
-		// Takeaway text
 		const takeawayEl = document.getElementById('replicationTakeaway');
-		const toggleUnbundle = (document.getElementById('toggleUnbundle') as HTMLInputElement)?.checked ?? true;
+		const toggleUnbundle = (document.getElementById('unbundleToggle') as HTMLInputElement)?.checked ?? true;
 
 		if (takeawayEl) {
 			if (toggleUnbundle) {
-				takeawayEl.innerText = `By unbundling insurance from investment, purchasing pure Term Life + Accident cover (${formatRupeeShort(results.engineB.riskCostPaid)} total risk cost), and investing the rest, DIY Equity leaves you with ${formatRupeeShort(results.engineC.finalArbitrageProfit)} in SURPLUS WEALTH after paying out all requested cash flows!`;
+				takeawayEl.innerText = `By unbundling insurance from investment, purchasing pure Term Life + Accident cover (${formatShortRupee(results.engineB.riskCostPaid)} total risk cost), and investing the rest, DIY Equity leaves you with ${formatShortRupee(results.engineC.finalArbitrageProfit)} in SURPLUS WEALTH after paying out all requested cash flows!`;
 			} else {
-				takeawayEl.innerText = `Without deducting any insurance cost, investing 100% of your premiums into DIY Equity leaves you with ${formatRupeeShort(results.engineC.finalArbitrageProfit)} in SURPLUS WEALTH after paying out all requested cash flows!`;
+				takeawayEl.innerText = `Without deducting any insurance cost, investing 100% of your premiums into DIY Equity leaves you with ${formatShortRupee(results.engineC.finalArbitrageProfit)} in SURPLUS WEALTH after paying out all requested cash flows!`;
 			}
 		}
 
-		// Calculate Hidden Frictions
-		const inputPremium = parseFloat((document.getElementById('inPremium') as HTMLInputElement)?.value) || 100000;
+		const inputPremium = parseFormattedNumber((document.getElementById('inPremium') as HTMLInputElement)?.value) || 100000;
 		const inputPPT = parseInt((document.getElementById('inPPT') as HTMLInputElement)?.value) || 10;
-
 		let totalGstPaid = 0;
 		for (let yr = 1; yr <= inputPPT; yr++) {
-			let gstRate = (yr === 1) ? 0.045 : 0.0225; // Standard Indian insurance GST proxy
+			let gstRate = (yr === 1) ? 0.045 : 0.0225;
 			totalGstPaid += inputPremium * gstRate;
 		}
-
-		// Estimate First Year Agent Commission (~20% of Year 1 Premium)
 		let estCommission = inputPremium * 0.20;
-
-		// Find Real Break-Even Year (When cumulative real net cash turns positive)
+		
 		let breakEvenYear = "Never / Term";
 		let cumulativeReal = 0;
 		const ledger = results.ledger || [];
 		for (let i = 0; i < ledger.length; i++) {
 			cumulativeReal += ledger[i].realValue - ledger[i].premiumOut;
-			if (cumulativeReal > 0) {
-				breakEvenYear = `Year ${ledger[i].year}`;
-				break;
-			}
+			if (cumulativeReal > 0) { breakEvenYear = `Year ${ledger[i].year}`; break; }
 		}
 
-		// Update DOM Elements for Hidden Frictions
 		const frictionalGstEl = document.getElementById('frictionalGst');
 		const frictionalCommissionEl = document.getElementById('frictionalCommission');
 		const frictionalBreakEvenEl = document.getElementById('frictionalBreakEven');
 
-		if (frictionalGstEl) frictionalGstEl.innerText = '₹ ' + Math.round(totalGstPaid).toLocaleString('en-IN');
-		if (frictionalCommissionEl) frictionalCommissionEl.innerText = '₹ ' + Math.round(estCommission).toLocaleString('en-IN');
+		if (frictionalGstEl) frictionalGstEl.innerText = tableFormatter.format(Math.round(totalGstPaid));
+		if (frictionalCommissionEl) frictionalCommissionEl.innerText = tableFormatter.format(Math.round(estCommission));
 		if (frictionalBreakEvenEl) frictionalBreakEvenEl.innerText = breakEvenYear;
 	}
 
-	// Toggle Visibility Listeners
-	const toggleUnbundleEl = (document.getElementById('unbundleToggle') || document.getElementById('toggleUnbundle')) as HTMLInputElement;
-	const simpleRiskViewEl = document.getElementById('simpleRiskView');
-	const btnAdvancedRiskEl = document.getElementById('advancedToggleBtn') || document.getElementById('btnAdvancedRisk');
-	const advancedRiskViewEl = document.getElementById('advancedRiskView');
-
-	if (toggleUnbundleEl && simpleRiskViewEl) {
-		toggleUnbundleEl.addEventListener('change', () => {
-			if (toggleUnbundleEl.checked) {
-				simpleRiskViewEl.classList.remove('hidden');
-			} else {
-				simpleRiskViewEl.classList.add('hidden');
-				if (advancedRiskViewEl) advancedRiskViewEl.classList.add('hidden');
-			}
-			updateDashboardUI();
-		});
-	}
-
-	if (btnAdvancedRiskEl && advancedRiskViewEl) {
-		btnAdvancedRiskEl.addEventListener('click', () => {
-			advancedRiskViewEl.classList.toggle('hidden');
-		});
-	}
-
-	// Simple View inputs sync listeners
-	const inTermCoverEl = document.getElementById('inTermCover');
-	const inAccidentCoverEl = document.getElementById('inAccidentCover');
-
-	if (inTermCoverEl) {
-		inTermCoverEl.addEventListener('input', () => {
-			syncRiskCostsFromCover();
-			updateDashboardUI();
-		});
-	}
-	if (inAccidentCoverEl) {
-		inAccidentCoverEl.addEventListener('input', () => {
-			syncRiskCostsFromCover();
-			updateDashboardUI();
-		});
-	}
-
-	// Advanced Override View inputs listeners
-	const inTermCostOverrideEl = document.getElementById('inTermCostOverride');
-	const inAccidentCostOverrideEl = document.getElementById('inAccidentCostOverride');
-
-	if (inTermCostOverrideEl) {
-		inTermCostOverrideEl.addEventListener('input', updateDashboardUI);
-	}
-	if (inAccidentCostOverrideEl) {
-		inAccidentCostOverrideEl.addEventListener('input', updateDashboardUI);
-	}
-
-	// Add event listeners for main policy inputs
-	const inputIds = ['inPremium', 'inPPT', 'inPayoutStart', 'inPayoutYears', 'inPayout', 'inMaturity', 'inInflation'];
-	inputIds.forEach(id => {
-		const el = document.getElementById(id);
-		if (el) {
-			el.addEventListener('input', updateDashboardUI);
-			el.addEventListener('change', updateDashboardUI);
-		}
-	});
-
-	// FAQ Category Filter Handler
-	function initFaqFilter() {
-		const filterContainer = document.getElementById('faqFilterContainer');
-		if (!filterContainer) return;
-
-		const filterBtns = filterContainer.querySelectorAll('.faq-filter-btn');
-		const faqCards = document.querySelectorAll('.faq-card');
-
-		filterBtns.forEach(btn => {
-			btn.addEventListener('click', () => {
-				const category = btn.getAttribute('data-faq-cat');
-
-				filterBtns.forEach(b => {
-					b.className = 'faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 btn-ghost cursor-pointer whitespace-nowrap';
-				});
-
-				btn.className = 'faq-filter-btn px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 btn-gold cursor-pointer shadow-xs whitespace-nowrap';
-
-				faqCards.forEach(card => {
-					const cardCat = card.getAttribute('data-category');
-					if (category === 'all' || cardCat === category) {
-						(card as HTMLElement).style.display = 'flex';
-					} else {
-						(card as HTMLElement).style.display = 'none';
-					}
-				});
-			});
-		});
-	}
-
-	// Initial execution
 	document.addEventListener('DOMContentLoaded', () => {
-		initFaqFilter();
+		['inPremium', 'inPayout', 'inMaturity', 'inTermCover', 'inAccidentCover', 'inTermCostOverride', 'inAccidentCostOverride'].forEach(id => {
+			const el = document.getElementById(id);
+			if (el) setupFormattingField(el as HTMLInputElement, updateDashboardUI);
+		});
+
+		const toggleUnbundleEl = document.getElementById('unbundleToggle') as HTMLInputElement;
+		const simpleRiskViewEl = document.getElementById('simpleRiskView');
+		const btnAdvancedRiskEl = document.getElementById('advancedToggleBtn');
+		const advancedRiskViewEl = document.getElementById('advancedRiskView');
+
+		if (toggleUnbundleEl && simpleRiskViewEl) {
+			toggleUnbundleEl.addEventListener('change', () => {
+				if (toggleUnbundleEl.checked) simpleRiskViewEl.classList.remove('hidden');
+				else { simpleRiskViewEl.classList.add('hidden'); advancedRiskViewEl?.classList.add('hidden'); }
+				updateDashboardUI();
+			});
+		}
+
+		if (btnAdvancedRiskEl && advancedRiskViewEl) {
+			btnAdvancedRiskEl.addEventListener('click', () => advancedRiskViewEl.classList.toggle('hidden'));
+		}
+
+		['inTermCover', 'inAccidentCover'].forEach(id => {
+			document.getElementById(id)?.addEventListener('input', () => { syncRiskCostsFromCover(); updateDashboardUI(); });
+		});
+
+		['inPPT', 'inPayoutStart', 'inPayoutYears', 'inInflation'].forEach(id => {
+			const el = document.getElementById(id);
+			if (el) { el.addEventListener('input', updateDashboardUI); el.addEventListener('change', updateDashboardUI); }
+		});
+
 		syncRiskCostsFromCover();
 		updateDashboardUI();
 	});
-	syncRiskCostsFromCover();
-	updateDashboardUI();
 </script>
