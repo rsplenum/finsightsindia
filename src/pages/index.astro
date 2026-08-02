@@ -4,30 +4,31 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout title="Retirement Withdrawal Planner — SWP Intelligence Engine">
 	<!-- Centered Symmetrical Hero Funnel -->
-	<section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-10 flex flex-col items-center text-center">
-		<span class="inline-block text-xs font-semibold tracking-wider text-slate-900 dark:text-zinc-100 uppercase px-3 py-1 bg-slate-100 dark:bg-zinc-900 rounded-md border border-slate-200 dark:border-zinc-800">
+	<section class="hero-glow reveal max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 flex flex-col items-center text-center">
+		<span class="inline-block text-xs font-semibold tracking-wider text-gold-500 uppercase px-3 py-1 bg-gold-500/10 rounded-md border border-gold-500/20">
 			SWP Intelligence Engine
 		</span>
-		<h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 dark:text-zinc-100 max-w-4xl mt-4">
+		<h1 class="text-hero text-navy-900 dark:text-navy-100 max-w-4xl mt-4">
 			Retirement Withdrawal Planner
 		</h1>
-		<p class="mt-5 text-lg sm:text-xl text-slate-500 dark:text-zinc-400 max-w-2xl leading-relaxed font-normal">
+		<p class="mt-5 text-lg sm:text-xl text-navy-500 dark:text-navy-400 max-w-2xl leading-relaxed font-normal">
 			A systematic withdrawal engine engineered to stress-test your wealth against inflation, market volatility, and tax friction over your lifetime.
 		</p>
 	</section>
 
 		<!-- Main Application Content -->
-		<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+		<hr class="section-divider" />
+		<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
 
 			<!-- 2-Column Responsive Grid -->
-			<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+			<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 				
 				<!-- Left Column: Input Form Card -->
-				<section class="lg:col-span-5 bg-white dark:bg-zinc-950 rounded-xl border border-slate-200 dark:border-zinc-800 p-6 sm:p-8 space-y-6 transition-colors duration-200">
-					<div class="pb-4 border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between">
+				<section class="lg:col-span-5 card-premium rounded-2xl reveal p-6 sm:p-8 space-y-6 transition-colors duration-200">
+					<div class="pb-4 border-b border-navy-200 dark:border-navy-800 flex items-center justify-between">
 						<div>
-							<h3 class="text-lg font-bold tracking-tight text-slate-900 dark:text-zinc-100">Your Plan Details</h3>
-							<p class="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">Enter your savings, monthly income needs, and growth expectations.</p>
+							<h3 class="text-lg font-bold tracking-tight text-navy-900 dark:text-navy-100">Your Plan Details</h3>
+							<p class="text-xs text-navy-500 dark:text-navy-400 mt-0.5">Enter your savings, monthly income needs, and growth expectations.</p>
 						</div>
 					</div>
 
@@ -35,31 +36,31 @@ import Layout from '../layouts/Layout.astro';
 						
 						<!-- Section 1: Starting Investments -->
 						<div class="space-y-4">
-							<h4 class="text-xs font-semibold text-slate-500 dark:text-zinc-400 tracking-wider uppercase">01 / Starting Investments</h4>
+							<h4 class="text-xs font-semibold text-navy-500 dark:text-navy-400 tracking-wider uppercase">01 / Starting Investments</h4>
 							
 							<!-- Initial Corpus -->
 							<div>
 								<div class="flex justify-between items-center mb-1.5">
 									<!-- Hoverable Tooltip Label -->
 									<div class="relative group inline-flex items-center gap-1.5 cursor-pointer">
-										<label for="initialCorpus" class="text-xs font-semibold text-slate-800 dark:text-zinc-200 cursor-pointer">
+										<label for="initialCorpus" class="text-xs font-semibold text-navy-800 dark:text-navy-200 cursor-pointer">
 											Total Savings / Initial Corpus <span class="text-rose-500">*</span>
 										</label>
-										<svg class="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<svg class="w-3.5 h-3.5 text-navy-400 dark:text-navy-500 hover:text-navy-600 dark:hover:text-navy-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
 										</svg>
 										<!-- Absolute Tooltip Div -->
-										<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-slate-900 dark:bg-zinc-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-normal">
+										<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-normal">
 											The total lump sum you are starting with today.
 										</div>
 									</div>
 
-									<span class="text-xs text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 rounded-md font-medium" id="corpusFormatted">
+									<span class="text-xs text-emerald-700 dark:text-emerald-300 badge-safe px-2 py-0.5 rounded-md font-medium" id="corpusFormatted">
 										₹ 1,00,00,000 (1 Cr)
 									</span>
 								</div>
 								<div class="relative flex items-center">
-									<span class="absolute left-3.5 text-sm text-slate-400 dark:text-zinc-500 select-none">₹</span>
+									<span class="absolute left-3.5 text-sm text-navy-400 dark:text-navy-500 select-none">₹</span>
 									<input 
 										type="text" 
 										inputmode="numeric"
@@ -67,9 +68,9 @@ import Layout from '../layouts/Layout.astro';
 										name="initialCorpus" 
 										value="1,00,00,000"
 										required
-										class="w-full min-h-[44px] bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-md pl-9 pr-14 py-2.5 text-sm text-slate-900 dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-slate-900 dark:focus:ring-white transition-all duration-200 ease-geist font-sans"
+										class="input-premium pl-9 pr-14 py-2.5 text-sm text-navy-900 dark:text-navy-100 placeholder:text-navy-400 dark:placeholder:text-navy-500 focus:outline-none "
 									/>
-									<span class="absolute right-3.5 text-xs text-slate-400 dark:text-zinc-500 select-none font-sans">INR</span>
+									<span class="absolute right-3.5 text-xs text-navy-400 dark:text-navy-500 select-none font-sans">INR</span>
 								</div>
 							</div>
 
@@ -78,24 +79,24 @@ import Layout from '../layouts/Layout.astro';
 								<div class="flex justify-between items-center mb-1.5">
 									<!-- Hoverable Tooltip Label -->
 									<div class="relative group inline-flex items-center gap-1.5 cursor-pointer">
-										<label for="monthlyWithdrawal" class="text-xs font-semibold text-slate-800 dark:text-zinc-200 cursor-pointer">
+										<label for="monthlyWithdrawal" class="text-xs font-semibold text-navy-800 dark:text-navy-200 cursor-pointer">
 											First Year Monthly Paycheck <span class="text-rose-500">*</span>
 										</label>
-										<svg class="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<svg class="w-3.5 h-3.5 text-navy-400 dark:text-navy-500 hover:text-navy-600 dark:hover:text-navy-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
 										</svg>
 										<!-- Absolute Tooltip Div -->
-										<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-slate-900 dark:bg-zinc-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-normal">
+										<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-normal">
 											This is your GROSS target. Your actual net-in-hand income will be slightly lower because LTCG taxes will be deducted from the profit portion of this withdrawal.
 										</div>
 									</div>
 
-									<span class="text-xs text-slate-600 dark:text-zinc-400 bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 px-2 py-0.5 rounded-md font-medium" id="withdrawalFormatted">
+									<span class="text-xs text-navy-600 dark:text-navy-400 bg-navy-100 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 px-2 py-0.5 rounded-md font-medium" id="withdrawalFormatted">
 										₹ 50,000 / month
 									</span>
 								</div>
 								<div class="relative flex items-center">
-									<span class="absolute left-3.5 text-sm text-slate-400 dark:text-zinc-500 select-none">₹</span>
+									<span class="absolute left-3.5 text-sm text-navy-400 dark:text-navy-500 select-none">₹</span>
 									<input 
 										type="text" 
 										inputmode="numeric"
@@ -103,31 +104,31 @@ import Layout from '../layouts/Layout.astro';
 										name="monthlyWithdrawal" 
 										value="50,000"
 										required
-										class="w-full min-h-[44px] bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-md pl-9 pr-16 py-2.5 text-sm text-slate-900 dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-slate-900 dark:focus:ring-white transition-all duration-200 ease-geist font-sans"
+										class="input-premium pl-9 pr-16 py-2.5 text-sm text-navy-900 dark:text-navy-100 placeholder:text-navy-400 dark:placeholder:text-navy-500 focus:outline-none "
 									/>
-									<span class="absolute right-3.5 text-xs text-slate-400 dark:text-zinc-500 select-none font-sans">/month</span>
+									<span class="absolute right-3.5 text-xs text-navy-400 dark:text-navy-500 select-none font-sans">/month</span>
 								</div>
 							</div>
 						</div>
 
-						<div class="h-px bg-slate-200 dark:bg-zinc-800"></div>
+						<hr class="section-divider" />
 
 						<!-- Section 2: Escalation & Market Expectations -->
 						<div class="space-y-4">
-							<h4 class="text-xs font-semibold text-slate-500 dark:text-zinc-400 tracking-wider uppercase">02 / Escalation & Expected Rates</h4>
+							<h4 class="text-xs font-semibold text-navy-500 dark:text-navy-400 tracking-wider uppercase">02 / Escalation & Expected Rates</h4>
 
-							<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+							<div class="grid grid-cols-1 sm:grid-cols-2 reveal-stagger gap-6">
 								<!-- Annual Step-Up % -->
 								<div>
 									<div class="relative group inline-flex items-center gap-1.5 cursor-pointer mb-1.5">
-										<label for="stepUp" class="block text-xs font-semibold text-slate-800 dark:text-zinc-200 cursor-pointer">
+										<label for="stepUp" class="block text-xs font-semibold text-navy-800 dark:text-navy-200 cursor-pointer">
 											Annual Step-Up (Inflation)
 										</label>
-										<svg class="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<svg class="w-3.5 h-3.5 text-navy-400 dark:text-navy-500 hover:text-navy-600 dark:hover:text-navy-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
 										</svg>
 										<!-- Absolute Tooltip Div -->
-										<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-slate-900 dark:bg-zinc-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-normal">
+										<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-normal">
 											The percentage by which your monthly paycheck increases each year to keep pace with inflation.
 										</div>
 									</div>
@@ -141,23 +142,23 @@ import Layout from '../layouts/Layout.astro';
 											max="20"
 											step="0.5"
 											required
-											class="w-full min-h-[44px] bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-md px-3.5 pr-14 py-2.5 text-sm text-slate-900 dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-slate-900 dark:focus:ring-white transition-all duration-200 ease-geist font-sans"
+											class="input-premium px-3.5 pr-14 py-2.5 text-sm text-navy-900 dark:text-navy-100 placeholder:text-navy-400 dark:placeholder:text-navy-500 focus:outline-none "
 										/>
-										<span class="absolute right-3.5 text-xs text-slate-400 dark:text-zinc-500 select-none font-sans">% / yr</span>
+										<span class="absolute right-3.5 text-xs text-navy-400 dark:text-navy-500 select-none font-sans">% / yr</span>
 									</div>
 								</div>
 
 								<!-- Expected Return % -->
 								<div>
 									<div class="relative group inline-flex items-center gap-1.5 cursor-pointer mb-1.5">
-										<label for="expectedReturn" class="block text-xs font-semibold text-slate-800 dark:text-zinc-200 cursor-pointer">
+										<label for="expectedReturn" class="block text-xs font-semibold text-navy-800 dark:text-navy-200 cursor-pointer">
 											Expected CAGR %
 										</label>
-										<svg class="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<svg class="w-3.5 h-3.5 text-navy-400 dark:text-navy-500 hover:text-navy-600 dark:hover:text-navy-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
 										</svg>
 										<!-- Absolute Tooltip Div -->
-										<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-slate-900 dark:bg-zinc-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 sm:right-0 sm:left-auto pointer-events-none font-normal leading-normal">
+										<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 sm:right-0 sm:left-auto pointer-events-none font-normal leading-normal">
 											The long-term average annual return rate of your portfolio.
 										</div>
 									</div>
@@ -171,32 +172,32 @@ import Layout from '../layouts/Layout.astro';
 											max="30"
 											step="0.5"
 											required
-											class="w-full min-h-[44px] bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-md px-3.5 pr-14 py-2.5 text-sm text-slate-900 dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-slate-900 dark:focus:ring-white transition-all duration-200 ease-geist font-sans"
+											class="input-premium px-3.5 pr-14 py-2.5 text-sm text-navy-900 dark:text-navy-100 placeholder:text-navy-400 dark:placeholder:text-navy-500 focus:outline-none "
 										/>
-										<span class="absolute right-3.5 text-xs text-slate-400 dark:text-zinc-500 select-none font-sans">% cagr</span>
+										<span class="absolute right-3.5 text-xs text-navy-400 dark:text-navy-500 select-none font-sans">% cagr</span>
 									</div>
 								</div>
 							</div>
 						</div>
 
-						<div class="h-px bg-slate-200 dark:bg-zinc-800"></div>
+						<hr class="section-divider" />
 
 						<!-- Section 3: Tax Friction & Horizon -->
 						<div class="space-y-4">
-							<h4 class="text-xs font-semibold text-slate-500 dark:text-zinc-400 tracking-wider uppercase">03 / Tax Friction & Time Horizon</h4>
+							<h4 class="text-xs font-semibold text-navy-500 dark:text-navy-400 tracking-wider uppercase">03 / Tax Friction & Time Horizon</h4>
 
-							<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+							<div class="grid grid-cols-1 sm:grid-cols-2 reveal-stagger gap-6">
 								<!-- LTCG Tax % -->
 								<div>
 									<div class="relative group inline-flex items-center gap-1.5 cursor-pointer mb-1.5">
-										<label for="ltcgTax" class="block text-xs font-semibold text-slate-800 dark:text-zinc-200 cursor-pointer">
+										<label for="ltcgTax" class="block text-xs font-semibold text-navy-800 dark:text-navy-200 cursor-pointer">
 											LTCG Tax Rate %
 										</label>
-										<svg class="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<svg class="w-3.5 h-3.5 text-navy-400 dark:text-navy-500 hover:text-navy-600 dark:hover:text-navy-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
 										</svg>
 										<!-- Absolute Tooltip Div -->
-										<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-slate-900 dark:bg-zinc-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-normal">
+										<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-normal">
 											Long Term Capital Gains tax. This friction is only applied to your profits, not your original invested capital.
 										</div>
 									</div>
@@ -210,23 +211,23 @@ import Layout from '../layouts/Layout.astro';
 											max="50"
 											step="0.1"
 											required
-											class="w-full min-h-[44px] bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-md px-3.5 pr-16 py-2.5 text-sm text-slate-900 dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-slate-900 dark:focus:ring-white transition-all duration-200 ease-geist font-sans"
+											class="input-premium px-3.5 pr-16 py-2.5 text-sm text-navy-900 dark:text-navy-100 placeholder:text-navy-400 dark:placeholder:text-navy-500 focus:outline-none "
 										/>
-										<span class="absolute right-3.5 text-xs text-slate-400 dark:text-zinc-500 select-none font-sans">% tax</span>
+										<span class="absolute right-3.5 text-xs text-navy-400 dark:text-navy-500 select-none font-sans">% tax</span>
 									</div>
 								</div>
 
 								<!-- Time Horizon -->
 								<div>
 									<div class="relative group inline-flex items-center gap-1.5 cursor-pointer mb-1.5">
-										<label for="horizonYears" class="block text-xs font-semibold text-slate-800 dark:text-zinc-200 cursor-pointer">
+										<label for="horizonYears" class="block text-xs font-semibold text-navy-800 dark:text-navy-200 cursor-pointer">
 											Retirement Length (Years)
 										</label>
-										<svg class="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<svg class="w-3.5 h-3.5 text-navy-400 dark:text-navy-500 hover:text-navy-600 dark:hover:text-navy-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
 										</svg>
 										<!-- Absolute Tooltip Div -->
-										<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-slate-900 dark:bg-zinc-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 sm:right-0 sm:left-auto pointer-events-none font-normal leading-normal">
+										<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 sm:right-0 sm:left-auto pointer-events-none font-normal leading-normal">
 											The total number of years you plan to withdraw monthly paychecks during your retirement.
 										</div>
 									</div>
@@ -240,30 +241,30 @@ import Layout from '../layouts/Layout.astro';
 											max="50"
 											step="1"
 											required
-											class="w-full min-h-[44px] bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-md px-3.5 pr-16 py-2.5 text-sm text-slate-900 dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-slate-900 dark:focus:ring-white transition-all duration-200 ease-geist font-sans"
+											class="input-premium px-3.5 pr-16 py-2.5 text-sm text-navy-900 dark:text-navy-100 placeholder:text-navy-400 dark:placeholder:text-navy-500 focus:outline-none "
 										/>
-										<span class="absolute right-3.5 text-xs text-slate-400 dark:text-zinc-500 select-none font-sans">years</span>
+										<span class="absolute right-3.5 text-xs text-navy-400 dark:text-navy-500 select-none font-sans">years</span>
 									</div>
 								</div>
 							</div>
 						</div>
 
-						<div class="h-px bg-slate-200 dark:bg-zinc-800"></div>
+						<hr class="section-divider" />
 
 						<!-- Section 04: Advanced Risk Controls -->
 						<div class="space-y-3">
-							<h4 class="text-xs font-semibold text-slate-500 dark:text-zinc-400 tracking-wider uppercase">04 / Advanced Risk Controls</h4>
+							<h4 class="text-xs font-semibold text-navy-500 dark:text-navy-400 tracking-wider uppercase">04 / Advanced Risk Controls</h4>
 
 							<div class="flex items-center justify-between gap-3">
-								<span class="text-xs font-semibold text-slate-800 dark:text-zinc-200">
+								<span class="text-xs font-semibold text-navy-800 dark:text-navy-200">
 									Enable Dynamic Guardrails
 								</span>
 								<label class="relative inline-flex items-center cursor-pointer shrink-0">
 									<input type="checkbox" id="useGuardrails" name="useGuardrails" class="sr-only peer">
-									<div class="w-11 h-6 bg-slate-200 dark:bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-slate-900 dark:peer-checked:bg-white"></div>
+									<div class="w-11 h-6 bg-navy-200 dark:bg-navy-800 peer-focus:outline-none rounded-full peer peer-checked:after:trannavy-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-navy-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-navy-900 dark:peer-checked:bg-white"></div>
 								</label>
 							</div>
-							<p class="text-xs text-slate-500 dark:text-zinc-400 leading-relaxed">
+							<p class="text-xs text-navy-500 dark:text-navy-400 leading-relaxed">
 								Simulates a rational investor. If a severe market crash occurs, the system automatically reduces your monthly paycheck by 10% to protect the underlying collateral. This trades guaranteed income for higher portfolio survival.
 							</p>
 						</div>
@@ -273,7 +274,7 @@ import Layout from '../layouts/Layout.astro';
 							<button 
 								type="button" 
 								id="runSimBtn"
-								class="w-full min-h-[44px] bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-zinc-200 dark:text-black font-semibold py-3 px-6 rounded-md transition-all duration-200 ease-geist flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
+								class="btn-gold w-full"
 							>
 								<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
 									<path d="M8 5v14l11-7z"/>
@@ -288,18 +289,18 @@ import Layout from '../layouts/Layout.astro';
 				<section class="lg:col-span-7 space-y-6">
 					
 					<!-- Modern Tabbed Navigation Header (Touch Friendly Targets) -->
-					<div class="flex items-center gap-8 border-b border-slate-200 dark:border-white/10 pb-px">
+					<div class="flex items-center gap-6 border-b border-navy-200 dark:border-white/10 pb-px">
 						<button 
 							id="tabPlanSummaryBtn"
 							type="button"
-							class="min-h-[44px] pb-3 text-sm font-bold text-slate-900 dark:text-zinc-100 border-b-2 border-slate-900 dark:border-white transition-all cursor-pointer flex items-center"
+							class="min-h-[44px] pb-3 text-sm font-bold text-navy-900 dark:text-navy-100 border-b-2 border-gold-500 transition-all cursor-pointer flex items-center"
 						>
 							Plan Summary
 						</button>
 						<button 
 							id="tabScheduleBtn"
 							type="button"
-							class="min-h-[44px] pb-3 text-sm font-semibold text-slate-500 hover:text-slate-800 dark:text-zinc-400 dark:hover:text-zinc-200 border-b-2 border-transparent transition-all cursor-pointer flex items-center"
+							class="min-h-[44px] pb-3 text-sm font-semibold text-navy-500 hover:text-navy-800 dark:text-navy-400 dark:hover:text-navy-200 border-b-2 border-transparent transition-all cursor-pointer flex items-center"
 						>
 							Yearly Paycheck Schedule
 						</button>
@@ -309,37 +310,37 @@ import Layout from '../layouts/Layout.astro';
 					<div id="viewPlanSummary" class="space-y-6">
 						
 						<!-- Primary Results Card -->
-						<div class="bg-white dark:bg-zinc-950 rounded-xl border border-slate-200 dark:border-white/10 p-6 sm:p-8 space-y-6 transition-colors duration-200">
+						<div class="card-premium rounded-2xl reveal p-6 sm:p-8 space-y-6 transition-colors duration-200">
 							
 							<!-- Actionable Portfolio Health & Endurance Hero Section -->
-							<div class="pb-6 border-b border-slate-200 dark:border-white/10 space-y-3">
+							<div class="pb-6 border-b border-navy-200 dark:border-white/10 space-y-3">
 								<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
 									<div>
-										<h3 class="text-xl font-bold tracking-tight text-slate-900 dark:text-zinc-100">Projected Runway</h3>
-										<p class="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">Projected portfolio endurance under real-world market stress tests.</p>
+										<h3 class="text-xl font-bold tracking-tight text-navy-900 dark:text-navy-100">Projected Runway</h3>
+										<p class="text-xs text-navy-500 dark:text-navy-400 mt-0.5">Projected portfolio endurance under real-world market stress tests.</p>
 									</div>
 
 									<!-- Health Status Badge & Hero Metric Div -->
 									<div class="flex items-center gap-2 self-start sm:self-auto flex-wrap justify-end">
-										<div id="portfolioEnduranceHero" class="text-3xl sm:text-4xl font-extrabold tracking-tight font-sans text-slate-900 dark:text-zinc-100">
+										<div id="portfolioEnduranceHero" class="text-3xl sm:text-4xl font-extrabold stat-value tracking-tight font-sans text-navy-900 dark:text-navy-100">
 											--
 										</div>
-										<div id="guardrailsActiveBadge" class="hidden px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-md bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+										<div id="guardrailsActiveBadge" class="hidden px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-md badge-safe">
 											GUARDRAILS ACTIVE
 										</div>
-										<div id="portfolioHealthBadge" class="px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-md bg-slate-100 text-slate-700 dark:bg-zinc-900 dark:text-zinc-300 border border-slate-200 dark:border-white/10">
+										<div id="portfolioHealthBadge" class="px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-md badge-warning">
 											CALCULATING
 										</div>
 									</div>
 								</div>
 
 								<!-- Reality Check Subtext -->
-								<p id="portfolioRealityCheck" class="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 leading-relaxed font-sans pt-1">
+								<p id="portfolioRealityCheck" class="text-xs sm:text-sm text-navy-600 dark:text-navy-400 leading-relaxed font-sans pt-1">
 									Running 10,000 market stress tests...
 								</p>
 
 								<!-- Lifestyle Degradation / Prosperity Bonus Alert Box -->
-								<div id="lifestyleSacrificeAlertBox" class="hidden mt-4 p-4 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 rounded-lg space-y-2.5 transition-colors duration-200">
+								<div id="lifestyleSacrificeAlertBox" class="hidden mt-4 p-4 badge-warning rounded-lg space-y-2.5 transition-colors duration-200">
 									<div class="flex items-center gap-2">
 										<svg id="sacrificeIcon" class="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
@@ -350,24 +351,24 @@ import Layout from '../layouts/Layout.astro';
 									</div>
 									<div class="space-y-2 text-xs text-amber-800 dark:text-amber-300 leading-relaxed font-sans">
 										<p id="sacrificeMetric1">
-											To force your portfolio to survive, the system withheld <strong id="valSacrificeTotalCash" class="font-bold text-amber-950 dark:text-amber-100">--</strong> in planned lifetime income.
+											To force your portfolio to survive, the system withheld <strong id="valSacrificeTotalCash" class="font-bold stat-value text-amber-950 dark:text-amber-100">--</strong> in planned lifetime income.
 										</p>
 										<p id="sacrificeMetric2">
-											During the worst market crashes, your monthly paycheck was slashed. At its lowest point, your income dropped to the equivalent purchasing power of just <strong id="valSacrificeRockBottom" class="font-bold text-amber-950 dark:text-amber-100">--</strong> in today's money.
+											During the worst market crashes, your monthly paycheck was slashed. At its lowest point, your income dropped to the equivalent purchasing power of just <strong id="valSacrificeRockBottom" class="font-bold stat-value text-amber-950 dark:text-amber-100">--</strong> in today's money.
 										</p>
 									</div>
 								</div>
 
 								<!-- Guardrail Weather Forecast Grid -->
-								<div id="weatherForecastContainer" class="hidden mt-4 p-4 sm:p-5 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-lg space-y-3">
+								<div id="weatherForecastContainer" class="hidden mt-4 p-4 sm:p-5 card-premium rounded-2xl space-y-3">
 									<div class="flex items-center justify-between">
-										<h4 class="text-xs font-bold text-slate-800 dark:text-zinc-200 uppercase tracking-wider">30-Year Lifestyle Heatmap</h4>
-										<div class="flex items-center gap-3 text-[10px] font-medium text-slate-500 dark:text-zinc-400">
+										<h4 class="text-xs font-bold text-navy-800 dark:text-navy-200 uppercase tracking-wider">30-Year Lifestyle Heatmap</h4>
+										<div class="flex items-center gap-3 text-[10px] font-medium text-navy-500 dark:text-navy-400">
 											<span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-emerald-500/80"></span> Full Paycheck</span>
 											<span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-amber-500/90 animate-pulse"></span> Pay Cut</span>
 										</div>
 									</div>
-									<p class="text-xs text-slate-500 dark:text-zinc-400">Visualizing the exact years your paycheck is curtailed to protect your portfolio from bankruptcy.</p>
+									<p class="text-xs text-navy-500 dark:text-navy-400">Visualizing the exact years your paycheck is curtailed to protect your portfolio from bankruptcy.</p>
 									
 									<!-- The Dynamic Grid -->
 									<div id="weatherGrid" class="grid grid-cols-10 sm:grid-cols-15 gap-1.5 pt-2">
@@ -377,129 +378,129 @@ import Layout from '../layouts/Layout.astro';
 							</div>
 
 							<!-- CONSOLIDATED 3-TIER UNIFIED COMMAND CENTER DASHBOARD BANNER -->
-							<div id="wowMetricBanner" class="relative overflow-hidden rounded-xl bg-white dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 p-6 sm:p-7 space-y-5 animate-slide-up-fade hover:-translate-y-[1px] hover:shadow-sm active:translate-y-[0px] active:scale-[0.99] transition-all duration-200 ease-geist">
+							<div id="wowMetricBanner" class="relative overflow-hidden rounded-xl bg-white dark:bg-navy-950 border border-navy-200 dark:border-navy-800 p-6 sm:p-7 space-y-5 animate-slide-up-fade hover:-trannavy-y-[1px] hover:shadow-sm active:trannavy-y-[0px] active:scale-[0.99] transition-all duration-200 ease-geist">
 								
 								<!-- Tier 1: The Headline -->
-								<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-zinc-800">
+								<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-navy-200 dark:border-navy-800">
 									<div>
-										<span class="text-xs font-semibold uppercase tracking-wider text-slate-900 dark:text-zinc-100">Total Lifetime After-Tax Cash Flow</span>
-										<div class="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">Your initial investment vs. total net paychecks collected over retirement</div>
+										<span class="text-xs font-semibold uppercase tracking-wider text-navy-900 dark:text-navy-100">Total Lifetime After-Tax Cash Flow</span>
+										<div class="text-xs text-navy-500 dark:text-navy-400 mt-0.5">Your initial investment vs. total net paychecks collected over retirement</div>
 									</div>
-									<div id="wowMultiplierBadge" class="self-start sm:self-auto bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-xs font-bold px-3 py-1 rounded-md">
+									<div id="wowMultiplierBadge" class="self-start sm:self-auto badge-safe text-xs font-bold px-3 py-1 rounded-md">
 										--x Lifetime Payout
 									</div>
 								</div>
 
-								<div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-baseline">
+								<div class="grid grid-cols-1 sm:grid-cols-2 reveal-stagger gap-6 items-baseline">
 									<div>
-										<div class="text-xs font-medium text-slate-500 dark:text-zinc-400">You Started With</div>
-										<div id="wowInitialCorpus" class="text-2xl font-bold text-slate-900 dark:text-zinc-100 mt-0.5 font-sans">--</div>
+										<div class="text-xs font-medium text-navy-500 dark:text-navy-400">You Started With</div>
+										<div id="wowInitialCorpus" class="text-2xl font-bold stat-value text-navy-900 dark:text-navy-100 mt-0.5 font-sans">--</div>
 									</div>
 									<div>
-										<div class="text-xs font-medium text-emerald-600 dark:text-emerald-400">You Received (After Taxes)</div>
-										<div id="wowNetPayout" class="text-3xl sm:text-4xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-0.5 font-sans tracking-tight">--</div>
+										<div class="text-xs font-medium text-gold-500 dark:text-gold-400">You Received (After Taxes)</div>
+										<div id="wowNetPayout" class="text-3xl sm:text-4xl font-extrabold stat-value text-gold-500 dark:text-gold-400 mt-0.5 font-sans tracking-tight">--</div>
 									</div>
 								</div>
 
 								<!-- Tier 2: The Ledger Grid (5-Column Layout on Desktop with Fractional Survival Duration) -->
-								<div class="bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg p-4 mt-2">
-									<div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+								<div class="card-premium rounded-2xl p-4 mt-2">
+									<div class="grid grid-cols-2 md:grid-cols-5 reveal-stagger gap-6">
 										<div>
-											<div class="text-[11px] font-medium text-slate-500 dark:text-zinc-400 uppercase tracking-wider">Duration</div>
-											<div id="tier2Duration" class="text-sm sm:text-base font-bold text-slate-900 dark:text-zinc-100 mt-0.5 font-sans">--</div>
+											<div class="stat-label uppercase tracking-wider">Duration</div>
+											<div id="tier2Duration" class="text-sm sm:text-base font-bold stat-value text-navy-900 dark:text-navy-100 mt-0.5 font-sans">--</div>
 										</div>
 										<div>
-											<div class="text-[11px] font-medium text-slate-500 dark:text-zinc-400 uppercase tracking-wider">Total Gross</div>
-											<div id="tier2Gross" class="text-sm sm:text-base font-bold text-slate-900 dark:text-zinc-100 mt-0.5 font-sans">--</div>
+											<div class="stat-label uppercase tracking-wider">Total Gross</div>
+											<div id="tier2Gross" class="text-sm sm:text-base font-bold stat-value text-navy-900 dark:text-navy-100 mt-0.5 font-sans">--</div>
 										</div>
 										<div>
-											<div class="text-[11px] font-medium text-rose-600 dark:text-rose-400 uppercase tracking-wider">Taxes Paid</div>
-											<div id="tier2Taxes" class="text-sm sm:text-base font-bold text-rose-600 dark:text-rose-400 mt-0.5 font-sans">--</div>
+											<div class="stat-label text-rose-600 dark:text-rose-400 uppercase tracking-wider">Taxes Paid</div>
+											<div id="tier2Taxes" class="text-sm sm:text-base font-bold stat-value text-rose-600 dark:text-rose-400 mt-0.5 font-sans">--</div>
 										</div>
 										<div>
-											<div class="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Net In-Hand</div>
-											<div id="tier2Net" class="text-sm sm:text-base font-bold text-emerald-600 dark:text-emerald-400 mt-0.5 font-sans">--</div>
+											<div class="stat-label text-gold-500 dark:text-gold-400 uppercase tracking-wider">Net In-Hand</div>
+											<div id="tier2Net" class="text-sm sm:text-base font-bold stat-value text-gold-500 dark:text-gold-400 mt-0.5 font-sans">--</div>
 										</div>
 										<div>
-											<div class="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Balance Remaining</div>
-											<div id="tier2BalanceRemaining" class="text-sm sm:text-base font-bold text-emerald-600 dark:text-emerald-400 mt-0.5 font-sans">--</div>
+											<div class="stat-label text-gold-500 dark:text-gold-400 uppercase tracking-wider">Balance Remaining</div>
+											<div id="tier2BalanceRemaining" class="text-sm sm:text-base font-bold stat-value text-gold-500 dark:text-gold-400 mt-0.5 font-sans">--</div>
 										</div>
 									</div>
 								</div>
 
 								<!-- Guardrails Lowest Paycheck & Purchasing Power Sacrifice Alert Metric -->
-								<div id="guardrailsLowestPaycheckRow" class="hidden bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg p-3.5 mt-2 flex flex-col lg:flex-row lg:items-center justify-between gap-3 text-xs">
+								<div id="guardrailsLowestPaycheckRow" class="hidden card-premium rounded-2xl p-3.5 mt-2 flex flex-col lg:flex-row lg:items-center justify-between gap-3 text-xs">
 									<div class="flex items-center gap-2 text-emerald-700 dark:text-emerald-400 shrink-0">
 										<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
 										<span class="font-semibold">Dynamic Guardrails Active</span>
 									</div>
-									<div class="font-sans flex flex-wrap items-center gap-3 text-slate-600 dark:text-zinc-400">
-										<div>Min Paycheck: <span id="valLowestPaycheck" class="text-slate-900 dark:text-zinc-100 font-bold">--</span></div>
-										<span class="text-slate-300 dark:text-zinc-700 hidden sm:inline">•</span>
+									<div class="font-sans flex flex-wrap items-center gap-3 text-navy-600 dark:text-navy-400">
+										<div>Min Paycheck: <span id="valLowestPaycheck" class="text-navy-900 dark:text-navy-100 font-bold">--</span></div>
+										<span class="text-navy-300 dark:text-navy-700 hidden sm:inline">•</span>
 										<div>Real Floor (Today's Money): <span id="valRockBottom" class="text-amber-700 dark:text-amber-400 font-bold">--</span></div>
-										<span class="text-slate-300 dark:text-zinc-700 hidden sm:inline">•</span>
+										<span class="text-navy-300 dark:text-navy-700 hidden sm:inline">•</span>
 										<div>Lifetime Sacrifice: <span id="valSacrifice" class="text-rose-600 dark:text-rose-400 font-bold">--</span></div>
 									</div>
 								</div>
 
 								<!-- Tier 3: The Actionable Footer -->
-								<div class="bg-slate-50 dark:bg-zinc-900 border-t border-slate-200 dark:border-zinc-800 rounded-b-lg -mx-6 -mb-6 sm:-mx-7 sm:-mb-7 p-4 text-xs flex items-start gap-3 text-slate-600 dark:text-zinc-400">
-									<svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<div class="bg-navy-50 dark:bg-navy-900 border-t border-navy-200 dark:border-navy-800 rounded-b-lg -mx-6 -mb-6 sm:-mx-7 sm:-mb-7 p-4 text-xs flex items-start gap-3 text-navy-600 dark:text-navy-400">
+									<svg class="w-4 h-4 text-gold-500 dark:text-gold-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
 									</svg>
-									<div id="tier3ActionableFooter" class="leading-relaxed font-sans text-slate-600 dark:text-zinc-400">
+									<div id="tier3ActionableFooter" class="leading-relaxed font-sans text-navy-600 dark:text-navy-400">
 										Calculating actionable financial guidance...
 									</div>
 								</div>
 							</div>
 
 							<!-- 2. INTERACTIVE MICRO-CHART (Paycheck Scaling vs Savings Balance) -->
-							<div class="bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl p-4 sm:p-5 space-y-3">
+							<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-xl p-4 sm:p-5 space-y-3">
 								<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
 									<div>
-										<h4 class="text-xs font-bold tracking-tight text-slate-800 dark:text-zinc-100">Paycheck Growth vs. Savings Balance</h4>
-										<p class="text-xs text-slate-500 dark:text-zinc-400">Net monthly paycheck scaling with inflation alongside underlying corpus growth.</p>
+										<h4 class="text-xs font-bold tracking-tight text-navy-800 dark:text-navy-100">Paycheck Growth vs. Savings Balance</h4>
+										<p class="text-xs text-navy-500 dark:text-navy-400">Net monthly paycheck scaling with inflation alongside underlying corpus growth.</p>
 									</div>
-									<div class="flex items-center gap-4 text-xs font-medium self-start sm:self-auto">
-										<span class="flex items-center gap-1.5 text-slate-900 dark:text-zinc-100">
-											<span class="w-2.5 h-2.5 rounded-full bg-slate-900 dark:bg-white"></span> Net Monthly Paycheck
+									<div class="flex items-center gap-6 text-xs font-medium self-start sm:self-auto">
+										<span class="flex items-center gap-1.5 text-navy-900 dark:text-navy-100">
+											<span class="w-2.5 h-2.5 rounded-full bg-navy-900 dark:bg-white"></span> Net Monthly Paycheck
 										</span>
-										<span class="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
+										<span class="flex items-center gap-1.5 text-gold-500 dark:text-gold-400">
 											<span class="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400"></span> Savings Balance
 										</span>
 									</div>
 								</div>
-								<div class="relative w-full h-52 bg-white dark:bg-zinc-950 rounded-lg p-3 border border-slate-200 dark:border-zinc-800">
+								<div class="relative w-full h-52 bg-white dark:bg-navy-950 rounded-lg p-3 border border-navy-200 dark:border-navy-800">
 									<canvas id="cashflowMicroChart" class="w-full h-full"></canvas>
 								</div>
 							</div>
 
 							<!-- PERPETUAL INCOME TARGETS -->
 							<div class="space-y-3">
-								<h4 class="text-xs font-semibold text-slate-500 dark:text-zinc-400 tracking-wider uppercase mb-2">PERPETUAL INCOME TARGETS</h4>
+								<h4 class="text-xs font-semibold text-navy-500 dark:text-navy-400 tracking-wider uppercase mb-2">PERPETUAL INCOME TARGETS</h4>
 								
 								<div class="grid grid-cols-1 gap-3">
 									<!-- Card 1: The Capital Target -->
-									<div class="bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg p-4 sm:p-5 space-y-1">
+									<div class="card-premium rounded-2xl p-4 sm:p-5 space-y-1">
 										<div class="flex items-center gap-2">
-											<span class="w-2.5 h-2.5 rounded-full bg-slate-900 dark:bg-white"></span>
-											<h5 class="text-xs font-semibold text-slate-800 dark:text-zinc-200">Required Corpus at Risk-Free Rate</h5>
+											<span class="w-2.5 h-2.5 rounded-full bg-navy-900 dark:bg-white"></span>
+											<h5 class="text-xs font-semibold text-navy-800 dark:text-navy-200">Required Corpus at Risk-Free Rate</h5>
 										</div>
-										<p class="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-sans pt-1">
-											To guarantee this exact purchasing power perpetually using safe government bonds (assuming a 7% yield), you would need an initial corpus of <strong id="statRequiredCorpus" class="text-slate-900 dark:text-zinc-100 font-bold">[Calculated Corpus]</strong>.
+										<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans pt-1">
+											To guarantee this exact purchasing power perpetually using safe government bonds (assuming a 7% yield), you would need an initial corpus of <strong id="statRequiredCorpus" class="text-navy-900 dark:text-navy-100 font-bold">[Calculated Corpus]</strong>.
 										</p>
 									</div>
 
 									<!-- Card 2: The Market Target -->
-									<div class="bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg p-4 sm:p-5 space-y-1">
+									<div class="card-premium rounded-2xl p-4 sm:p-5 space-y-1">
 										<div class="flex items-center gap-2">
 											<span class="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400"></span>
-											<h5 class="text-xs font-semibold text-slate-800 dark:text-zinc-200">Required Market Return (CAGR)</h5>
+											<h5 class="text-xs font-semibold text-navy-800 dark:text-navy-200">Required Market Return (CAGR)</h5>
 										</div>
-										<p class="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-sans pt-1">
-											Assuming perfectly smooth, linear growth, your investments must generate a gross return of <strong id="statRequiredCAGR" class="text-slate-900 dark:text-zinc-100 font-bold">[Calculated CAGR]%</strong> every year to overcome taxes and inflation without depleting the principal.
+										<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans pt-1">
+											Assuming perfectly smooth, linear growth, your investments must generate a gross return of <strong id="statRequiredCAGR" class="text-navy-900 dark:text-navy-100 font-bold">[Calculated CAGR]%</strong> every year to overcome taxes and inflation without depleting the principal.
 										</p>
-										<span class="text-xs text-slate-500 dark:text-zinc-400 mt-2 block leading-relaxed">
+										<span class="text-xs text-navy-500 dark:text-navy-400 mt-2 block leading-relaxed">
 											Note on Volatility: Because markets are not linear, withdrawing cash during negative years (Sequence of Return Risk) permanently damages compound growth. Real-world portfolios generally require a return higher than this theoretical baseline to survive severe early market crashes, which is why the Monte Carlo simulation above stress-tests your runway.
 										</span>
 									</div>
@@ -512,31 +513,31 @@ import Layout from '../layouts/Layout.astro';
 
 					<!-- View 2: Yearly Paycheck Schedule Tab Content (Balanced Column Spacing without Gaps) -->
 					<div id="viewSchedule" class="hidden space-y-6">
-						<div class="bg-white dark:bg-zinc-950 rounded-xl border border-slate-200 dark:border-white/10 p-6 sm:p-8 space-y-4 transition-colors duration-200">
-							<div class="pb-4 border-b border-slate-200 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+						<div class="card-premium rounded-2xl reveal p-6 sm:p-8 space-y-4 transition-colors duration-200">
+							<div class="pb-4 border-b border-navy-200 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
 								<div>
-									<h3 class="text-lg font-bold text-slate-900 dark:text-zinc-100">Yearly Inflation Escalation Schedule</h3>
-									<p class="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">Year-by-year breakdown of net monthly income, net annual withdrawal, taxes, corpus additions, and balance.</p>
+									<h3 class="text-lg font-bold text-navy-900 dark:text-navy-100">Yearly Inflation Escalation Schedule</h3>
+									<p class="text-xs text-navy-500 dark:text-navy-400 mt-0.5">Year-by-year breakdown of net monthly income, net annual withdrawal, taxes, corpus additions, and balance.</p>
 								</div>
-								<span id="scheduleStepUpBadge" class="text-xs text-slate-600 dark:text-zinc-400 bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 px-2.5 py-1 rounded-md font-medium self-start sm:self-auto">
+								<span id="scheduleStepUpBadge" class="text-xs text-navy-600 dark:text-navy-400 bg-navy-100 dark:bg-navy-900 border border-navy-200 dark:border-white/10 px-2.5 py-1 rounded-md font-medium self-start sm:self-auto">
 									+6% Inflation & +5% Step-Up
 								</span>
 							</div>
 
 							<!-- Scrolling Wrapper: Natural Fluid Column Spacing with Tight Padding -->
-							<div class="w-full max-h-[600px] overflow-x-auto overflow-y-auto border-b border-slate-200 dark:border-white/10 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-zinc-700">
-								<table class="w-full min-w-[680px] text-left border-collapse">
-									<thead class="sticky top-0 z-10 bg-slate-100 dark:bg-zinc-900 border-b border-slate-200 dark:border-white/10">
+							<div class="w-full max-h-[600px] overflow-x-auto overflow-y-auto border-b border-navy-200 dark:border-white/10 scrollbar-thin scrollbar-thumb-navy-300 dark:scrollbar-thumb-navy-700">
+								<table class="table-premium min-w-[680px]">
+									<thead class="sticky top-0 z-10 bg-navy-100 dark:bg-navy-900 border-b border-navy-200 dark:border-white/10">
 										<tr>
-											<th class="py-3 px-3 sm:px-4 text-left text-xs font-semibold text-slate-500 dark:text-zinc-400 whitespace-nowrap">Year</th>
-											<th class="py-3 px-3 sm:px-4 text-right text-xs font-semibold text-slate-500 dark:text-zinc-400 whitespace-nowrap">Net Monthly Withdrawal</th>
-											<th class="py-3 px-3 sm:px-4 text-right text-xs font-semibold text-slate-500 dark:text-zinc-400 whitespace-nowrap">Net Annual Withdrawal</th>
-											<th class="py-3 px-3 sm:px-4 text-right text-xs font-semibold text-slate-500 dark:text-zinc-400 whitespace-nowrap">Annual Taxes</th>
-											<th class="py-3 px-3 sm:px-4 text-right text-xs font-semibold text-slate-500 dark:text-zinc-400 whitespace-nowrap">Additions to Corpus</th>
-											<th class="py-3 px-3 sm:px-4 text-right text-xs font-semibold text-slate-500 dark:text-zinc-400 whitespace-nowrap">Corpus Balance</th>
+											<th class="py-3 px-3 sm:px-4 text-left text-xs font-semibold text-navy-500 dark:text-navy-400 whitespace-nowrap">Year</th>
+											<th class="py-3 px-3 sm:px-4 text-right text-xs font-semibold text-navy-500 dark:text-navy-400 whitespace-nowrap">Net Monthly Withdrawal</th>
+											<th class="py-3 px-3 sm:px-4 text-right text-xs font-semibold text-navy-500 dark:text-navy-400 whitespace-nowrap">Net Annual Withdrawal</th>
+											<th class="py-3 px-3 sm:px-4 text-right text-xs font-semibold text-navy-500 dark:text-navy-400 whitespace-nowrap">Annual Taxes</th>
+											<th class="py-3 px-3 sm:px-4 text-right text-xs font-semibold text-navy-500 dark:text-navy-400 whitespace-nowrap">Additions to Corpus</th>
+											<th class="py-3 px-3 sm:px-4 text-right text-xs font-semibold text-navy-500 dark:text-navy-400 whitespace-nowrap">Corpus Balance</th>
 										</tr>
 									</thead>
-									<tbody id="scheduleTableBody" class="divide-y divide-slate-100 dark:divide-white/5 font-sans">
+									<tbody id="scheduleTableBody" class="divide-y divide-navy-100 dark:divide-white/5 font-sans">
 										<!-- Dynamically populated via JavaScript -->
 									</tbody>
 								</table>
@@ -548,39 +549,39 @@ import Layout from '../layouts/Layout.astro';
 			</div>
 
 			<!-- Full-Width Chart Container Card (Dynamic Scaling Mobile Canvas Geometry h-64 sm:h-80 md:h-96) -->
-			<section class="max-w-7xl mx-auto w-full mt-12 bg-white dark:bg-zinc-950 rounded-xl border border-slate-200 dark:border-white/10 p-6 sm:p-8 space-y-4 transition-colors duration-200">
-				<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-white/10">
+			<section class="max-w-7xl mx-auto w-full mt-12 card-premium rounded-2xl reveal p-6 sm:p-8 space-y-4 transition-colors duration-200">
+				<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-navy-200 dark:border-white/10">
 					<div>
-						<h3 class="text-lg font-bold text-slate-900 dark:text-zinc-100">The Lifecycle of Your Savings</h3>
-						<p class="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">A visual projection of how your money grows and depletes over time based on market conditions.</p>
+						<h3 class="text-lg font-bold text-navy-900 dark:text-navy-100">The Lifecycle of Your Savings</h3>
+						<p class="text-xs text-navy-500 dark:text-navy-400 mt-0.5">A visual projection of how your money grows and depletes over time based on market conditions.</p>
 					</div>
 
 					<!-- Mode Selector (Touch-Friendly Target Sizes) -->
-					<div class="flex items-center gap-1 bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-md p-1 text-xs">
-						<button id="viewPercentilesBtn" type="button" class="min-h-[36px] px-3 py-1 rounded-md bg-white dark:bg-black text-slate-900 dark:text-zinc-100 font-semibold shadow-xs transition-colors flex items-center">Likelihoods</button>
-						<button id="viewSamplePathsBtn" type="button" class="min-h-[36px] px-3 py-1 rounded-md text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200 transition-colors flex items-center">Sample Paths</button>
+					<div class="flex items-center gap-1 bg-navy-100 dark:bg-navy-900 border border-navy-200 dark:border-white/10 rounded-md p-1 text-xs">
+						<button id="viewPercentilesBtn" type="button" class="min-h-[36px] px-3 py-1 rounded-md bg-white dark:bg-navy-950 text-navy-900 dark:text-navy-100 font-semibold shadow-xs transition-colors flex items-center">Likelihoods</button>
+						<button id="viewSamplePathsBtn" type="button" class="min-h-[36px] px-3 py-1 rounded-md text-navy-600 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-200 transition-colors flex items-center">Sample Paths</button>
 					</div>
 				</div>
 
 				<!-- Canvas Element for Chart.js (Mobile Scale h-64 sm:h-80 md:h-96) -->
-				<div class="relative w-full h-64 sm:h-80 md:h-96 bg-white dark:bg-zinc-950 border border-slate-200 dark:border-white/10 rounded-lg p-4 flex items-center justify-center">
+				<div class="relative w-full h-64 sm:h-80 md:h-96 bg-white dark:bg-navy-950 border border-navy-200 dark:border-white/10 rounded-lg p-4 flex items-center justify-center">
 					<canvas id="swpChart" class="w-full h-full"></canvas>
 				</div>
 
 				<!-- Chart Common-Man Friendly Legend -->
-				<div class="flex flex-wrap items-center justify-between text-xs text-slate-600 dark:text-zinc-400 pt-2 gap-3 border-t border-slate-200 dark:border-white/10">
-					<div class="flex items-center gap-4 sm:gap-6">
+				<div class="flex flex-wrap items-center justify-between text-xs text-navy-600 dark:text-navy-400 pt-2 gap-3 border-t border-navy-200 dark:border-white/10">
+					<div class="flex items-center gap-6 sm:gap-6">
 						<span class="flex items-center gap-1.5">
 							<span class="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400"></span> Optimistic (Strong Markets)
 						</span>
 						<span class="flex items-center gap-1.5">
-							<span class="w-2.5 h-2.5 rounded-full bg-slate-900 dark:bg-zinc-100"></span> Expected Path
+							<span class="w-2.5 h-2.5 rounded-full bg-navy-900 dark:bg-navy-100"></span> Expected Path
 						</span>
 						<span class="flex items-center gap-1.5">
 							<span class="w-2.5 h-2.5 rounded-full bg-rose-600 dark:bg-rose-400"></span> Conservative (Poor Markets)
 						</span>
 					</div>
-					<span class="text-xs text-slate-400 dark:text-zinc-500">10,000 Simulated Lifetimes</span>
+					<span class="text-xs text-navy-400 dark:text-navy-500">10,000 Simulated Lifetimes</span>
 				</div>
 			</section>
 
@@ -625,20 +626,20 @@ import Layout from '../layouts/Layout.astro';
 				viewSummaryEl?.classList.remove('hidden');
 				viewScheduleEl?.classList.add('hidden');
 				
-				tabSummaryBtn?.classList.add('border-slate-900', 'text-slate-900', 'dark:border-white', 'dark:text-zinc-100', 'font-bold');
-				tabSummaryBtn?.classList.remove('border-transparent', 'text-slate-500', 'dark:text-zinc-400');
+				tabSummaryBtn?.classList.add('border-navy-900', 'text-navy-900', 'dark:border-white', 'dark:text-navy-100', 'font-bold');
+				tabSummaryBtn?.classList.remove('border-transparent', 'text-navy-500', 'dark:text-navy-400');
 				
-				tabScheduleBtn?.classList.remove('border-slate-900', 'text-slate-900', 'dark:border-white', 'dark:text-zinc-100', 'font-bold');
-				tabScheduleBtn?.classList.add('border-transparent', 'text-slate-500', 'dark:text-zinc-400');
+				tabScheduleBtn?.classList.remove('border-navy-900', 'text-navy-900', 'dark:border-white', 'dark:text-navy-100', 'font-bold');
+				tabScheduleBtn?.classList.add('border-transparent', 'text-navy-500', 'dark:text-navy-400');
 			} else {
 				viewScheduleEl?.classList.remove('hidden');
 				viewSummaryEl?.classList.add('hidden');
 				
-				tabScheduleBtn?.classList.add('border-slate-900', 'text-slate-900', 'dark:border-white', 'dark:text-zinc-100', 'font-bold');
-				tabScheduleBtn?.classList.remove('border-transparent', 'text-slate-500', 'dark:text-zinc-400');
+				tabScheduleBtn?.classList.add('border-navy-900', 'text-navy-900', 'dark:border-white', 'dark:text-navy-100', 'font-bold');
+				tabScheduleBtn?.classList.remove('border-transparent', 'text-navy-500', 'dark:text-navy-400');
 				
-				tabSummaryBtn?.classList.remove('border-slate-900', 'text-slate-900', 'dark:border-white', 'dark:text-zinc-100', 'font-bold');
-				tabSummaryBtn?.classList.add('border-transparent', 'text-slate-500', 'dark:text-zinc-400');
+				tabSummaryBtn?.classList.remove('border-navy-900', 'text-navy-900', 'dark:border-white', 'dark:text-navy-100', 'font-bold');
+				tabSummaryBtn?.classList.add('border-transparent', 'text-navy-500', 'dark:text-navy-400');
 			}
 		}
 
@@ -797,7 +798,7 @@ import Layout from '../layouts/Layout.astro';
 
 		for (let yr = 1; yr <= yearsCount; yr++) {
 			const i = yr - 1; // 0-indexed loop counter for zebra striping
-			const rowBgClass = i % 2 === 1 ? 'bg-slate-50 dark:bg-zinc-900/50' : 'bg-transparent';
+			const rowBgClass = i % 2 === 1 ? 'bg-navy-50 dark:bg-navy-900/50' : 'bg-transparent';
 
 			if (yr > 1) {
 				currentMonthly = currentMonthly * escalationFactor;
@@ -809,13 +810,13 @@ import Layout from '../layouts/Layout.astro';
 			if (prevBal <= 0 && currentBal <= 0) {
 				// Case C: Ghost Years (Post-Exhaustion) - Muted visual text to indicate dead plan
 				html += `
-					<tr class="${rowBgClass} hover:bg-slate-100 dark:hover:bg-zinc-900 transition-colors border-b border-slate-100 dark:border-white/10">
-						<td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-medium text-slate-400 dark:text-zinc-600">Year ${yr}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-slate-300 dark:text-zinc-600">${tableFormatter.format(0)}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-slate-300 dark:text-zinc-600">${tableFormatter.format(0)}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-slate-300 dark:text-zinc-600">${tableFormatter.format(0)}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-slate-300 dark:text-zinc-600">-</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-slate-300 dark:text-zinc-600">${tableFormatter.format(0)}</td>
+					<tr class="${rowBgClass} hover:bg-navy-100 dark:hover:bg-navy-900 transition-colors border-b border-navy-100 dark:border-white/10">
+						<td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-medium text-navy-400 dark:text-navy-600">Year ${yr}</td>
+						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-300 dark:text-navy-600">${tableFormatter.format(0)}</td>
+						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-300 dark:text-navy-600">${tableFormatter.format(0)}</td>
+						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-300 dark:text-navy-600">${tableFormatter.format(0)}</td>
+						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-300 dark:text-navy-600">-</td>
+						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-300 dark:text-navy-600">${tableFormatter.format(0)}</td>
 					</tr>
 				`;
 			} else if (prevBal > 0 && currentBal <= 0) {
@@ -829,12 +830,12 @@ import Layout from '../layouts/Layout.astro';
 				const formattedAnnualTax = tableFormatter.format(Math.round(annualTax));
 
 				html += `
-					<tr class="${rowBgClass} hover:bg-slate-100 dark:hover:bg-zinc-900 transition-colors border-b border-slate-100 dark:border-white/10">
-						<td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-semibold text-slate-800 dark:text-zinc-200">Year ${yr}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-emerald-600 dark:text-emerald-400">${formattedTargetMonthly}</td>
+					<tr class="${rowBgClass} hover:bg-navy-100 dark:hover:bg-navy-900 transition-colors border-b border-navy-100 dark:border-white/10">
+						<td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-semibold text-navy-800 dark:text-navy-200">Year ${yr}</td>
+						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-500 dark:text-gold-400">${formattedTargetMonthly}</td>
 						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-amber-600 dark:text-amber-400">${formattedNetAnnual}</td>
 						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-600 dark:text-rose-400">${formattedAnnualTax}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-slate-400 dark:text-zinc-500">-</td>
+						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-400 dark:text-navy-500">-</td>
 						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-600 dark:text-rose-400">${tableFormatter.format(0)}</td>
 					</tr>
 				`;
@@ -858,17 +859,17 @@ import Layout from '../layouts/Layout.astro';
 				const formattedGrowth = growth >= 0 
 					? `+${tableFormatter.format(Math.round(growth))}` 
 					: `-${tableFormatter.format(Math.round(Math.abs(growth)))}`;
-				const growthColorClass = growth >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
+				const growthColorClass = growth >= 0 ? 'text-gold-500 dark:text-gold-400' : 'text-rose-600 dark:text-rose-400';
 				const formattedBal = tableFormatter.format(Math.round(currentBal));
 
 				html += `
-					<tr class="${rowBgClass} hover:bg-slate-100 dark:hover:bg-zinc-900 transition-colors border-b border-slate-100 dark:border-white/10">
-						<td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-semibold text-slate-800 dark:text-zinc-200">Year ${yr}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-emerald-600 dark:text-emerald-400">${formattedNetMonthly}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-emerald-600 dark:text-emerald-400">${formattedNetAnnual}</td>
+					<tr class="${rowBgClass} hover:bg-navy-100 dark:hover:bg-navy-900 transition-colors border-b border-navy-100 dark:border-white/10">
+						<td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-semibold text-navy-800 dark:text-navy-200">Year ${yr}</td>
+						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-500 dark:text-gold-400">${formattedNetMonthly}</td>
+						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-500 dark:text-gold-400">${formattedNetAnnual}</td>
 						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-600 dark:text-rose-400">${formattedAnnualTax}</td>
 						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium ${growthColorClass}">${formattedGrowth}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-slate-900 dark:text-zinc-100">${formattedBal}</td>
+						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-900 dark:text-navy-100">${formattedBal}</td>
 					</tr>
 				`;
 			}
@@ -1118,15 +1119,15 @@ import Layout from '../layouts/Layout.astro';
 			enduranceHeroEl.innerText = durationString;
 
 			if (actualDuration >= horizonYears) {
-				enduranceHeroEl.className = "text-3xl sm:text-4xl font-extrabold tracking-tight font-sans text-emerald-600 dark:text-emerald-400";
+				enduranceHeroEl.className = "text-3xl sm:text-4xl font-extrabold stat-value tracking-tight font-sans text-gold-500 dark:text-gold-400";
 				healthBadgeEl.innerText = "SAFE";
-				healthBadgeEl.className = "px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800";
+				healthBadgeEl.className = "px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full badge-safe";
 			} else if (actualDuration >= 20) {
-				enduranceHeroEl.className = "text-3xl sm:text-4xl font-extrabold tracking-tight font-sans text-amber-600 dark:text-amber-400";
+				enduranceHeroEl.className = "text-3xl sm:text-4xl font-extrabold stat-value tracking-tight font-sans text-amber-600 dark:text-amber-400";
 				healthBadgeEl.innerText = "AT RISK";
 				healthBadgeEl.className = "px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300 border border-amber-200 dark:border-amber-800";
 			} else {
-				enduranceHeroEl.className = "text-3xl sm:text-4xl font-extrabold tracking-tight font-sans text-rose-600 dark:text-rose-400";
+				enduranceHeroEl.className = "text-3xl sm:text-4xl font-extrabold stat-value tracking-tight font-sans text-rose-600 dark:text-rose-400";
 				healthBadgeEl.innerText = "AGGRESSIVE DEPLETION";
 				healthBadgeEl.className = "px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full bg-rose-100 text-rose-800 dark:bg-rose-950/80 dark:text-rose-300 border border-rose-200 dark:border-rose-800";
 			}
@@ -1135,11 +1136,11 @@ import Layout from '../layouts/Layout.astro';
 				realityCheckEl.innerHTML = `Based on 10,000 stress tests with Guardrails active. Your portfolio survived by automatically reducing your monthly lifestyle payouts during severe market crashes.`;
 			} else {
 				if (actualDuration >= horizonYears) {
-					realityCheckEl.innerHTML = `Based on 10,000 market stress tests, your savings comfortably survive your full <strong class="font-semibold text-slate-800 dark:text-zinc-200">${horizonYears}-year</strong> retirement target while compounding against inflation.`;
+					realityCheckEl.innerHTML = `Based on 10,000 market stress tests, your savings comfortably survive your full <strong class="font-semibold text-navy-800 dark:text-navy-200">${horizonYears}-year</strong> retirement target while compounding against inflation.`;
 				} else if (actualDuration >= 20) {
-					realityCheckEl.innerHTML = `Based on 10,000 market stress tests, your savings are projected to exhaust in <strong class="font-semibold text-slate-800 dark:text-zinc-200">${durationString}</strong> due to the combined drag of inflation, step-up payouts, and market volatility.`;
+					realityCheckEl.innerHTML = `Based on 10,000 market stress tests, your savings are projected to exhaust in <strong class="font-semibold text-navy-800 dark:text-navy-200">${durationString}</strong> due to the combined drag of inflation, step-up payouts, and market volatility.`;
 				} else {
-					realityCheckEl.innerHTML = `Based on 10,000 market stress tests, your savings are projected to exhaust rapidly in <strong class="font-semibold text-slate-800 dark:text-zinc-200">${durationString}</strong> due to heavy initial withdrawal pressure.`;
+					realityCheckEl.innerHTML = `Based on 10,000 market stress tests, your savings are projected to exhaust rapidly in <strong class="font-semibold text-navy-800 dark:text-navy-200">${durationString}</strong> due to heavy initial withdrawal pressure.`;
 				}
 			}
 		}
@@ -1154,18 +1155,18 @@ import Layout from '../layouts/Layout.astro';
 			if (data.useGuardrails && data.lifestyleSacrificeAmount !== undefined && data.lifestyleSacrificeAmount !== 0) {
 				if (data.lifestyleSacrificeAmount > 0) {
 					// Lifestyle Degradation Alert (Amber)
-					sacrificeAlertBoxEl.className = "mt-4 p-4 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 rounded-xl space-y-2.5 transition-colors duration-200";
+					sacrificeAlertBoxEl.className = "mt-4 p-4 badge-warning rounded-xl space-y-2.5 transition-colors duration-200";
 					if (sacrificeTitleEl) {
 						sacrificeTitleEl.className = "text-xs font-bold text-amber-900 dark:text-amber-200 uppercase tracking-wider";
 						sacrificeTitleEl.innerText = "Lifestyle Degradation Alert";
 					}
 					if (sacrificeMetric1El) {
 						sacrificeMetric1El.className = "text-xs text-amber-800 dark:text-amber-300 leading-relaxed font-sans";
-						sacrificeMetric1El.innerHTML = `To force your portfolio to survive, the system withheld <strong class="font-bold text-amber-950 dark:text-amber-100">${tableFormatter.format(data.lifestyleSacrificeAmount)}</strong> in planned lifetime income.`;
+						sacrificeMetric1El.innerHTML = `To force your portfolio to survive, the system withheld <strong class="font-bold stat-value text-amber-950 dark:text-amber-100">${tableFormatter.format(data.lifestyleSacrificeAmount)}</strong> in planned lifetime income.`;
 					}
 					if (sacrificeMetric2El) {
 						sacrificeMetric2El.className = "text-xs text-amber-800 dark:text-amber-300 leading-relaxed font-sans";
-						sacrificeMetric2El.innerHTML = `During market drops, your monthly paycheck took a cut. At its lowest point, your income dropped to the equivalent purchasing power of <strong class="font-bold text-amber-950 dark:text-amber-100">${tableFormatter.format(data.rockBottomRealValue)}</strong> in today's money.`;
+						sacrificeMetric2El.innerHTML = `During market drops, your monthly paycheck took a cut. At its lowest point, your income dropped to the equivalent purchasing power of <strong class="font-bold stat-value text-amber-950 dark:text-amber-100">${tableFormatter.format(data.rockBottomRealValue)}</strong> in today's money.`;
 					}
 				} else {
 					// Prosperity Bonus Alert (Green / Emerald)
@@ -1313,9 +1314,9 @@ import Layout from '../layouts/Layout.astro';
 		const tier3El = document.getElementById('tier3ActionableFooter');
 		if (tier3El) {
 			if (survivedTotalMonths < targetMonths) {
-				tier3El.innerHTML = `At your requested rate, this plan mathematically exhausts in <strong class="font-bold text-slate-900 dark:text-white">${durationString}</strong>. To ensure it safely lasts your full <strong class="font-bold text-slate-900 dark:text-white">${horizonYears}-year</strong> target, experts recommend a starting paycheck of no more than <strong class="font-bold text-emerald-600 dark:text-emerald-400">${formattedRecommendedPaycheck}</strong> per month.`;
+				tier3El.innerHTML = `At your requested rate, this plan mathematically exhausts in <strong class="font-bold text-navy-900 dark:text-white">${durationString}</strong>. To ensure it safely lasts your full <strong class="font-bold text-navy-900 dark:text-white">${horizonYears}-year</strong> target, experts recommend a starting paycheck of no more than <strong class="font-bold text-gold-500 dark:text-gold-400">${formattedRecommendedPaycheck}</strong> per month.`;
 			} else {
-				tier3El.innerHTML = `At your requested rate, this plan comfortably funds your entire <strong class="font-bold text-slate-900 dark:text-white">${horizonYears}-year</strong> retirement target with a high probability of success.`;
+				tier3El.innerHTML = `At your requested rate, this plan comfortably funds your entire <strong class="font-bold text-navy-900 dark:text-white">${horizonYears}-year</strong> retirement target with a high probability of success.`;
 			}
 		}
 
@@ -1489,15 +1490,15 @@ import Layout from '../layouts/Layout.astro';
 
 	viewPercentilesBtn?.addEventListener('click', () => {
 		activeViewMode = 'percentiles';
-		viewPercentilesBtn.className = 'min-h-[36px] px-3 py-1 rounded-md bg-white dark:bg-black text-slate-900 dark:text-zinc-100 font-semibold shadow-xs transition-colors flex items-center';
-		viewSamplePathsBtn!.className = 'min-h-[36px] px-3 py-1 rounded-md text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200 transition-colors flex items-center';
+		viewPercentilesBtn.className = 'min-h-[36px] px-3 py-1 rounded-md bg-white dark:bg-navy-950 text-navy-900 dark:text-navy-100 font-semibold shadow-xs transition-colors flex items-center';
+		viewSamplePathsBtn!.className = 'min-h-[36px] px-3 py-1 rounded-md text-navy-600 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-200 transition-colors flex items-center';
 		if (lastWorkerResponse) renderConsumerChart(lastWorkerResponse);
 	});
 
 	viewSamplePathsBtn?.addEventListener('click', () => {
 		activeViewMode = 'samples';
-		viewSamplePathsBtn.className = 'min-h-[36px] px-3 py-1 rounded-md bg-white dark:bg-black text-slate-900 dark:text-zinc-100 font-semibold shadow-xs transition-colors flex items-center';
-		viewPercentilesBtn!.className = 'min-h-[36px] px-3 py-1 rounded-md text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200 transition-colors flex items-center';
+		viewSamplePathsBtn.className = 'min-h-[36px] px-3 py-1 rounded-md bg-white dark:bg-navy-950 text-navy-900 dark:text-navy-100 font-semibold shadow-xs transition-colors flex items-center';
+		viewPercentilesBtn!.className = 'min-h-[36px] px-3 py-1 rounded-md text-navy-600 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-200 transition-colors flex items-center';
 		if (lastWorkerResponse) renderConsumerChart(lastWorkerResponse);
 	});
 

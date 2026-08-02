@@ -6,31 +6,31 @@ const articlesList = Object.values(TAX_ARTICLES);
 ---
 
 <Layout title="India Direct Tax Code 2025 & Calculators — SWP Intelligence">
-	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
+	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 space-y-10">
 		
 		<!-- Hero Header Section -->
-		<section class="max-w-4xl mx-auto text-center space-y-4">
-			<div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-slate-100 dark:bg-zinc-900 text-slate-900 dark:text-zinc-100 text-xs font-semibold tracking-wider uppercase border border-slate-200 dark:border-white/10 shadow-xs">
+		<section class="max-w-4xl mx-auto text-center space-y-4 hero-glow reveal">
+			<div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-navy-100 dark:bg-navy-900 text-navy-900 dark:text-navy-100 text-xs font-semibold tracking-wider uppercase border border-navy-200 dark:border-white/10 shadow-xs">
 				<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
 				<span>AUTHENTIC INDIA DIRECT TAX CODE (FY 2025-26)</span>
 			</div>
-			<h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 dark:text-zinc-100 font-sans leading-tight">
+			<h1 class="text-hero sm:text-4xl lg:text-5xl font-bold tracking-tight text-navy-900 dark:text-navy-100 font-sans leading-tight">
 				India Direct Tax Intelligence Hub
 			</h1>
-			<p class="text-base sm:text-lg text-slate-600 dark:text-zinc-400 font-normal leading-relaxed max-w-2xl mx-auto font-sans">
+			<p class="text-base sm:text-lg text-navy-600 dark:text-navy-400 font-normal leading-relaxed max-w-2xl mx-auto font-sans">
 				First-principles tax guidance, interactive slab calculators, capital gains rules, and quantitative master whitepapers under the Income Tax Act, 2025.
 			</p>
 		</section>
 
 		<!-- INTERACTIVE INDIA TAX REGIME CALCULATOR PANEL -->
-		<section class="max-w-6xl mx-auto bg-white dark:bg-zinc-950 border border-slate-200 dark:border-white/10 rounded-xl p-6 sm:p-8 space-y-6 shadow-xs transition-all duration-200 ease-geist">
+		<section class="max-w-6xl mx-auto card-premium rounded-2xl p-6 sm:p-8 space-y-6 shadow-xs transition-all duration-200 ease-geist reveal">
 			
-			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-white/10 pb-4">
+			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-navy-200 dark:border-white/10 pb-4">
 				<div>
 					<span class="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">INTERACTIVE SLAB ENGINE</span>
-					<h2 class="text-xl font-bold tracking-tight text-slate-900 dark:text-zinc-100">India Income Tax Calculator (FY 2025-26)</h2>
+					<h2 class="text-xl font-bold tracking-tight text-navy-900 dark:text-navy-100">India Income Tax Calculator (FY 2025-26)</h2>
 				</div>
-				<div id="indiaSavingsBadge" class="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 px-3 py-1.5 rounded-lg text-xs font-mono font-bold self-start sm:self-auto">
+				<div id="indiaSavingsBadge" class="badge-safe px-3 py-1.5 rounded-lg text-xs font-mono font-bold self-start sm:self-auto">
 					New Regime Recommended
 				</div>
 			</div>
@@ -39,74 +39,74 @@ const articlesList = Object.values(TAX_ARTICLES);
 				<!-- Inputs Column (5/12) -->
 				<div class="lg:col-span-5 space-y-4">
 					<div class="space-y-1.5">
-						<label for="inIndiaSalary" class="text-xs font-semibold text-slate-700 dark:text-zinc-300">
+						<label for="inIndiaSalary" class="text-xs font-semibold text-navy-700 dark:text-navy-300">
 							Gross Annual Income / Salary (₹)
 						</label>
 						<div class="relative">
-							<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-sm font-mono font-medium">₹</span>
+							<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-navy-400 text-sm font-mono font-medium">₹</span>
 							<input 
 								type="number" 
 								id="inIndiaSalary" 
 								value="1500000" 
 								min="0" 
 								step="50000" 
-								class="w-full pl-8 pr-4 py-2.5 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-md text-slate-900 dark:text-zinc-100 font-mono font-bold text-sm focus:outline-none focus:border-emerald-500"
+								class="input-premium pl-8"
 							/>
 						</div>
 					</div>
 
 					<div class="space-y-1.5">
-						<label for="inIndiaDeductions" class="text-xs font-semibold text-slate-700 dark:text-zinc-300">
+						<label for="inIndiaDeductions" class="text-xs font-semibold text-navy-700 dark:text-navy-300">
 							Old Regime Deductions (80C, 80D, HRA, 24b Home Loan) (₹)
 						</label>
 						<div class="relative">
-							<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-sm font-mono font-medium">₹</span>
+							<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-navy-400 text-sm font-mono font-medium">₹</span>
 							<input 
 								type="number" 
 								id="inIndiaDeductions" 
 								value="250000" 
 								min="0" 
 								step="25000" 
-								class="w-full pl-8 pr-4 py-2.5 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-md text-slate-900 dark:text-zinc-100 font-mono font-bold text-sm focus:outline-none focus:border-emerald-500"
+								class="input-premium pl-8"
 							/>
 						</div>
-						<p class="text-[11px] text-slate-400 dark:text-zinc-500 font-mono">Includes ₹1.5L 80C + ₹50k 80D + HRA/Interest.</p>
+						<p class="text-[11px] text-navy-400 dark:text-navy-500 font-mono">Includes ₹1.5L 80C + ₹50k 80D + HRA/Interest.</p>
 					</div>
 				</div>
 
 				<!-- Outputs Column (7/12) -->
 				<div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
 					<!-- New Tax Regime Card -->
-					<div class="p-5 bg-slate-50 dark:bg-zinc-900 border border-emerald-500/30 rounded-xl space-y-3">
+					<div class="p-5 card-premium border-emerald-500/30 rounded-2xl space-y-3">
 						<div class="flex justify-between items-center text-xs font-mono font-bold">
 							<span class="text-emerald-600 dark:text-emerald-400 uppercase">NEW TAX REGIME (DEFAULT)</span>
 							<span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 text-[10px]">FY 2025-26</span>
 						</div>
 						<div class="space-y-1">
-							<div class="text-xs text-slate-500 dark:text-zinc-400">Total Tax Payable:</div>
-							<div id="valNewTax" class="text-2xl font-mono font-black text-slate-900 dark:text-zinc-100">₹ 0</div>
+							<div class="text-xs text-navy-500 dark:text-navy-400">Total Tax Payable:</div>
+							<div id="valNewTax" class="text-2xl font-mono font-black text-navy-900 dark:text-navy-100">₹ 0</div>
 						</div>
-						<div class="pt-2 border-t border-slate-200 dark:border-white/10 text-[11px] font-mono text-slate-500 dark:text-zinc-400 space-y-1">
+						<div class="pt-2 border-t border-navy-200 dark:border-white/10 text-[11px] font-mono text-navy-500 dark:text-navy-400 space-y-1">
 							<div>Std Deduction: ₹75,000</div>
 							<div>Sec 87A Rebate: Up to ₹12.75L Tax-Free</div>
-							<div id="valNewEffectiveRate" class="font-bold text-slate-800 dark:text-zinc-200">Effective Rate: 0.0%</div>
+							<div id="valNewEffectiveRate" class="font-bold text-navy-800 dark:text-navy-200">Effective Rate: 0.0%</div>
 						</div>
 					</div>
 
 					<!-- Old Tax Regime Card -->
-					<div class="p-5 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl space-y-3">
+					<div class="p-5 card-premium rounded-2xl space-y-3">
 						<div class="flex justify-between items-center text-xs font-mono font-bold">
-							<span class="text-slate-500 dark:text-zinc-400 uppercase">OLD TAX REGIME (OPTIONAL)</span>
-							<span class="px-2 py-0.5 rounded bg-slate-200 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 text-[10px]">WITH DEDUCTIONS</span>
+							<span class="text-navy-500 dark:text-navy-400 uppercase">OLD TAX REGIME (OPTIONAL)</span>
+							<span class="px-2 py-0.5 rounded bg-navy-200 dark:bg-navy-800 text-navy-600 dark:text-navy-400 text-[10px]">WITH DEDUCTIONS</span>
 						</div>
 						<div class="space-y-1">
-							<div class="text-xs text-slate-500 dark:text-zinc-400">Total Tax Payable:</div>
-							<div id="valOldTax" class="text-2xl font-mono font-bold text-slate-900 dark:text-zinc-100">₹ 0</div>
+							<div class="text-xs text-navy-500 dark:text-navy-400">Total Tax Payable:</div>
+							<div id="valOldTax" class="text-2xl font-mono font-bold text-navy-900 dark:text-navy-100">₹ 0</div>
 						</div>
-						<div class="pt-2 border-t border-slate-200 dark:border-white/10 text-[11px] font-mono text-slate-500 dark:text-zinc-400 space-y-1">
+						<div class="pt-2 border-t border-navy-200 dark:border-white/10 text-[11px] font-mono text-navy-500 dark:text-navy-400 space-y-1">
 							<div>Std Deduction: ₹50,000</div>
 							<div>User Deductions: <span id="valOldDeductionsText">₹2,50,000</span></div>
-							<div id="valOldEffectiveRate" class="font-bold text-slate-800 dark:text-zinc-200">Effective Rate: 0.0%</div>
+							<div id="valOldEffectiveRate" class="font-bold text-navy-800 dark:text-navy-200">Effective Rate: 0.0%</div>
 						</div>
 					</div>
 				</div>
@@ -115,14 +115,14 @@ const articlesList = Object.values(TAX_ARTICLES);
 		</section>
 
 		<!-- CATEGORIZED TOP DIRECT TAX MASTER WHITEPAPERS -->
-		<section class="bg-white dark:bg-zinc-950 border border-slate-200 dark:border-white/10 rounded-xl p-6 sm:p-8 space-y-6 shadow-xs transition-all duration-200 ease-geist max-w-7xl mx-auto">
+		<section class="card-premium rounded-2xl p-6 sm:p-8 space-y-6 shadow-xs transition-all duration-200 ease-geist max-w-7xl mx-auto reveal">
 			
-			<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-white/10">
+			<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-navy-200 dark:border-white/10">
 				<div>
-					<h2 class="text-xl font-bold tracking-tight text-slate-900 dark:text-zinc-100 font-sans">
+					<h2 class="text-xl font-bold tracking-tight text-navy-900 dark:text-navy-100 font-sans">
 						Institutional Direct Tax Whitepapers (Income Tax Act 2025)
 					</h2>
-					<p class="text-xs text-slate-500 dark:text-zinc-400 font-sans mt-0.5">
+					<p class="text-xs text-navy-500 dark:text-navy-400 font-sans mt-0.5">
 						Comprehensive, multi-section master guides structured into legal statutory basis, mathematical breakdowns, case study tables, and notice traps.
 					</p>
 				</div>
@@ -132,41 +132,41 @@ const articlesList = Object.values(TAX_ARTICLES);
 			</div>
 
 			<!-- Dynamic Master Article Cards Grid -->
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="faqCardGrid">
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="faqCardGrid" class="reveal-stagger">
 				{articlesList.map((art, idx) => (
-					<div class="faq-card bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl p-6 space-y-4 hover:border-slate-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between">
+					<div class="faq-card card-premium rounded-2xl p-6 space-y-4 hover:border-navy-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between">
 						<div class="space-y-3">
 							<div class="flex items-center justify-between">
-								<span class="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-widest bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+								<span class="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-widest badge-safe">
 									🇮🇳 {art.categoryName}
 								</span>
-								<span class="text-xs font-mono text-slate-400 dark:text-zinc-500 font-bold">Q0{idx + 1}</span>
+								<span class="text-xs font-mono text-navy-400 dark:text-navy-500 font-bold">Q0{idx + 1}</span>
 							</div>
 
-							<h3 class="text-lg font-bold text-slate-900 dark:text-zinc-100 font-sans leading-snug">
+							<h3 class="text-lg font-bold text-navy-900 dark:text-navy-100 font-sans leading-snug">
 								{art.title}
 							</h3>
 
-							<div class="text-xs font-mono text-slate-500 dark:text-zinc-400 flex items-center gap-2">
+							<div class="text-xs font-mono text-navy-500 dark:text-navy-400 flex items-center gap-2">
 								<span>{art.readTime}</span>
 								<span>•</span>
 								<span class="text-emerald-600 dark:text-emerald-400 font-bold">{art.statutoryAct}</span>
 							</div>
 
-							<p class="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-sans line-clamp-3">
+							<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans line-clamp-3">
 								{art.summary}
 							</p>
 						</div>
 
 						<div class="space-y-3 pt-2">
-							<div class="p-3 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-lg border-l-2 border-emerald-500 text-xs font-sans text-slate-700 dark:text-zinc-300 space-y-1">
+							<div class="p-3 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-lg border-l-2 border-emerald-500 text-xs font-sans text-navy-700 dark:text-navy-300 space-y-1">
 								<div class="text-[10px] font-mono font-bold text-emerald-800 dark:text-emerald-300 uppercase">💡 Key Insight</div>
 								<div>{art.sec6_KeyTakeawaysChecklist.checklistItems[0]}</div>
 							</div>
 
 							<a 
 								href={`/direct-tax/${art.slug}`} 
-								class="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-black text-xs font-mono font-bold uppercase tracking-wider hover:opacity-90 transition-opacity shadow-xs text-center"
+								class="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-lg btn-gold w-full text-center"
 							>
 								Read Full 6-Section Whitepaper →
 							</a>
@@ -270,13 +270,13 @@ const articlesList = Object.values(TAX_ARTICLES);
 		if (badgeEl) {
 			if (newTax < oldTax) {
 				badgeEl.innerText = `New Regime Saves ${formatRupee(oldTax - newTax)}`;
-				badgeEl.className = "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 px-3 py-1.5 rounded-lg text-xs font-mono font-bold self-start sm:self-auto";
+				badgeEl.className = "badge-safe px-3 py-1.5 rounded-lg text-xs font-mono font-bold self-start sm:self-auto";
 			} else if (oldTax < newTax) {
 				badgeEl.innerText = `Old Regime Saves ${formatRupee(newTax - oldTax)}`;
 				badgeEl.className = "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 px-3 py-1.5 rounded-lg text-xs font-mono font-bold self-start sm:self-auto";
 			} else {
 				badgeEl.innerText = "Both Regimes Equal Tax";
-				badgeEl.className = "bg-slate-200 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 border border-slate-300 dark:border-white/10 px-3 py-1.5 rounded-lg text-xs font-mono font-bold self-start sm:self-auto";
+				badgeEl.className = "bg-navy-200 dark:bg-navy-800 text-navy-600 dark:text-navy-400 border border-navy-300 dark:border-white/10 px-3 py-1.5 rounded-lg text-xs font-mono font-bold self-start sm:self-auto";
 			}
 		}
 	}

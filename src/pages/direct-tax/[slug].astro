@@ -17,85 +17,85 @@ if (!article) {
 ---
 
 <Layout title={`${article.title} — Quantitative Direct Tax Master Whitepaper`}>
-	<main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+	<main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 space-y-10">
 		
 		<!-- Breadcrumb Navigation -->
-		<nav class="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-zinc-400">
-			<a href="/" class="hover:text-slate-900 dark:hover:text-white transition-colors">Home</a>
+		<nav class="flex items-center gap-2 text-xs font-mono text-navy-500 dark:text-navy-400">
+			<a href="/" class="hover:text-navy-900 dark:hover:text-white transition-colors">Home</a>
 			<span>/</span>
-			<a href="/direct-tax" class="hover:text-slate-900 dark:hover:text-white transition-colors">Direct Tax Directory</a>
+			<a href="/direct-tax" class="hover:text-navy-900 dark:hover:text-white transition-colors">Direct Tax Directory</a>
 			<span>/</span>
-			<span class="text-slate-900 dark:text-zinc-100 font-semibold truncate">{article.categoryName}</span>
+			<span class="text-navy-900 dark:text-navy-100 font-semibold truncate">{article.categoryName}</span>
 		</nav>
 
 		<!-- Whitepaper Hero Header Section -->
-		<header class="space-y-4 border-b border-slate-200 dark:border-white/10 pb-8">
+		<header class="space-y-4 border-b border-navy-200 dark:border-white/10 pb-8">
 			<div class="flex flex-wrap items-center gap-3">
 				<span class="px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 text-xs font-mono font-bold uppercase tracking-wider border border-emerald-200 dark:border-emerald-800">
 					{article.categoryName}
 				</span>
-				<span class="text-xs font-mono text-slate-400 dark:text-zinc-500 font-medium">
+				<span class="text-xs font-mono text-navy-400 dark:text-navy-500 font-medium">
 					{article.readTime}
 				</span>
-				<span class="text-xs font-mono text-slate-400 dark:text-zinc-500 font-medium">
+				<span class="text-xs font-mono text-navy-400 dark:text-navy-500 font-medium">
 					• Updated {article.updatedDate}
 				</span>
 			</div>
 
-			<h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 dark:text-zinc-100 font-sans leading-tight">
+			<h1 class="text-hero sm:text-4xl lg:text-5xl font-bold tracking-tight text-navy-900 dark:text-navy-100 font-sans leading-tight">
 				{article.title}
 			</h1>
 
 			<!-- Statutory Authority Badge -->
-			<div class="p-3.5 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl inline-flex items-center gap-2 text-xs font-mono text-slate-700 dark:text-zinc-300 shadow-xs">
+			<div class="p-3.5 card-premium rounded-2xl inline-flex items-center gap-2 text-xs font-mono text-navy-700 dark:text-navy-300 shadow-xs">
 				<span class="font-bold text-emerald-600 dark:text-emerald-400 uppercase">Statutory Act:</span>
 				<span>{article.statutoryAct}</span>
 			</div>
 
-			<p class="text-base sm:text-lg text-slate-600 dark:text-zinc-400 leading-relaxed font-sans pt-2">
+			<p class="text-base sm:text-lg text-navy-600 dark:text-navy-400 leading-relaxed font-sans pt-2">
 				{article.summary}
 			</p>
 		</header>
 
 		<!-- ARTICLE BODY - STRICT 6-SECTION FRAMEWORK -->
-		<article class="space-y-12 bg-white dark:bg-zinc-950 border border-slate-200 dark:border-white/10 rounded-xl p-6 sm:p-10 shadow-xs transition-all duration-200 ease-geist">
+		<article class="space-y-12 card-premium rounded-2xl p-6 sm:p-10 shadow-xs transition-all duration-200 ease-geist">
 			
 			<!-- SECTION 1: Executive Summary & Legal Statutory Basis -->
-			<section class="space-y-4">
+			<section class="space-y-4 reveal">
 				<div class="flex items-center gap-2">
 					<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-					<h2 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-zinc-100 font-sans">
+					<h2 class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 font-sans">
 						{article.sec1_ExecutiveSummary.headline}
 					</h2>
 				</div>
-				<div class="p-4 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-lg text-xs font-mono text-slate-600 dark:text-zinc-400">
-					<strong class="text-slate-900 dark:text-zinc-100 font-bold uppercase">Legal Authority:</strong> {article.sec1_ExecutiveSummary.legalBasis}
+				<div class="p-4 bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-white/10 rounded-lg text-xs font-mono text-navy-600 dark:text-navy-400">
+					<strong class="text-navy-900 dark:text-navy-100 font-bold uppercase">Legal Authority:</strong> {article.sec1_ExecutiveSummary.legalBasis}
 				</div>
-				<div class="prose prose-slate dark:prose-invert max-w-none font-sans leading-relaxed text-sm sm:text-base text-slate-700 dark:text-zinc-300" set:html={article.sec1_ExecutiveSummary.narrative} />
+				<div class="prose prose-slate dark:prose-invert max-w-none font-sans leading-relaxed text-sm sm:text-base text-navy-700 dark:text-navy-300" set:html={article.sec1_ExecutiveSummary.narrative} />
 			</section>
 
 			<!-- SECTION 2: First-Principles Mathematical Breakdown -->
-			<section class="space-y-6 pt-6 border-t border-slate-200 dark:border-white/10">
+			<section class="space-y-6 pt-6 border-t border-navy-200 dark:border-white/10 reveal">
 				<div class="flex items-center gap-2">
 					<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-					<h2 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-zinc-100 font-sans">
+					<h2 class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 font-sans">
 						{article.sec2_MathematicalBreakdown.headline}
 					</h2>
 				</div>
 				
-				<div class="prose prose-slate dark:prose-invert max-w-none font-sans leading-relaxed text-sm sm:text-base text-slate-700 dark:text-zinc-300" set:html={article.sec2_MathematicalBreakdown.narrative} />
+				<div class="prose prose-slate dark:prose-invert max-w-none font-sans leading-relaxed text-sm sm:text-base text-navy-700 dark:text-navy-300" set:html={article.sec2_MathematicalBreakdown.narrative} />
 
 				<!-- Formula Cards Grid -->
 				<div class="grid grid-cols-1 gap-4">
 					{article.sec2_MathematicalBreakdown.formulas.map((form) => (
-						<div class="p-4 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl space-y-2">
+						<div class="p-4 card-premium rounded-2xl space-y-2">
 							<div class="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
 								{form.label}
 							</div>
-							<div class="p-3 bg-white dark:bg-zinc-950 rounded border border-slate-200 dark:border-white/10 font-mono text-xs sm:text-sm font-bold text-slate-900 dark:text-zinc-100 text-center">
+							<div class="p-3 card-glow rounded-2xl font-mono text-xs sm:text-sm font-bold text-navy-900 dark:text-navy-100 text-center">
 								{form.formula}
 							</div>
-							<p class="text-xs text-slate-600 dark:text-zinc-400 font-sans">
+							<p class="text-xs text-navy-600 dark:text-navy-400 font-sans">
 								{form.explanation}
 							</p>
 						</div>
@@ -104,33 +104,33 @@ if (!article) {
 			</section>
 
 			<!-- SECTION 3: Real-World Case Studies & Multi-Scenario Tables -->
-			<section class="space-y-6 pt-6 border-t border-slate-200 dark:border-white/10">
+			<section class="space-y-6 pt-6 border-t border-navy-200 dark:border-white/10 reveal">
 				<div class="flex items-center gap-2">
 					<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-					<h2 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-zinc-100 font-sans">
+					<h2 class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 font-sans">
 						{article.sec3_CaseStudiesAndTables.headline}
 					</h2>
 				</div>
 
-				<div class="prose prose-slate dark:prose-invert max-w-none font-sans leading-relaxed text-sm sm:text-base text-slate-700 dark:text-zinc-300" set:html={article.sec3_CaseStudiesAndTables.narrative} />
+				<div class="prose prose-slate dark:prose-invert max-w-none font-sans leading-relaxed text-sm sm:text-base text-navy-700 dark:text-navy-300" set:html={article.sec3_CaseStudiesAndTables.narrative} />
 
 				<!-- Responsive Multi-Scenario Matrix Table -->
-				<div class="overflow-x-auto border border-slate-200 dark:border-white/10 rounded-xl">
-					<table class="w-full text-left text-xs font-sans border-collapse">
-						<thead class="bg-slate-100 dark:bg-zinc-900 border-b border-slate-200 dark:border-white/10 font-mono">
+				<div class="overflow-x-auto border border-navy-200 dark:border-white/10 rounded-xl">
+					<table class="table-premium">
+						<thead class="bg-navy-100 dark:bg-navy-900 border-b border-navy-200 dark:border-white/10 font-mono">
 							<tr>
 								{article.sec3_CaseStudiesAndTables.tableHeaders.map((head) => (
-									<th class="p-3.5 text-slate-900 dark:text-zinc-100 font-bold whitespace-nowrap">{head}</th>
+									<th class="p-3.5 text-navy-900 dark:text-navy-100 font-bold whitespace-nowrap">{head}</th>
 								))}
 							</tr>
 						</thead>
-						<tbody class="divide-y divide-slate-100 dark:divide-white/5 font-mono">
+						<tbody class="divide-y divide-navy-100 dark:divide-white/5 font-mono">
 							{article.sec3_CaseStudiesAndTables.rows.map((row) => (
-								<tr class="hover:bg-slate-50 dark:hover:bg-zinc-900/50 transition-colors">
-									<td class="p-3.5 font-bold text-slate-900 dark:text-zinc-100 whitespace-nowrap">{row.salary}</td>
-									<td class="p-3.5 text-slate-600 dark:text-zinc-400 whitespace-nowrap">{row.newTax}</td>
-									<td class="p-3.5 text-slate-600 dark:text-zinc-400 whitespace-nowrap">{row.oldTaxNoDed}</td>
-									<td class="p-3.5 text-slate-600 dark:text-zinc-400 whitespace-nowrap">{row.oldTaxMaxDed}</td>
+								<tr class="hover:bg-navy-50 dark:hover:bg-navy-900/50 transition-colors">
+									<td class="p-3.5 font-bold text-navy-900 dark:text-navy-100 whitespace-nowrap">{row.salary}</td>
+									<td class="p-3.5 text-navy-600 dark:text-navy-400 whitespace-nowrap">{row.newTax}</td>
+									<td class="p-3.5 text-navy-600 dark:text-navy-400 whitespace-nowrap">{row.oldTaxNoDed}</td>
+									<td class="p-3.5 text-navy-600 dark:text-navy-400 whitespace-nowrap">{row.oldTaxMaxDed}</td>
 									<td class="p-3.5 font-bold text-emerald-600 dark:text-emerald-400 whitespace-nowrap">{row.optimalRegime}</td>
 								</tr>
 							))}
@@ -140,67 +140,67 @@ if (!article) {
 			</section>
 
 			<!-- SECTION 4: Embedded Interactive Live Calculator Workbench -->
-			<section class="space-y-6 pt-6 border-t border-slate-200 dark:border-white/10" id="articleWorkbench">
+			<section class="space-y-6 pt-6 border-t border-navy-200 dark:border-white/10 reveal" id="articleWorkbench">
 				<div class="flex items-center gap-2">
 					<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-					<h2 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-zinc-100 font-sans">
+					<h2 class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 font-sans">
 						4. Embedded Interactive Live Calculator Workbench
 					</h2>
 				</div>
 
-				<div class="p-6 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl space-y-6 shadow-xs">
-					<p class="text-xs text-slate-600 dark:text-zinc-400 font-sans">
+				<div class="p-6 card-premium rounded-2xl space-y-6 shadow-xs">
+					<p class="text-xs text-navy-600 dark:text-navy-400 font-sans">
 						{article.sec4_CalculatorConfig.instruction}
 					</p>
 
 					<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 						<div class="space-y-2">
-							<label for="wbSalary" class="text-xs font-semibold text-slate-700 dark:text-zinc-300">
+							<label for="wbSalary" class="text-xs font-semibold text-navy-700 dark:text-navy-300">
 								Gross Annual Salary (₹)
 							</label>
 							<div class="relative">
-								<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-sm font-mono">₹</span>
+								<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-navy-400 text-sm font-mono">₹</span>
 								<input 
 									type="number" 
 									id="wbSalary" 
 									value={article.sec4_CalculatorConfig.defaultSalary} 
 									min="0" 
 									step="50000" 
-									class="w-full pl-8 pr-4 py-2 bg-white dark:bg-zinc-950 border border-slate-200 dark:border-white/10 rounded-md text-slate-900 dark:text-zinc-100 font-mono font-bold text-sm focus:outline-none focus:border-emerald-500"
+									class="input-premium pl-8"
 								/>
 							</div>
 						</div>
 
 						<div class="space-y-2">
-							<label for="wbDeductions" class="text-xs font-semibold text-slate-700 dark:text-zinc-300">
+							<label for="wbDeductions" class="text-xs font-semibold text-navy-700 dark:text-navy-300">
 								Total Old Regime Deductions (80C, 80D, HRA, 24b) (₹)
 							</label>
 							<div class="relative">
-								<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-sm font-mono">₹</span>
+								<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-navy-400 text-sm font-mono">₹</span>
 								<input 
 									type="number" 
 									id="wbDeductions" 
 									value={article.sec4_CalculatorConfig.defaultDeductions} 
 									min="0" 
 									step="25000" 
-									class="w-full pl-8 pr-4 py-2 bg-white dark:bg-zinc-950 border border-slate-200 dark:border-white/10 rounded-md text-slate-900 dark:text-zinc-100 font-mono font-bold text-sm focus:outline-none focus:border-emerald-500"
+									class="input-premium pl-8"
 								/>
 							</div>
 						</div>
 					</div>
 
 					<!-- Workbench Live Results Display -->
-					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-slate-200 dark:border-white/10">
-						<div class="p-4 bg-white dark:bg-zinc-950 rounded-lg border border-emerald-500/30 space-y-1">
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-navy-200 dark:border-white/10">
+						<div class="p-4 bg-white dark:bg-navy-950 rounded-lg border border-emerald-500/30 space-y-1">
 							<div class="text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400 uppercase">NEW TAX REGIME LIABILITY</div>
-							<div id="wbResultNew" class="text-xl font-mono font-black text-slate-900 dark:text-zinc-100">₹ 0</div>
-							<div id="wbResultNewRate" class="text-[11px] font-mono text-slate-500 dark:text-zinc-400">Effective: 0.0%</div>
+							<div id="wbResultNew" class="text-xl font-mono font-black text-navy-900 dark:text-navy-100">₹ 0</div>
+							<div id="wbResultNewRate" class="text-[11px] font-mono text-navy-500 dark:text-navy-400">Effective: 0.0%</div>
 						</div>
 
-						<div class="p-4 bg-white dark:bg-zinc-950 rounded-lg border border-slate-200 dark:border-white/10 space-y-1">
-							<div class="text-[10px] font-mono font-bold text-slate-500 dark:text-zinc-400 uppercase">OLD TAX REGIME LIABILITY</div>
-							<div id="wbResultOld" class="text-xl font-mono font-bold text-slate-900 dark:text-zinc-100">₹ 0</div>
-							<div id="wbResultOldRate" class="text-[11px] font-mono text-slate-500 dark:text-zinc-400">Effective: 0.0%</div>
+						<div class="p-4 bg-white dark:bg-navy-950 rounded-lg border border-navy-200 dark:border-white/10 space-y-1">
+							<div class="text-[10px] font-mono font-bold text-navy-500 dark:text-navy-400 uppercase">OLD TAX REGIME LIABILITY</div>
+							<div id="wbResultOld" class="text-xl font-mono font-bold text-navy-900 dark:text-navy-100">₹ 0</div>
+							<div id="wbResultOldRate" class="text-[11px] font-mono text-navy-500 dark:text-navy-400">Effective: 0.0%</div>
 						</div>
 					</div>
 
@@ -211,10 +211,10 @@ if (!article) {
 			</section>
 
 			<!-- SECTION 5: Tax Department Pitfalls & Notice Traps -->
-			<section class="space-y-6 pt-6 border-t border-slate-200 dark:border-white/10">
+			<section class="space-y-6 pt-6 border-t border-navy-200 dark:border-white/10 reveal">
 				<div class="flex items-center gap-2">
 					<span class="w-2 h-2 rounded-full bg-rose-500"></span>
-					<h2 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-zinc-100 font-sans">
+					<h2 class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 font-sans">
 						{article.sec5_TaxPitfallsAndNotices.headline}
 					</h2>
 				</div>
@@ -225,10 +225,10 @@ if (!article) {
 							<h3 class="text-sm font-bold text-rose-800 dark:text-rose-300 font-sans">
 								⚠️ {pit.title}
 							</h3>
-							<div class="text-xs font-sans text-slate-700 dark:text-zinc-300">
+							<div class="text-xs font-sans text-navy-700 dark:text-navy-300">
 								<strong class="font-semibold text-rose-700 dark:text-rose-400">Scrutiny Trigger:</strong> {pit.trigger}
 							</div>
-							<div class="text-xs font-sans text-slate-700 dark:text-zinc-300 pt-1 border-t border-rose-200/60 dark:border-rose-900/40">
+							<div class="text-xs font-sans text-navy-700 dark:text-navy-300 pt-1 border-t border-rose-200/60 dark:border-rose-900/40">
 								<strong class="font-semibold text-emerald-700 dark:text-emerald-400">Resolution Strategy:</strong> {pit.resolution}
 							</div>
 						</div>
@@ -237,13 +237,13 @@ if (!article) {
 			</section>
 
 			<!-- SECTION 6: 💡 Key Takeaway Summary & Checklist -->
-			<section class="space-y-4 pt-6 border-t border-slate-200 dark:border-white/10">
+			<section class="space-y-4 pt-6 border-t border-navy-200 dark:border-white/10 reveal">
 				<div class="p-6 bg-emerald-500/5 dark:bg-emerald-500/10 border-l-4 border-emerald-500 rounded-xl space-y-4">
 					<div class="text-xs font-mono font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-widest flex items-center gap-2">
 						<span>💡</span>
 						<span>{article.sec6_KeyTakeawaysChecklist.headline}</span>
 					</div>
-					<ul class="space-y-2.5 text-xs sm:text-sm text-slate-700 dark:text-zinc-300 font-sans">
+					<ul class="space-y-2.5 text-xs sm:text-sm text-navy-700 dark:text-navy-300 font-sans">
 						{article.sec6_KeyTakeawaysChecklist.checklistItems.map((item) => (
 							<li class="flex items-start gap-2.5">
 								<span class="text-emerald-500 font-bold text-base leading-none">✓</span>
@@ -258,7 +258,7 @@ if (!article) {
 
 		<!-- Footer Navigation Links -->
 		<footer class="flex items-center justify-between pt-4 text-xs font-mono">
-			<a href="/direct-tax" class="text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1">
+			<a href="/direct-tax" class="text-navy-600 dark:text-navy-400 hover:text-navy-900 dark:hover:text-white transition-colors flex items-center gap-1">
 				← Back to Direct Tax Directory
 			</a>
 			<a href="/sip-engine" class="text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 font-bold">
