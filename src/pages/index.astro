@@ -1,1523 +1,309 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { TAX_ARTICLES } from '../data/taxArticles';
+
+const articleEntries = Object.entries(TAX_ARTICLES).slice(0, 3);
 ---
 
-<Layout title="Retirement Withdrawal Planner — SWP Intelligence Engine">
-	<!-- Centered Symmetrical Hero Funnel -->
-	<section class="hero-glow reveal max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 flex flex-col items-center text-center">
-		<span class="inline-block text-xs font-semibold tracking-wider text-gold-500 uppercase px-3 py-1 bg-gold-500/10 rounded-md border border-gold-500/20">
-			SWP Intelligence Engine
-		</span>
-		<h1 class="text-hero text-navy-900 dark:text-navy-100 max-w-4xl mt-4">
-			Retirement Withdrawal Planner
-		</h1>
-		<p class="mt-5 text-lg sm:text-xl text-navy-500 dark:text-navy-400 max-w-2xl leading-relaxed font-normal">
-			A systematic withdrawal engine engineered to stress-test your wealth against inflation, market volatility, and tax friction over your lifetime.
-		</p>
-	</section>
+<Layout title="FinSight India — Financial Intelligence Platform for Everyone" description="India's most trusted financial intelligence platform. Monte Carlo retirement simulators, SIP engines, insurance analyzers, options pricing, and 100+ expert tax articles.">
 
-		<!-- Main Application Content -->
-		<hr class="section-divider" />
-		<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-
-			<!-- 2-Column Responsive Grid -->
-			<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+	<!-- ====================================================
+	     HERO SECTION — Etihad Bureau-Inspired Asymmetric Split
+	     ==================================================== -->
+	<section class="hero-glow relative overflow-hidden">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-36">
+			<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
 				
-				<!-- Left Column: Input Form Card -->
-				<section class="lg:col-span-5 card-premium rounded-2xl reveal p-6 sm:p-8 space-y-6 transition-colors duration-200">
-					<div class="pb-4 border-b border-navy-200 dark:border-navy-800 flex items-center justify-between">
-						<div>
-							<h3 class="text-lg font-bold tracking-tight text-navy-900 dark:text-navy-100">Your Plan Details</h3>
-							<p class="text-xs text-navy-500 dark:text-navy-400 mt-0.5">Enter your savings, monthly income needs, and growth expectations.</p>
-						</div>
+				<!-- Left Column: Value Proposition -->
+				<div class="lg:col-span-7 space-y-8 reveal">
+					<div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-gold-500/10 border border-gold-500/20 rounded-full">
+						<div class="w-2 h-2 rounded-full bg-emerald-500 animate-glow-pulse"></div>
+						<span class="text-xs font-semibold tracking-wider text-gold-600 dark:text-gold-400 uppercase">100% Free • Client-Side • No Data Leaves Your Device</span>
 					</div>
 
-					<form id="swpForm" onsubmit="event.preventDefault();" class="space-y-6">
+					<h1 class="text-hero text-navy-900 dark:text-navy-100">
+						India's Financial Intelligence Platform,
+						<span class="text-gradient-gold"> Built for Everyone.</span>
+					</h1>
+
+					<p class="text-lg sm:text-xl text-navy-500 dark:text-navy-400 leading-relaxed max-w-2xl">
+						Institutional-grade Monte Carlo simulators, insurance deconstructors, options pricing labs, and the deepest library of tax research in the country — all running on your device, completely free.
+					</p>
+
+					<div class="flex flex-col sm:flex-row gap-4">
+						<a href="/swp-planner" class="btn-gold text-center">
+							<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 0 0-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" /></svg>
+							Explore Calculators
+						</a>
+						<a href="/direct-tax" class="btn-ghost text-center">
+							<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>
+							Read Tax Research
+						</a>
+					</div>
+				</div>
+
+				<!-- Right Column: Floating Preview Card -->
+				<div class="lg:col-span-5 reveal" style="transition-delay: 200ms;">
+					<div class="card-glass rounded-2xl p-6 sm:p-8 space-y-6 relative">
+						<div class="card-glow absolute inset-0 rounded-2xl pointer-events-none"></div>
 						
-						<!-- Section 1: Starting Investments -->
-						<div class="space-y-4">
-							<h4 class="text-xs font-semibold text-navy-500 dark:text-navy-400 tracking-wider uppercase">01 / Starting Investments</h4>
-							
-							<!-- Initial Corpus -->
-							<div>
-								<div class="flex justify-between items-center mb-1.5">
-									<!-- Hoverable Tooltip Label -->
-									<div class="relative group inline-flex items-center gap-1.5 cursor-pointer">
-										<label for="initialCorpus" class="text-xs font-semibold text-navy-800 dark:text-navy-200 cursor-pointer">
-											Total Savings / Initial Corpus <span class="text-rose-500">*</span>
-										</label>
-										<svg class="w-3.5 h-3.5 text-navy-400 dark:text-navy-500 hover:text-navy-600 dark:hover:text-navy-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-										</svg>
-										<!-- Absolute Tooltip Div -->
-										<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-normal">
-											The total lump sum you are starting with today.
-										</div>
-									</div>
+						<!-- Mini SWP Preview -->
+						<div class="relative z-10 space-y-5">
+							<div class="flex items-center justify-between">
+								<span class="text-caption text-navy-500 dark:text-navy-400">Retirement Simulation Preview</span>
+								<span class="badge-safe">Live Demo</span>
+							</div>
 
-									<span class="text-xs text-emerald-700 dark:text-emerald-300 badge-safe px-2 py-0.5 rounded-md font-medium" id="corpusFormatted">
-										₹ 1,00,00,000 (1 Cr)
-									</span>
+							<div class="space-y-4">
+								<div class="flex justify-between items-baseline">
+									<span class="stat-label">Portfolio Corpus</span>
+									<span class="stat-value text-xl text-navy-900 dark:text-navy-100">₹1,00,00,000</span>
 								</div>
-								<div class="relative flex items-center">
-									<span class="absolute left-3.5 text-sm text-navy-400 dark:text-navy-500 select-none">₹</span>
-									<input 
-										type="text" 
-										inputmode="numeric"
-										id="initialCorpus" 
-										name="initialCorpus" 
-										value="1,00,00,000"
-										required
-										class="input-premium pl-9 pr-14 py-2.5 text-sm text-navy-900 dark:text-navy-100 placeholder:text-navy-400 dark:placeholder:text-navy-500 focus:outline-none "
-									/>
-									<span class="absolute right-3.5 text-xs text-navy-400 dark:text-navy-500 select-none font-sans">INR</span>
+								<div class="flex justify-between items-baseline">
+									<span class="stat-label">Monthly Withdrawal</span>
+									<span class="stat-value text-xl text-gold-500">₹50,000</span>
+								</div>
+								<div class="h-px bg-navy-200 dark:bg-navy-700"></div>
+								<div class="flex justify-between items-baseline">
+									<span class="stat-label">Projected Endurance</span>
+									<span class="stat-value text-2xl text-emerald-500">30 Years</span>
 								</div>
 							</div>
 
-							<!-- Monthly Withdrawal -->
-							<div>
-								<div class="flex justify-between items-center mb-1.5">
-									<!-- Hoverable Tooltip Label -->
-									<div class="relative group inline-flex items-center gap-1.5 cursor-pointer">
-										<label for="monthlyWithdrawal" class="text-xs font-semibold text-navy-800 dark:text-navy-200 cursor-pointer">
-											First Year Monthly Paycheck <span class="text-rose-500">*</span>
-										</label>
-										<svg class="w-3.5 h-3.5 text-navy-400 dark:text-navy-500 hover:text-navy-600 dark:hover:text-navy-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-										</svg>
-										<!-- Absolute Tooltip Div -->
-										<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-normal">
-											This is your GROSS target. Your actual net-in-hand income will be slightly lower because LTCG taxes will be deducted from the profit portion of this withdrawal.
-										</div>
-									</div>
-
-									<span class="text-xs text-navy-600 dark:text-navy-400 bg-navy-100 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 px-2 py-0.5 rounded-md font-medium" id="withdrawalFormatted">
-										₹ 50,000 / month
-									</span>
-								</div>
-								<div class="relative flex items-center">
-									<span class="absolute left-3.5 text-sm text-navy-400 dark:text-navy-500 select-none">₹</span>
-									<input 
-										type="text" 
-										inputmode="numeric"
-										id="monthlyWithdrawal" 
-										name="monthlyWithdrawal" 
-										value="50,000"
-										required
-										class="input-premium pl-9 pr-16 py-2.5 text-sm text-navy-900 dark:text-navy-100 placeholder:text-navy-400 dark:placeholder:text-navy-500 focus:outline-none "
-									/>
-									<span class="absolute right-3.5 text-xs text-navy-400 dark:text-navy-500 select-none font-sans">/month</span>
-								</div>
+							<!-- Mini chart bars -->
+							<div class="flex items-end gap-1 h-20">
+								<div class="flex-1 rounded-t bg-emerald-500/20 dark:bg-emerald-500/30" style="height: 100%"></div>
+								<div class="flex-1 rounded-t bg-emerald-500/25 dark:bg-emerald-500/35" style="height: 95%"></div>
+								<div class="flex-1 rounded-t bg-emerald-500/30 dark:bg-emerald-500/40" style="height: 88%"></div>
+								<div class="flex-1 rounded-t bg-emerald-500/35 dark:bg-emerald-500/45" style="height: 82%"></div>
+								<div class="flex-1 rounded-t bg-emerald-500/40 dark:bg-emerald-500/50" style="height: 75%"></div>
+								<div class="flex-1 rounded-t bg-gold-500/30 dark:bg-gold-500/40" style="height: 68%"></div>
+								<div class="flex-1 rounded-t bg-gold-500/35 dark:bg-gold-500/45" style="height: 60%"></div>
+								<div class="flex-1 rounded-t bg-gold-500/40 dark:bg-gold-500/50" style="height: 52%"></div>
+								<div class="flex-1 rounded-t bg-gold-500/45 dark:bg-gold-500/55" style="height: 44%"></div>
+								<div class="flex-1 rounded-t bg-amber-500/30 dark:bg-amber-500/40" style="height: 35%"></div>
+								<div class="flex-1 rounded-t bg-amber-500/35 dark:bg-amber-500/45" style="height: 28%"></div>
+								<div class="flex-1 rounded-t bg-amber-500/40 dark:bg-amber-500/50" style="height: 20%"></div>
 							</div>
-						</div>
 
-						<hr class="section-divider" />
-
-						<!-- Section 2: Escalation & Market Expectations -->
-						<div class="space-y-4">
-							<h4 class="text-xs font-semibold text-navy-500 dark:text-navy-400 tracking-wider uppercase">02 / Escalation & Expected Rates</h4>
-
-							<div class="grid grid-cols-1 sm:grid-cols-2 reveal-stagger gap-6">
-								<!-- Annual Step-Up % -->
-								<div>
-									<div class="relative group inline-flex items-center gap-1.5 cursor-pointer mb-1.5">
-										<label for="stepUp" class="block text-xs font-semibold text-navy-800 dark:text-navy-200 cursor-pointer">
-											Annual Step-Up (Inflation)
-										</label>
-										<svg class="w-3.5 h-3.5 text-navy-400 dark:text-navy-500 hover:text-navy-600 dark:hover:text-navy-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-										</svg>
-										<!-- Absolute Tooltip Div -->
-										<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-normal">
-											The percentage by which your monthly paycheck increases each year to keep pace with inflation.
-										</div>
-									</div>
-									<div class="relative flex items-center">
-										<input 
-											type="number" 
-											id="stepUp" 
-											name="stepUp" 
-											value="6.0"
-											min="0"
-											max="20"
-											step="0.5"
-											required
-											class="input-premium px-3.5 pr-14 py-2.5 text-sm text-navy-900 dark:text-navy-100 placeholder:text-navy-400 dark:placeholder:text-navy-500 focus:outline-none "
-										/>
-										<span class="absolute right-3.5 text-xs text-navy-400 dark:text-navy-500 select-none font-sans">% / yr</span>
-									</div>
-								</div>
-
-								<!-- Expected Return % -->
-								<div>
-									<div class="relative group inline-flex items-center gap-1.5 cursor-pointer mb-1.5">
-										<label for="expectedReturn" class="block text-xs font-semibold text-navy-800 dark:text-navy-200 cursor-pointer">
-											Expected CAGR %
-										</label>
-										<svg class="w-3.5 h-3.5 text-navy-400 dark:text-navy-500 hover:text-navy-600 dark:hover:text-navy-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-										</svg>
-										<!-- Absolute Tooltip Div -->
-										<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 sm:right-0 sm:left-auto pointer-events-none font-normal leading-normal">
-											The long-term average annual return rate of your portfolio.
-										</div>
-									</div>
-									<div class="relative flex items-center">
-										<input 
-											type="number" 
-											id="expectedReturn" 
-											name="expectedReturn" 
-											value="12.0"
-											min="0"
-											max="30"
-											step="0.5"
-											required
-											class="input-premium px-3.5 pr-14 py-2.5 text-sm text-navy-900 dark:text-navy-100 placeholder:text-navy-400 dark:placeholder:text-navy-500 focus:outline-none "
-										/>
-										<span class="absolute right-3.5 text-xs text-navy-400 dark:text-navy-500 select-none font-sans">% cagr</span>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<hr class="section-divider" />
-
-						<!-- Section 3: Tax Friction & Horizon -->
-						<div class="space-y-4">
-							<h4 class="text-xs font-semibold text-navy-500 dark:text-navy-400 tracking-wider uppercase">03 / Tax Friction & Time Horizon</h4>
-
-							<div class="grid grid-cols-1 sm:grid-cols-2 reveal-stagger gap-6">
-								<!-- LTCG Tax % -->
-								<div>
-									<div class="relative group inline-flex items-center gap-1.5 cursor-pointer mb-1.5">
-										<label for="ltcgTax" class="block text-xs font-semibold text-navy-800 dark:text-navy-200 cursor-pointer">
-											LTCG Tax Rate %
-										</label>
-										<svg class="w-3.5 h-3.5 text-navy-400 dark:text-navy-500 hover:text-navy-600 dark:hover:text-navy-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-										</svg>
-										<!-- Absolute Tooltip Div -->
-										<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 pointer-events-none font-normal leading-normal">
-											Long Term Capital Gains tax. This friction is only applied to your profits, not your original invested capital.
-										</div>
-									</div>
-									<div class="relative flex items-center">
-										<input 
-											type="number" 
-											id="ltcgTax" 
-											name="ltcgTax" 
-											value="12.5"
-											min="0"
-											max="50"
-											step="0.1"
-											required
-											class="input-premium px-3.5 pr-16 py-2.5 text-sm text-navy-900 dark:text-navy-100 placeholder:text-navy-400 dark:placeholder:text-navy-500 focus:outline-none "
-										/>
-										<span class="absolute right-3.5 text-xs text-navy-400 dark:text-navy-500 select-none font-sans">% tax</span>
-									</div>
-								</div>
-
-								<!-- Time Horizon -->
-								<div>
-									<div class="relative group inline-flex items-center gap-1.5 cursor-pointer mb-1.5">
-										<label for="horizonYears" class="block text-xs font-semibold text-navy-800 dark:text-navy-200 cursor-pointer">
-											Retirement Length (Years)
-										</label>
-										<svg class="w-3.5 h-3.5 text-navy-400 dark:text-navy-500 hover:text-navy-600 dark:hover:text-navy-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-										</svg>
-										<!-- Absolute Tooltip Div -->
-										<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 sm:right-0 sm:left-auto pointer-events-none font-normal leading-normal">
-											The total number of years you plan to withdraw monthly paychecks during your retirement.
-										</div>
-									</div>
-									<div class="relative flex items-center">
-										<input 
-											type="number" 
-											id="horizonYears" 
-											name="horizonYears" 
-											value="30"
-											min="5"
-											max="50"
-											step="1"
-											required
-											class="input-premium px-3.5 pr-16 py-2.5 text-sm text-navy-900 dark:text-navy-100 placeholder:text-navy-400 dark:placeholder:text-navy-500 focus:outline-none "
-										/>
-										<span class="absolute right-3.5 text-xs text-navy-400 dark:text-navy-500 select-none font-sans">years</span>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<hr class="section-divider" />
-
-						<!-- Section 04: Advanced Risk Controls -->
-						<div class="space-y-3">
-							<h4 class="text-xs font-semibold text-navy-500 dark:text-navy-400 tracking-wider uppercase">04 / Advanced Risk Controls</h4>
-
-							<div class="flex items-center justify-between gap-3">
-								<span class="text-xs font-semibold text-navy-800 dark:text-navy-200">
-									Enable Dynamic Guardrails
-								</span>
-								<label class="relative inline-flex items-center cursor-pointer shrink-0">
-									<input type="checkbox" id="useGuardrails" name="useGuardrails" class="sr-only peer">
-									<div class="w-11 h-6 bg-navy-200 dark:bg-navy-800 peer-focus:outline-none rounded-full peer peer-checked:after:trannavy-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-navy-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-navy-900 dark:peer-checked:bg-white"></div>
-								</label>
-							</div>
-							<p class="text-xs text-navy-500 dark:text-navy-400 leading-relaxed">
-								Simulates a rational investor. If a severe market crash occurs, the system automatically reduces your monthly paycheck by 10% to protect the underlying collateral. This trades guaranteed income for higher portfolio survival.
+							<p class="text-xs text-navy-400 dark:text-navy-500 text-center">
+								10,000 Monte Carlo simulations • Inflation-adjusted
 							</p>
 						</div>
-
-						<!-- Submit Button -->
-						<div class="pt-2">
-							<button 
-								type="button" 
-								id="runSimBtn"
-								class="btn-gold w-full"
-							>
-								<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-									<path d="M8 5v14l11-7z"/>
-								</svg>
-								<span class="text-sm font-semibold">Run 10,000 Market Simulations</span>
-							</button>
-						</div>
-					</form>
-				</section>
-
-				<!-- Right Column: Results Section (Sleek Tabbed Layout) -->
-				<section class="lg:col-span-7 space-y-6">
-					
-					<!-- Modern Tabbed Navigation Header (Touch Friendly Targets) -->
-					<div class="flex items-center gap-6 border-b border-navy-200 dark:border-white/10 pb-px">
-						<button 
-							id="tabPlanSummaryBtn"
-							type="button"
-							class="min-h-[44px] pb-3 text-sm font-bold text-navy-900 dark:text-navy-100 border-b-2 border-gold-500 transition-all cursor-pointer flex items-center"
-						>
-							Plan Summary
-						</button>
-						<button 
-							id="tabScheduleBtn"
-							type="button"
-							class="min-h-[44px] pb-3 text-sm font-semibold text-navy-500 hover:text-navy-800 dark:text-navy-400 dark:hover:text-navy-200 border-b-2 border-transparent transition-all cursor-pointer flex items-center"
-						>
-							Yearly Paycheck Schedule
-						</button>
 					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-					<!-- View 1: Plan Summary Tab Content -->
-					<div id="viewPlanSummary" class="space-y-6">
-						
-						<!-- Primary Results Card -->
-						<div class="card-premium rounded-2xl reveal p-6 sm:p-8 space-y-6 transition-colors duration-200">
-							
-							<!-- Actionable Portfolio Health & Endurance Hero Section -->
-							<div class="pb-6 border-b border-navy-200 dark:border-white/10 space-y-3">
-								<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-									<div>
-										<h3 class="text-xl font-bold tracking-tight text-navy-900 dark:text-navy-100">Projected Runway</h3>
-										<p class="text-xs text-navy-500 dark:text-navy-400 mt-0.5">Projected portfolio endurance under real-world market stress tests.</p>
-									</div>
+	<hr class="section-divider" />
 
-									<!-- Health Status Badge & Hero Metric Div -->
-									<div class="flex items-center gap-2 self-start sm:self-auto flex-wrap justify-end">
-										<div id="portfolioEnduranceHero" class="text-3xl sm:text-4xl font-extrabold stat-value tracking-tight font-sans text-navy-900 dark:text-navy-100">
-											--
-										</div>
-										<div id="guardrailsActiveBadge" class="hidden px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-md badge-safe">
-											GUARDRAILS ACTIVE
-										</div>
-										<div id="portfolioHealthBadge" class="px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-md badge-warning">
-											CALCULATING
-										</div>
-									</div>
-								</div>
-
-								<!-- Reality Check Subtext -->
-								<p id="portfolioRealityCheck" class="text-xs sm:text-sm text-navy-600 dark:text-navy-400 leading-relaxed font-sans pt-1">
-									Running 10,000 market stress tests...
-								</p>
-
-								<!-- Lifestyle Degradation / Prosperity Bonus Alert Box -->
-								<div id="lifestyleSacrificeAlertBox" class="hidden mt-4 p-4 badge-warning rounded-lg space-y-2.5 transition-colors duration-200">
-									<div class="flex items-center gap-2">
-										<svg id="sacrificeIcon" class="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-										</svg>
-										<h4 id="sacrificeTitle" class="text-xs font-bold text-amber-900 dark:text-amber-200 uppercase tracking-wider">
-											Lifestyle Degradation Alert
-										</h4>
-									</div>
-									<div class="space-y-2 text-xs text-amber-800 dark:text-amber-300 leading-relaxed font-sans">
-										<p id="sacrificeMetric1">
-											To force your portfolio to survive, the system withheld <strong id="valSacrificeTotalCash" class="font-bold stat-value text-amber-950 dark:text-amber-100">--</strong> in planned lifetime income.
-										</p>
-										<p id="sacrificeMetric2">
-											During the worst market crashes, your monthly paycheck was slashed. At its lowest point, your income dropped to the equivalent purchasing power of just <strong id="valSacrificeRockBottom" class="font-bold stat-value text-amber-950 dark:text-amber-100">--</strong> in today's money.
-										</p>
-									</div>
-								</div>
-
-								<!-- Guardrail Weather Forecast Grid -->
-								<div id="weatherForecastContainer" class="hidden mt-4 p-4 sm:p-5 card-premium rounded-2xl space-y-3">
-									<div class="flex items-center justify-between">
-										<h4 class="text-xs font-bold text-navy-800 dark:text-navy-200 uppercase tracking-wider">30-Year Lifestyle Heatmap</h4>
-										<div class="flex items-center gap-3 text-[10px] font-medium text-navy-500 dark:text-navy-400">
-											<span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-emerald-500/80"></span> Full Paycheck</span>
-											<span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-amber-500/90 animate-pulse"></span> Pay Cut</span>
-										</div>
-									</div>
-									<p class="text-xs text-navy-500 dark:text-navy-400">Visualizing the exact years your paycheck is curtailed to protect your portfolio from bankruptcy.</p>
-									
-									<!-- The Dynamic Grid -->
-									<div id="weatherGrid" class="grid grid-cols-10 sm:grid-cols-15 gap-1.5 pt-2">
-										<!-- Blocks injected via JS -->
-									</div>
-								</div>
-							</div>
-
-							<!-- CONSOLIDATED 3-TIER UNIFIED COMMAND CENTER DASHBOARD BANNER -->
-							<div id="wowMetricBanner" class="relative overflow-hidden rounded-xl bg-white dark:bg-navy-950 border border-navy-200 dark:border-navy-800 p-6 sm:p-7 space-y-5 animate-slide-up-fade hover:-trannavy-y-[1px] hover:shadow-sm active:trannavy-y-[0px] active:scale-[0.99] transition-all duration-200 ease-geist">
-								
-								<!-- Tier 1: The Headline -->
-								<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-navy-200 dark:border-navy-800">
-									<div>
-										<span class="text-xs font-semibold uppercase tracking-wider text-navy-900 dark:text-navy-100">Total Lifetime After-Tax Cash Flow</span>
-										<div class="text-xs text-navy-500 dark:text-navy-400 mt-0.5">Your initial investment vs. total net paychecks collected over retirement</div>
-									</div>
-									<div id="wowMultiplierBadge" class="self-start sm:self-auto badge-safe text-xs font-bold px-3 py-1 rounded-md">
-										--x Lifetime Payout
-									</div>
-								</div>
-
-								<div class="grid grid-cols-1 sm:grid-cols-2 reveal-stagger gap-6 items-baseline">
-									<div>
-										<div class="text-xs font-medium text-navy-500 dark:text-navy-400">You Started With</div>
-										<div id="wowInitialCorpus" class="text-2xl font-bold stat-value text-navy-900 dark:text-navy-100 mt-0.5 font-sans">--</div>
-									</div>
-									<div>
-										<div class="text-xs font-medium text-gold-500 dark:text-gold-400">You Received (After Taxes)</div>
-										<div id="wowNetPayout" class="text-3xl sm:text-4xl font-extrabold stat-value text-gold-500 dark:text-gold-400 mt-0.5 font-sans tracking-tight">--</div>
-									</div>
-								</div>
-
-								<!-- Tier 2: The Ledger Grid (5-Column Layout on Desktop with Fractional Survival Duration) -->
-								<div class="card-premium rounded-2xl p-4 mt-2">
-									<div class="grid grid-cols-2 md:grid-cols-5 reveal-stagger gap-6">
-										<div>
-											<div class="stat-label uppercase tracking-wider">Duration</div>
-											<div id="tier2Duration" class="text-sm sm:text-base font-bold stat-value text-navy-900 dark:text-navy-100 mt-0.5 font-sans">--</div>
-										</div>
-										<div>
-											<div class="stat-label uppercase tracking-wider">Total Gross</div>
-											<div id="tier2Gross" class="text-sm sm:text-base font-bold stat-value text-navy-900 dark:text-navy-100 mt-0.5 font-sans">--</div>
-										</div>
-										<div>
-											<div class="stat-label text-rose-600 dark:text-rose-400 uppercase tracking-wider">Taxes Paid</div>
-											<div id="tier2Taxes" class="text-sm sm:text-base font-bold stat-value text-rose-600 dark:text-rose-400 mt-0.5 font-sans">--</div>
-										</div>
-										<div>
-											<div class="stat-label text-gold-500 dark:text-gold-400 uppercase tracking-wider">Net In-Hand</div>
-											<div id="tier2Net" class="text-sm sm:text-base font-bold stat-value text-gold-500 dark:text-gold-400 mt-0.5 font-sans">--</div>
-										</div>
-										<div>
-											<div class="stat-label text-gold-500 dark:text-gold-400 uppercase tracking-wider">Balance Remaining</div>
-											<div id="tier2BalanceRemaining" class="text-sm sm:text-base font-bold stat-value text-gold-500 dark:text-gold-400 mt-0.5 font-sans">--</div>
-										</div>
-									</div>
-								</div>
-
-								<!-- Guardrails Lowest Paycheck & Purchasing Power Sacrifice Alert Metric -->
-								<div id="guardrailsLowestPaycheckRow" class="hidden card-premium rounded-2xl p-3.5 mt-2 flex flex-col lg:flex-row lg:items-center justify-between gap-3 text-xs">
-									<div class="flex items-center gap-2 text-emerald-700 dark:text-emerald-400 shrink-0">
-										<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-										<span class="font-semibold">Dynamic Guardrails Active</span>
-									</div>
-									<div class="font-sans flex flex-wrap items-center gap-3 text-navy-600 dark:text-navy-400">
-										<div>Min Paycheck: <span id="valLowestPaycheck" class="text-navy-900 dark:text-navy-100 font-bold">--</span></div>
-										<span class="text-navy-300 dark:text-navy-700 hidden sm:inline">•</span>
-										<div>Real Floor (Today's Money): <span id="valRockBottom" class="text-amber-700 dark:text-amber-400 font-bold">--</span></div>
-										<span class="text-navy-300 dark:text-navy-700 hidden sm:inline">•</span>
-										<div>Lifetime Sacrifice: <span id="valSacrifice" class="text-rose-600 dark:text-rose-400 font-bold">--</span></div>
-									</div>
-								</div>
-
-								<!-- Tier 3: The Actionable Footer -->
-								<div class="bg-navy-50 dark:bg-navy-900 border-t border-navy-200 dark:border-navy-800 rounded-b-lg -mx-6 -mb-6 sm:-mx-7 sm:-mb-7 p-4 text-xs flex items-start gap-3 text-navy-600 dark:text-navy-400">
-									<svg class="w-4 h-4 text-gold-500 dark:text-gold-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-									</svg>
-									<div id="tier3ActionableFooter" class="leading-relaxed font-sans text-navy-600 dark:text-navy-400">
-										Calculating actionable financial guidance...
-									</div>
-								</div>
-							</div>
-
-							<!-- 2. INTERACTIVE MICRO-CHART (Paycheck Scaling vs Savings Balance) -->
-							<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-xl p-4 sm:p-5 space-y-3">
-								<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-									<div>
-										<h4 class="text-xs font-bold tracking-tight text-navy-800 dark:text-navy-100">Paycheck Growth vs. Savings Balance</h4>
-										<p class="text-xs text-navy-500 dark:text-navy-400">Net monthly paycheck scaling with inflation alongside underlying corpus growth.</p>
-									</div>
-									<div class="flex items-center gap-6 text-xs font-medium self-start sm:self-auto">
-										<span class="flex items-center gap-1.5 text-navy-900 dark:text-navy-100">
-											<span class="w-2.5 h-2.5 rounded-full bg-navy-900 dark:bg-white"></span> Net Monthly Paycheck
-										</span>
-										<span class="flex items-center gap-1.5 text-gold-500 dark:text-gold-400">
-											<span class="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400"></span> Savings Balance
-										</span>
-									</div>
-								</div>
-								<div class="relative w-full h-52 bg-white dark:bg-navy-950 rounded-lg p-3 border border-navy-200 dark:border-navy-800">
-									<canvas id="cashflowMicroChart" class="w-full h-full"></canvas>
-								</div>
-							</div>
-
-							<!-- PERPETUAL INCOME TARGETS -->
-							<div class="space-y-3">
-								<h4 class="text-xs font-semibold text-navy-500 dark:text-navy-400 tracking-wider uppercase mb-2">PERPETUAL INCOME TARGETS</h4>
-								
-								<div class="grid grid-cols-1 gap-3">
-									<!-- Card 1: The Capital Target -->
-									<div class="card-premium rounded-2xl p-4 sm:p-5 space-y-1">
-										<div class="flex items-center gap-2">
-											<span class="w-2.5 h-2.5 rounded-full bg-navy-900 dark:bg-white"></span>
-											<h5 class="text-xs font-semibold text-navy-800 dark:text-navy-200">Required Corpus at Risk-Free Rate</h5>
-										</div>
-										<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans pt-1">
-											To guarantee this exact purchasing power perpetually using safe government bonds (assuming a 7% yield), you would need an initial corpus of <strong id="statRequiredCorpus" class="text-navy-900 dark:text-navy-100 font-bold">[Calculated Corpus]</strong>.
-										</p>
-									</div>
-
-									<!-- Card 2: The Market Target -->
-									<div class="card-premium rounded-2xl p-4 sm:p-5 space-y-1">
-										<div class="flex items-center gap-2">
-											<span class="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400"></span>
-											<h5 class="text-xs font-semibold text-navy-800 dark:text-navy-200">Required Market Return (CAGR)</h5>
-										</div>
-										<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans pt-1">
-											Assuming perfectly smooth, linear growth, your investments must generate a gross return of <strong id="statRequiredCAGR" class="text-navy-900 dark:text-navy-100 font-bold">[Calculated CAGR]%</strong> every year to overcome taxes and inflation without depleting the principal.
-										</p>
-										<span class="text-xs text-navy-500 dark:text-navy-400 mt-2 block leading-relaxed">
-											Note on Volatility: Because markets are not linear, withdrawing cash during negative years (Sequence of Return Risk) permanently damages compound growth. Real-world portfolios generally require a return higher than this theoretical baseline to survive severe early market crashes, which is why the Monte Carlo simulation above stress-tests your runway.
-										</span>
-									</div>
-								</div>
-							</div>
-
-						</div>
-
-					</div>
-
-					<!-- View 2: Yearly Paycheck Schedule Tab Content (Balanced Column Spacing without Gaps) -->
-					<div id="viewSchedule" class="hidden space-y-6">
-						<div class="card-premium rounded-2xl reveal p-6 sm:p-8 space-y-4 transition-colors duration-200">
-							<div class="pb-4 border-b border-navy-200 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-								<div>
-									<h3 class="text-lg font-bold text-navy-900 dark:text-navy-100">Yearly Inflation Escalation Schedule</h3>
-									<p class="text-xs text-navy-500 dark:text-navy-400 mt-0.5">Year-by-year breakdown of net monthly income, net annual withdrawal, taxes, corpus additions, and balance.</p>
-								</div>
-								<span id="scheduleStepUpBadge" class="text-xs text-navy-600 dark:text-navy-400 bg-navy-100 dark:bg-navy-900 border border-navy-200 dark:border-white/10 px-2.5 py-1 rounded-md font-medium self-start sm:self-auto">
-									+6% Inflation & +5% Step-Up
-								</span>
-							</div>
-
-							<!-- Scrolling Wrapper: Natural Fluid Column Spacing with Tight Padding -->
-							<div class="w-full max-h-[600px] overflow-x-auto overflow-y-auto border-b border-navy-200 dark:border-white/10 scrollbar-thin scrollbar-thumb-navy-300 dark:scrollbar-thumb-navy-700">
-								<table class="table-premium min-w-[680px]">
-									<thead class="sticky top-0 z-10 bg-navy-100 dark:bg-navy-900 border-b border-navy-200 dark:border-white/10">
-										<tr>
-											<th class="py-3 px-3 sm:px-4 text-left text-xs font-semibold text-navy-500 dark:text-navy-400 whitespace-nowrap">Year</th>
-											<th class="py-3 px-3 sm:px-4 text-right text-xs font-semibold text-navy-500 dark:text-navy-400 whitespace-nowrap">Net Monthly Withdrawal</th>
-											<th class="py-3 px-3 sm:px-4 text-right text-xs font-semibold text-navy-500 dark:text-navy-400 whitespace-nowrap">Net Annual Withdrawal</th>
-											<th class="py-3 px-3 sm:px-4 text-right text-xs font-semibold text-navy-500 dark:text-navy-400 whitespace-nowrap">Annual Taxes</th>
-											<th class="py-3 px-3 sm:px-4 text-right text-xs font-semibold text-navy-500 dark:text-navy-400 whitespace-nowrap">Additions to Corpus</th>
-											<th class="py-3 px-3 sm:px-4 text-right text-xs font-semibold text-navy-500 dark:text-navy-400 whitespace-nowrap">Corpus Balance</th>
-										</tr>
-									</thead>
-									<tbody id="scheduleTableBody" class="divide-y divide-navy-100 dark:divide-white/5 font-sans">
-										<!-- Dynamically populated via JavaScript -->
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-
-				</section>
+	<!-- ====================================================
+	     CALCULATOR MODULES — Responsive Card Grid
+	     ==================================================== -->
+	<section class="section-glow relative py-16 sm:py-24">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+			<div class="text-center mb-12 sm:mb-16 reveal">
+				<span class="text-caption text-gold-500">Institutional-Grade Tools</span>
+				<h2 class="text-section text-navy-900 dark:text-navy-100 mt-3">
+					Every Calculator You'll Ever Need
+				</h2>
+				<p class="mt-4 text-navy-500 dark:text-navy-400 max-w-2xl mx-auto leading-relaxed">
+					From retirement planning to options hedging — our engines process millions of computations entirely on your device. Zero data leaves your browser.
+				</p>
 			</div>
 
-			<!-- Full-Width Chart Container Card (Dynamic Scaling Mobile Canvas Geometry h-64 sm:h-80 md:h-96) -->
-			<section class="max-w-7xl mx-auto w-full mt-12 card-premium rounded-2xl reveal p-6 sm:p-8 space-y-4 transition-colors duration-200">
-				<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-navy-200 dark:border-white/10">
-					<div>
-						<h3 class="text-lg font-bold text-navy-900 dark:text-navy-100">The Lifecycle of Your Savings</h3>
-						<p class="text-xs text-navy-500 dark:text-navy-400 mt-0.5">A visual projection of how your money grows and depletes over time based on market conditions.</p>
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 reveal-stagger">
+				
+				<!-- SWP Retirement Planner -->
+				<a href="/swp-planner" class="card-premium card-glow rounded-2xl p-7 flex flex-col h-full group reveal cursor-pointer">
+					<div class="w-12 h-12 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/15 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+						<svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" /></svg>
 					</div>
-
-					<!-- Mode Selector (Touch-Friendly Target Sizes) -->
-					<div class="flex items-center gap-1 bg-navy-100 dark:bg-navy-900 border border-navy-200 dark:border-white/10 rounded-md p-1 text-xs">
-						<button id="viewPercentilesBtn" type="button" class="min-h-[36px] px-3 py-1 rounded-md bg-white dark:bg-navy-950 text-navy-900 dark:text-navy-100 font-semibold shadow-xs transition-colors flex items-center">Likelihoods</button>
-						<button id="viewSamplePathsBtn" type="button" class="min-h-[36px] px-3 py-1 rounded-md text-navy-600 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-200 transition-colors flex items-center">Sample Paths</button>
+					<h3 class="text-card-title text-navy-900 dark:text-navy-100 mb-2">SWP Retirement Planner</h3>
+					<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed flex-grow">
+						10,000 Monte Carlo simulations stress-testing your retirement corpus against inflation, market volatility, and LTCG tax friction.
+					</p>
+					<div class="mt-5 flex items-center gap-2 text-xs font-semibold text-gold-500 group-hover:gap-3 transition-all duration-300">
+						Launch Simulator <span class="text-sm">→</span>
 					</div>
-				</div>
+				</a>
 
-				<!-- Canvas Element for Chart.js (Mobile Scale h-64 sm:h-80 md:h-96) -->
-				<div class="relative w-full h-64 sm:h-80 md:h-96 bg-white dark:bg-navy-950 border border-navy-200 dark:border-white/10 rounded-lg p-4 flex items-center justify-center">
-					<canvas id="swpChart" class="w-full h-full"></canvas>
-				</div>
-
-				<!-- Chart Common-Man Friendly Legend -->
-				<div class="flex flex-wrap items-center justify-between text-xs text-navy-600 dark:text-navy-400 pt-2 gap-3 border-t border-navy-200 dark:border-white/10">
-					<div class="flex items-center gap-6 sm:gap-6">
-						<span class="flex items-center gap-1.5">
-							<span class="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400"></span> Optimistic (Strong Markets)
-						</span>
-						<span class="flex items-center gap-1.5">
-							<span class="w-2.5 h-2.5 rounded-full bg-navy-900 dark:bg-navy-100"></span> Expected Path
-						</span>
-						<span class="flex items-center gap-1.5">
-							<span class="w-2.5 h-2.5 rounded-full bg-rose-600 dark:bg-rose-400"></span> Conservative (Poor Markets)
-						</span>
+				<!-- SIP Accumulation Engine -->
+				<a href="/sip-engine" class="card-premium card-glow rounded-2xl p-7 flex flex-col h-full group reveal cursor-pointer">
+					<div class="w-12 h-12 rounded-xl bg-gold-500/10 dark:bg-gold-500/15 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+						<svg class="w-6 h-6 text-gold-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" /></svg>
 					</div>
-					<span class="text-xs text-navy-400 dark:text-navy-500">10,000 Simulated Lifetimes</span>
-				</div>
-			</section>
+					<h3 class="text-card-title text-navy-900 dark:text-navy-100 mb-2">SIP Accumulation Engine</h3>
+					<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed flex-grow">
+						Stochastic purchasing power simulator with multi-asset GBM, goal-seek reverse mode, and optional Black-Scholes put hedging.
+					</p>
+					<div class="mt-5 flex items-center gap-2 text-xs font-semibold text-gold-500 group-hover:gap-3 transition-all duration-300">
+						Launch Engine <span class="text-sm">→</span>
+					</div>
+				</a>
 
-		</main>
+				<!-- Insurance ROI Analyzer -->
+				<a href="/insurance-analyzer" class="card-premium card-glow rounded-2xl p-7 flex flex-col h-full group reveal cursor-pointer">
+					<div class="w-12 h-12 rounded-xl bg-navy-500/10 dark:bg-navy-500/15 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+						<svg class="w-6 h-6 text-navy-600 dark:text-navy-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" /></svg>
+					</div>
+					<h3 class="text-card-title text-navy-900 dark:text-navy-100 mb-2">Insurance ROI Analyzer</h3>
+					<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed flex-grow">
+						Unmask guaranteed income policy returns with Newton-Raphson XIRR, inflation-adjusted PV, and synthetic 3-way replication.
+					</p>
+					<div class="mt-5 flex items-center gap-2 text-xs font-semibold text-gold-500 group-hover:gap-3 transition-all duration-300">
+						Analyze Policy <span class="text-sm">→</span>
+					</div>
+				</a>
+
+				<!-- Options Pricing Lab -->
+				<a href="/black-scholes" class="card-premium card-glow rounded-2xl p-7 flex flex-col h-full group reveal cursor-pointer">
+					<div class="w-12 h-12 rounded-xl bg-rose-500/10 dark:bg-rose-500/15 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+						<svg class="w-6 h-6 text-rose-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6" /></svg>
+					</div>
+					<h3 class="text-card-title text-navy-900 dark:text-navy-100 mb-2">Options Pricing Lab</h3>
+					<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed flex-grow">
+						Interactive Black-Scholes engine for European options. Premiums, d₁/d₂ probabilities, and all Greeks (Δ, Γ, Θ, ν) in real-time.
+					</p>
+					<div class="mt-5 flex items-center gap-2 text-xs font-semibold text-gold-500 group-hover:gap-3 transition-all duration-300">
+						Price Options <span class="text-sm">→</span>
+					</div>
+				</a>
+
+				<!-- Direct Tax Code 2025 -->
+				<a href="/direct-tax" class="card-premium card-glow rounded-2xl p-7 flex flex-col h-full group reveal cursor-pointer">
+					<div class="w-12 h-12 rounded-xl bg-amber-500/10 dark:bg-amber-500/15 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+						<svg class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
+					</div>
+					<h3 class="text-card-title text-navy-900 dark:text-navy-100 mb-2">Direct Tax Code 2025</h3>
+					<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed flex-grow">
+						New vs Old Regime comparison, slab calculators, and long-form whitepapers with embedded interactive workbenches.
+					</p>
+					<div class="mt-5 flex items-center gap-2 text-xs font-semibold text-gold-500 group-hover:gap-3 transition-all duration-300">
+						Explore Tax Code <span class="text-sm">→</span>
+					</div>
+				</a>
+
+				<!-- GST Hub — Coming Soon -->
+				<div class="card-premium rounded-2xl p-7 flex flex-col h-full reveal opacity-70 relative overflow-hidden">
+					<div class="absolute top-4 right-4">
+						<span class="badge-gold">Coming Soon</span>
+					</div>
+					<div class="w-12 h-12 rounded-xl bg-navy-200/50 dark:bg-navy-800/50 flex items-center justify-center mb-5">
+						<svg class="w-6 h-6 text-navy-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>
+					</div>
+					<h3 class="text-card-title text-navy-900 dark:text-navy-100 mb-2">GST Intelligence Hub</h3>
+					<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed flex-grow">
+						GST slab calculator, ITC eligibility checker, GSTR filing tracker, and 50 expert whitepapers on Goods & Services Tax.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<hr class="section-divider" />
+
+	<!-- ====================================================
+	     TRUST SIGNALS — By The Numbers
+	     ==================================================== -->
+	<section class="py-16 sm:py-24">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 reveal-stagger">
+				<div class="text-center reveal">
+					<div class="stat-value text-3xl sm:text-4xl text-navy-900 dark:text-navy-100">10,000</div>
+					<p class="stat-label mt-2">Monte Carlo Simulations</p>
+					<p class="text-xs text-navy-400 dark:text-navy-500 mt-1">Per retirement scenario</p>
+				</div>
+				<div class="text-center reveal">
+					<div class="stat-value text-3xl sm:text-4xl text-gold-500">100%</div>
+					<p class="stat-label mt-2">Client-Side Processing</p>
+					<p class="text-xs text-navy-400 dark:text-navy-500 mt-1">Zero data leaves your device</p>
+				</div>
+				<div class="text-center reveal">
+					<div class="stat-value text-3xl sm:text-4xl text-navy-900 dark:text-navy-100">5+</div>
+					<p class="stat-label mt-2">Quantitative Engines</p>
+					<p class="text-xs text-navy-400 dark:text-navy-500 mt-1">SWP, SIP, Insurance, Options, Tax</p>
+				</div>
+				<div class="text-center reveal">
+					<div class="stat-value text-3xl sm:text-4xl text-emerald-500">₹0</div>
+					<p class="stat-label mt-2">Completely Free</p>
+					<p class="text-xs text-navy-400 dark:text-navy-500 mt-1">No ads, no subscriptions, forever</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<hr class="section-divider" />
+
+	<!-- ====================================================
+	     FEATURED TAX RESEARCH ARTICLES
+	     ==================================================== -->
+	<section class="section-glow relative py-16 sm:py-24">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+			<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10 reveal">
+				<div>
+					<span class="text-caption text-gold-500">Expert Research</span>
+					<h2 class="text-section text-navy-900 dark:text-navy-100 mt-2">
+						Latest Tax Whitepapers
+					</h2>
+				</div>
+				<a href="/direct-tax" class="btn-ghost text-sm">
+					View All Articles <span>→</span>
+				</a>
+			</div>
+
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 reveal-stagger">
+				{articleEntries.map(([slug, article]) => (
+					<a href={`/direct-tax/${slug}`} class="card-premium rounded-2xl overflow-hidden group reveal cursor-pointer">
+						<!-- Category Header -->
+						<div class="px-6 py-4 bg-navy-50 dark:bg-navy-800/50 border-b border-navy-200 dark:border-navy-700">
+							<div class="flex items-center justify-between">
+								<span class="badge-gold">{article.categoryName}</span>
+								<span class="text-xs text-navy-400 dark:text-navy-500">{article.readTime}</span>
+							</div>
+						</div>
+						<!-- Content -->
+						<div class="p-6 space-y-3">
+							<h3 class="text-card-title text-navy-900 dark:text-navy-100 group-hover:text-gold-500 transition-colors line-clamp-2">
+								{article.title}
+							</h3>
+							<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed line-clamp-3">
+								{article.summary}
+							</p>
+							<div class="flex items-center gap-2 text-xs font-semibold text-gold-500 group-hover:gap-3 transition-all duration-300 pt-2">
+								Read Whitepaper <span class="text-sm">→</span>
+							</div>
+						</div>
+					</a>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<hr class="section-divider" />
+
+	<!-- ====================================================
+	     BOTTOM CTA SECTION
+	     ==================================================== -->
+	<section class="hero-glow relative py-20 sm:py-28">
+		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 reveal">
+			<h2 class="text-section text-navy-900 dark:text-navy-100">
+				Your Financial Future
+				<span class="text-gradient-gold"> Deserves Better Tools.</span>
+			</h2>
+			<p class="mt-5 text-lg text-navy-500 dark:text-navy-400 max-w-2xl mx-auto leading-relaxed">
+				Stop guessing. Start simulating. Every calculation runs 100% on your device — your financial data never touches a server.
+			</p>
+			<div class="flex flex-col sm:flex-row justify-center gap-4 mt-10">
+				<a href="/swp-planner" class="btn-gold text-center">
+					Start Planning Your Retirement
+				</a>
+				<a href="/sip-engine" class="btn-ghost text-center">
+					Build Your Wealth with SIPs
+				</a>
+			</div>
+		</div>
+	</section>
+
 </Layout>
-
-<script>
-	// Strict Table & Currency Formatter (en-IN, INR, 0 decimals)
-	const tableFormatter = new Intl.NumberFormat('en-IN', { 
-		style: 'currency', 
-		currency: 'INR', 
-		maximumFractionDigits: 0 
-	});
-
-	// Debounce helper
-	function debounce(fn: any, ms = 300) { let t: any; return (...a: any[]) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
-
-	// Client-side JavaScript with Natural Proportional Column Spacing (No Artificial Gap Stretching)
-	let worker: Worker | null = null;
-	let chartInstance: any = null;
-	let microChartInstance: any = null;
-	let lastWorkerResponse: any = null;
-	let activeViewMode: 'percentiles' | 'samples' = 'percentiles';
-
-	const corpusInput = document.getElementById('initialCorpus') as HTMLInputElement;
-	const corpusDisplay = document.getElementById('corpusFormatted');
-	const withdrawalInput = document.getElementById('monthlyWithdrawal') as HTMLInputElement;
-	const withdrawalDisplay = document.getElementById('withdrawalFormatted');
-	const runBtn = document.getElementById('runSimBtn') as HTMLButtonElement;
-	const viewPercentilesBtn = document.getElementById('viewPercentilesBtn');
-	const viewSamplePathsBtn = document.getElementById('viewSamplePathsBtn');
-
-	// 1. Tab Switching Logic (Plan Summary vs Yearly Paycheck Schedule)
-	function initTabNavigation() {
-		const tabSummaryBtn = document.getElementById('tabPlanSummaryBtn');
-		const tabScheduleBtn = document.getElementById('tabScheduleBtn');
-		const viewSummaryEl = document.getElementById('viewPlanSummary');
-		const viewScheduleEl = document.getElementById('viewSchedule');
-
-		function switchTab(target: 'summary' | 'schedule') {
-			if (target === 'summary') {
-				viewSummaryEl?.classList.remove('hidden');
-				viewScheduleEl?.classList.add('hidden');
-				
-				tabSummaryBtn?.classList.add('border-navy-900', 'text-navy-900', 'dark:border-white', 'dark:text-navy-100', 'font-bold');
-				tabSummaryBtn?.classList.remove('border-transparent', 'text-navy-500', 'dark:text-navy-400');
-				
-				tabScheduleBtn?.classList.remove('border-navy-900', 'text-navy-900', 'dark:border-white', 'dark:text-navy-100', 'font-bold');
-				tabScheduleBtn?.classList.add('border-transparent', 'text-navy-500', 'dark:text-navy-400');
-			} else {
-				viewScheduleEl?.classList.remove('hidden');
-				viewSummaryEl?.classList.add('hidden');
-				
-				tabScheduleBtn?.classList.add('border-navy-900', 'text-navy-900', 'dark:border-white', 'dark:text-navy-100', 'font-bold');
-				tabScheduleBtn?.classList.remove('border-transparent', 'text-navy-500', 'dark:text-navy-400');
-				
-				tabSummaryBtn?.classList.remove('border-navy-900', 'text-navy-900', 'dark:border-white', 'dark:text-navy-100', 'font-bold');
-				tabSummaryBtn?.classList.add('border-transparent', 'text-navy-500', 'dark:text-navy-400');
-			}
-		}
-
-		tabSummaryBtn?.addEventListener('click', () => switchTab('summary'));
-		tabScheduleBtn?.addEventListener('click', () => switchTab('schedule'));
-	}
-
-	// 2. Theme Toggle Engine (Listens for global theme-changed event to refresh charts)
-	function initThemeMachine() {
-		window.addEventListener('theme-changed', () => {
-			if (lastWorkerResponse) {
-				renderConsumerChart(lastWorkerResponse);
-				renderMicroCashflowChart(lastWorkerResponse);
-			}
-		});
-	}
-
-	// Parse unformatted numbers (stripping commas)
-	function parseRawNumber(val: string | number): number {
-		if (typeof val === 'number') return val;
-		const cleanStr = String(val || '').replace(/,/g, '').trim();
-		const parsed = parseFloat(cleanStr);
-		return isNaN(parsed) ? 0 : parsed;
-	}
-
-	// South Asian / Indian Numbering System Formatter (e.g. 10000000 -> 1,00,00,000)
-	function formatSouthAsianNumber(val: number | string): string {
-		const num = parseRawNumber(val);
-		if (num === 0 && String(val).trim() === '') return '';
-		return num.toLocaleString('en-IN');
-	}
-
-	function formatIndianRupeeLabel(val: number): string {
-		if (isNaN(val) || val <= 0) return '₹ 0';
-		const absVal = Math.abs(val);
-		if (absVal >= 10000000) {
-			return `₹ ${(val / 10000000).toFixed(2)} Cr (${val.toLocaleString('en-IN')})`;
-		} else if (absVal >= 100000) {
-			return `₹ ${(val / 100000).toFixed(2)} Lakh (${val.toLocaleString('en-IN')})`;
-		}
-		return `₹ ${val.toLocaleString('en-IN')}`;
-	}
-
-	function formatShortRupee(val: number): string {
-		const absVal = Math.abs(val);
-		if (absVal >= 10000000) return `₹ ${(val / 10000000).toFixed(2)} Cr`;
-		if (absVal >= 100000) return `₹ ${(val / 100000).toFixed(2)} Lakh`;
-		return `₹ ${val.toLocaleString('en-IN')}`;
-	}
-
-	// Dynamic Helper Badges Update
-	function updateDisplayBadges() {
-		if (corpusInput && corpusDisplay) {
-			const val = parseRawNumber(corpusInput.value);
-			corpusDisplay.innerText = formatIndianRupeeLabel(val);
-		}
-		if (withdrawalInput && withdrawalDisplay) {
-			const val = parseRawNumber(withdrawalInput.value);
-			withdrawalDisplay.innerText = `₹ ${val.toLocaleString('en-IN')} / month`;
-		}
-	}
-
-	// Setup South Asian formatting on Blur & Focus for input fields
-	function setupFormattingField(inputEl: HTMLInputElement, updateFn: () => void) {
-		if (!inputEl) return;
-
-		inputEl.addEventListener('blur', () => {
-			const num = parseRawNumber(inputEl.value);
-			if (num > 0) {
-				inputEl.value = formatSouthAsianNumber(num);
-			}
-			updateFn();
-		});
-
-		inputEl.addEventListener('focus', () => {
-			const num = parseRawNumber(inputEl.value);
-			if (num > 0) {
-				inputEl.value = String(num);
-			}
-		});
-
-		inputEl.addEventListener('input', debounce(updateFn));
-	}
-
-	// Web Worker Initialization
-	function initWorker() {
-		if (window.Worker) {
-			worker = new Worker(new URL('../workers/swpWorker.ts', import.meta.url), { type: 'module' });
-
-			worker.onmessage = function (e: MessageEvent) {
-				lastWorkerResponse = e.data;
-				handleWorkerResponse(lastWorkerResponse);
-			};
-		}
-	}
-
-	// Run Simulation: Collect inputs, set loading state, post to Worker
-	function triggerSimulation() {
-		if (!worker) {
-			initWorker();
-		}
-
-		if (runBtn) {
-			runBtn.disabled = true;
-			runBtn.innerHTML = `
-				<span class="inline-block w-4 h-4 border-2 border-white dark:border-black border-t-transparent rounded-full animate-spin"></span>
-				<span class="text-sm font-semibold">Simulating 10,000 Market Simulations...</span>
-			`;
-		}
-
-		const payload = {
-			initialCorpus: parseRawNumber((document.getElementById('initialCorpus') as HTMLInputElement)?.value || 10000000),
-			monthlyWithdrawal: parseRawNumber((document.getElementById('monthlyWithdrawal') as HTMLInputElement)?.value || 50000),
-			annualStepUp: parseFloat((document.getElementById('annualStepUp') as HTMLInputElement)?.value || '5'),
-			expectedReturn: parseFloat((document.getElementById('expectedReturn') as HTMLInputElement)?.value || '12'),
-			annualVolatility: parseFloat((document.getElementById('annualVolatility') as HTMLInputElement)?.value || '15'),
-			expectedInflation: parseFloat((document.getElementById('expectedInflation') as HTMLInputElement)?.value || '6'),
-			ltcgTax: parseFloat((document.getElementById('ltcgTax') as HTMLInputElement)?.value || '12.5'),
-			horizonYears: parseInt((document.getElementById('horizonYears') as HTMLInputElement)?.value || '30', 10),
-			useGuardrails: (document.getElementById('useGuardrails') as HTMLInputElement)?.checked || false,
-			numSimulations: 10000,
-		};
-
-		worker?.postMessage(payload);
-	}
-
-	// Render Schedule Table with Tight Proportional Padding (Eliminating Excess Gaps)
-	function renderScheduleTable(
-		initialMonthly: number, 
-		expectedInflation: number, 
-		annualStepUp: number, 
-		yearsCount: number,
-		initialCorpus: number,
-		p50Array: number[] = [],
-		medianTaxesArray: number[] = [],
-		medianWithdrawalsArray: number[] = []
-	) {
-		const tableBody = document.getElementById('scheduleTableBody');
-		const badgeEl = document.getElementById('scheduleStepUpBadge');
-		if (badgeEl) {
-			badgeEl.innerText = `+${expectedInflation}% Inflation & +${annualStepUp}% Step-Up`;
-		}
-
-		if (!tableBody) return;
-
-		// 1. Instantiate Strict Table Currency Formatter (en-IN, INR, 0 decimals)
-		const tableFormatter = new Intl.NumberFormat('en-IN', { 
-			style: 'currency', 
-			currency: 'INR', 
-			maximumFractionDigits: 0 
-		});
-
-		let html = '';
-		let currentMonthly = initialMonthly;
-		const escalationFactor = (1 + expectedInflation / 100) * (1 + annualStepUp / 100);
-
-		for (let yr = 1; yr <= yearsCount; yr++) {
-			const i = yr - 1; // 0-indexed loop counter for zebra striping
-			const rowBgClass = i % 2 === 1 ? 'bg-navy-50 dark:bg-navy-900/50' : 'bg-transparent';
-
-			if (yr > 1) {
-				currentMonthly = currentMonthly * escalationFactor;
-			}
-
-			const currentBal = (p50Array && p50Array[yr] !== undefined) ? p50Array[yr] : 0;
-			const prevBal = (yr === 1) ? initialCorpus : ((p50Array && p50Array[yr - 1] !== undefined) ? p50Array[yr - 1] : 0);
-
-			if (prevBal <= 0 && currentBal <= 0) {
-				// Case C: Ghost Years (Post-Exhaustion) - Muted visual text to indicate dead plan
-				html += `
-					<tr class="${rowBgClass} hover:bg-navy-100 dark:hover:bg-navy-900 transition-colors border-b border-navy-100 dark:border-white/10">
-						<td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-medium text-navy-400 dark:text-navy-600">Year ${yr}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-300 dark:text-navy-600">${tableFormatter.format(0)}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-300 dark:text-navy-600">${tableFormatter.format(0)}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-300 dark:text-navy-600">${tableFormatter.format(0)}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-300 dark:text-navy-600">-</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-300 dark:text-navy-600">${tableFormatter.format(0)}</td>
-					</tr>
-				`;
-			} else if (prevBal > 0 && currentBal <= 0) {
-				// Case B: The "Death Row" (The Final Partial Year)
-				const grossExtracted = (medianWithdrawalsArray && medianWithdrawalsArray[yr] !== undefined) ? medianWithdrawalsArray[yr] : prevBal;
-				const annualTax = (medianTaxesArray && medianTaxesArray[yr] !== undefined) ? medianTaxesArray[yr] : 0;
-				const netExtracted = Math.max(0, grossExtracted - annualTax);
-
-				const formattedTargetMonthly = tableFormatter.format(Math.round(currentMonthly));
-				const formattedNetAnnual = tableFormatter.format(Math.round(netExtracted));
-				const formattedAnnualTax = tableFormatter.format(Math.round(annualTax));
-
-				html += `
-					<tr class="${rowBgClass} hover:bg-navy-100 dark:hover:bg-navy-900 transition-colors border-b border-navy-100 dark:border-white/10">
-						<td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-semibold text-navy-800 dark:text-navy-200">Year ${yr}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-500 dark:text-gold-400">${formattedTargetMonthly}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-amber-600 dark:text-amber-400">${formattedNetAnnual}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-600 dark:text-rose-400">${formattedAnnualTax}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-400 dark:text-navy-500">-</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-600 dark:text-rose-400">${tableFormatter.format(0)}</td>
-					</tr>
-				`;
-			} else {
-				// Case A: Active Surviving Year
-				let grossAnnual = currentMonthly * 12;
-				if (medianWithdrawalsArray && medianWithdrawalsArray[yr] !== undefined) {
-					grossAnnual = medianWithdrawalsArray[yr];
-				}
-				
-				const annualTax = (medianTaxesArray && medianTaxesArray[yr] !== undefined) ? medianTaxesArray[yr] : 0;
-				const netAnnual = Math.max(0, grossAnnual - annualTax);
-				const netMonthly = grossAnnual > 0 ? netAnnual / 12 : 0;
-
-				const growth = currentBal - prevBal;
-
-				const formattedNetMonthly = tableFormatter.format(Math.round(netMonthly));
-				const formattedNetAnnual = tableFormatter.format(Math.round(netAnnual));
-				const formattedAnnualTax = tableFormatter.format(Math.round(annualTax));
-				
-				const formattedGrowth = growth >= 0 
-					? `+${tableFormatter.format(Math.round(growth))}` 
-					: `-${tableFormatter.format(Math.round(Math.abs(growth)))}`;
-				const growthColorClass = growth >= 0 ? 'text-gold-500 dark:text-gold-400' : 'text-rose-600 dark:text-rose-400';
-				const formattedBal = tableFormatter.format(Math.round(currentBal));
-
-				html += `
-					<tr class="${rowBgClass} hover:bg-navy-100 dark:hover:bg-navy-900 transition-colors border-b border-navy-100 dark:border-white/10">
-						<td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-semibold text-navy-800 dark:text-navy-200">Year ${yr}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-500 dark:text-gold-400">${formattedNetMonthly}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-500 dark:text-gold-400">${formattedNetAnnual}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-600 dark:text-rose-400">${formattedAnnualTax}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium ${growthColorClass}">${formattedGrowth}</td>
-						<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-900 dark:text-navy-100">${formattedBal}</td>
-					</tr>
-				`;
-			}
-		}
-
-		tableBody.innerHTML = html;
-	}
-
-	// Render Interactive Micro-Chart (Paycheck Growth vs Savings Balance)
-	async function renderMicroCashflowChart(data: any) {
-		const canvas = document.getElementById('cashflowMicroChart') as HTMLCanvasElement;
-		if (!canvas) return;
-
-		if (microChartInstance) {
-			microChartInstance.destroy();
-			microChartInstance = null;
-		}
-
-		const ctx = canvas.getContext('2d');
-		if (!ctx) return;
-
-		const { Chart } = await import('chart.js/auto');
-
-		const initialMonthly = parseRawNumber((document.getElementById('monthlyWithdrawal') as HTMLInputElement)?.value || 50000);
-		const expectedInflation = parseFloat((document.getElementById('expectedInflation') as HTMLInputElement)?.value || '6');
-		const annualStepUp = parseFloat((document.getElementById('annualStepUp') as HTMLInputElement)?.value || '5');
-		const horizonYears = parseInt((document.getElementById('horizonYears') as HTMLInputElement)?.value || '30', 10);
-		const escalationFactor = (1 + expectedInflation / 100) * (1 + annualStepUp / 100);
-
-		const labels = ['Yr 0'];
-		const actualMonthlyData: number[] = data.actualPaycheckTimeline ? [...data.actualPaycheckTimeline] : [initialMonthly];
-		const idealMonthlyData: number[] = data.idealPaycheckTimeline ? [...data.idealPaycheckTimeline] : [initialMonthly];
-		const corpusData: number[] = [parseRawNumber((document.getElementById('initialCorpus') as HTMLInputElement)?.value || 10000000)];
-
-		if (!data.actualPaycheckTimeline || !data.idealPaycheckTimeline) {
-			let currentMonthly = initialMonthly;
-			let idealMonthly = initialMonthly;
-			for (let yr = 1; yr <= horizonYears; yr++) {
-				labels.push(`Yr ${yr}`);
-				if (yr > 1) {
-					currentMonthly = currentMonthly * escalationFactor;
-					idealMonthly = idealMonthly * escalationFactor;
-				}
-				let grossAnnual = currentMonthly * 12;
-				if (data.medianWithdrawals && data.medianWithdrawals[yr] !== undefined) {
-					grossAnnual = data.medianWithdrawals[yr];
-				}
-				const annualTax = (data.medianTaxes && data.medianTaxes[yr] !== undefined) ? data.medianTaxes[yr] : 0;
-				const netAnnual = Math.max(0, grossAnnual - annualTax);
-				actualMonthlyData.push(grossAnnual > 0 ? Math.round(netAnnual / 12) : 0);
-				idealMonthlyData.push(Math.round(idealMonthly));
-
-				const bal = (data.p50 && data.p50[yr] !== undefined) ? data.p50[yr] : 0;
-				corpusData.push(bal);
-			}
-		} else {
-			for (let yr = 1; yr <= horizonYears; yr++) {
-				labels.push(`Yr ${yr}`);
-				const bal = (data.p50 && data.p50[yr] !== undefined) ? data.p50[yr] : 0;
-				corpusData.push(bal);
-			}
-		}
-
-		const isDark = document.documentElement.classList.contains('dark');
-		const tickColor = isDark ? '#94a3b8' : '#64748b';
-
-		microChartInstance = new Chart(ctx, {
-			type: 'line',
-			data: {
-				labels,
-				datasets: [
-					{
-						label: 'Actual Income (Realized)',
-						data: actualMonthlyData,
-						borderColor: isDark ? '#818cf8' : '#4f46e5',
-						backgroundColor: 'transparent',
-						borderWidth: 2.5,
-						borderDash: [],
-						pointRadius: 0,
-						tension: 0.4,
-						yAxisID: 'y'
-					},
-					{
-						label: 'Ideal Income (Target)',
-						data: idealMonthlyData,
-						borderColor: isDark ? '#fbbf24' : '#d97706',
-						backgroundColor: 'transparent',
-						borderWidth: 1.5,
-						borderDash: [5, 5],
-						fill: false,
-						pointRadius: 0,
-						tension: 0.4,
-						yAxisID: 'y'
-					},
-					{
-						label: 'Savings Balance (₹)',
-						data: corpusData,
-						borderColor: isDark ? '#34d399' : '#059669',
-						backgroundColor: 'transparent',
-						borderWidth: 2,
-						borderDash: [4, 4],
-						pointRadius: 0,
-						tension: 0.4,
-						yAxisID: 'y1'
-					}
-				]
-			},
-			options: {
-				responsive: true,
-				maintainAspectRatio: false,
-				animation: { duration: 300 },
-				interaction: { mode: 'index', intersect: false },
-				plugins: {
-					legend: { display: false },
-					tooltip: {
-						backgroundColor: '#0f172a',
-						borderColor: '#334155',
-						borderWidth: 1,
-						titleColor: '#f8fafc',
-						bodyColor: '#e2e8f0',
-						padding: 10,
-						callbacks: {
-							label: function (context: any) {
-								const val = context.raw;
-								if (context.datasetIndex === 0) {
-									return ` Actual Income (Realized): ₹ ${Math.round(val).toLocaleString('en-IN')}`;
-								} else if (context.datasetIndex === 1) {
-									return ` Ideal Income (Target): ₹ ${Math.round(val).toLocaleString('en-IN')}`;
-								} else {
-									return ` Balance: ${formatShortRupee(val)}`;
-								}
-							}
-						}
-					}
-				},
-				scales: {
-					x: {
-						grid: { display: false },
-						ticks: { color: tickColor, font: { family: 'Inter', size: 10 }, maxTicksLimit: 8 }
-					},
-					y: {
-						type: 'linear',
-						display: true,
-						position: 'left',
-						grid: { display: false },
-						ticks: {
-							color: isDark ? '#818cf8' : '#4f46e5',
-							font: { family: 'Inter', size: 10 },
-							callback: function(val: any) {
-								return `₹${Math.round(val / 1000)}k`;
-							}
-						}
-					},
-					y1: {
-						type: 'linear',
-						display: true,
-						position: 'right',
-						grid: { display: false },
-						ticks: {
-							color: isDark ? '#34d399' : '#059669',
-							font: { family: 'Inter', size: 10 },
-							callback: function(val: any) {
-								if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)}Cr`;
-								if (val >= 100000) return `₹${(val / 100000).toFixed(0)}L`;
-								return `₹${val}`;
-							}
-						}
-					}
-				}
-			}
-		});
-	}
-
-	// Handle Worker Output Data & Render Command Center Results
-	function handleWorkerResponse(data: any) {
-		if (runBtn) {
-			runBtn.disabled = false;
-			runBtn.innerHTML = `
-				<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-					<path d="M8 5v14l11-7z"/>
-				</svg>
-				<span class="text-sm font-semibold">Run 10,000 Market Simulations</span>
-			`;
-		}
-
-		if (!data) return;
-
-		const inputCorpus = parseRawNumber((document.getElementById('initialCorpus') as HTMLInputElement)?.value || 10000000);
-		const initialMonthly = parseRawNumber((document.getElementById('monthlyWithdrawal') as HTMLInputElement)?.value || 50000);
-		const expectedInflation = parseFloat((document.getElementById('expectedInflation') as HTMLInputElement)?.value || '6');
-		const annualStepUp = parseFloat((document.getElementById('annualStepUp') as HTMLInputElement)?.value || '5');
-		const horizonYears = parseInt((document.getElementById('horizonYears') as HTMLInputElement)?.value || '30', 10);
-		const annualWithdrawal = initialMonthly * 12;
-
-		// 1. Calculate Exact Fractional Survival Duration (Years & Months) and Final Balance Remaining
-		let deathYear = (data.p50 || []).findIndex((balance: number, idx: number) => idx > 0 && balance <= 0);
-		let balanceRemaining = 0;
-		let durationString = `${horizonYears} Years`;
-		let actualDuration = horizonYears;
-		let survivedMonths = 0;
-
-		if (deathYear === -1) {
-			actualDuration = horizonYears;
-			balanceRemaining = (data.p50 && data.p50[horizonYears] !== undefined) ? data.p50[horizonYears] : 0;
-			durationString = `${horizonYears} Years`;
-			survivedMonths = 0;
-		} else {
-			actualDuration = deathYear;
-			balanceRemaining = 0;
-
-			const completedYears = deathYear - 1;
-			const startingBalance = (data.p50 && data.p50[completedYears] !== undefined) ? data.p50[completedYears] : 0;
-
-			// Net Monthly Withdrawal for the final partial year
-			const escalationFactor = (1 + expectedInflation / 100) * (1 + annualStepUp / 100);
-			const deathYearGrossMonthly = initialMonthly * Math.pow(escalationFactor, completedYears);
-			const deathYearGrossAnnual = deathYearGrossMonthly * 12;
-			const deathYearTax = (data.medianTaxes && data.medianTaxes[deathYear] !== undefined) ? data.medianTaxes[deathYear] : 0;
-			const deathYearNetAnnual = Math.max(0, deathYearGrossAnnual - deathYearTax);
-			const deathYearNetMonthly = deathYearNetAnnual > 0 ? deathYearNetAnnual / 12 : deathYearGrossMonthly;
-
-			survivedMonths = deathYearNetMonthly > 0 ? Math.floor(startingBalance / deathYearNetMonthly) : 0;
-			survivedMonths = Math.min(11, Math.max(0, survivedMonths));
-
-			if (survivedMonths > 0) {
-				durationString = `${completedYears} Yrs, ${survivedMonths} Mos`;
-			} else {
-				durationString = `${completedYears} Years`;
-			}
-		}
-
-		// 2. Actionable Portfolio Health & Endurance Hero Metric, Health Badge, and Reality Check Subtext
-		const enduranceHeroEl = document.getElementById('portfolioEnduranceHero');
-		const healthBadgeEl = document.getElementById('portfolioHealthBadge');
-		const guardrailsActiveBadgeEl = document.getElementById('guardrailsActiveBadge');
-		const realityCheckEl = document.getElementById('portfolioRealityCheck');
-
-		if (guardrailsActiveBadgeEl) {
-			if (data.useGuardrails) {
-				guardrailsActiveBadgeEl.classList.remove('hidden');
-			} else {
-				guardrailsActiveBadgeEl.classList.add('hidden');
-			}
-		}
-
-		if (enduranceHeroEl && healthBadgeEl && realityCheckEl) {
-			enduranceHeroEl.innerText = durationString;
-
-			if (actualDuration >= horizonYears) {
-				enduranceHeroEl.className = "text-3xl sm:text-4xl font-extrabold stat-value tracking-tight font-sans text-gold-500 dark:text-gold-400";
-				healthBadgeEl.innerText = "SAFE";
-				healthBadgeEl.className = "px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full badge-safe";
-			} else if (actualDuration >= 20) {
-				enduranceHeroEl.className = "text-3xl sm:text-4xl font-extrabold stat-value tracking-tight font-sans text-amber-600 dark:text-amber-400";
-				healthBadgeEl.innerText = "AT RISK";
-				healthBadgeEl.className = "px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300 border border-amber-200 dark:border-amber-800";
-			} else {
-				enduranceHeroEl.className = "text-3xl sm:text-4xl font-extrabold stat-value tracking-tight font-sans text-rose-600 dark:text-rose-400";
-				healthBadgeEl.innerText = "AGGRESSIVE DEPLETION";
-				healthBadgeEl.className = "px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full bg-rose-100 text-rose-800 dark:bg-rose-950/80 dark:text-rose-300 border border-rose-200 dark:border-rose-800";
-			}
-
-			if (data.useGuardrails) {
-				realityCheckEl.innerHTML = `Based on 10,000 stress tests with Guardrails active. Your portfolio survived by automatically reducing your monthly lifestyle payouts during severe market crashes.`;
-			} else {
-				if (actualDuration >= horizonYears) {
-					realityCheckEl.innerHTML = `Based on 10,000 market stress tests, your savings comfortably survive your full <strong class="font-semibold text-navy-800 dark:text-navy-200">${horizonYears}-year</strong> retirement target while compounding against inflation.`;
-				} else if (actualDuration >= 20) {
-					realityCheckEl.innerHTML = `Based on 10,000 market stress tests, your savings are projected to exhaust in <strong class="font-semibold text-navy-800 dark:text-navy-200">${durationString}</strong> due to the combined drag of inflation, step-up payouts, and market volatility.`;
-				} else {
-					realityCheckEl.innerHTML = `Based on 10,000 market stress tests, your savings are projected to exhaust rapidly in <strong class="font-semibold text-navy-800 dark:text-navy-200">${durationString}</strong> due to heavy initial withdrawal pressure.`;
-				}
-			}
-		}
-
-		// Lifestyle Degradation / Prosperity Bonus Alert Box DOM Update
-		const sacrificeAlertBoxEl = document.getElementById('lifestyleSacrificeAlertBox');
-		const sacrificeTitleEl = document.getElementById('sacrificeTitle');
-		const sacrificeMetric1El = document.getElementById('sacrificeMetric1');
-		const sacrificeMetric2El = document.getElementById('sacrificeMetric2');
-
-		if (sacrificeAlertBoxEl) {
-			if (data.useGuardrails && data.lifestyleSacrificeAmount !== undefined && data.lifestyleSacrificeAmount !== 0) {
-				if (data.lifestyleSacrificeAmount > 0) {
-					// Lifestyle Degradation Alert (Amber)
-					sacrificeAlertBoxEl.className = "mt-4 p-4 badge-warning rounded-xl space-y-2.5 transition-colors duration-200";
-					if (sacrificeTitleEl) {
-						sacrificeTitleEl.className = "text-xs font-bold text-amber-900 dark:text-amber-200 uppercase tracking-wider";
-						sacrificeTitleEl.innerText = "Lifestyle Degradation Alert";
-					}
-					if (sacrificeMetric1El) {
-						sacrificeMetric1El.className = "text-xs text-amber-800 dark:text-amber-300 leading-relaxed font-sans";
-						sacrificeMetric1El.innerHTML = `To force your portfolio to survive, the system withheld <strong class="font-bold stat-value text-amber-950 dark:text-amber-100">${tableFormatter.format(data.lifestyleSacrificeAmount)}</strong> in planned lifetime income.`;
-					}
-					if (sacrificeMetric2El) {
-						sacrificeMetric2El.className = "text-xs text-amber-800 dark:text-amber-300 leading-relaxed font-sans";
-						sacrificeMetric2El.innerHTML = `During market drops, your monthly paycheck took a cut. At its lowest point, your income dropped to the equivalent purchasing power of <strong class="font-bold stat-value text-amber-950 dark:text-amber-100">${tableFormatter.format(data.rockBottomRealValue)}</strong> in today's money.`;
-					}
-				} else {
-					// Prosperity Bonus Alert (Green / Emerald)
-					const bonusAmount = Math.abs(data.lifestyleSacrificeAmount);
-					sacrificeAlertBoxEl.className = "mt-4 p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 rounded-xl space-y-2.5 transition-colors duration-200";
-					if (sacrificeTitleEl) {
-						sacrificeTitleEl.className = "text-xs font-bold text-emerald-900 dark:text-emerald-200 uppercase tracking-wider";
-						sacrificeTitleEl.innerText = "Prosperity Bonus Alert";
-					}
-					if (sacrificeMetric1El) {
-						sacrificeMetric1El.className = "text-xs text-emerald-800 dark:text-emerald-300 leading-relaxed font-sans";
-						sacrificeMetric1El.innerHTML = `Thanks to strong market growth, the Guyton-Klinger Prosperity Rule awarded you an extra <strong class="font-bold text-emerald-950 dark:text-emerald-100">${tableFormatter.format(bonusAmount)}</strong> in bonus lifetime income above your initial baseline plan!`;
-					}
-					if (sacrificeMetric2El) {
-						sacrificeMetric2El.className = "text-xs text-emerald-800 dark:text-emerald-300 leading-relaxed font-sans";
-						sacrificeMetric2El.innerHTML = `During bull runs, your monthly paycheck automatically stepped up to let you enjoy your compounding wealth.`;
-					}
-				}
-				sacrificeAlertBoxEl.classList.remove('hidden');
-			} else {
-				sacrificeAlertBoxEl.classList.add('hidden');
-			}
-		}
-
-		// Weather Forecast Heatmap Render Logic
-		const weatherContainerEl = document.getElementById('weatherForecastContainer');
-		const weatherGridEl = document.getElementById('weatherGrid');
-
-		if (weatherContainerEl && weatherGridEl) {
-			if (data.useGuardrails && data.actualPaycheckTimeline && data.idealPaycheckTimeline) {
-				let gridHtml = '';
-				const horizon = parseInt((document.getElementById('horizonYears') as HTMLInputElement)?.value || '30', 10);
-				
-				for (let yr = 1; yr <= horizon; yr++) {
-					// Default to full pay if data is missing for that specific year
-					const actual = data.actualPaycheckTimeline[yr] || 0;
-					const ideal = data.idealPaycheckTimeline[yr] || 0;
-					
-					// If actual is strictly less than ideal (allowing a tiny margin for float rounding)
-					if (actual < (ideal - 10)) {
-						// Pay Cut Triggered (Amber Block)
-						gridHtml += `<div class="w-full aspect-square bg-amber-500/90 rounded-sm border border-amber-600/50" title="Year ${yr}: Pay Cut Triggered"></div>`;
-					} else {
-						// Full Paycheck (Emerald Block)
-						gridHtml += `<div class="w-full aspect-square bg-emerald-500/80 rounded-sm border border-emerald-600/30" title="Year ${yr}: Full Paycheck"></div>`;
-					}
-				}
-				
-				weatherGridEl.innerHTML = gridHtml;
-				weatherContainerEl.classList.remove('hidden');
-			} else {
-				weatherContainerEl.classList.add('hidden');
-				weatherGridEl.innerHTML = '';
-			}
-		}
-
-		// 3. Compute Total Gross, Total Taxes, and Net Lifetime Payouts for 5-Column Dashboard Grid
-		let totalGrossPayout = 0;
-		let totalTaxesPaid = 0;
-		let totalNetPayout = 0;
-		let currentMonthly = initialMonthly;
-		const escalationFactor = (1 + expectedInflation / 100) * (1 + annualStepUp / 100);
-
-		for (let yr = 1; yr <= horizonYears; yr++) {
-			if (yr > 1) {
-				currentMonthly = currentMonthly * escalationFactor;
-			}
-			let grossAnnual = currentMonthly * 12;
-			if (data.medianWithdrawals && data.medianWithdrawals[yr] !== undefined) {
-				grossAnnual = data.medianWithdrawals[yr];
-			}
-			const annualTax = (data.medianTaxes && data.medianTaxes[yr] !== undefined) ? data.medianTaxes[yr] : 0;
-			const netAnnual = Math.max(0, grossAnnual - annualTax);
-
-			totalGrossPayout += grossAnnual;
-			totalTaxesPaid += annualTax;
-			totalNetPayout += netAnnual;
-		}
-
-		// Tier 1 DOM Updates
-		const wowInitialCorpusEl = document.getElementById('wowInitialCorpus');
-		if (wowInitialCorpusEl) wowInitialCorpusEl.innerText = formatShortRupee(inputCorpus);
-
-		const wowNetPayoutEl = document.getElementById('wowNetPayout');
-		if (wowNetPayoutEl) wowNetPayoutEl.innerText = formatShortRupee(totalNetPayout);
-
-		const multiplierBadgeEl = document.getElementById('wowMultiplierBadge');
-		if (multiplierBadgeEl) {
-			const mult = inputCorpus > 0 ? (totalNetPayout / inputCorpus).toFixed(1) : '0';
-			multiplierBadgeEl.innerText = `${mult}x Lifetime Payout`;
-		}
-
-		// Tier 2 Ledger 5-Column Grid DOM Updates (Inject calculated durationString)
-		const t2DurationEl = document.getElementById('tier2Duration');
-		if (t2DurationEl) t2DurationEl.innerText = durationString;
-
-		const t2GrossEl = document.getElementById('tier2Gross');
-		if (t2GrossEl) t2GrossEl.innerText = formatShortRupee(totalGrossPayout);
-
-		const t2TaxesEl = document.getElementById('tier2Taxes');
-		if (t2TaxesEl) t2TaxesEl.innerText = formatShortRupee(totalTaxesPaid);
-
-		const t2NetEl = document.getElementById('tier2Net');
-		if (t2NetEl) t2NetEl.innerText = formatShortRupee(totalNetPayout);
-
-		const t2BalRemEl = document.getElementById('tier2BalanceRemaining');
-		if (t2BalRemEl) t2BalRemEl.innerText = formatShortRupee(balanceRemaining);
-
-		// Guardrails Lowest Paycheck & Purchasing Power Metrics DOM Update
-		const guardrailsLowestRowEl = document.getElementById('guardrailsLowestPaycheckRow');
-		const valLowestPaycheckEl = document.getElementById('valLowestPaycheck');
-		const valRockBottomEl = document.getElementById('valRockBottom');
-		const valSacrificeEl = document.getElementById('valSacrifice');
-
-		if (guardrailsLowestRowEl) {
-			if (data.useGuardrails) {
-				if (valLowestPaycheckEl && data.lowestMonthlyPaycheck) {
-					valLowestPaycheckEl.innerText = tableFormatter.format(data.lowestMonthlyPaycheck);
-				}
-				if (valRockBottomEl && data.rockBottomRealValue !== undefined) {
-					valRockBottomEl.innerText = tableFormatter.format(data.rockBottomRealValue);
-				}
-				if (valSacrificeEl && data.lifestyleSacrificeAmount !== undefined) {
-					valSacrificeEl.innerText = formatShortRupee(data.lifestyleSacrificeAmount);
-				}
-				guardrailsLowestRowEl.classList.remove('hidden');
-			} else {
-				guardrailsLowestRowEl.classList.add('hidden');
-			}
-		}
-
-		// Tier 3 Actionable Footer DOM Update (Proportional Reduction Algorithm)
-		let currentPaycheck = initialMonthly;
-		let targetMonths = horizonYears * 12;
-		let survivedTotalMonths = (actualDuration - 1) * 12 + survivedMonths;
-
-		let recommendedPaycheck = currentPaycheck;
-		if (survivedTotalMonths < targetMonths) {
-			let survivalRatio = survivedTotalMonths / targetMonths;
-			recommendedPaycheck = Math.floor(currentPaycheck * survivalRatio * 0.95);
-		}
-
-		const formattedRecommendedPaycheck = tableFormatter.format(recommendedPaycheck);
-
-		const tier3El = document.getElementById('tier3ActionableFooter');
-		if (tier3El) {
-			if (survivedTotalMonths < targetMonths) {
-				tier3El.innerHTML = `At your requested rate, this plan mathematically exhausts in <strong class="font-bold text-navy-900 dark:text-white">${durationString}</strong>. To ensure it safely lasts your full <strong class="font-bold text-navy-900 dark:text-white">${horizonYears}-year</strong> target, experts recommend a starting paycheck of no more than <strong class="font-bold text-gold-500 dark:text-gold-400">${formattedRecommendedPaycheck}</strong> per month.`;
-			} else {
-				tier3El.innerHTML = `At your requested rate, this plan comfortably funds your entire <strong class="font-bold text-navy-900 dark:text-white">${horizonYears}-year</strong> retirement target with a high probability of success.`;
-			}
-		}
-
-		// 4. Render Interactive Micro-Chart
-		renderMicroCashflowChart(data);
-
-		// 5. Calculate & Inject Perpetual Income Targets (Cards 1 & 2)
-		const realRate = Math.max(0.001, (7 - expectedInflation) / 100);
-		const requiredCorpus = annualWithdrawal / realRate;
-		const reqCorpusEl = document.getElementById('statRequiredCorpus');
-		if (reqCorpusEl) reqCorpusEl.innerText = formatShortRupee(requiredCorpus);
-
-		// Institutional Hurdle Rate Algorithm (Accounting for Tax Drag & Volatility Drain)
-		let startingCorpus = inputCorpus;
-		let iwr = (annualWithdrawal / startingCorpus) * 100;
-		let netRequired = iwr + expectedInflation;
-		let marketVolatility = parseFloat((document.getElementById('annualVolatility') as HTMLInputElement)?.value || '15');
-		let volatilityDrag = Math.pow(marketVolatility, 2) / 200;
-		let ltcgTaxRate = parseFloat((document.getElementById('ltcgTax') as HTMLInputElement)?.value || '12.5');
-		let requiredCAGR = (netRequired / (1 - (ltcgTaxRate / 100))) + volatilityDrag;
-
-		const reqCagrEl = document.getElementById('statRequiredCAGR');
-		if (reqCagrEl) reqCagrEl.innerText = requiredCAGR.toFixed(2) + '%';
-
-		// 6. Render Schedule Table with Natural Proportional Spacing
-		renderScheduleTable(initialMonthly, expectedInflation, annualStepUp, horizonYears, inputCorpus, data.p50, data.medianTaxes, data.medianWithdrawals);
-
-		// 7. Render Common-Man Friendly Adaptive Chart.js
-		renderConsumerChart(data);
-	}
-
-	// Render Dynamic Light/Dark Theme Adaptable Chart.js Line Chart with Friendly Labels
-	async function renderConsumerChart(data: any) {
-		const canvas = document.getElementById('swpChart') as HTMLCanvasElement;
-		if (!canvas) return;
-
-		if (chartInstance) {
-			chartInstance.destroy();
-			chartInstance = null;
-		}
-
-		const ctx = canvas.getContext('2d');
-		if (!ctx) return;
-
-		const { Chart } = await import('chart.js/auto');
-
-		const labels = data.years.map((y: number) => `Year ${y}`);
-		const isDark = document.documentElement.classList.contains('dark');
-
-		const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : '#e2e8f0';
-		const tickTextColor = isDark ? '#a1a1aa' : '#64748b';
-		const axisTitleColor = isDark ? '#d4d4d8' : '#475569';
-		const expectedLineColor = isDark ? '#f4f4f5' : '#0f172a';
-		const bestLineColor = isDark ? '#34d399' : '#059669';
-		const worstLineColor = isDark ? '#f87171' : '#dc2626';
-
-		let datasets = [];
-
-		if (activeViewMode === 'percentiles') {
-			datasets = [
-				{
-					label: 'Optimistic (Strong Markets)',
-					data: data.p90,
-					borderColor: bestLineColor,
-					backgroundColor: isDark ? 'rgba(52, 211, 153, 0.04)' : 'rgba(5, 150, 105, 0.04)',
-					borderWidth: 2,
-					pointRadius: 0,
-					tension: 0.3,
-					fill: false
-				},
-				{
-					label: 'Expected Path',
-					data: data.p50,
-					borderColor: expectedLineColor,
-					backgroundColor: isDark ? 'rgba(244, 244, 245, 0.04)' : 'rgba(15, 23, 42, 0.04)',
-					borderWidth: 2.5,
-					pointRadius: 0,
-					tension: 0.3,
-					fill: false
-				},
-				{
-					label: 'Conservative (Poor Markets)',
-					data: data.p10,
-					borderColor: worstLineColor,
-					backgroundColor: isDark ? 'rgba(248, 113, 113, 0.04)' : 'rgba(220, 38, 38, 0.04)',
-					borderWidth: 2,
-					pointRadius: 0,
-					tension: 0.3,
-					fill: false
-				}
-			];
-		} else {
-			const pathColors = [
-				'#38bdf8', '#818cf8', '#c084fc', '#f472b6', '#fb7185',
-				'#34d399', '#a3e635', '#facc15', '#fb923c', '#a1a1aa'
-			];
-			datasets = (data.samplePaths || []).map((path: number[], idx: number) => ({
-				label: `Simulated Lifetime #${idx + 1}`,
-				data: path,
-				borderColor: pathColors[idx % pathColors.length],
-				borderWidth: 1.25,
-				pointRadius: 0,
-				tension: 0.3,
-				fill: false
-			}));
-		}
-
-		chartInstance = new Chart(ctx, {
-			type: 'line',
-			data: {
-				labels,
-				datasets
-			},
-			options: {
-				responsive: true,
-				maintainAspectRatio: false,
-				animation: { duration: 300 },
-				interaction: {
-					mode: 'index',
-					intersect: false,
-				},
-				plugins: {
-					legend: { display: false },
-					tooltip: {
-						backgroundColor: isDark ? '#000000' : '#0f172a',
-						borderColor: isDark ? 'rgba(255, 255, 255, 0.15)' : '#334155',
-						borderWidth: 1,
-						titleColor: '#f8fafc',
-						bodyColor: '#e2e8f0',
-						padding: 12,
-						displayColors: true,
-						callbacks: {
-							label: function (context: any) {
-								const val = context.raw;
-								let formatted = val;
-								if (typeof val === 'number') {
-									if (val >= 10000000) formatted = `₹ ${(val / 10000000).toFixed(2)} Cr`;
-									else if (val >= 100000) formatted = `₹ ${(val / 100000).toFixed(2)} Lakh`;
-									else formatted = `₹ ${val.toLocaleString('en-IN')}`;
-								}
-								return ` ${context.dataset.label}: ${formatted}`;
-							}
-						}
-					}
-				},
-				scales: {
-					x: {
-						border: { color: gridColor },
-						grid: { display: false },
-						ticks: { color: tickTextColor, font: { family: 'Inter', size: 11 } },
-						title: { display: true, text: 'Retirement Horizon (Years)', color: axisTitleColor, font: { family: 'Inter', size: 11 } }
-					},
-					y: {
-						border: { color: gridColor },
-						grid: { color: gridColor },
-						ticks: {
-							color: tickTextColor,
-							font: { family: 'Inter', size: 11 },
-							callback: function (val: any) {
-								if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)}Cr`;
-								if (val >= 100000) return `₹${(val / 100000).toFixed(0)}L`;
-								return `₹${val}`;
-							}
-						},
-						title: { display: true, text: 'Portfolio Balance (₹)', color: axisTitleColor, font: { family: 'Inter', size: 11 } }
-					}
-				}
-			}
-		});
-	}
-
-	viewPercentilesBtn?.addEventListener('click', () => {
-		activeViewMode = 'percentiles';
-		viewPercentilesBtn.className = 'min-h-[36px] px-3 py-1 rounded-md bg-white dark:bg-navy-950 text-navy-900 dark:text-navy-100 font-semibold shadow-xs transition-colors flex items-center';
-		viewSamplePathsBtn!.className = 'min-h-[36px] px-3 py-1 rounded-md text-navy-600 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-200 transition-colors flex items-center';
-		if (lastWorkerResponse) renderConsumerChart(lastWorkerResponse);
-	});
-
-	viewSamplePathsBtn?.addEventListener('click', () => {
-		activeViewMode = 'samples';
-		viewSamplePathsBtn.className = 'min-h-[36px] px-3 py-1 rounded-md bg-white dark:bg-navy-950 text-navy-900 dark:text-navy-100 font-semibold shadow-xs transition-colors flex items-center';
-		viewPercentilesBtn!.className = 'min-h-[36px] px-3 py-1 rounded-md text-navy-600 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-200 transition-colors flex items-center';
-		if (lastWorkerResponse) renderConsumerChart(lastWorkerResponse);
-	});
-
-	setupFormattingField(corpusInput, updateDisplayBadges);
-	setupFormattingField(withdrawalInput, updateDisplayBadges);
-
-	runBtn?.addEventListener('click', triggerSimulation);
-
-	function startApp() {
-		initTabNavigation();
-		initThemeMachine();
-		updateDisplayBadges();
-		initWorker();
-		triggerSimulation();
-	}
-
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', startApp);
-	} else {
-		startApp();
-	}
-</script>

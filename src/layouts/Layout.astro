@@ -77,6 +77,9 @@ const currentPath = Astro.url.pathname;
 					
 					<!-- Desktop Navigation -->
 					<nav class="hidden lg:flex items-center gap-1">
+						<a href="/swp-planner" class={`nav-link text-sm font-medium px-3 py-2 rounded-lg transition-colors ${currentPath === '/swp-planner' || currentPath === '/swp-planner/' ? 'text-gold-500 active' : 'text-navy-500 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100'}`}>
+							SWP Planner
+						</a>
 						<a href="/sip-engine" class={`nav-link text-sm font-medium px-3 py-2 rounded-lg transition-colors ${currentPath === '/sip-engine' || currentPath === '/sip-engine/' ? 'text-gold-500 active' : 'text-navy-500 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100'}`}>
 							SIP Engine
 						</a>
@@ -91,9 +94,6 @@ const currentPath = Astro.url.pathname;
 						</a>
 						<a href="/faq" class={`nav-link text-sm font-medium px-3 py-2 rounded-lg transition-colors ${currentPath === '/faq' || currentPath === '/faq/' ? 'text-gold-500 active' : 'text-navy-500 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100'}`}>
 							FAQs
-						</a>
-						<a href="/about" class={`nav-link text-sm font-medium px-3 py-2 rounded-lg transition-colors ${currentPath === '/about' || currentPath === '/about/' ? 'text-gold-500 active' : 'text-navy-500 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100'}`}>
-							About
 						</a>
 					</nav>
 
@@ -153,7 +153,7 @@ const currentPath = Astro.url.pathname;
 
 				<!-- Mobile Nav Links -->
 				<div class="space-y-1">
-					<a href="/" class={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${currentPath === '/' ? 'bg-gold-500/10 text-gold-600 dark:text-gold-400' : 'text-navy-600 dark:text-navy-300 hover:bg-navy-100 dark:hover:bg-navy-800'}`}>
+					<a href="/swp-planner" class={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${currentPath === '/swp-planner' || currentPath === '/swp-planner/' ? 'bg-gold-500/10 text-gold-600 dark:text-gold-400' : 'text-navy-600 dark:text-navy-300 hover:bg-navy-100 dark:hover:bg-navy-800'}`}>
 						<svg class="w-5 h-5 opacity-60" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955a1.126 1.126 0 0 1 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>
 						SWP Planner
 					</a>
@@ -213,7 +213,7 @@ const currentPath = Astro.url.pathname;
 					<div>
 						<h4 class="text-caption text-navy-400 mb-4">Calculators</h4>
 						<ul class="space-y-2.5">
-							<li><a href="/" class="text-sm text-navy-300 hover:text-gold-400 transition-colors duration-200">SWP Retirement Planner</a></li>
+							<li><a href="/swp-planner" class="text-sm text-navy-300 hover:text-gold-400 transition-colors duration-200">SWP Retirement Planner</a></li>
 							<li><a href="/sip-engine" class="text-sm text-navy-300 hover:text-gold-400 transition-colors duration-200">SIP Accumulation Engine</a></li>
 							<li><a href="/insurance-analyzer" class="text-sm text-navy-300 hover:text-gold-400 transition-colors duration-200">Insurance ROI Analyzer</a></li>
 							<li><a href="/black-scholes" class="text-sm text-navy-300 hover:text-gold-400 transition-colors duration-200">Options Pricing Lab</a></li>
