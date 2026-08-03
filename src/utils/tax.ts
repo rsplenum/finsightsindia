@@ -1,4 +1,14 @@
-export function calculateIndiaTaxEngine(grossSalary, userDeductions) {
+export interface TaxResult {
+    newTax: number;
+    oldTax: number;
+    newEffectiveRate: string;
+    oldEffectiveRate: string;
+    savingsAmount: number;
+    isNewBetter: boolean;
+    isOldBetter: boolean;
+}
+
+export function calculateIndiaTaxEngine(grossSalary: number, userDeductions: number): TaxResult {
     // NEW TAX REGIME (FY 2025-26)
     const newStdDed = 75000;
     const newTaxableIncome = Math.max(0, grossSalary - newStdDed);

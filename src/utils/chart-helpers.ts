@@ -1,7 +1,7 @@
-import { formatShortRupee } from './formatters.js';
+import { formatShortRupee } from './formatters';
 
-export async function createLineChart(canvasId, data, activeViewMode = 'percentiles', chartInstance = null) {
-	const canvas = document.getElementById(canvasId);
+export async function createLineChart(canvasId: string, data: any, activeViewMode: string = 'percentiles', chartInstance: any = null): Promise<any> {
+	const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null;
 	if (!canvas) return chartInstance;
 
 	if (chartInstance) {
@@ -13,7 +13,7 @@ export async function createLineChart(canvasId, data, activeViewMode = 'percenti
 
 	const { Chart } = await import('chart.js/auto');
 
-	const labels = data.years ? data.years.map((y) => `Year ${y}`) : [];
+	const labels = data.years ? data.years.map((y: number) => `Year ${y}`) : [];
 	const isDark = document.documentElement.classList.contains('dark');
 
 	const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : '#e2e8f0';
@@ -23,7 +23,7 @@ export async function createLineChart(canvasId, data, activeViewMode = 'percenti
 	const bestLineColor = isDark ? '#34d399' : '#059669';
 	const worstLineColor = isDark ? '#f87171' : '#dc2626';
 
-	let datasets = [];
+	let datasets: any[] = [];
 
 	if (activeViewMode === 'percentiles' && data.p50) {
 		datasets = [
@@ -63,7 +63,7 @@ export async function createLineChart(canvasId, data, activeViewMode = 'percenti
 			'#38bdf8', '#818cf8', '#c084fc', '#f472b6', '#fb7185',
 			'#34d399', '#a3e635', '#facc15', '#fb923c', '#a1a1aa'
 		];
-		datasets = data.samplePaths.map((path, idx) => ({
+		datasets = data.samplePaths.map((path: any, idx: number) => ({
 			label: `Simulated Path #${idx + 1}`,
 			data: path,
 			borderColor: pathColors[idx % pathColors.length],
@@ -99,7 +99,7 @@ export async function createLineChart(canvasId, data, activeViewMode = 'percenti
 					padding: 12,
 					displayColors: true,
 					callbacks: {
-						label: function (context) {
+						label: function (context: any) {
 							const val = context.raw;
 							let formatted = val;
 							if (typeof val === 'number') {
@@ -125,7 +125,7 @@ export async function createLineChart(canvasId, data, activeViewMode = 'percenti
 					ticks: {
 						color: tickTextColor,
 						font: { family: 'Inter', size: 11 },
-						callback: function (val) {
+						callback: function (val: any) {
 							if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)}Cr`;
 							if (val >= 100000) return `₹${(val / 100000).toFixed(0)}L`;
 							return `₹${val}`;
@@ -138,8 +138,8 @@ export async function createLineChart(canvasId, data, activeViewMode = 'percenti
 	});
 }
 
-export async function createMicroCashflowChart(canvasId, data, inputs, chartInstance = null) {
-	const canvas = document.getElementById(canvasId);
+export async function createMicroCashflowChart(canvasId: string, data: any, inputs: any, chartInstance: any = null): Promise<any> {
+	const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null;
 	if (!canvas) return chartInstance;
 
 	if (chartInstance) {
@@ -250,7 +250,7 @@ export async function createMicroCashflowChart(canvasId, data, inputs, chartInst
 					bodyColor: '#e2e8f0',
 					padding: 10,
 					callbacks: {
-						label: function (context) {
+						label: function (context: any) {
 							const val = context.raw;
 							if (context.datasetIndex === 0) {
 								return ` Actual Income (Realized): ₹ ${Math.round(val).toLocaleString('en-IN')}`;
@@ -276,7 +276,7 @@ export async function createMicroCashflowChart(canvasId, data, inputs, chartInst
 					ticks: {
 						color: isDark ? '#818cf8' : '#4f46e5',
 						font: { family: 'Inter', size: 10 },
-						callback: function(val) {
+						callback: function(val: any) {
 							return `₹${Math.round(val / 1000)}k`;
 						}
 					}
@@ -289,7 +289,7 @@ export async function createMicroCashflowChart(canvasId, data, inputs, chartInst
 					ticks: {
 						color: isDark ? '#34d399' : '#059669',
 						font: { family: 'Inter', size: 10 },
-						callback: function(val) {
+						callback: function(val: any) {
 							if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)}Cr`;
 							if (val >= 100000) return `₹${(val / 100000).toFixed(0)}L`;
 							return `₹${val}`;

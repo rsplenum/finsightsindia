@@ -1,6 +1,10 @@
 ---
 import Layout from './Layout.astro';
 import Hero from '../components/Hero.astro';
+import ReadingProgressBar from '../components/ReadingProgressBar.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ShareButtons from '../components/ShareButtons.astro';
+import RelatedArticles from '../components/RelatedArticles.astro';
 
 interface Props {
 	title: string;
@@ -8,15 +12,33 @@ interface Props {
 	categoryName: string;
 	readTime: string;
 	statutoryAct: string;
+	currentSlug: string;
+	currentCategory: string;
 }
 
-const { title, description, categoryName, readTime, statutoryAct } = Astro.props;
+const { title, description, categoryName, readTime, statutoryAct, currentSlug, currentCategory } = Astro.props;
+
+const articleJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": title,
+  "description": description,
+  "author": { "@type": "Organization", "name": "FinSight India" },
+  "publisher": { "@type": "Organization", "name": "FinSight India" },
+  "mainEntityOfPage": { "@type": "WebPage" }
+};
 ---
 
-<Layout title={title} description={description}>
+<Layout title={title} description={description} jsonLd={articleJsonLd} type="article">
+	<ReadingProgressBar />
 	<!-- Article Hero Section -->
 	<section class="hero-glow relative overflow-hidden bg-navy-50 dark:bg-navy-950 border-b border-navy-200 dark:border-navy-800">
 		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12 sm:pt-24 sm:pb-16">
+			<Breadcrumbs items={[
+				{label: 'Home', href: '/'}, 
+				{label: 'Tax Code', href: '/tax-code'}, 
+				{label: title}
+			]} />
 			<div class="flex items-center gap-3 mb-6">
 				<span class="badge-gold">{categoryName}</span>
 				<span class="text-sm font-medium text-navy-500 dark:text-navy-400">{readTime}</span>
@@ -50,5 +72,7 @@ const { title, description, categoryName, readTime, statutoryAct } = Astro.props
 			">
 			<slot />
 		</article>
+		<ShareButtons title={title} url={Astro.url.href} />
+		<RelatedArticles currentSlug={currentSlug} currentCategory={currentCategory} />
 	</main>
 </Layout>

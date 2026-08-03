@@ -1,0 +1,47 @@
+---
+interface Props {
+  items: Array<{label: string, href?: string}>;
+}
+
+const { items } = Astro.props;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": items.map((item, index) => ({
+    "@type": "ListItem",
+    "position": index + 1,
+    "name": item.label,
+    ...(item.href ? { "item": new URL(item.href, Astro.site || 'https://example.com').toString() } : {})
+  }))
+};
+---
+
+<nav aria-label="Breadcrumb" class="mb-6">
+  <ol class="flex items-center space-x-2 text-sm text-navy-600 dark:text-navy-400">
+    {items.map((item, index) => {
+      const isLast = index === items.length - 1;
+      return (
+        <li class="flex items-center">
+          {item.href && !isLast ? (
+            <a href={item.href} class="hover:text-gold-600 dark:hover:text-gold-500 transition-colors">
+              {item.label}
+            </a>
+          ) : (
+            <span class={isLast ? "text-navy-900 dark:text-navy-100 font-medium line-clamp-1" : ""} aria-current={isLast ? "page" : undefined}>
+              {item.label}
+            </span>
+          )}
+          
+          {!isLast && (
+            <svg class="w-4 h-4 mx-2 text-gold-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          )}
+        </li>
+      );
+    })}
+  </ol>
+</nav>
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

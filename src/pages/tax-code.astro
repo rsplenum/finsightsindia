@@ -10,9 +10,15 @@ import SectionTitle from '../components/SectionTitle.astro';
 const allArticles = await getCollection('direct-tax');
 // Optional: We can group them by bucket or sort them if needed. 
 const articlesList = allArticles;
+
+// Get unique categories
+const uniqueCategories = [...new Set(articlesList.map(art => art.data.categoryName))].filter(Boolean);
 ---
 
-<Layout title="India Direct Tax Code 2025 & Calculators — SWP Intelligence">
+<Layout 
+	title="India Direct Tax Code 2025 & Calculators — SWP Intelligence"
+	description="Comprehensive India Direct Tax Code guide featuring interactive slab calculators, capital gains rules, and quantitative master whitepapers under the Income Tax Act, 2025."
+>
 	
 	<Hero 
 		badge="AUTHENTIC INDIA DIRECT TAX CODE (FY 2025-26)"
@@ -36,15 +42,48 @@ const articlesList = allArticles;
 						The Top 100 most highly searched tax anxiety symptoms in India, mapped to exact statutory codes and live workbenches.
 					</p>
 				</div>
-				<span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 px-3 py-1.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 uppercase tracking-widest whitespace-nowrap">
+				<span id="articleCount" class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 px-3 py-1.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 uppercase tracking-widest whitespace-nowrap">
 					{articlesList.length} Published Master Guides
 				</span>
 			</div>
 
+			<!-- Search and Filter Controls -->
+			<div class="space-y-4">
+				<div>
+					<input 
+						type="search" 
+						id="searchInput" 
+						placeholder="Search by title or symptom..." 
+						class="input-premium text-sm text-navy-900 dark:text-navy-100 placeholder:text-navy-400 dark:placeholder:text-navy-500 focus:outline-none w-full py-2.5 px-3.5"
+					/>
+				</div>
+				
+				<div class="flex flex-wrap gap-2" id="categoryFilters">
+					<button class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest badge-gold filter-btn active" data-filter="all">
+						All
+					</button>
+					{uniqueCategories.map(cat => (
+						<button class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest badge-safe opacity-70 hover:opacity-100 transition-opacity filter-btn" data-filter={cat}>
+							{cat}
+						</button>
+					))}
+				</div>
+			</div>
+
 			<!-- Dynamic Master Article Cards Grid -->
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="faqCardGrid" class="reveal-stagger">
+			<!-- Dynamic Master Article Cards Grid -->
+			<div id="noResultsMsg" class="hidden text-center py-12 text-navy-500 dark:text-navy-400 font-sans">
+				No articles found matching your criteria.
+			</div>
+			
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-6 reveal-stagger" id="faqCardGrid">
 				{articlesList.map((art, idx) => (
-					<div class="faq-card bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-6 space-y-4 hover:border-navy-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between">
+					<div 
+						class="faq-card bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-6 space-y-4 hover:border-navy-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between article-card"
+						data-title={art.data.title.toLowerCase()}
+						data-summary={art.data.summary.toLowerCase()}
+						data-category={art.data.categoryName}
+					>
 						<div class="space-y-3">
 							<div class="flex items-center justify-between">
 								<span class="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-widest badge-safe">
@@ -84,4 +123,71 @@ const articlesList = allArticles;
 
 	</main>
 </Layout>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const searchInput = document.getElementById('searchInput');
+		const filterBtns = document.querySelectorAll('.filter-btn');
+		const articleCards = document.querySelectorAll('.article-card');
+		const articleCount = document.getElementById('articleCount');
+		const noResultsMsg = document.getElementById('noResultsMsg');
+		
+		let currentCategory = 'all';
+		let currentSearch = '';
+
+		function filterArticles() {
+			let visibleCount = 0;
+			
+			articleCards.forEach((card) => {
+				const title = card.getAttribute('data-title') || '';
+				const summary = card.getAttribute('data-summary') || '';
+				const category = card.getAttribute('data-category') || '';
+				
+				const matchesSearch = currentSearch === '' || title.includes(currentSearch) || summary.includes(currentSearch);
+				const matchesCategory = currentCategory === 'all' || category === currentCategory;
+				
+				if (matchesSearch && matchesCategory) {
+					(card as HTMLElement).style.display = 'flex';
+					visibleCount++;
+				} else {
+					(card as HTMLElement).style.display = 'none';
+				}
+			});
+
+			if (articleCount) {
+				articleCount.textContent = `${visibleCount} Published Master Guide${visibleCount === 1 ? '' : 's'}`;
+			}
+			
+			if (noResultsMsg) {
+				if (visibleCount === 0) {
+					noResultsMsg.classList.remove('hidden');
+				} else {
+					noResultsMsg.classList.add('hidden');
+				}
+			}
+		}
+
+		searchInput?.addEventListener('input', (e) => {
+			currentSearch = (e.target as HTMLInputElement).value.toLowerCase();
+			filterArticles();
+		});
+
+		filterBtns.forEach(btn => {
+			btn.addEventListener('click', (e) => {
+				const target = e.currentTarget as HTMLButtonElement;
+				currentCategory = target.getAttribute('data-filter') || 'all';
+				
+				// Update active state of buttons
+				filterBtns.forEach(b => {
+					b.classList.remove('badge-gold', 'active');
+					b.classList.add('badge-safe', 'opacity-70');
+				});
+				target.classList.remove('badge-safe', 'opacity-70');
+				target.classList.add('badge-gold', 'active');
+				
+				filterArticles();
+			});
+		});
+	});
+</script>
 

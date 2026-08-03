@@ -4,11 +4,10 @@
  * for irregular cash flows with exact calendar dates.
  */
 
-/**
- * @typedef {Object} CashFlow
- * @property {number} amount Cash flow value (negative for investments/outflows, positive for payouts/inflows)
- * @property {Date|string|number} date Date of cash flow
- */
+export interface CashFlow {
+  amount: number | string;
+  date: Date | string | number;
+}
 
 /**
  * Calculate XIRR for an array of irregular cash flows using Newton-Raphson iteration.
@@ -19,7 +18,7 @@
  * @param {number} [tolerance=1e-7] Convergence threshold
  * @returns {number|null} Annualized percentage yield (e.g., 10.54) or null if convergence fails
  */
-export function calculateXIRR(cashFlows, guess = 0.1, maxIterations = 100, tolerance = 1e-7) {
+export function calculateXIRR(cashFlows: CashFlow[], guess: number = 0.1, maxIterations: number = 100, tolerance: number = 1e-7): number | null {
   if (!Array.isArray(cashFlows) || cashFlows.length < 2) {
     return null;
   }

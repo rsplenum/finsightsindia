@@ -6,13 +6,22 @@ import '@fontsource/geist-mono';
 interface Props {
 	title?: string;
 	description?: string;
+	image?: string;
+	type?: string;
+	canonicalUrl?: string;
+	jsonLd?: Record<string, any>;
 }
 
 const { 
 	title = "FinSight India — Financial Intelligence Platform",
-	description = "India's most trusted financial intelligence platform. Monte Carlo simulators, tax calculators, insurance analyzers, and 100+ expert articles for smart financial decisions."
+	description = "India's most trusted financial intelligence platform. Monte Carlo simulators, tax calculators, insurance analyzers, and 100+ expert articles for smart financial decisions.",
+	image = '/images/og-default.jpg',
+	type = 'website',
+	canonicalUrl,
+	jsonLd,
 } = Astro.props;
 
+const canonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site).href;
 const currentPath = Astro.url.pathname;
 ---
 
@@ -27,10 +36,42 @@ const currentPath = Astro.url.pathname;
 		<meta name="description" content={description} />
 		<meta name="theme-color" content="#0A192F" />
 		
+		<!-- Canonical URL -->
+		<link rel="canonical" href={canonical} />
+
 		<!-- Open Graph -->
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
-		<meta property="og:type" content="website" />
+		<meta property="og:type" content={type} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:image" content={new URL(image, Astro.site).href} />
+		<meta property="og:site_name" content="FinSight India" />
+		<meta property="og:locale" content="en_IN" />
+
+		<!-- Twitter Card -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={new URL(image, Astro.site).href} />
+
+		<!-- JSON-LD Structured Data -->
+		{jsonLd && (
+		  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+		)}
+
+		<!-- Default WebSite Schema (always present) -->
+		<script type="application/ld+json" set:html={JSON.stringify({
+		  "@context": "https://schema.org",
+		  "@type": "WebSite",
+		  "name": "FinSight India",
+		  "url": "https://finsightindia.in",
+		  "description": "India's most trusted financial intelligence platform.",
+		  "potentialAction": {
+		    "@type": "SearchAction",
+		    "target": "https://finsightindia.in/tax-code?q={search_term_string}",
+		    "query-input": "required name=search_term_string"
+		  }
+		})} />
 
 		<!-- Prevent Flash of Unstyled Theme -->
 		<script is:inline>
@@ -297,16 +338,40 @@ const currentPath = Astro.url.pathname;
 			const mobileOverlay = document.getElementById("mobile-nav-overlay");
 			const mobileDrawer = document.getElementById("mobile-nav-drawer");
 
+			function handleDrawerKeydown(e) {
+				if (e.key === 'Escape') {
+					closeMobileNav();
+					return;
+				}
+				if (e.key === 'Tab' && mobileDrawer) {
+					const focusable = mobileDrawer.querySelectorAll('a, button');
+					const first = focusable[0];
+					const last = focusable[focusable.length - 1];
+					if (e.shiftKey && document.activeElement === first) {
+						e.preventDefault();
+						last.focus();
+					} else if (!e.shiftKey && document.activeElement === last) {
+						e.preventDefault();
+						first.focus();
+					}
+				}
+			}
+
 			function openMobileNav() {
 				mobileOverlay?.classList.add("active");
 				mobileDrawer?.classList.add("active");
 				document.body.style.overflow = "hidden";
+				// Focus trap
+				mobileDrawer?.querySelector('a')?.focus();
+				document.addEventListener('keydown', handleDrawerKeydown);
 			}
 
 			function closeMobileNav() {
 				mobileOverlay?.classList.remove("active");
 				mobileDrawer?.classList.remove("active");
 				document.body.style.overflow = "";
+				document.removeEventListener('keydown', handleDrawerKeydown);
+				mobileToggle?.focus();
 			}
 
 			mobileToggle?.addEventListener("click", openMobileNav);

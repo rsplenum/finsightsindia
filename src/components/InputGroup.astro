@@ -53,10 +53,10 @@ else inputPadding += " pr-3.5";
 			</label>
 			{tooltip && (
 				<>
-					<svg class="w-3.5 h-3.5 text-navy-400 dark:text-navy-500 hover:text-navy-600 dark:hover:text-navy-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<svg tabindex="0" role="button" aria-labelledby={`tooltip-${id}`} class="w-3.5 h-3.5 text-navy-400 dark:text-navy-500 hover:text-navy-600 dark:hover:text-navy-300 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
 					</svg>
-					<div class="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 sm:right-0 sm:left-auto pointer-events-none font-normal leading-normal">
+					<div id={`tooltip-${id}`} role="tooltip" class="absolute z-50 invisible opacity-0 group-hover:visible group-focus-within:visible group-hover:opacity-100 group-focus-within:opacity-100 bg-navy-900 dark:bg-navy-800 text-white text-xs rounded-md p-3 w-64 shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-200 bottom-full mb-2 left-0 sm:right-0 sm:left-auto pointer-events-none font-normal leading-normal">
 						{tooltip}
 					</div>
 				</>
@@ -81,6 +81,7 @@ else inputPadding += " pr-3.5";
 			max={max}
 			step={step}
 			required={required}
+			aria-describedby={tooltip ? `tooltip-${id}` : undefined}
 			class={`input-premium text-sm text-navy-900 dark:text-navy-100 placeholder:text-navy-400 dark:placeholder:text-navy-500 focus:outline-none w-full ${inputPadding}`}
 		/>
 		{suffix && <span class="absolute right-3.5 text-xs text-navy-400 dark:text-navy-500 select-none font-sans">{suffix}</span>}

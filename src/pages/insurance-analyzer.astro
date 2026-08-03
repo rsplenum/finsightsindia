@@ -315,13 +315,13 @@ import SectionTitle from '../components/SectionTitle.astro';
 </Layout>
 
 <script>
-	import { calculateXIRR } from '../utils/xirr.js';
+	import { calculateXIRR } from '../utils/xirr';
 	import { 
 		parseFormattedNumber, 
 		formatShortRupee, 
 		tableFormatter, 
 		setupFormattingField 
-	} from '../utils/formatters.js';
+	} from '../utils/formatters';
 
 	function syncRiskCostsFromCover() {
 		const termCover = parseFormattedNumber((document.getElementById('inTermCover') as HTMLInputElement)?.value || '0');

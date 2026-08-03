@@ -103,8 +103,8 @@ const articlesList = allArticles;
 </Layout>
 
 <script>
-	import { calculateIndiaTaxEngine } from '../utils/tax.js';
-	import { parseFormattedNumber, tableFormatter, setupFormattingField } from '../utils/formatters.js';
+	import { calculateIndiaTaxEngine } from '../utils/tax';
+	import { parseFormattedNumber, tableFormatter, setupFormattingField } from '../utils/formatters';
 
 	function formatRupee(val: number): string {
 		if (isNaN(val)) return '₹0';

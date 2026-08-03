@@ -1,0 +1,24 @@
+---
+---
+<div id="reading-progress-container" class="fixed top-0 left-0 w-full h-[2px] z-40 bg-transparent">
+  <div id="reading-progress-bar" class="h-full bg-gold-500 w-0 transition-all duration-150 ease-out"></div>
+</div>
+
+<script>
+  function updateProgressBar() {
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = scrollHeight > 0 ? (window.scrollY / scrollHeight) * 100 : 0;
+    const bar = document.getElementById('reading-progress-bar');
+    if (bar) {
+      bar.style.width = `${progress}%`;
+    }
+  }
+
+  window.addEventListener('scroll', updateProgressBar);
+  window.addEventListener('resize', updateProgressBar);
+  document.addEventListener('astro:page-load', updateProgressBar);
+  // Also run once immediately
+  if (typeof window !== 'undefined') {
+    updateProgressBar();
+  }
+</script>

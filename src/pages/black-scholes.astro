@@ -208,8 +208,8 @@ import SectionTitle from '../components/SectionTitle.astro';
 </Layout>
 
 <script>
-	import { calculateBlackScholes } from '../utils/blackScholes.js';
-	import { parseFormattedNumber, setupFormattingField } from '../utils/formatters.js';
+	import { calculateBlackScholes } from '../utils/blackScholes';
+	import { parseFormattedNumber, setupFormattingField } from '../utils/formatters';
 
 	function getNumValue(id: string, defaultVal: number): number {
 		const el = document.getElementById(id) as HTMLInputElement;

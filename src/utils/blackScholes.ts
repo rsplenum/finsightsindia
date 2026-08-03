@@ -9,7 +9,7 @@
  * @param {number} x
  * @returns {number}
  */
-export function pdf(x) {
+export function pdf(x: number): number {
   return Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI);
 }
 
@@ -19,7 +19,7 @@ export function pdf(x) {
  * @param {number} x
  * @returns {number}
  */
-export function cdf(x) {
+export function cdf(x: number): number {
   if (x < 0) {
     return 1 - cdf(-x);
   }
@@ -41,6 +41,22 @@ export function cdf(x) {
  */
 export const N = cdf;
 
+export interface BlackScholesResult {
+  callPrice: number;
+  putPrice: number;
+  deltaCall: number;
+  deltaPut: number;
+  gamma: number;
+  thetaCall: number;
+  thetaPut: number;
+  thetaCallDaily: number;
+  thetaPutDaily: number;
+  vega: number;
+  vegaPerPercent: number;
+  d1: number;
+  d2: number;
+}
+
 /**
  * Calculate Black-Scholes Option Prices and Greeks
  * 
@@ -49,9 +65,9 @@ export const N = cdf;
  * @param {number} T Time to Expiration in Years (e.g., 0.25 for 3 months, 1.0 for 1 year)
  * @param {number} r Risk-Free Interest Rate (as decimal e.g. 0.07 or percentage 7)
  * @param {number} v Implied Volatility (as decimal e.g. 0.20 or percentage 20)
- * @returns {Object} Option Prices & Greeks
+ * @returns {BlackScholesResult} Option Prices & Greeks
  */
-export function calculateBlackScholes(S, K, T, r, v) {
+export function calculateBlackScholes(S: number | string, K: number | string, T: number | string, r: number | string, v: number | string): BlackScholesResult {
   const spot = Number(S);
   const strike = Number(K);
   let time = Number(T);

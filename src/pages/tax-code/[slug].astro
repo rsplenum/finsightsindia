@@ -20,6 +20,8 @@ const { Content } = await render(entry);
 	categoryName={entry.data.categoryName}
 	readTime={entry.data.readTime}
 	statutoryAct={entry.data.statutoryAct}
+	currentSlug={entry.id}
+	currentCategory={entry.data.categoryName}
 >
 	<Content />
 </ArticleLayout>
