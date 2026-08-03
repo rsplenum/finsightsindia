@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import '@fontsource/geist-sans';
 import '@fontsource/geist-mono';
+import defaultOgImage from '../assets/images/og-default.jpg';
 
 interface Props {
 	title?: string;
@@ -15,7 +16,7 @@ interface Props {
 const { 
 	title = "FinSight India — Financial Intelligence Platform",
 	description = "India's most trusted financial intelligence platform. Monte Carlo simulators, tax calculators, insurance analyzers, and 100+ expert articles for smart financial decisions.",
-	image = '/images/og-default.jpg',
+	image = defaultOgImage.src,
 	type = 'website',
 	canonicalUrl,
 	jsonLd,

@@ -189,12 +189,17 @@ import ButtonGold from '../components/ButtonGold.astro';
 			<section class="lg:col-span-7 space-y-6">
 				
 				<!-- Modern Tabbed Navigation Header -->
-				<div class="flex items-center gap-6 border-b border-navy-200 dark:border-white/10 pb-px">
-					<button id="tabPlanSummaryBtn" type="button" class="min-h-[44px] pb-3 text-sm font-bold text-navy-900 dark:text-navy-100 border-b-2 border-gold-500 transition-all cursor-pointer flex items-center">
-						Plan Summary
-					</button>
-					<button id="tabScheduleBtn" type="button" class="min-h-[44px] pb-3 text-sm font-semibold text-navy-500 hover:text-navy-800 dark:text-navy-400 dark:hover:text-navy-200 border-b-2 border-transparent transition-all cursor-pointer flex items-center">
-						Yearly Paycheck Schedule
+				<div class="flex items-center justify-between border-b border-navy-200 dark:border-white/10 pb-px">
+					<div class="flex items-center gap-6">
+						<button id="tabPlanSummaryBtn" type="button" class="min-h-[44px] pb-3 text-sm font-bold text-navy-900 dark:text-navy-100 border-b-2 border-gold-500 transition-all cursor-pointer flex items-center">
+							Plan Summary
+						</button>
+						<button id="tabScheduleBtn" type="button" class="min-h-[44px] pb-3 text-sm font-semibold text-navy-500 hover:text-navy-800 dark:text-navy-400 dark:hover:text-navy-200 border-b-2 border-transparent transition-all cursor-pointer flex items-center">
+							Yearly Paycheck Schedule
+						</button>
+					</div>
+					<button id="downloadPdfBtn" type="button" class="btn-ghost px-3 py-1 text-[10px] uppercase tracking-widest cursor-pointer border border-navy-200 dark:border-navy-800 rounded mb-2 hover:bg-navy-100 dark:hover:bg-navy-800 transition-colors">
+						↓ Download PDF Report
 					</button>
 				</div>
 
@@ -473,6 +478,8 @@ import ButtonGold from '../components/ButtonGold.astro';
 		formatIndianRupeeLabel 
 	} from '../utils/formatters';
 	
+	import html2pdf from 'html2pdf.js';
+	
 	import { 
 		createLineChart, 
 		createMicroCashflowChart 
@@ -571,6 +578,47 @@ import ButtonGold from '../components/ButtonGold.astro';
 		};
 	}
 
+	function syncUrlParams(inputs: any) {
+		const params = new URLSearchParams(window.location.search);
+		Object.keys(inputs).forEach(key => {
+			if (key !== 'numSimulations' && key !== 'initialMonthly' && key !== 'expectedReturn' && key !== 'annualVolatility' && key !== 'expectedInflation') {
+				params.set(key, inputs[key]);
+			}
+		});
+		window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+	}
+
+	function parseUrlParams() {
+		const params = new URLSearchParams(window.location.search);
+		
+		const numFields = ['initialCorpus', 'monthlyWithdrawal', 'annualStepUp', 'ltcgTax', 'horizonYears', 'hedgingDragCost', 'hedgingFloorLimit'];
+		const mapping: any = {
+			'annualStepUp': 'stepUp'
+		};
+
+		numFields.forEach(id => {
+			if (params.has(id)) {
+				const targetId = mapping[id] || id;
+				const el = document.getElementById(targetId) as HTMLInputElement;
+				if (el) {
+					if (targetId === 'initialCorpus' || targetId === 'monthlyWithdrawal') {
+						el.value = Number(params.get(id)).toLocaleString('en-IN');
+					} else {
+						el.value = params.get(id) || el.value;
+					}
+				}
+			}
+		});
+		
+		['useGuardrails', 'bsEnabled'].forEach(id => {
+			if (params.has(id)) {
+				const targetId = id === 'bsEnabled' ? 'bsHedgingToggle' : id;
+				const el = document.getElementById(targetId) as HTMLInputElement;
+				if (el) el.checked = params.get(id) === 'true';
+			}
+		});
+	}
+
 	function triggerSimulation() {
 		if (!worker) initWorker();
 
@@ -582,7 +630,9 @@ import ButtonGold from '../components/ButtonGold.astro';
 			`;
 		}
 
-		worker?.postMessage(getInputs());
+		const inputs = getInputs();
+		syncUrlParams(inputs);
+		worker?.postMessage(inputs);
 	}
 
 	function renderScheduleTable(
@@ -905,11 +955,32 @@ import ButtonGold from '../components/ButtonGold.astro';
 	runBtn?.addEventListener('click', triggerSimulation);
 
 	function startApp() {
+		parseUrlParams();
 		initTabNavigation();
 		initThemeMachine();
 		updateDisplayBadges();
 		initWorker();
 		triggerSimulation();
+
+		document.getElementById('downloadPdfBtn')?.addEventListener('click', () => {
+			const element = document.querySelector('main');
+			if (!element) return;
+			
+			const opt = {
+				margin:       10,
+				filename:     'swp_planner_report.pdf',
+				image:        { type: 'jpeg', quality: 0.98 },
+				html2canvas:  { scale: 2, useCORS: true },
+				jsPDF:        { unit: 'mm', format: 'a3', orientation: 'portrait' }
+			};
+			
+			const btn = document.getElementById('downloadPdfBtn');
+			if(btn) btn.innerText = "Generating PDF...";
+			
+			html2pdf().set(opt).from(element).save().then(() => {
+				if(btn) btn.innerText = "↓ Download PDF Report";
+			});
+		});
 	}
 
 	if (document.readyState === 'loading') {
