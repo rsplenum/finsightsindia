@@ -2,7 +2,8 @@
 import '../styles/global.css';
 import '@fontsource/geist-sans';
 import '@fontsource/geist-mono';
-import defaultOgImage from '../assets/images/og-default.jpg';
+import defaultOgImage from '../assets/images/crypto-mining-rig.jpg';
+import { pwaInfo } from 'virtual:pwa-info';
 
 interface Props {
 	title?: string;
@@ -37,6 +38,12 @@ const currentPath = Astro.url.pathname;
 		<meta name="description" content={description} />
 		<meta name="theme-color" content="#0A192F" />
 		
+		<!-- PWA Manifest -->
+		{ pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} /> }
+
+		<!-- RSS Auto-Discovery -->
+		<link rel="alternate" type="application/rss+xml" title="FinSight India - Direct Tax Guide" href={new URL("rss.xml", Astro.site)} />
+
 		<!-- Canonical URL -->
 		<link rel="canonical" href={canonical} />
 
