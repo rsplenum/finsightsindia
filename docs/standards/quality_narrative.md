@@ -9,8 +9,10 @@ Does the article structure directly mirror the user's anxious internal monologue
 - [ ] **Pillar 3: How can I save money?** (Detailing exemptions, deductions, and loopholes, often paired with a `<TaxWorkbench>` interactive calculator).
 - [ ] **Pillar 4: Am I leaving anything out?** (The 360-degree Edge Cases—exploring highly obscure, specific nuances that generic tax sites ignore).
 
-## 2. Depth and "Meat"
-- [ ] Does the article contain exhaustive, real-world examples (e.g., Joint Home Loans, NRI status impact, 1.25L marginal mechanics)?
+## 2. Depth and "Meat" (The 7-12 Minute Rule)
+- [ ] Is the article substantial enough to legitimately warrant a 7-12 minute read time (approx. 1,500+ words)? 
+- [ ] Are we strictly avoiding 3-minute "summaries"? If the draft feels light, it must be rejected and sent back for expansion.
+- [ ] Does the article contain exhaustive, real-world examples (e.g., Joint Home Loans, NRI status impact, Grossing Up math)?
 - [ ] Are the explanations rich in prose, prioritizing extreme clarity over brevity?
 
 ## 3. The Final Actionable Checklist
