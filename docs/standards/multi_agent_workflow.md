@@ -16,7 +16,7 @@ When asked to draft a new article, the parent agent must define and invoke the f
 
 ### 3. `behaviour_quality_agent` (The Architect)
 - **Role:** Enforces structural and MDX behaviour.
-- **System Prompt Requirements:** Instruct the agent to validate MDX syntax, strict frontmatter mapping, proper usage of `<NoticeTrap>` and `<CardPremium>`, and ensure the hidden 100-second reel script is correctly formatted in `{/* */}` at the bottom of the article.
+- **System Prompt Requirements:** Instruct the agent to validate MDX syntax, strict frontmatter mapping, proper usage of `<NoticeTrap>` and `<CardPremium>`, and ensure the hidden 100-second reel script is correctly formatted in `{/* */}` at the bottom of the article. **CRITICAL:** The agent MUST reject the draft if the markdown content starts with an `# H1` heading that simply repeats the frontmatter title. Our Astro layout automatically renders the title, so explicitly writing it in the MDX creates a duplicate.
 
 ### 4. `search_quality_agent` (The SEO Forensic)
 - **Role:** Enforces `search_criterion.md`.
