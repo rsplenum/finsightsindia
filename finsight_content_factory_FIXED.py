@@ -1,21 +1,18 @@
 #!/usr/bin/env python3
 """
-FinSight India — Content Factory v3
-====================================
+FinSight India — Content Factory v4 (First-Principles & Creativity)
+===================================================================
 Generation → Evaluation → Iteration (bounded), then polish + package.
 
 Pipeline primitives:
-  1. GENERATE  — Quant → SEO → Novelist (draft v1)
-  2. EVALUATE  — Style Critic → PASS | FAIL + rewrites
-  3. ITERATE   — if FAIL, Novelist revises using critique (max MAX_STYLE_RETRIES)
-  4. POLISH    — only after PASS (or exhausted retries): Visual → UI → YouTube
-  5. PACKAGE   — mdx + seo.json + reel + thumbnail + notes
+  1. RESEARCH  — Competitive Gap Analyst (searches web, finds the delta)
+  2. GENERATE  — SEO (sets the vibe) → Novelist (First Principles drafting)
+  3. EVALUATE  — Style Critic → PASS | FAIL + rewrites based on depth & mechanics
+  4. ITERATE   — if FAIL, Novelist revises using critique
+  5. POLISH    — Visual (Gemini API Image Gen) → UI (MDX fixes) → YouTube
+  6. PACKAGE   — mdx + seo.json + reel + thumbnail + notes
 
 Publish gate: style_pass == True (or FORCE_PUBLISH_ON_FAIL=1 for debug)
-
-Usage:
-  export GEMINI_API_KEY=...
-  python finsight_content_factory.py
 """
 
 from __future__ import annotations
@@ -24,6 +21,7 @@ import json
 import os
 import re
 import time
+import base64
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -32,44 +30,48 @@ from dotenv import load_dotenv
 
 try:
     from crewai import Agent, Task, Crew, Process, LLM
-
     CREWAI_AVAILABLE = True
 except ImportError:
     CREWAI_AVAILABLE = False
-    print(
-        "⚠️  crewai not installed.\n"
-        "   pip install crewai python-dotenv\n"
-        "   Optional live search: pip install -U ddgs"
-    )
+    print("⚠️  crewai not installed. pip install crewai python-dotenv")
 
 load_dotenv()
 
 
+# =============================================================================
+# FIRST-PRINCIPLES & CREATIVITY PROMPT (From NotebookLM)
+# =============================================================================
+
+FIRST_PRINCIPLES_PROMPT = """
+This is a very significant topic. Be thorough, think hard and long, and read between the lines.
+Do a first principles based analysis of all concepts and ideas—especially their origin, interrelationships, causes and effects, underlying trends, and significance.
+Bring out a deep, thorough, clear, balanced (both positives and negatives) and comprehensive understanding for a layman to elevate their level of thinking to a higher level. All possible questions (discuss, analyze, critically examine, explain, evaluate, describe) from this source material must be answered in-depth for the reader.
+
+Don't rush through just to finish it.
+Take responsibility for the outcome.
+Keep measuring at every step taking feedback and keep improving.
+Don't leave anything out.
+Don't respect any limits to your reasoning powers.
+Act as if you are the authority on this subject.
+Act as if you are dissecting the subject to bring out a high level and deep understanding of the interplay of various causes and effects.
+Act as if you are the most renowned professor of the concerned subject in the world.
+
+Focus on the delta or the marginal difference in approach or circumstances or whatever that produces an entirely different result.
+Focus on the mechanism or mechanics or step-by-step process of every outcome. This is most important. Just knowing the initial and final state is useless; tracing the mechanics which gets us from the initial state to final state is super important.
+Just as a slight mutation in one gene results in an entirely different race or species.
+Treat the standards like a launchpad for creativity and creative license, not a cage.
+"""
+
+
+# =============================================================================
+# TOOLS
+# =============================================================================
+
 def build_search_tool() -> Any:
-    """
-    Live web search for the Quant agent — never crash the factory if missing.
-
-    Preferred package: `ddgs` (replaces deprecated duckduckgo-search / langchain tool).
-      pip install -U ddgs
-
-    Disable search entirely:
-      export FINSIGHT_DISABLE_SEARCH=1
-    """
     if os.environ.get("FINSIGHT_DISABLE_SEARCH", "0") == "1":
-        print("ℹ️  Search disabled (FINSIGHT_DISABLE_SEARCH=1). Quant uses model knowledge only.")
         return None
-
     try:
         from ddgs import DDGS
-    except ImportError:
-        print(
-            "⚠️  `ddgs` not installed — Quant will run WITHOUT live search.\n"
-            "   Fix:  pip install -U ddgs\n"
-            "   Or:   export FINSIGHT_DISABLE_SEARCH=1"
-        )
-        return None
-
-    try:
         from crewai.tools import BaseTool
         from pydantic import BaseModel, Field
 
@@ -78,10 +80,7 @@ def build_search_tool() -> Any:
 
         class DdgsSearchTool(BaseTool):
             name: str = "web_search"
-            description: str = (
-                "Search the live web for current Indian tax laws, CBDT circulars, "
-                "sections, rates, and thresholds. Pass a clear search query string."
-            )
+            description: str = "Search the live web for articles on this topic to identify what competitors missed."
             args_schema: type[BaseModel] = SearchInput
 
             def _run(self, query: str) -> str:
@@ -98,11 +97,51 @@ def build_search_tool() -> Any:
                     body = r.get("body") or r.get("snippet") or ""
                     parts.append(f"{i}. {title}\n   {href}\n   {body}")
                 return "\n\n".join(parts)
-
-        print("✅ Live search enabled via `ddgs`.")
         return DdgsSearchTool()
     except Exception as e:
-        print(f"⚠️  Could not wrap ddgs for CrewAI ({e}). Quant runs without search.")
+        return None
+
+def build_image_tool() -> Any:
+    try:
+        from crewai.tools import BaseTool
+        from pydantic import BaseModel, Field
+        import requests
+
+        class ImageInput(BaseModel):
+            prompt: str = Field(..., description="Vivid, engrossing visual prompt for the illustration.")
+            filename: str = Field(..., description="Short slug-like filename (e.g., freelance-tax-trap).")
+
+        class GeminiImageTool(BaseTool):
+            name: str = "generate_illustration"
+            description: str = "Generate an illustration using Gemini API. Returns the MDX image tag."
+            args_schema: type[BaseModel] = ImageInput
+
+            def _run(self, prompt: str, filename: str) -> str:
+                api_key = os.environ.get("GEMINI_API_KEY")
+                if not api_key:
+                    return f"![Illustration: {prompt}](../../assets/images/placeholder.jpg)"
+                try:
+                    url = f"https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key={api_key}"
+                    payload = {
+                        "instances": [{"prompt": prompt}],
+                        "parameters": {"sampleCount": 1}
+                    }
+                    res = requests.post(url, json=payload)
+                    data = res.json()
+                    if "predictions" in data:
+                        b64 = data["predictions"][0]["bytesBase64Encoded"]
+                        img_data = base64.b64decode(b64)
+                        out_path = Path("src/assets/images") / f"{filename}.jpg"
+                        out_path.parent.mkdir(parents=True, exist_ok=True)
+                        out_path.write_bytes(img_data)
+                        return f"![{filename}](../../assets/images/{filename}.jpg)"
+                    else:
+                        err = data.get('error', {}).get('message', 'unknown')
+                        return f"![Image Gen Failed: {err}](../../assets/images/placeholder.jpg)"
+                except Exception as e:
+                    return f"![Image Error: {e}](../../assets/images/placeholder.jpg)"
+        return GeminiImageTool()
+    except Exception as e:
         return None
 
 
@@ -114,97 +153,18 @@ OUTPUT_ROOT = Path(os.environ.get("FINSIGHT_CONTENT_OUT", "src/content/direct-ta
 PACKAGE_ROOT = Path(os.environ.get("FINSIGHT_PACKAGE_OUT", "content_packages"))
 MODEL_RIGID = os.environ.get("FINSIGHT_LLM_RIGID", "gemini/gemini-3.6-flash")
 MODEL_CREATIVE = os.environ.get("FINSIGHT_LLM_CREATIVE", "gemini/gemini-3.6-flash")
-
-# Bounded iteration: generation → evaluation → revision
 MAX_STYLE_RETRIES = int(os.environ.get("FINSIGHT_MAX_STYLE_RETRIES", "2"))
-# If still FAIL after retries, do not write to content collection unless forced
 FORCE_PUBLISH_ON_FAIL = os.environ.get("FINSIGHT_FORCE_PUBLISH_ON_FAIL", "0") == "1"
 
-# =============================================================================
-# STYLES + NARRATIVE CONTRACT
-# =============================================================================
-
-POLYMORPHIC_STYLES: dict[str, dict[str, str]] = {
-    "1": {
-        "name": "The Brutal Truth",
-        "rules": "Direct, authoritative, highly mathematical, devoid of fluff. Fast, punchy sentences. Numbers over adjectives.",
-        "exemplar": "The New Regime is not a suggestion. Unless your Old Regime deductions clear ₹3.75 Lakh, you are paying more tax for the privilege of feeling traditional.",
-    },
-    "2": {
-        "name": "The Forensic Auditor",
-        "rules": "Procedural, investigative. Follow a trail of money or paperwork step-by-step. Cold, stark, precise. Case-file framing is allowed. No humor.",
-        "exemplar": "Dispatch Note #DN-8841. Item retained. Return voucher: ABSENT. TDS under 194R: ₹0.00. Statutory breach recorded.",
-    },
-    "3": {
-        "name": "The Myth-Buster",
-        "rules": "Systematic. Quote the myth in the reader's voice, then dismantle it with statute. Slightly sarcastic. Harsh wake-up call.",
-        "exemplar": "The WhatsApp tip said: 'Just file under 44AD, declare 8%, done.' The portal said: Form 26AS shows 194J. Mismatch. Notice follows.",
-    },
-    "4": {
-        "name": "The Coffee Shop Chat",
-        "rules": "Conversational. Use 'we' and 'you.' Name the paranoia before the math. Relatable peer, not lecturer.",
-        "exemplar": "You opened AIS and there were two Form 16s. You did not sleep well. Here is the conversation you needed the next morning.",
-    },
-    "5": {
-        "name": "The Scenario Wargamer",
-        "rules": "Analytical, branching. If X then Y. Matrix of outcomes. Optimization-first.",
-        "exemplar": "If deductions exceed ₹3.75 L, Old Regime wins. If not, New Regime leaves more cash. Joint home loan changes the threshold—run the branch before you lock Form 10-IEA.",
-    },
-    "6": {
-        "name": "The Narrative Arc",
-        "rules": "Persona-driven story. Beginning (hope), middle (shock), end (agency). Hold the named person through the close.",
-        "exemplar": "Rahul exercised at ₹10. FMV hit ₹1,010. The next salary slip was zero. This is how paper wealth becomes a cash tax bill—and how to structure the exit.",
-    },
-    "7": {
-        "name": "The Diplomat",
-        "rules": "Reassuring, structured. Safe harbors, smooth transitions. No panic amplification.",
-        "exemplar": "There is a clean path through this. We will map the deadline, the fee, and the one filing that stops the interest clock.",
-    },
-    "8": {
-        "name": "The Chess Grandmaster",
-        "rules": "Forward-looking, calculating. Counter-moves to policy. Multi-year thinking.",
-        "exemplar": "The department moved first with AIS matching. Your counter-move is pre-emptive reconciliation before the return is filed—not after the notice.",
-    },
-    "9": {
-        "name": "The Alchemist",
-        "rules": "Transformative, energetic. Turn liability into a tax-free or lower-tax outcome. Slightly euphoric but still accurate.",
-        "exemplar": "The same loss that felt like failure becomes an eight-year shield—if you file on time and stop treating it like a salary offset.",
-    },
-    "10": {
-        "name": "The Trench Survivor",
-        "rules": "Gritty, realistic. Validate frustration first. No pep talk until the path is clear. Honest about permanent damage vs what can still be fixed.",
-        "exemplar": "The loss carry-forward is already gone. That part is decided. What is left is stopping the interest clock and filing a clean belated return.",
-    },
-}
-
-NARRATIVE_CONTRACT = """
-STRUCTURE (unless Forensic Auditor case-file frame is chosen):
-
-1. HOOK (80–150 words): Named person + concrete number + consequence. NO statute in the first paragraph.
-2. THE FEAR NAMED: One sentence mirroring the reader's monologue.
-3. THE MECHANISM (short): Only needed regulation + 2–4 sentences on why the law/algorithm exists.
-4. THE WORKED EXAMPLE: Same person, numbers, outcome.
-5. THE WAY OUT: Checklist in human verbs. Deadlines in calendar language.
-6. EDGE CASES (optional): Only if they change the decision.
-7. CLOSING RELIEF: Return to the named person — what Monday looks like after they act.
-
-HARD BANS:
-- No "Pillar 1/2/3/4" headings.
-- No ASCII art, box-drawing, or markdown flowcharts.
-- No padding for word count.
-- No opening with "What is the regulation regarding this specific transaction?"
-"""
 
 # =============================================================================
 # DATA
 # =============================================================================
 
-
 @dataclass
 class ArticleJob:
     topic: str
     filename: str
-    style_key: str
     category: str = "tds"
     category_name: str = "Compliance"
     statutory_hint: str = ""
@@ -230,66 +190,45 @@ class FactoryResult:
 # LLM / PARSE HELPERS
 # =============================================================================
 
-
 def make_llm(model: str, temperature: float) -> Any:
-    if not CREWAI_AVAILABLE:
-        return None
-    return LLM(
-        model=model,
-        api_key=os.environ.get("GEMINI_API_KEY"),
-        temperature=temperature,
-    )
-
+    if not CREWAI_AVAILABLE: return None
+    return LLM(model=model, api_key=os.environ.get("GEMINI_API_KEY"), temperature=temperature)
 
 def extract_json_block(text: str) -> dict[str, Any]:
     text = (text or "").strip()
     m = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.DOTALL)
     if m:
-        try:
-            return json.loads(m.group(1))
-        except json.JSONDecodeError:
-            pass
+        try: return json.loads(m.group(1))
+        except: pass
     m = re.search(r"\{.*\}", text, re.DOTALL)
     if m:
-        try:
-            return json.loads(m.group(0))
-        except json.JSONDecodeError:
-            pass
+        try: return json.loads(m.group(0))
+        except: pass
     return {}
-
 
 def task_raw(task: Any) -> str:
     out = getattr(task, "output", None)
-    if out is None:
-        return ""
+    if out is None: return ""
     return getattr(out, "raw", None) or str(out)
 
-
 def run_crew(agents: list[Any], tasks: list[Any], label: str) -> str:
-    """Run a sequential mini-crew; return last task raw output."""
     print(f"\n── Crew segment: {label} ({len(tasks)} task(s)) ──")
-    crew = Crew(
-        agents=agents,
-        tasks=tasks,
-        process=Process.sequential,
-        verbose=True,
-    )
+    crew = Crew(agents=agents, tasks=tasks, process=Process.sequential, verbose=True)
     result = crew.kickoff()
     return getattr(result, "raw", None) or str(result)
 
-
-def ensure_frontmatter(mdx: str, job: ArticleJob, style_name: str, seo: dict[str, Any]) -> str:
+def ensure_frontmatter(mdx: str, job: ArticleJob, seo: dict[str, Any]) -> str:
     title = seo.get("title") or job.topic
     summary = seo.get("description") or job.primary_fear or job.topic
     fm = {
         "title": title,
         "category": job.category,
         "categoryName": job.category_name,
-        "readTime": seo.get("readTime", "9 min read"),
+        "readTime": seo.get("readTime", "15 min read"),
         "updatedDate": "FY 2025-26",
         "statutoryAct": job.statutory_hint or seo.get("statutoryAct", "Income Tax Act"),
         "summary": summary,
-        "writingStyle": style_name,
+        "writingStyle": seo.get("vibe", "First Principles Analysis"),
         "protagonist": job.protagonist or seo.get("protagonist", "the taxpayer"),
         "primaryFear": job.primary_fear or seo.get("primaryFear", "unexpected tax liability"),
     }
@@ -310,65 +249,65 @@ def ensure_frontmatter(mdx: str, job: ArticleJob, style_name: str, seo: dict[str
     if "<CardPremium" in body and "import CardPremium" not in body:
         lines.append("import CardPremium from '../../components/CardPremium.astro';")
         lines.append("")
-    return "\n".join(lines) + body
+    return "\n".join(lines) + "\n\n" + body
 
 
 # =============================================================================
 # AGENTS
 # =============================================================================
 
-
-def build_agents(search_tool: Any) -> dict[str, Any]:
+def build_agents(search_tool: Any, image_tool: Any) -> dict[str, Any]:
     llm_rigid = make_llm(MODEL_RIGID, 0.1)
-    llm_creative = make_llm(MODEL_CREATIVE, 0.55)
-    llm_critic = make_llm(MODEL_RIGID, 0.2)
+    llm_creative = make_llm(MODEL_CREATIVE, 0.65)
+    llm_critic = make_llm(MODEL_CREATIVE, 0.3)
 
     return {
         "quant": Agent(
-            role="Principal Tax Quant",
-            goal="Verify current Indian tax mechanics. Bulleted facts only: sections, rates, thresholds, deadlines, penalties.",
-            backstory="Ruthless quant. No narrative. Flag uncertainty explicitly.",
+            role="Research & Competitive Gap Analyst",
+            goal="1. Search the web for existing articles on this topic. 2. Extract current tax mechanics. 3. Identify the 'delta'—what generic articles missed, edge cases, underlying mechanics. Pass these gaps to the Novelist so our article is vastly superior.",
+            backstory="You are a ruthless researcher building the foundation for demystifying India's top 100 direct tax topics. Your job is to find the gap in the current internet knowledge.",
             llm=llm_rigid,
             tools=[search_tool] if search_tool else [],
             allow_delegation=False,
             verbose=True,
         ),
         "seo": Agent(
-            role="SEO Forensic Strategist",
-            goal="JSON: high-anxiety title, description, slug, faqs, intent. No dictionary-definition titles.",
-            backstory="Panic symptoms → commercial queries. Outcome Certainty mandatory.",
+            role="SEO & Vibe Strategist",
+            goal="JSON: high-anxiety title, description, slug, faqs, intent, and define the 'vibe' (e.g., The Coffee Shop Chat, The Narrative Arc, The Brutal Truth) based solely on the topic.",
+            backstory="You ensure the article catches attention and sets the creative direction without being boxed into rigid styles.",
             llm=llm_creative,
             allow_delegation=False,
             verbose=True,
         ),
         "novelist": Agent(
-            role="Narrative Architect",
-            goal="Write or revise the full article under the assigned persona and narrative contract.",
-            backstory="FinSight polymorphic voice. Never pad. Never open with statute when a human scene carries more anxiety.",
+            role="First Principles Narrative Architect",
+            goal="Write the full article using First Principles. Embody the vibe set by SEO. Comprehensively cover all competitive gaps identified by the Researcher. Focus on mechanics and causality.",
+            backstory=FIRST_PRINCIPLES_PROMPT,
             llm=llm_creative,
             allow_delegation=False,
             verbose=True,
         ),
         "style_critic": Agent(
-            role="Style & Voice Critic",
-            goal="PASS or FAIL with drift sentences and concrete rewrites. Reject interchangeable tax-blog prose.",
-            backstory="You protect FinSight from formulaic output.",
+            role="First Principles & Creativity Critic",
+            goal="PASS or FAIL with rewrites. Did they trace the mechanics? Is it deep and analytical? Did they cover the competitive gaps? Reject superficial tax-blog prose.",
+            backstory=FIRST_PRINCIPLES_PROMPT,
             llm=llm_critic,
             allow_delegation=False,
             verbose=True,
         ),
         "visual": Agent(
             role="Art Director",
-            goal="Insert 1–2 markers: [Illustration: <≤12 words>]. Anxiety under hook; optional relief before close.",
-            backstory="Specific to the protagonist's moment. No generic stock.",
+            goal="Use the generate_illustration tool to create 1-2 vivid, engrossing images that make the article come alive. Insert the exact Markdown tags returned by the tool into the article body.",
+            backstory="You are a master illustrator. Use the tool to summon real images. Do not write text placeholders.",
             llm=llm_creative,
+            tools=[image_tool] if image_tool else [],
             allow_delegation=False,
             verbose=True,
         ),
         "ui": Agent(
             role="Astro MDX Architect",
-            goal="MDX body with NoticeTrap around traps; checklist heading; no frontmatter; no ASCII; no duplicate H1.",
-            backstory="FinSight MDX pipeline specialist.",
+            goal="Fix MDX formatting: 1. NEVER use raw LaTeX ($$ or \\frac). Wrap math in standard markdown code blocks. 2. Ensure EXACTLY one blank line immediately after any 'import' statement. 3. Wrap traps in <NoticeTrap>.",
+            backstory="You protect the Astro compiler from crashing while keeping the content gorgeous.",
             llm=llm_rigid,
             allow_delegation=False,
             verbose=True,
@@ -376,408 +315,177 @@ def build_agents(search_tool: Any) -> dict[str, Any]:
         "youtube": Agent(
             role="YouTube Reel Producer",
             goal="60–100s spoken script (hook in first 3s) + thumbnail thesis (5–8 word overlay).",
-            backstory="Short-form tax content that stops the scroll without lying.",
+            backstory="Short-form tax content that stops the scroll.",
             llm=llm_creative,
             allow_delegation=False,
             verbose=True,
         ),
     }
 
-
 # =============================================================================
-# TASK BUILDERS (single-purpose, for composition in the loop)
+# TASKS
 # =============================================================================
-
 
 def task_quant(job: ArticleJob, agent: Any) -> Any:
     return Task(
-        description=(
-            f"Topic: {job.topic}\nStatutory hint: {job.statutory_hint or 'discover'}\n\n"
-            "Extract CURRENT Indian tax rules only as bullets: sections, rates, thresholds, "
-            "deadlines, penalties, payer vs recipient. Flag uncertainty."
-        ),
-        expected_output="Bulleted legal constraint list.",
+        description=f"Topic: {job.topic}\nSearch the web. What are competitors missing? Identify the gaps, edge cases, and current rules.",
+        expected_output="Bulleted list of rules AND specific competitive gaps to fill.",
         agent=agent,
     )
 
-
 def task_seo(job: ArticleJob, agent: Any, quant_task: Any) -> Any:
     return Task(
-        description=(
-            f"Topic: {job.topic}\nPrimary fear: {job.primary_fear}\n\n"
-            "Return JSON with keys: title, title_alts, description, slug, intent, "
-            "faqs ([{q,a}]), readTime, statutoryAct.\n"
-            "High-anxiety H1. Outcome certainty in description."
-        ),
+        description=f"Topic: {job.topic}\nFear: {job.primary_fear}\nReturn JSON: title, title_alts, description, slug, intent, faqs, readTime, vibe.",
         expected_output="Single JSON object.",
         agent=agent,
         context=[quant_task],
     )
 
-
-def task_novelist_draft(
-    job: ArticleJob,
-    agent: Any,
-    style: dict[str, str],
-    quant_task: Any,
-    seo_task: Any,
-) -> Any:
+def task_novelist_draft(job: ArticleJob, agent: Any, quant_task: Any, seo_task: Any) -> Any:
     return Task(
-        description=(
-            f"Write the FULL article for: {job.topic}\n\n"
-            f"PROTAGONIST: {job.protagonist}\n"
-            f"PRIMARY FEAR: {job.primary_fear}\n"
-            f"ALPHA: {job.alpha or '(none)'}\n\n"
-            f"STYLE: {style['name']}\nRULES: {style['rules']}\n"
-            f"EXEMPLAR:\n{style['exemplar']}\n\n"
-            f"{NARRATIVE_CONTRACT}\n\n"
-            "Ground truth = quant facts. Markdown body only (no YAML frontmatter)."
-        ),
+        description=f"Write the FULL article: {job.topic}\nProtagonist: {job.protagonist}\nFear: {job.primary_fear}\nAlpha: {job.alpha}\nGround truth = quant facts and competitive gaps. Markdown body only.",
         expected_output="Full markdown article body.",
         agent=agent,
         context=[quant_task, seo_task],
     )
 
-
-def task_style_critique(
-    agent: Any,
-    style: dict[str, str],
-    draft_text: str,
-) -> Any:
-    """Critic sees the draft in the description (not only context) so revision rounds work cleanly."""
-    # Truncate extremely long drafts in the prompt edge case
+def task_style_critique(agent: Any, draft_text: str) -> Any:
     draft_for_prompt = draft_text if len(draft_text) < 120_000 else draft_text[:120_000] + "\n…[truncated]"
     return Task(
-        description=(
-            f"Critique this article against style '{style['name']}'.\n"
-            f"Rules: {style['rules']}\n"
-            f"Exemplar energy: {style['exemplar']}\n\n"
-            "ARTICLE DRAFT:\n"
-            "```markdown\n"
-            f"{draft_for_prompt}\n"
-            "```\n\n"
-            "Return JSON only:\n"
-            '  "verdict": "PASS" | "FAIL",\n'
-            '  "score": 0-10,\n'
-            '  "drift_sentences": [strings],\n'
-            '  "rewrites": [{"original": "...", "suggested": "..."}],\n'
-            '  "notes": "..."\n\n'
-            "FAIL if: no named person early; statute-first open (unless Forensic); "
-            "generic tax-blog voice; missing close returning to the person; ASCII diagrams."
-        ),
+        description=f"Critique this article against First Principles.\nDRAFT:\n```markdown\n{draft_for_prompt}\n```\nReturn JSON: verdict (PASS/FAIL), score (0-10), drift_sentences, rewrites, notes. FAIL if it is generic, superficial, or lacks deep mechanics.",
         expected_output="JSON critique with PASS or FAIL.",
         agent=agent,
     )
 
-
-def task_novelist_revise(
-    job: ArticleJob,
-    agent: Any,
-    style: dict[str, str],
-    previous_draft: str,
-    critique: dict[str, Any],
-    quant_summary: str,
-) -> Any:
+def task_novelist_revise(job: ArticleJob, agent: Any, previous_draft: str, critique: dict[str, Any], quant_summary: str) -> Any:
     rewrites = json.dumps(critique.get("rewrites", []), ensure_ascii=False)[:8000]
-    drifts = json.dumps(critique.get("drift_sentences", []), ensure_ascii=False)[:4000]
     notes = critique.get("notes", "")
-    draft_for_prompt = (
-        previous_draft if len(previous_draft) < 100_000 else previous_draft[:100_000] + "\n…[truncated]"
-    )
     return Task(
-        description=(
-            f"REVISE the article. Do not start from scratch unless the draft is unusable.\n\n"
-            f"Topic: {job.topic}\n"
-            f"PROTAGONIST: {job.protagonist}\n"
-            f"PRIMARY FEAR: {job.primary_fear}\n"
-            f"STYLE: {style['name']} — {style['rules']}\n"
-            f"EXEMPLAR:\n{style['exemplar']}\n\n"
-            f"{NARRATIVE_CONTRACT}\n\n"
-            f"QUANT FACTS (must remain accurate):\n{quant_summary[:6000]}\n\n"
-            f"CRITIC VERDICT: {critique.get('verdict')} (score {critique.get('score')})\n"
-            f"CRITIC NOTES: {notes}\n"
-            f"DRIFT SENTENCES:\n{drifts}\n"
-            f"REQUESTED REWRITES:\n{rewrites}\n\n"
-            "PREVIOUS DRAFT:\n"
-            "```markdown\n"
-            f"{draft_for_prompt}\n"
-            "```\n\n"
-            "Apply the rewrites. Fix every drift. Keep correct law. "
-            "Output the full revised markdown body only."
-        ),
+        description=f"REVISE the article.\nTopic: {job.topic}\nQUANT & GAPS:\n{quant_summary[:6000]}\nCRITIQUE:\n{notes}\nREWRITES:\n{rewrites}\nPREVIOUS DRAFT:\n{previous_draft[:100000]}\nFix drifts. Deepen the mechanics. Output full revised markdown.",
         expected_output="Full revised markdown article body.",
         agent=agent,
     )
 
-
 def task_visual(agent: Any, article: str) -> Any:
-    body = article if len(article) < 100_000 else article[:100_000] + "\n…[truncated]"
     return Task(
-        description=(
-            "Insert 1 or 2 markers only: [Illustration: <max 12 words>].\n"
-            "One under the hook (anxiety); optional one before the close (relief).\n\n"
-            "ARTICLE:\n```markdown\n"
-            f"{body}\n"
-            "```\n\n"
-            "Output the full article with markers."
-        ),
-        expected_output="Article markdown with illustration markers.",
+        description=f"Use the generate_illustration tool to create 1 or 2 vivid, engrossing images for this article. Inject the exact returned MDX tags directly into the text. ARTICLE:\n{article[:100000]}",
+        expected_output="Article markdown with injected image tags.",
         agent=agent,
     )
 
-
 def task_ui(agent: Any, article: str) -> Any:
-    body = article if len(article) < 100_000 else article[:100_000] + "\n…[truncated]"
     return Task(
-        description=(
-            "Convert to FinSight MDX body:\n"
-            "- Wrap main trap/penalty in <NoticeTrap title=\"...\">...</NoticeTrap>\n"
-            "- Checklist under '## Key Takeaway Summary & Actionable Checklist'\n"
-            "- Remove ASCII diagrams if any remain\n"
-            "- No YAML frontmatter, no H1 repeating the SEO title\n\n"
-            "ARTICLE:\n```markdown\n"
-            f"{body}\n"
-            "```\n\n"
-            "Output final MDX body only."
-        ),
+        description=f"Format for Astro MDX.\n1. Convert all LaTeX math ($$ etc) to standard inline markdown code.\n2. Ensure a blank line after imports.\nARTICLE:\n{article[:100000]}",
         expected_output="Production MDX body.",
         agent=agent,
     )
 
-
 def task_youtube(job: ArticleJob, agent: Any, article: str, seo: dict[str, Any]) -> Any:
-    body = article if len(article) < 80_000 else article[:80_000] + "\n…[truncated]"
     return Task(
-        description=(
-            f"Topic: {job.topic}\nSEO title: {seo.get('title', job.topic)}\n\n"
-            "Write:\n"
-            "1) ## reel_60s — spoken 60–100s script; FIRST LINE is the fear/hook; "
-            "one number; one action; CTA to FinSight article.\n"
-            "2) ## thumbnail_thesis — 5–8 word overlay + brief visual idea.\n\n"
-            "ARTICLE (for accuracy):\n```markdown\n"
-            f"{body}\n"
-            "```"
-        ),
+        description=f"Topic: {job.topic}\nWrite ## reel_60s and ## thumbnail_thesis based on:\n{article[:80000]}",
         expected_output="Markdown with ## reel_60s and ## thumbnail_thesis.",
         agent=agent,
     )
 
-
 # =============================================================================
-# PACKAGE WRITER
+# CORE ENGINE
 # =============================================================================
 
-
-def write_package(
-    job: ArticleJob,
-    result: FactoryResult,
-    style_name: str,
-    write_to_collection: bool,
-) -> Path:
+def write_package(job: ArticleJob, result: FactoryResult, write_to_collection: bool) -> Path:
     slug = job.filename
     pkg_dir = PACKAGE_ROOT / slug
     pkg_dir.mkdir(parents=True, exist_ok=True)
-
-    mdx = ensure_frontmatter(result.article_mdx, job, style_name, result.seo)
+    mdx = ensure_frontmatter(result.article_mdx, job, result.seo)
     (pkg_dir / "article.mdx").write_text(mdx, encoding="utf-8")
-
     if write_to_collection:
         OUTPUT_ROOT.mkdir(parents=True, exist_ok=True)
         (OUTPUT_ROOT / f"{slug}.mdx").write_text(mdx, encoding="utf-8")
-
-    seo = {
-        "slug": slug,
-        "title": result.seo.get("title", job.topic),
-        "description": result.seo.get("description", ""),
-        "intent": result.seo.get("intent", ""),
-        "faqs": result.seo.get("faqs", []),
-        "title_alts": result.seo.get("title_alts", []),
-        "writingStyle": style_name,
-        "protagonist": job.protagonist,
-        "primaryFear": job.primary_fear,
-        "style_pass": result.style_pass,
-        "revision_rounds": result.revision_rounds,
+    
+    seo_data = {
+        "slug": slug, "title": result.seo.get("title", job.topic),
+        "vibe": result.seo.get("vibe", "First Principles"),
+        "style_pass": result.style_pass, "revision_rounds": result.revision_rounds,
     }
-    (pkg_dir / "seo.json").write_text(json.dumps(seo, indent=2, ensure_ascii=False), encoding="utf-8")
+    (pkg_dir / "seo.json").write_text(json.dumps(seo_data, indent=2, ensure_ascii=False), encoding="utf-8")
     (pkg_dir / "reel_60s.md").write_text(result.reel or "# reel missing\n", encoding="utf-8")
-    (pkg_dir / "thumbnail_thesis.txt").write_text(
-        result.thumbnail or "thumbnail thesis missing\n", encoding="utf-8"
-    )
-    (pkg_dir / "constants.json").write_text(
-        json.dumps(result.constants or {"note": "fill from quant if needed"}, indent=2),
-        encoding="utf-8",
-    )
+    (pkg_dir / "thumbnail_thesis.txt").write_text(result.thumbnail or "missing\n", encoding="utf-8")
+    (pkg_dir / "constants.json").write_text("{}", encoding="utf-8")
     (pkg_dir / "factory_notes.txt").write_text("\n".join(result.notes) or "ok", encoding="utf-8")
     return pkg_dir
 
-
-# =============================================================================
-# CORE: GENERATION → EVALUATION → ITERATION → POLISH
-# =============================================================================
-
-
 def run_factory(job: ArticleJob, interactive_alpha: bool = True) -> FactoryResult:
-    if not CREWAI_AVAILABLE:
-        raise RuntimeError("Install: pip install crewai python-dotenv  (optional search: pip install -U ddgs)")
-    if not os.environ.get("GEMINI_API_KEY"):
-        raise RuntimeError("GEMINI_API_KEY not set")
-
-    style = POLYMORPHIC_STYLES.get(job.style_key, POLYMORPHIC_STYLES["4"])
-    style_name = style["name"]
-
-    print("\n" + "=" * 64)
-    print(f"🏭 FinSight Factory v3 (iterate until PASS)")
-    print(f"   {job.topic}")
-    print(f"   Style: {style_name} | slug: {job.filename} | max_retries: {MAX_STYLE_RETRIES}")
-    print("=" * 64)
+    print(f"\n================================================================")
+    print(f"🏭 FinSight Factory v4 (First-Principles Engine)")
+    print(f"   {job.topic} | slug: {job.filename}")
+    print(f"================================================================")
 
     if interactive_alpha:
         injected = input("💡 INJECT ALPHA (or Enter): ").strip()
-        if injected:
-            job.alpha = injected
-        if not job.protagonist:
-            job.protagonist = input("👤 Protagonist: ").strip() or "the taxpayer"
-        if not job.primary_fear:
-            job.primary_fear = input("😨 Primary fear: ").strip() or "unexpected tax demand"
+        if injected: job.alpha = injected
+        if not job.protagonist: job.protagonist = input("👤 Protagonist: ").strip() or "the taxpayer"
+        if not job.primary_fear: job.primary_fear = input("😨 Primary fear: ").strip() or "unexpected tax demand"
 
-    search_tool = build_search_tool()  # None is OK — Quant runs without tools
-    agents = build_agents(search_tool)
+    search_tool = build_search_tool()
+    image_tool = build_image_tool()
+    agents = build_agents(search_tool, image_tool)
     notes: list[str] = []
 
-    # ── PHASE A: GENERATE (Quant + SEO + first draft) ─────────────────────
     t_quant = task_quant(job, agents["quant"])
     t_seo = task_seo(job, agents["seo"], t_quant)
-    t_draft = task_novelist_draft(job, agents["novelist"], style, t_quant, t_seo)
-
-    run_crew(
-        [agents["quant"], agents["seo"], agents["novelist"]],
-        [t_quant, t_seo, t_draft],
-        "A · GENERATE (quant → seo → draft)",
-    )
+    t_draft = task_novelist_draft(job, agents["novelist"], t_quant, t_seo)
+    run_crew([agents["quant"], agents["seo"], agents["novelist"]], [t_quant, t_seo, t_draft], "A · RESEARCH & DRAFT")
 
     quant_text = task_raw(t_quant)
     seo = extract_json_block(task_raw(t_seo))
     draft = task_raw(t_draft)
-    notes.append(f"draft_v1_chars={len(draft)}")
-
-    # ── PHASE B: EVALUATE → ITERATE (bounded) ─────────────────────────────
-    style_pass = False
-    critique: dict[str, Any] = {}
-    revision_rounds = 0
-
+    
+    style_pass, revision_rounds = False, 0
     for attempt in range(MAX_STYLE_RETRIES + 1):
-        # Evaluate current draft
-        t_crit = task_style_critique(agents["style_critic"], style, draft)
+        t_crit = task_style_critique(agents["style_critic"], draft)
         run_crew([agents["style_critic"]], [t_crit], f"B · EVALUATE (round {attempt})")
         critique = extract_json_block(task_raw(t_crit))
         verdict = str(critique.get("verdict", "")).upper()
-        score = critique.get("score", "?")
-        notes.append(f"eval_round_{attempt}: verdict={verdict} score={score}")
-
+        
         if verdict == "PASS":
             style_pass = True
-            print(f"✅ Style PASS on round {attempt} (score={score})")
             break
-
-        print(f"❌ Style FAIL on round {attempt} (score={score})")
-        if attempt >= MAX_STYLE_RETRIES:
-            notes.append("max style retries exhausted — leaving FAIL draft for package notes")
-            break
-
-        # Iterate: feed critique back to novelist
+        
+        if attempt >= MAX_STYLE_RETRIES: break
+        
         revision_rounds += 1
-        t_rev = task_novelist_revise(
-            job, agents["novelist"], style, draft, critique, quant_text
-        )
-        run_crew(
-            [agents["novelist"]],
-            [t_rev],
-            f"B · ITERATE revise #{revision_rounds}",
-        )
+        t_rev = task_novelist_revise(job, agents["novelist"], draft, critique, quant_text)
+        run_crew([agents["novelist"]], [t_rev], f"B · ITERATE revise #{revision_rounds}")
         revised = task_raw(t_rev)
-        if revised.strip():
-            draft = revised
-            notes.append(f"revise_{revision_rounds}_chars={len(draft)}")
-        else:
-            notes.append(f"revise_{revision_rounds}_empty_output")
+        if revised.strip(): draft = revised
 
-    # ── PHASE C: POLISH only after loop (always produce package; gate collection write)
     t_vis = task_visual(agents["visual"], draft)
-    run_crew([agents["visual"]], [t_vis], "C · POLISH visual")
+    run_crew([agents["visual"]], [t_vis], "C · ART DIRECTION")
     with_visual = task_raw(t_vis) or draft
 
     t_ui = task_ui(agents["ui"], with_visual)
-    run_crew([agents["ui"]], [t_ui], "C · POLISH mdx")
+    run_crew([agents["ui"]], [t_ui], "C · MDX COMPILER")
     mdx_body = task_raw(t_ui) or with_visual
 
     t_yt = task_youtube(job, agents["youtube"], mdx_body, seo)
-    run_crew([agents["youtube"]], [t_yt], "C · POLISH youtube")
+    run_crew([agents["youtube"]], [t_yt], "C · YOUTUBE")
     yt_raw = task_raw(t_yt)
+    reel = yt_raw.split("## thumbnail_thesis")[0].replace("## reel_60s", "").strip() if "## thumbnail_thesis" in yt_raw else yt_raw
+    thumbnail = yt_raw.split("## thumbnail_thesis")[1].strip() if "## thumbnail_thesis" in yt_raw else ""
 
-    reel, thumbnail = yt_raw, ""
-    if "## thumbnail_thesis" in yt_raw:
-        parts = yt_raw.split("## thumbnail_thesis", 1)
-        reel = parts[0].replace("## reel_60s", "").strip()
-        thumbnail = parts[1].strip()
-
-    result = FactoryResult(
-        slug=job.filename,
-        article_mdx=mdx_body,
-        seo=seo,
-        reel=reel,
-        thumbnail=thumbnail,
-        constants={},
-        style_pass=style_pass,
-        revision_rounds=revision_rounds,
-        notes=notes,
-    )
-
-    write_to_collection = style_pass or FORCE_PUBLISH_ON_FAIL
-    pkg = write_package(job, result, style_name, write_to_collection=write_to_collection)
-
-    print(f"\n📦 Package: {pkg}")
-    print(f"   style_pass={style_pass}  revision_rounds={revision_rounds}")
-    print(f"   collection_write={write_to_collection}  path={OUTPUT_ROOT / (job.filename + '.mdx')}")
-    if not style_pass:
-        print("   ⚠️  FAIL after retries — package kept for inspection; collection write skipped "
-              "(set FINSIGHT_FORCE_PUBLISH_ON_FAIL=1 to override).")
-
+    result = FactoryResult(slug=job.filename, article_mdx=mdx_body, seo=seo, reel=reel, thumbnail=thumbnail, style_pass=style_pass, revision_rounds=revision_rounds, notes=notes)
+    pkg = write_package(job, result, write_to_collection=(style_pass or FORCE_PUBLISH_ON_FAIL))
+    print(f"\n📦 Package: {pkg}\n   Published: {style_pass or FORCE_PUBLISH_ON_FAIL}\n")
     return result
-
-
-# =============================================================================
-# BATCH
-# =============================================================================
 
 ARTICLES: list[ArticleJob] = [
     ArticleJob(
-        topic="The Influencer Barter Trap: Section 194R, in-kind benefits, and tax on free products",
+        topic="The Section 194R Forensic Audit",
         filename="influencer-barter-trap-194r",
-        style_key="2",
-        category="tds",
-        category_name="Freelancers & Creators",
-        statutory_hint="Section 194R, Section 28(iv), CBDT Circular 12/2022",
-        protagonist="Ava, lifestyle creator who kept a ₹1.4L review laptop",
-        primary_fear="The free product is taxable income and the brand never deducted TDS",
-        alpha="Retained product = benefit; documented return is the clean exemption path",
+        category="tds", category_name="Freelancers & Creators",
+        protagonist="Ava", primary_fear="Tax on free products"
     ),
 ]
 
-
-def main() -> None:
-    print("FinSight Content Factory v3 — Generate → Evaluate → Iterate → Polish")
-    print(f"MAX_STYLE_RETRIES={MAX_STYLE_RETRIES}  FORCE_PUBLISH_ON_FAIL={FORCE_PUBLISH_ON_FAIL}")
-    print(f"OUTPUT_ROOT={OUTPUT_ROOT.resolve()}")
-    print(f"PACKAGE_ROOT={PACKAGE_ROOT.resolve()}")
-
+if __name__ == "__main__":
     for i, job in enumerate(ARTICLES):
         run_factory(job, interactive_alpha=True)
-        if i < len(ARTICLES) - 1:
-            print("\n⏳ Cooldown 45s…\n")
-            time.sleep(45)
-
-    print("\n🎉 Batch complete.")
-
-
-if __name__ == "__main__":
-    main()
