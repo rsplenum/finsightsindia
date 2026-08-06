@@ -11,39 +11,6 @@ key = os.getenv("GEMINI_API_KEY")
 base_prompt_light = "A varsity style minimalist illustration. Pure solid white background (#FFFFFF) so it blends perfectly into a light theme. Institutional gold accents (#D4AF37) and deep navy lines (#0A192F). Elegant, modern line art, less is more, say more with less. Clean, premium, no text. Subject: "
 base_prompt_dark = "A varsity style minimalist illustration. Pure solid deep navy background (#0A192F) so it blends perfectly into a dark theme. Institutional gold accents (#D4AF37) and bright white/silver lines. Elegant, modern line art, less is more, say more with less. Clean, premium, no text. Subject: "
 
-images_to_generate = [
-    {
-        "filename_light": "139-9-defective-return-light.jpg",
-        "filename_dark": "139-9-defective-return-dark.jpg",
-        "subject": "A sleek, minimal 15-day hourglass where the falling sand forms a document."
-    },
-    {
-        "filename_light": "142-1-sft-trap-light.jpg",
-        "filename_dark": "142-1-sft-trap-dark.jpg",
-        "subject": "A glowing minimal radar sweep revealing a hidden gold coin."
-    },
-    {
-        "filename_light": "143-1-tds-arrears-light.jpg",
-        "filename_dark": "143-1-tds-arrears-dark.jpg",
-        "subject": "A clean, broken chain link symbolizing a severed connection."
-    },
-    {
-        "filename_light": "148-escaped-assessment-light.jpg",
-        "filename_dark": "148-escaped-assessment-dark.jpg",
-        "subject": "A sharp beam of light illuminating a single old, dusty file folder."
-    },
-    {
-        "filename_light": "270a-penalty-trap-light.jpg",
-        "filename_dark": "270a-penalty-trap-dark.jpg",
-        "subject": "A sleek, minimal metallic trap snapping shut."
-    },
-    {
-        "filename_light": "271a-bookkeeping-trap-light.jpg",
-        "filename_dark": "271a-bookkeeping-trap-dark.jpg",
-        "subject": "A solitary closed ledger book with a heavy metallic stamp hovering just above it."
-    }
-]
-
 def generate_image(filename, prompt):
     print(f"Generating {filename}...")
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key={key}"
@@ -65,8 +32,7 @@ def generate_image(filename, prompt):
     except Exception as e:
         print(f"Failed to generate {filename}: {e}")
 
-for item in images_to_generate:
-    generate_image(item["filename_light"], base_prompt_light + item["subject"])
-    time.sleep(2)
-    generate_image(item["filename_dark"], base_prompt_dark + item["subject"])
-    time.sleep(2)
+# Retry the failed ones
+generate_image("143-1-tds-arrears-dark.jpg", base_prompt_dark + "A clean, broken chain link symbolizing a severed connection.")
+time.sleep(2)
+generate_image("271a-bookkeeping-trap-light.jpg", base_prompt_light + "A solitary closed ledger book with a heavy metallic stamp hovering just above it.")
