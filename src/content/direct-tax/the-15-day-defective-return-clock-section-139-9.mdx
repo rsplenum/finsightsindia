@@ -12,6 +12,15 @@ writingStyle: "The Trench Survivor"
 import NoticeTrap from "../../components/mdx/NoticeTrap.astro";
 import CardPremium from "../../components/CardPremium.astro";
 
+
+<CardPremium>
+### TL;DR
+- **The Trigger:** A Form 16/AIS mismatch causes the CPC to flag your return as defective under Section 139(9).
+- **The Deadline:** You have exactly 15 days to respond; otherwise, your ITR is legally treated as "never filed."
+- **The Fix:** Log into the e-Filing portal, navigate to Pending Actions, and correct the specific error code (e.g., Error 38) by submitting a revised computation.
+</CardPremium>
+
+
 You hit "e-Verify" on July 30th. You paid the taxes, you matched the forms, and you felt the profound relief of a bureaucratic chore conquered for another year. 
 
 Two months later, an email lands in your inbox from `donotreply@incometaxindiaefiling.gov.in`. 
@@ -28,7 +37,7 @@ Here is the exact mechanism of how the 15-day clock works, the historical reason
 
 ---
 
-## The Philosophy: The 5 Whys of Section 139(9)
+## The Historical Intent & Legal Shift
 
 To understand how to beat the algorithm, you have to understand why the algorithm was built. Let's run the 5 Whys on Section 139(9).
 
@@ -71,26 +80,23 @@ The CPC algorithm does not issue 139(9) notices for "under-reporting" income (th
 
 Here are the most common automated traps that ensnare salaried employees and freelancers:
 
-<NoticeTrap 
-  title="Error Code 38: Tax Payable But Not Paid" 
-  severity="high" 
-  trigger="The algorithm calculates that you owe additional tax, but there is no matching Challan (BSR code) in your return." 
-  solution="Pay the outstanding tax immediately using Challan ITNS 280, note the BSR Code and Challan Serial Number, and update the return." 
-/>
+<NoticeTrap title="Error Code 38: Tax Payable But Not Paid">
+**The Trigger:** The algorithm calculates that you owe additional tax, but there is no matching Challan (BSR code) in your return.
 
-<NoticeTrap 
-  title="Error Code 32: Missing Form 10E" 
-  severity="high" 
-  trigger="You claimed tax relief under Section 89 for salary arrears, but you forgot to independently file Form 10E on the portal BEFORE filing the ITR." 
-  solution="File Form 10E immediately. Then, respond to the defective notice stating that the form has now been submitted." 
-/>
+**The Solution:** Pay the outstanding tax immediately using Challan ITNS 280, note the BSR Code and Challan Serial Number, and update the return.
+</NoticeTrap>
 
-<NoticeTrap 
-  title="Error Code 14/15: The Presumptive Trap" 
-  severity="medium" 
-  trigger="You filed ITR-4 claiming presumptive income under Section 44AD/44ADA, but your gross receipts exceed the statutory limit (₹3 Crore/₹75 Lakh), or you failed to fill out the mandatory gross profit ratios." 
-  solution="You must shift your filing to ITR-3, fill out a regular Balance Sheet and P&L, and upload the revised XML in response to the notice." 
-/>
+<NoticeTrap title="Error Code 32: Missing Form 10E">
+**The Trigger:** You claimed tax relief under Section 89 for salary arrears, but you forgot to independently file Form 10E on the portal BEFORE filing the ITR.
+
+**The Solution:** File Form 10E immediately. Then, respond to the defective notice stating that the form has now been submitted.
+</NoticeTrap>
+
+<NoticeTrap title="Error Code 14/15: The Presumptive Trap">
+**The Trigger:** You filed ITR-4 claiming presumptive income under Section 44AD/44ADA, but your gross receipts exceed the statutory limit (₹3 Crore/₹75 Lakh), or you failed to fill out the mandatory gross profit ratios.
+
+**The Solution:** You must shift your filing to ITR-3, fill out a regular Balance Sheet and P&L, and upload the revised XML in response to the notice.
+</NoticeTrap>
 
 ---
 

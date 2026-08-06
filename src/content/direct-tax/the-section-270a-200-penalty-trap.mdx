@@ -15,6 +15,15 @@ primaryFear: "The algorithm catches a fake expense claim. What is the difference
 import NoticeTrap from "../../components/mdx/NoticeTrap.astro";
 import CardPremium from "../../components/CardPremium.astro";
 
+
+<CardPremium>
+### TL;DR
+- **The Core Distinction:** Section 270A categorizes tax additions into 50% penalty (Under-reporting) and 200% penalty (Misreporting).
+- **The Safe Harbor Shield:** A bona fide explanation with full disclosure of facts (Section 270A(6)) entirely shields you from penalties, reducing it to 0%.
+- **The Notice Defect:** If the AO's Show Cause Notice fails to specify whether the penalty is for under-reporting or misreporting, the notice is void ab initio.
+</CardPremium>
+
+
 # The Section 270A 200% Penalty Trap: How the Tax Algorithm Upgrades a 50% Disallowance into Financial Ruin
 
 ---
@@ -26,34 +35,6 @@ To eliminate subjective discretion and replace it with an objective, algorithmic
 1. **Under-reporting of income**, which attracts a mandatory penalty equal to **50%** of the tax payable on the under-reported amount.
 2. **Misreporting of income**, which attracts a mandatory penalty equal to **200%** of the tax payable on the under-reported amount.
 
-```
-                         [ TAXABLE INCOME DISCREPANCY DETECTED ]
-                                            |
-                                            v
-                         +----------------------------------+
-                         |  Statutory Safe Harbor Check     |
-                         |        [Section 270A(6)]         |
-                         +----------------------------------+
-                                  /                \
-                     EXEMPT      /                  \  NOT EXEMPT
-                                /                    \
-                               v                      v
-                      [ 0% PENALTY ]       +----------------------+
-                      No Under-reporting   | Under-Reporting Core |
-                      (Bona fide position, |  [Section 270A(2)]   |
-                       TP docs, estimates) +----------------------+
-                                                      |
-                                     +----------------+----------------+
-                                     |                                 |
-                          FALLS WITHIN 270A(9)?             DOES NOT FALL WITHIN 270A(9)
-                         (Exhaustive 6 Clauses)             (General Discrepancy)
-                                     |                                 |
-                                     v                                 v
-                             [ MISREPORTING ]                  [ UNDER-REPORTING ]
-                               200% Penalty                       50% Penalty
-                             (Sec 270AA Immunity               (Sec 270AA Immunity
-                              Statutorily BARRED)              AVAILABLE in 30 Days)
-```
 
 For taxpayers—ranging from independent professionals to multinational enterprise entities—the mathematical and procedural difference between these two tiers is categorical. A 50% penalty represents a manageable financial correction; a 200% penalty, combined with mandatory interest under Sections 234B and 234C, routinely exceeds 100% of the underlying disallowance itself.
 
@@ -68,28 +49,13 @@ To navigate or defend against this statutory framework, one must understand the 
 To understand the operational mechanics of Section 270A, one must first analyze the statutory breakdown of its predecessor, Section 271(1)(c), and why Parliament replaced it.
 
 ```
-+----------------------------------------------------------------------------------------------------+
-|                                PARADIGM SHIFT COMPARISON MATRIX                                    |
-+------------------------+------------------------------------+--------------------------------------+
-| Feature                | Legacy Section 271(1)(c)           | Current Section 270A                 |
-+------------------------+------------------------------------+--------------------------------------+
-| Core Benchmark         | Concealment of income OR           | Under-reporting OR                   |
-|                        | Furnishing inaccurate particulars  | Misreporting of income               |
-+------------------------+------------------------------------+--------------------------------------+
-| Nature of Power        | Subjective AO satisfaction         | Objective, formulaic mathematical    |
-|                        | ("If the AO is satisfied...")      | trigger based on variance            |
-+------------------------+------------------------------------+--------------------------------------+
-| Role of Mens Rea       | Pervasive litigation over intent;  | Completely eliminated; replaced by   |
-|                        | Reliance Petrochem protection      | strict statutory safe harbors u/s    |
-|                        | against bona fide claims           | 270A(6)                              |
-+------------------------+------------------------------------+--------------------------------------+
-| Penalty Quantum        | 100% to 300% of tax sought to      | Strict bifurcated fixed rate:        |
-|                        | be evaded (AO Discretion)          | 50% (Under-reporting) / 200% (Mis-   |
-|                        |                                    | reporting)                           |
-+------------------------+------------------------------------+--------------------------------------+
-| Statutory Immunity     | Discretionary via Sec 273AA /      | Mandatory statutory entitlement      |
-|                        | Settlement Commission (Sec 245D)   | u/s 270AA (Only for Under-reporting) |
-+------------------------+------------------------------------+--------------------------------------+
+| Feature | Legacy Section 271(1)(c) | Current Section 270A |
+| :--- | :--- | :--- |
+| **Core Benchmark** | Concealment of income OR Furnishing inaccurate particulars | Under-reporting OR Misreporting of income |
+| **Nature of Power** | Subjective AO satisfaction ("If the AO is satisfied...") | Objective, formulaic mathematical trigger based on variance |
+| **Role of Mens Rea** | Pervasive litigation over intent; Reliance Petrochem protection against bona fide claims | Completely eliminated; replaced by strict statutory safe harbors u/s 270A(6) |
+| **Penalty Quantum** | 100% to 300% of tax sought to be evaded (AO Discretion) | Strict bifurcated fixed rate: 50% (Under-reporting) / 200% (Misreporting) |
+| **Statutory Immunity** | Discretionary via Sec 273AA / Settlement Commission (Sec 245D) | Mandatory statutory entitlement u/s 270AA (Only for Under-reporting) |
 ```
 
 Under Section 271(1)(c), the term "inaccurate particulars" was not exhaustively defined by statute. This ambiguity allowed courts to carve out broad protections for taxpayers: as long as a taxpayer fully disclosed primary facts in their tax return and audit reports, making an untenable or rejected legal claim did not automatically trigger penalties (*CIT v. Reliance Petroproducts Pvt. Ltd.*).
@@ -106,36 +72,6 @@ If an addition to income occurs, it automatically constitutes "under-reporting" 
 
 Modern tax assessments in India are initiated through automated data-matching algorithms operated by the **Centralized Processing Center (CPC)** and the **Computer-Assisted Scrutiny Selection (CASS)** system. Understanding how these algorithms operate exposes the precise transition point where a routine return morphs into a Section 270A penalty proceeding.
 
-```
-+-----------------------------------------------------------------------------------+
-|                            THE ALGORITHMIC DETECTION PIPELINE                     |
-+-----------------------------------------------------------------------------------+
-|  STEP 1: DATA INGESTION                                                           |
-|  SFT (Banks/Registrars) + TDS/TCS (26AS) + GSTN (GSTR-1/3B) + AIS/TIS             |
-+-----------------------------------------------------------------------------------+
-                                         |
-                                         v
-+-----------------------------------------------------------------------------------+
-|  STEP 2: AUTOMATED CROSS-MATCHING ENGINE                                          |
-|  * Discrepancy Check: Form 26AS vs. Schedule BP (Turnover Mismatch)              |
-|  * Expense Ratio Engine: Expense Claims vs. Peer Industry Averages                |
-|  * Tax-Exempt Inconsistency: Sec 44ADA Gross Receipts vs. Sec 194J Data           |
-+-----------------------------------------------------------------------------------+
-                                         |
-                                         v
-+-----------------------------------------------------------------------------------+
-|  STEP 3: AUTOMATED CLAUSE DISCOVERY & NOTICE GENERATION                           |
-|  * Mismatch detected -> Issue Prima Facie Adjustment Notice u/s 143(1)(a)          |
-|  * Unresolved/High-Value Discrepancy -> CASS Flags for Faceless Assessment u/s 143(3)|
-+-----------------------------------------------------------------------------------+
-                                         |
-                                         v
-+-----------------------------------------------------------------------------------+
-|  STEP 4: PENALTY INITIATION ENGINE                                                |
-|  * AO adds back expense/income -> Invokes Section 270A                            |
-|  * Algorithmic Suggestion: Tag as 270A(9)(c) "Unsubstantiated Expenditure"         |
-+-----------------------------------------------------------------------------------+
-```
 
 ### Step 1: Ingestion and Aggregation via the Annual Information Statement (AIS)
 The Income Tax Department ingests real-time financial data via Statement of Financial Transactions (SFT), TDS/TCS returns, GSTN filings (GSTR-1 and GSTR-3B), and reporting entities. This data aggregates inside the taxpayer’s **Annual Information Statement (AIS)** and **Taxpayer Information Summary (TIS)**.
@@ -162,38 +98,6 @@ At the moment of making this assessment addition, the AO initiates penalty proce
 
 Section 270A does not give the Assessing Officer unfettered freedom to choose between a 50% and 200% penalty. The statute constructs a baseline definition for under-reporting and restricts misreporting to six statutory scenarios.
 
-```
-+-----------------------------------------------------------------------------------+
-|                        SECTION 270A STATUTORY BIFURCATION                         |
-+-----------------------------------------------------------------------------------+
-|                                UNDER-REPORTING                                    |
-|                              [Section 270A(2) & (3)]                              |
-|                                         |                                         |
-|  * Base Trigger: Assessed Income > Returned Income                                |
-|  * Penalty Base Rate: 50% of Tax Payable on Under-Reported Income                 |
-|  * Default Status: Applies to all additions UNLESS falling under 270A(6) or 270A(9)|
-|  * Immunity: FULLY ELIGIBLE for Section 270AA Immunity                            |
-+-----------------------------------------------------------------------------------+
-                                          |
-                                          | UPGRADED ONLY IF FULLY
-                                          | SATISFYING SEC 270A(9)
-                                          v
-+-----------------------------------------------------------------------------------+
-|                                  MISREPORTING                                     |
-|                                [Section 270A(9)]                                  |
-|                                         |                                         |
-|  * Exhaustive Statutory Categories:                                               |
-|    (a) Misrepresentation or suppression of facts                                  |
-|    (b) Failure to record investments in books of account                          |
-|    (c) Claim of expenditure not substantiated by evidence                         |
-|    (d) Recording of false entry in books of account                               |
-|    (e) Failure to record any receipt in books of account having a bearing on income|
-|    (f) Failure to report international/specified domestic transactions (Chapter X) |
-|                                         |                                         |
-|  * Penalty Base Rate: 200% of Tax Payable on Under-Reported Income                |
-|  * Immunity: STATUTORILY BARRED from Section 270AA Immunity                       |
-+-----------------------------------------------------------------------------------+
-```
 
 ### A. The Baseline: Under-Reporting of Income [Section 270A(2) & (3)]
 Under Section 270A(2), a person is deemed to have under-reported income if:
@@ -237,52 +141,19 @@ Occurs when an enterprise omits cross-border transactions with associated enterp
 
 A foundational principle of direct tax law—frequently missed by Assessing Officers and generic legal commentaries—is that **Section 270A(6) takes statutory precedence over Section 270A(9)**.
 
-```
-                   +---------------------------------------+
-                   |  AO Proposes Addition / Disallowance  |
-                   +---------------------------------------+
-                                       |
-                                       v
-                   +---------------------------------------+
-                   | DOES IT FIT A SEC 270A(6) SAFE HARBOR?|
-                   +---------------------------------------+
-                                  /         \
-                             YES /           \ NO
-                                /             \
-                               v               v
-               +-----------------------+     +-----------------------+
-               | EXCLUDED FROM         |     | PROCEED TO EVALUATE   |
-               | "UNDER-REPORTING"     |     | SEC 270A(9)           |
-               |                       |     | MISREPORTING CLAUSES  |
-               | Penalty = 0%          |     +-----------------------+
-               +-----------------------+
-```
 
 Section 270A(6) provides five statutory safe harbors. If an addition to income falls under any of these five clauses, it **cannot be treated as under-reported income at all**. If it is excluded from under-reporting, its Under-Reported Income (URI) is zero—making it legally impossible to upgrade to misreporting under Section 270A(9).
 
 ### The Five Statutory Safe Harbors [Section 270A(6)]
 
 ```
-+--------------------------------------------------------------------------------------------------+
-|                                SECTION 270A(6) SAFE HARBOR MATRIX                                |
-+------------------+------------------------------------------+------------------------------------+
-| Statutory Sub-cl | Safe Harbor Description                  | Legal Trigger Requirement          |
-+------------------+------------------------------------------+------------------------------------+
-| 270A(6)(a)       | Bona Fide Explanation & Material Facts   | Taxpayer offers a bona fide legal  |
-|                  | Disclosed                                | view and reveals all primary facts.|
-+------------------+------------------------------------------+------------------------------------+
-| 270A(6)(b)       | Estimated Additions (Incomplete Books)   | Books rejected, but accounting     |
-|                  |                                          | method applied consistently.       |
-+------------------+------------------------------------------+------------------------------------+
-| 270A(6)(c)       | Estimated Additions on Own Variance      | Taxpayer estimated a lower         |
-|                  |                                          | addition/disallowance in return.   |
-+------------------+------------------------------------------+------------------------------------+
-| 270A(6)(d)       | Transfer Pricing Compliance              | Maintained Sec 92D docs AND        |
-|                  |                                          | disclosed in Form 3CEB.            |
-+------------------+------------------------------------------+------------------------------------+
-| 270A(6)(e)       | Discrepancy in TDS/TCS Data              | Income omitted due to matching     |
-|                  |                                          | TDS/TCS with no prior control.     |
-+------------------+------------------------------------------+------------------------------------+
+| Statutory Sub-cl | Safe Harbor Description | Legal Trigger Requirement |
+| :--- | :--- | :--- |
+| **270A(6)(a)** | Bona Fide Explanation & Material Facts Disclosed | Taxpayer offers a bona fide legal view and reveals all primary facts. |
+| **270A(6)(b)** | Estimated Additions (Incomplete Books) | Books rejected, but accounting method applied consistently. |
+| **270A(6)(c)** | Estimated Additions on Own Variance | Taxpayer estimated a lower addition/disallowance in return. |
+| **270A(6)(d)** | Transfer Pricing Compliance | Maintained Sec 92D docs AND disclosed in Form 3CEB. |
+| **270A(6)(e)** | Discrepancy in TDS/TCS Data | Income omitted due to matching TDS/TCS with no prior control. |
 ```
 
 ### Deep Legal Mechanics: Section 270A(6)(a) vs. Section 270A(9)(c)
@@ -308,29 +179,6 @@ Section 270A penalties do not apply directly to the under-reported income itself
 
 Understanding these mathematical formulas shows why even taxpayers operating at a loss or paying Minimum Alternate Tax (MAT) can face significant penalty liabilities.
 
-```
-+-----------------------------------------------------------------------------------+
-|                        SECTION 270A COMPUTATIONAL WORKFLOW                        |
-+-----------------------------------------------------------------------------------+
-|  STEP 1: DETERMINATION OF UNDER-REPORTED INCOME (URI)                             |
-|  * First Assessment: URI = Assessed Income - Returned Income                      |
-|  * Loss Conversion: URI = | Claimed Loss | + Assessed Positive Income              |
-+-----------------------------------------------------------------------------------+
-                                         |
-                                         v
-+-----------------------------------------------------------------------------------+
-|  STEP 2: COMPUTATION OF TAX ON UNDER-REPORTED INCOME [Sec 270A(10)]               |
-|  Tax on URI = Tax(Assessed Income) - Tax(Returned Income / Basic Exemption)       |
-|  (Calculated using applicable slab/corporate rates plus Surcharge & Cess)         |
-+-----------------------------------------------------------------------------------+
-                                         |
-                                         v
-+-----------------------------------------------------------------------------------+
-|  STEP 3: MULTIPLICATION BY PENALTY RATE                                           |
-|  * Under-Reporting Penalty = 50%  x Tax on URI                                   |
-|  * Misreporting Penalty   = 200% x Tax on URI                                   |
-+-----------------------------------------------------------------------------------+
-```
 
 ### Formula 1: Regular Assessment (First Assessment - Positive Income)
 Where total income is assessed for the first time under Section 143(3) or Section 144:
@@ -364,8 +212,7 @@ Tax on URI (MAT) = (T_MAT(M_A) - T_MAT(M_R)) + (T_REG(I_A) - T_REG(I_R))
 
 If additions are made simultaneously to normal income and MAT book profit, tax on URI is computed across both streams to ensure no under-reporting escapes penalty.
 
-<NoticeTrap>
-### Formula 4: The Loss Return Trap
+<NoticeTrap title="The Loss Return Trap">
 The most severe mathematical impact occurs when an assessment turns a reported business loss into taxable income or reduces a reported loss.
 
 #### Case A: Reported Loss Reduced
@@ -389,16 +236,6 @@ Under-Reported Income (URI) = Claimed Loss + Assessed Income = ₹20,00,000 + �
 #### The Loss Calculation Rule [Section 270A(10)]
 Under Section 270A(10), tax on under-reported income in loss cases is calculated **as if the URI were the total income of the taxpayer**.
 
-```
-[ Claimed Loss: -₹20,00,000 ]  ----(AO Disallowance: ₹50,00,000)---->  [ Assessed Income: +₹30,00,000 ]
-                                                                                   |
-                                                                                   v
-                                                                   Under-Reported Income = ₹50,00,000
-                                                                                   |
-                                                                                   v
-                                                                  Calculate Tax on ₹50,00,000 as if Total Income
-                                                                  Apply 50% (Under-Reporting) or 200% (Misreporting)
-```
 
 #### Numerical Calculation Example:
 Assume a corporate taxpayer with a 30% tax rate (+ 4% Cess = 31.2% effective tax):
@@ -416,50 +253,11 @@ Even if a business has zero net cash profit and zero regular tax liability under
 
 To reduce litigation, Parliament introduced **Section 270AA**, allowing taxpayers to apply for complete immunity from Section 270A penalties and criminal prosecution under Sections 276C and 276CC.
 
-```
-+-----------------------------------------------------------------------------------+
-|                        SECTION 270AA IMMUNITY ELIGIBILITY MATRIX                  |
-+-----------------------------------------------------------------------------------+
-|  CONDITION 1: Pay Demand Notice u/s 156 within 30 days of receipt.                |
-|  CONDITION 2: Expressly WAIVE the right to file an Appeal u/s 246A.               |
-|  CONDITION 3: File FORM 68 within 30 days from end of month order received.       |
-|  CONDITION 4: Proceedings MUST NOT have been initiated for MISREPORTING u/s 270A(9)|
-+-----------------------------------------------------------------------------------+
-```
 
 While this mechanism offers a clear path to resolve disputes, it can also create a procedural catch-22 when misused by Assessing Officers.
 
-<NoticeTrap>
-### The Section 270AA Procedural Trap
+<NoticeTrap title="The Section 270AA Procedural Trap">
 
-```
-+-----------------------------------------------------------------------------------+
-|                            THE 270AA PROCEDURAL TRAP                              |
-+-----------------------------------------------------------------------------------+
-| STEP 1: Assessment Order passed. AO adds legal disallowance but tags it as        |
-|         "Misreporting u/s 270A(9)(c)" in the body of the order.                   |
-+-----------------------------------------------------------------------------------+
-                                         |
-                                         v
-+-----------------------------------------------------------------------------------+
-| STEP 2: Taxpayer pays tax demand and waives appeal rights to apply for immunity   |
-|         via Form 68 under Section 270AA.                                          |
-+-----------------------------------------------------------------------------------+
-                                         |
-                                         v
-+-----------------------------------------------------------------------------------+
-| STEP 3: AO rejects Form 68, citing statutory bar: "Section 270AA immunity is      |
-|         unavailable because penalty was initiated under Misreporting 270A(9)."    |
-+-----------------------------------------------------------------------------------+
-                                         |
-                                         v
-+-----------------------------------------------------------------------------------+
-| THE CATCH-22 RESULT:                                                              |
-| * Taxpayer paid tax and waived their appeal rights.                               |
-| * The 30-day statutory window to appeal the assessment order u/s 246A HAS EXPIRED.|
-| * The taxpayer is left with NO appeal, NO immunity, and an automatic 200% penalty. |
-+-----------------------------------------------------------------------------------+
-```
 
 ### Detailed Mechanics of the Catch-22
 1. **The Improper Tag:** The AO makes an assessment addition based on a legal disagreement (e.g., disallowing a depreciation claim or an estimated expense). Instead of initiating penalty for general under-reporting under Section 270A(2), the AO tags it as misreporting under Section 270A(9)(c) in the notice.
@@ -481,23 +279,7 @@ If an AO improperly labels a routine legal variance as misreporting under Sectio
 
 When defending against a Section 270A penalty, the most decisive defense often lies in procedural and jurisdictional errors within the **Show Cause Notice (SCN)** issued under Section 274.
 
-<NoticeTrap>
-```
-+-----------------------------------------------------------------------------------+
-|                       SCN JURISDICTIONAL DEFECT CHECKLIST                         |
-+-----------------------------------------------------------------------------------+
-| [ ] Does the Notice state whether penalty is for UNDER-REPORTING or MISREPORTING? |
-| [ ] If Misreporting, does the Notice specify the precise sub-clause of 270A(9)?   |
-| [ ] Is the relevant limb clearly marked (or were pre-printed templates used)?      |
-+-----------------------------------------------------------------------------------+
-                                   |
-                IF ANY CHECK BOX IS "NO" -> SCN IS DEFECTIVE
-                                   |
-                                   v
-                   [ PENALTY ORDER IS VOID AB INITIO ]
-        (Supported by Schneider Electric, Prem Brothers, & ITAT Precedents)
-```
-</NoticeTrap>
+
 
 ### Statutory Jurisdictional Requirements
 For a penalty order under Section 270A to be legally valid, the Show Cause Notice issued under Section 274 read with Section 270A must explicitly state:
@@ -506,22 +288,6 @@ For a penalty order under Section 270A to be legally valid, the Show Cause Notic
 
 An SCN that states both options simultaneously (e.g., *"for under-reporting / misreporting of income"*) or fails to identify the applicable clause under Section 270A(9) violates the **Principles of Natural Justice**. Without a specific charge, the taxpayer cannot prepare an effective defense.
 
-```
-                  +----------------------------------------------+
-                  |  SHOW CAUSE NOTICE ISSUED u/s 274 r.w. 270A  |
-                  +----------------------------------------------+
-                                         |
-               +-------------------------+-------------------------+
-               |                                                   |
-      SPECIFIC CHARGE GIVEN:                              VAGUE / AMBIGUOUS CHARGE:
-  "Misreporting under Sec 270A(9)(c):                  "For Under-reporting / Misreporting
-  Unsubstantiated expenditure of ₹15,00,000"           of income under Section 270A"
-               |                                                   |
-               v                                                   v
-      [ VALID NOTICE ]                                   [ JURISDICTIONAL DEFECT ]
-  Taxpayer can respond to specific                      Violates Principles of Natural
-  allegation on merits.                                 Justice; notice is VOID AB INITIO.
-```
 
 ### Precedents Established by High Courts
 
@@ -538,28 +304,6 @@ The Court reiterated that the AO cannot use ambiguous language in notice templat
 ### Tactical Defense Execution
 When an Assessing Officer issues a defective SCN, the taxpayer can challenge the notice on jurisdictional grounds before appealing on the merits:
 
-```
-                          [ DEFECTIVE SCN RECEIVED ]
-                                      |
-                                      v
-               +----------------------------------------------+
-               | STEP 1: File Preliminary Jurisdictional      |
-               | Objection highlighting vagueness/omission.   |
-               +----------------------------------------------+
-                                      |
-                                      v
-               +----------------------------------------------+
-               | STEP 2: Respond on Merits without Prejudice  |
-               | to Jurisdictional Objections.                |
-               +----------------------------------------------+
-                                      |
-                                      v
-               +----------------------------------------------+
-               | STEP 3: If Penalty Order is passed, challenge|
-               | validity before CIT(A) / ITAT / High Court   |
-               | under Schneider Electric line of cases.      |
-               +----------------------------------------------+
-```
 
 ---
 
@@ -567,63 +311,16 @@ When an Assessing Officer issues a defective SCN, the taxpayer can challenge the
 
 To examine how these statutory rules operate in practice, consider the following case study involving an independent software consultant.
 
-```
-+-----------------------------------------------------------------------------------+
-|                              CASE STUDY BACKGROUND                                |
-+-----------------------------------------------------------------------------------+
-|  Taxpayer: Rahul Verma (Independent Software Architect)                            |
-|  Assessment Year: 2023–24                                                         |
-|  Gross Professional Receipts: ₹85,00,000                                          |
-|  Returned Taxable Income: ₹18,00,000 (Filed under Sec 44AB with Audit Report)      |
-|                                                                                   |
-|  Key Expense Claims:                                                              |
-|  1. Sub-contracting/Software Development Charges: ₹25,00,000                       |
-|  2. Domestic Travel & Client Entertainment: ₹8,00,000                             |
-+-----------------------------------------------------------------------------------+
-```
 
 ### Audit Phase: Faceless Assessment u/s 143(3)
 The case is selected by CASS due to high expense-to-gross-receipt ratios. The Faceless Assessment Officer issues a notice under Section 142(1) requesting primary evidence for the claimed expenses.
 
-```
-+-----------------------------------------------------------------------------------+
-|                            ASSESSMENT EVIDENTIARY AUDIT                           |
-+-----------------------------------------------------------------------------------+
-|  DISALLOWANCE 1: Sub-contracting Charges (₹15,00,000)                             |
-|  * Findings: Paid to family members. No work outputs, GitHub commits, or emails  |
-|    could be produced. Invoices lacked GSTINs and description of services.         |
-|  * Assessment Action: Disallowed u/s 37(1) as unsubstantiated/non-genuine.        |
-|                                                                                   |
-|  DISALLOWANCE 2: Travel Expenses (₹3,00,000)                                      |
-|  * Findings: Disallowed due to missing logbooks and personal credit card receipts. |
-|  * Assessment Action: Disallowed u/s 37(1) due to inadequate documentation.        |
-+-----------------------------------------------------------------------------------+
-```
 
 Total Assessment Addition: **₹18,00,000**.  
 Revised Assessed Income: **₹36,00,000**.
 
 ### The Penalty Stage: Formulating the Response Strategy
 
-```
-                          [ ₹18,00,000 ADDITION MADE ]
-                                       |
-                                       v
-                     +-----------------------------------+
-                     |  AO Issues Penalty SCN u/s 274    |
-                     +-----------------------------------+
-                                       |
-                   +-------------------+-------------------+
-                   |                                       |
-        SCN A (DEFECTIVE TEMPLATE):               SCN B (SPECIFIC CHARGE):
-     "For under-reporting / misreporting        "For misreporting under Sec 270A(9)(c)
-      of income under Section 270A"              for unsubstantiated expenditures"
-                   |                                       |
-                   v                                       v
-         [ JURISDICTIONAL DEFENSE ]               [ STRATEGIC RESPONSE ON MERITS ]
-      Move to quash penalty order based        Separate additions into 270A(6)(a)
-      on Schneider Electric precedent.          vs. 270A(2) under-reporting.
-```
 
 #### Strategy for SCN A (Defective Notice)
 File a jurisdictional objection relying on *Schneider Electric* and *Prem Brothers*. Highlight that the notice fails to select between under-reporting and misreporting, and omits the specific sub-clause of Section 270A(9). Request that penalty proceedings be dropped as *void ab initio*.
