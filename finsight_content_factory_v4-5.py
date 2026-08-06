@@ -188,6 +188,47 @@ OUTCOME CERTAINTY
 - Reader leaves knowing what applies to them, what to do next, and how to avoid the notice.
 """
 
+GOLD_STANDARD_CHECKLIST = """
+═══════════════════════════════════════════════════════════════
+CONTENT QUALITY & NARRATIVE STRUCTURE — 100% GOLD STANDARD
+═══════════════════════════════════════════════════════════════
+Before the article can PASS, every item below must hold.
+Do NOT use the headings "Pillar 1/2/3/4" in the article — deliver the psychology
+through natural narrative flow that mirrors the reader's anxious monologue.
+
+1. THE 4-PILLAR PSYCHOLOGICAL NARRATIVE (substance, not labels)
+   - REGULATION: Exact legal mechanics and sections — zero fluff, plain language.
+   - RISK: How to minimize risk — CPC/AIS scrutiny triggers, deadlines.
+     Use <NoticeTrap title="...">...</NoticeTrap> for the sharpest traps.
+   - SAVE: How to save money or reduce damage — exemptions, deductions, safe harbours,
+     immunity paths. Clear numbers. Note where a <TaxWorkbench> calculator would belong.
+   - EDGE: Am I leaving anything out? — real edge cases generic sites ignore
+     (joint structures, NRI/RNOR, timing mismatches, presumptive friction, etc.).
+
+2. DEPTH AND "MEAT"
+   - Real-world examples with rupees, roles, and situations.
+   - Rich prose: extreme clarity over false brevity. Dense utility, not padding.
+
+3. FINAL ACTIONABLE CHECKLIST
+   - End with a section titled exactly:
+     ## 💡 Key Takeaway Summary & Actionable Checklist
+   - Concrete physical next steps (Download…, File…, Draft…, Do not…).
+   - Calendar language for deadlines.
+
+4. TONE AND EMPATHY
+   - Empathetic to friction at the open.
+   - Precise on math (plain rupees; no broken LaTeX).
+   - Cautionary on notice traps without shaming.
+   - Reader feels elevated and capable — never lesser for not knowing jargon.
+
+HARD FAILS for the reader critic:
+- Missing regulation OR risk/traps OR save/path OR edge depth.
+- Missing ## 💡 Key Takeaway Summary & Actionable Checklist.
+- ASCII / box-drawing diagrams.
+- No TL;DR near the top.
+- Tone that lectures or humiliates.
+"""
+
 # =============================================================================
 # STYLE CATALOG — auto-selected from topic (not asked of user)
 # =============================================================================
@@ -471,7 +512,42 @@ def run_crew(
     return getattr(result, "raw", None) or str(result)
 
 
+# Domains treated as official sources — useful for law, NOT for "competition"
+_GOV_OR_OFFICIAL_HINTS = (
+    "incometax.gov",
+    "incometaxindia.gov",
+    "gst.gov",
+    "cbic.gov",
+    "cbdt",
+    "indiacode.nic",
+    "legislative.gov",
+    "egazette",
+    "nic.in",
+    "india.gov",
+    "rbi.org",
+    "sebi.gov",
+    "mca.gov",
+    "cleartax.in/s/income-tax-act",  # statute mirrors sometimes; still skip for competitor list
+)
+
+# Hard cap: absurd multi-dozen tool loops are not allowed
+_MAX_SEARCH_CALLS = int(os.environ.get("FINSIGHT_MAX_SEARCH_CALLS", "3"))
+_search_call_count = 0
+
+
+def _is_gov_or_official(url: str) -> bool:
+    u = (url or "").lower()
+    return any(h in u for h in _GOV_OR_OFFICIAL_HINTS)
+
+
 def build_search_tool() -> Any:
+    """
+    Competitor research only.
+    - Max FINSIGHT_MAX_SEARCH_CALLS invocations per factory run (default 3).
+    - Returns up to 5 unique non-government organic results (what readers actually see).
+    - Government / statute sites are filtered out of the competitor set.
+    """
+    global _search_call_count
     if DISABLE_SEARCH:
         print("ℹ️  Search disabled")
         return None
@@ -485,29 +561,84 @@ def build_search_tool() -> Any:
         from pydantic import BaseModel, Field
 
         class In(BaseModel):
-            query: str = Field(..., description="Web search query")
+            query: str = Field(
+                ...,
+                description=(
+                    "One search query for TOP COMPETITOR articles on this tax topic "
+                    "(blogs, ClearTax, TaxGuru, BankBazaar, CA firm guides). "
+                    "Do NOT use this to scrape government statute pages."
+                ),
+            )
 
-        class T(BaseTool):
-            name: str = "web_search"
-            description: str = "Search the web for articles, guides, and official tax pages on the topic."
+        class CompetitorSearchTool(BaseTool):
+            name: str = "competitor_web_search"
+            description: str = (
+                "Search Google-like results for the TOP commercial/competitor articles on this topic. "
+                "Returns at most 5 unique non-government URLs. "
+                "Call at most twice in the whole task. Do not spam queries."
+            )
             args_schema: type[BaseModel] = In
 
             def _run(self, query: str) -> str:
+                global _search_call_count
+                if _search_call_count >= _MAX_SEARCH_CALLS:
+                    return (
+                        f"SEARCH_CAP_REACHED ({_MAX_SEARCH_CALLS}). "
+                        "Do not call again. Write the gap brief from results you already have."
+                    )
+                _search_call_count += 1
+                call_n = _search_call_count
+                print(f"🔍 competitor_web_search [{call_n}/{_MAX_SEARCH_CALLS}]: {query[:120]}")
+
                 try:
-                    rows = list(DDGS().text(query, max_results=10))
+                    # Pull a wider net, then filter to unique non-gov
+                    rows = list(DDGS().text(query, max_results=15))
                 except Exception as e:
                     return f"Search error: {e}"
-                if not rows:
-                    return "No results"
-                bits = []
-                for i, r in enumerate(rows, 1):
-                    bits.append(
-                        f"{i}. {r.get('title','')}\n   {r.get('href') or r.get('link','')}\n   {r.get('body') or r.get('snippet','')}"
+
+                seen_hosts: set[str] = set()
+                picked: list[dict[str, str]] = []
+                for r in rows:
+                    href = (r.get("href") or r.get("link") or "").strip()
+                    if not href or _is_gov_or_official(href):
+                        continue
+                    # unique by host
+                    host = re.sub(r"^https?://(www\.)?", "", href).split("/")[0].lower()
+                    if host in seen_hosts:
+                        continue
+                    seen_hosts.add(host)
+                    picked.append(
+                        {
+                            "title": r.get("title") or "",
+                            "url": href,
+                            "snippet": r.get("body") or r.get("snippet") or "",
+                        }
                     )
+                    if len(picked) >= 5:
+                        break
+
+                if not picked:
+                    return (
+                        "No non-government competitor results found. "
+                        "Proceed using your knowledge of typical ClearTax/TaxGuru-style coverage gaps."
+                    )
+
+                bits = [
+                    f"TOP {len(picked)} COMPETITOR SOURCES (non-government, unique hosts) "
+                    f"[call {call_n}/{_MAX_SEARCH_CALLS}]:"
+                ]
+                for i, p in enumerate(picked, 1):
+                    bits.append(
+                        f"{i}. {p['title']}\n   {p['url']}\n   {p['snippet']}"
+                    )
+                bits.append(
+                    "\nUse ONLY these to judge what competition covers. "
+                    "Official law remains the quant/model knowledge — do not treat .gov pages as competitors."
+                )
                 return "\n\n".join(bits)
 
-        print("✅ Search via ddgs")
-        return T()
+        print(f"✅ Competitor search ready (max {_MAX_SEARCH_CALLS} calls, top 5 non-gov each)")
+        return CompetitorSearchTool()
     except Exception as e:
         print(f"⚠️  Search tool wrap failed: {e}")
         return None
@@ -631,29 +762,34 @@ def build_agents(search_tool: Any) -> dict[str, Any]:
     llm_rigid = make_llm(0.15)
     llm_creative = make_llm(0.65)
     llm_critic = make_llm(0.2)
-    tools = [search_tool] if search_tool else []
+    # Only the gap agent may search — and only competitor pages (capped tool).
+    gap_tools = [search_tool] if search_tool else []
 
     return {
         "quant": Agent(
             role="Principal Tax Quant",
-            goal="Extract exact current Indian tax mechanics for the topic as bullets.",
+            goal="Extract exact current Indian tax mechanics for the topic as bullets. No web search.",
             backstory=DEEP_ANALYSIS_MANDATE
-            + "\nYou supply FACTS only: sections, rates, thresholds, deadlines, who pays whom. Flag uncertainty.",
+            + "\nYou supply FACTS only from statute knowledge and the editor's statutory hint. "
+            "Do NOT browse the web. Flag uncertainty explicitly.",
             llm=llm_rigid,
-            tools=tools,
+            tools=[],  # no search — stops 20+ quant tool loops
             allow_delegation=False,
             verbose=True,
         ),
         "gap": Agent(
             role="Content Gap Strategist",
             goal=(
-                "Search the internet for existing articles on this topic. List what they already cover "
-                "and — critically — what they MISS. Those misses MUST appear in our article."
+                "Find the TOP 5 non-government competitor articles readers actually see in search. "
+                "List what they cover and what they MISS. Gaps MUST appear in our article. "
+                "Call competitor_web_search at most TWICE."
             ),
             backstory=DEEP_ANALYSIS_MANDATE
-            + "\nYou think like a competitor analyst. Output a gap brief the novelist cannot ignore.",
+            + "\nYou are a competitor analyst — ClearTax, TaxGuru, BankBazaar, CA blogs — NOT a statute scraper. "
+            "Government sites are sources of law, not competition. "
+            "Our job is higher quality narrative, visuals, and outcome certainty than those 5 pages.",
             llm=llm_creative,
-            tools=tools,
+            tools=gap_tools,
             allow_delegation=False,
             verbose=True,
         ),
@@ -677,6 +813,8 @@ def build_agents(search_tool: Any) -> dict[str, Any]:
                 DEEP_ANALYSIS_MANDATE
                 + "\n\n"
                 + CONTENT_STRATEGY
+                + "\n\n"
+                + GOLD_STANDARD_CHECKLIST
                 + "\nYou write like the best FinSight myth-busters: human stakes, history, mechanism, "
                 "decision path — never like an internal audit memo or a statute reprint."
             ),
@@ -695,7 +833,10 @@ def build_agents(search_tool: Any) -> dict[str, Any]:
                 DEEP_ANALYSIS_MANDATE
                 + "\n\n"
                 + CONTENT_STRATEGY
-                + "\nYou defend the common reader. Fail statute dumps and text-art diagrams."
+                + "\n\n"
+                + GOLD_STANDARD_CHECKLIST
+                + "\nYou defend the common reader. Fail statute dumps, text-art diagrams, "
+                "and any draft missing the Gold Standard floor."
             ),
             llm=llm_critic,
             allow_delegation=False,
@@ -739,6 +880,7 @@ def t_quant(job: ArticleJob, agent: Any) -> Any:
             f"{DEEP_ANALYSIS_MANDATE}\n\n"
             f"Topic: {job.topic}\nHint: {job.statutory_hint or 'discover'}\n"
             f"Alpha thesis from editor: {job.alpha or '(none)'}\n\n"
+            "NO WEB SEARCH. Use statute knowledge + hint only.\n"
             "Output STRICT bullets: sections, circulars, rates, thresholds, deadlines, "
             "penalties, payer vs recipient. Flag uncertainty explicitly."
         ),
@@ -752,14 +894,28 @@ def t_gap(job: ArticleJob, agent: Any, quant_task: Any) -> Any:
         description=(
             f"{DEEP_ANALYSIS_MANDATE}\n\n"
             f"Topic: {job.topic}\n\n"
-            "Use web_search (multiple queries) for Indian tax articles/guides on this topic.\n"
+            "GOAL: See what the COMPETITION publishes so FinSight can beat them on quality, "
+            "depth, visuals, and outcome certainty.\n\n"
+            "SEARCH RULES (strict):\n"
+            "- Use the tool `competitor_web_search` at most TWO times total.\n"
+            "- Prefer queries like: the topic + guide/penalty/notice (India).\n"
+            "- Competition = top organic commercial pages (ClearTax, TaxGuru, BankBazaar, "
+            "CA firm blogs, news explainers) — NOT incometax.gov.in / CBDT / India Code.\n"
+            "- The tool already returns ≤5 unique non-government hosts. Do not re-query endlessly.\n"
+            "- If SEARCH_CAP_REACHED, stop searching and write the brief.\n\n"
             "Return markdown:\n"
-            "## Covered by existing articles\n- ...\n"
-            "## GAPS (must include in our article)\n- ...\n"
-            "## Dangerous myths circulating\n- ...\n"
-            "Be specific. Gaps are obligations for the novelist."
+            "## Top competitor sources (name + URL)\n"
+            "1. ...\n"
+            "## What they already cover\n"
+            "- ...\n"
+            "## GAPS we must cover better (obligations for the novelist)\n"
+            "- ...\n"
+            "## Dangerous myths they reinforce or leave unchallenged\n"
+            "- ...\n"
+            "## How we win (quality / visuals / decision path)\n"
+            "- ...\n"
         ),
-        expected_output="Gap brief markdown.",
+        expected_output="Competitor gap brief (top 5 non-gov focus).",
         agent=agent,
         context=[quant_task],
     )
@@ -774,33 +930,34 @@ def t_novelist(
 ) -> Any:
     return Task(
         description=(
-            f"{DEEP_ANALYSIS_MANDATE}\n\n{CONTENT_STRATEGY}\n\n"
+            f"{DEEP_ANALYSIS_MANDATE}\n\n{CONTENT_STRATEGY}\n\n{GOLD_STANDARD_CHECKLIST}\n\n"
             f"Write the FULL article on: {job.topic}\n\n"
             f"EDITOR ALPHA (honor this thesis):\n{job.alpha or '(derive from first principles)'}\n\n"
             f"AUTO-SELECTED STYLE: {style['name']}\n"
             f"Style energy (launchpad, not cage): {style['rules']}\n\n"
-            "MUST INCLUDE:\n"
+            "MUST INCLUDE (Gold Standard floor):\n"
             "- Symptom opening (human stakes).\n"
             "- TL;DR in <CardPremium> with 3–5 bullets near the top.\n"
-            "- First principles / why the law exists (5 Whys).\n"
-            "- Plain-language mechanism (no ASCII pipelines).\n"
+            "- REGULATION mechanics in plain language + why the law exists (5 Whys).\n"
+            "- RISK / notice traps (use <NoticeTrap> for the sharpest ones).\n"
+            "- SAVE / reduce-damage paths with numbers.\n"
+            "- EDGE cases generic sites skip.\n"
             "- Comparison table or scenario matrix when useful.\n"
-            "- Notice traps.\n"
-            "- Action checklist with human verbs.\n"
-            "- ## Key Takeaways section at the end (5–8 bullets).\n"
-            "- [Illustration: …] markers wherever a diagram or emotional beat is needed "
-            "(not limited to 2).\n\n"
+            "- ## 💡 Key Takeaway Summary & Actionable Checklist at the end "
+            "(concrete physical next steps, human verbs, deadlines).\n"
+            "- [Illustration: …] markers for every needed visual (not limited to 2).\n\n"
             "MUST NOT INCLUDE:\n"
             "- ASCII art, box-drawing trees, text flowcharts.\n"
             "- Raw LaTeX ($$).\n"
             "- Audit cosplay (Case File, Resolution Status, File closed).\n"
-            "- Pillar 1/2/3/4 headings.\n"
+            "- The words 'Pillar 1', 'Pillar 2', 'Pillar 3', 'Pillar 4' as headings.\n"
             "- YAML frontmatter (system injects it).\n\n"
+            "Tone: empathetic → precise on math → cautionary on traps → elevating close.\n"
             "Language: simple, modern, impactful; dejargonise for common people.\n"
             "Incorporate EVERY gap from the gap brief. Honor the alpha.\n"
             "Markdown body only."
         ),
-        expected_output="Full markdown article body with TL;DR and Key Takeaways.",
+        expected_output="Full markdown body meeting Gold Standard checklist.",
         agent=agent,
         context=[quant_task, gap_task],
     )
@@ -811,25 +968,29 @@ def t_reader(agent: Any, draft: str, gap_brief: str) -> Any:
     g = gap_brief if len(gap_brief) < 20_000 else gap_brief[:20_000]
     return Task(
         description=(
-            f"{CONTENT_STRATEGY}\n\n"
-            "Critique this draft against the Content Strategy floor and gap coverage.\n\n"
+            f"{CONTENT_STRATEGY}\n\n{GOLD_STANDARD_CHECKLIST}\n\n"
+            "Critique this draft against the Gold Standard checklist and gap coverage.\n\n"
             f"GAP BRIEF:\n{g}\n\n"
             f"DRAFT:\n```markdown\n{d}\n```\n\n"
             "Return JSON only:\n"
             '{"verdict":"PASS"|"FAIL","score":0-10,'
             '"has_tldr":true/false,'
-            '"has_key_takeaways":true/false,'
+            '"has_regulation":true/false,'
+            '"has_risk_notice_traps":true/false,'
+            '"has_save_path":true/false,'
+            '"has_edge_cases":true/false,'
+            '"has_key_takeaway_checklist":true/false,'
             '"has_ascii_diagrams":true/false,'
+            '"tone_ok":true/false,'
             '"jargon_problems":[],'
             '"missing_gaps":[],'
             '"confusing_bits":[],'
             '"rewrites":[{"original":"...","suggested":"..."}],'
             '"notes":"..."}\n\n'
-            "FAIL if any of: no TL;DR near top; no Key Takeaways at end; ASCII/box diagrams present; "
-            "heavy undeclared jargon; non-CA cannot decide; missing gap items; pure statute dump; "
-            "audit cosplay."
+            "FAIL if any Gold Standard hard-fail is true, or non-CA cannot decide, "
+            "or gap items missing, or pure statute dump / audit cosplay."
         ),
-        expected_output="JSON critique with strategy-floor checks.",
+        expected_output="JSON critique with Gold Standard checklist scores.",
         agent=agent,
     )
 
@@ -845,7 +1006,7 @@ def t_revise(
 ) -> Any:
     return Task(
         description=(
-            f"{DEEP_ANALYSIS_MANDATE}\n\n{CONTENT_STRATEGY}\n\n"
+            f"{DEEP_ANALYSIS_MANDATE}\n\n{CONTENT_STRATEGY}\n\n{GOLD_STANDARD_CHECKLIST}\n\n"
             f"REVISE the article on: {job.topic}\n"
             f"Style energy: {style['name']} — {style['rules']}\n"
             f"Alpha: {job.alpha}\n\n"
@@ -853,9 +1014,11 @@ def t_revise(
             f"GAPS STILL TO HONOR:\n{gap_brief[:8000]}\n\n"
             f"FACTS:\n{quant_text[:6000]}\n\n"
             f"PREVIOUS DRAFT:\n```markdown\n{draft[:90000]}\n```\n\n"
-            "Fix every FAIL reason. Remove all ASCII diagrams; replace with [Illustration: …] if needed.\n"
-            "Ensure TL;DR + Key Takeaways exist. Dejargonise. Keep law accurate.\n"
-            "Full revised markdown body only."
+            "Fix every FAIL reason against the Gold Standard checklist.\n"
+            "Remove ASCII diagrams; replace with [Illustration: …] if needed.\n"
+            "Ensure TL;DR, regulation, risk/traps, save path, edge cases, and "
+            "## 💡 Key Takeaway Summary & Actionable Checklist all exist.\n"
+            "Dejargonise. Keep law accurate. Full revised markdown body only."
         ),
         expected_output="Full revised markdown body.",
         agent=agent,
@@ -1032,6 +1195,9 @@ def run_factory(job: ArticleJob | None = None) -> FactoryResult:
     )
     logger.section("Inputs")
     logger.note(f"**Topic:** {job.topic}\n\n**Alpha:**\n\n{job.alpha}")
+
+    global _search_call_count
+    _search_call_count = 0  # reset cap each article run
 
     search = build_search_tool()
     agents = build_agents(search)
