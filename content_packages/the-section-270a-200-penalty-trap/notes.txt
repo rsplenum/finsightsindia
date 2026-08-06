@@ -1,0 +1,4 @@
+auto_style=The Coffee Shop Chat
+alpha_len=892
+gap_chars=12026
+reader_0=PASS score=9

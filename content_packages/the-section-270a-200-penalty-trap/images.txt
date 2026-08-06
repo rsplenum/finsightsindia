@@ -1,0 +1,2 @@
+src/assets/images/the-section-270a-200-penalty-trap-anxiety.jpg
+src/assets/images/the-section-270a-200-penalty-trap-relief.jpg

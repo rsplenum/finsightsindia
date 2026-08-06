@@ -1,0 +1,26 @@
+{
+  "title": "Caught Claiming Fake Expenses? How Section 270A Decides Between a 50% Penalty and a Ruinous 200% Fine",
+  "description": "Got a tax notice for padded expenses or unreported cash income? Discover how the Income Tax algorithm distinguishes 'under-reporting' from 'misreporting' under Section 270A, and what immediate steps you must take to avoid a 200% penalty trap.",
+  "readTime": "4 min read",
+  "statutoryAct": "Section 270A of the Income Tax Act, 1961",
+  "intent": "Panic Symptom + Decision Strategy: The user has received or anticipates an automated tax notice for invalid expense claims and needs to urgently determine if their tax error will trigger a 50% penalty (under-reporting) or a 200% penalty (misreporting), and how to legally contain the damage.",
+  "faqs": [
+    {
+      "q": "The tax algorithm flagged my fake expense claim. Will I automatically get hit with a 200% penalty?",
+      "a": "Not automatically, but you are in high-risk territory. A 200% penalty under Section 270A applies if the assessing officer categorizes your claim as 'misreporting' (e.g., misrepresentation or fake invoices). If you proactively substantiate the expense, admit a bonafide mistake, or show a reasonable cause, you may restrict the penalty to 50% for 'under-reporting' or avoid it under Section 273B."
+    },
+    {
+      "q": "What is the exact practical difference between 'under-reporting' and 'misreporting' under Section 270A?",
+      "a": "Under-reporting (50% penalty) happens when you omit income or claim an ineligible deduction without deliberate fraud. Misreporting (200% penalty) involves deliberate deception—such as claiming fake vendor bills, suppressing sales, fabricating books of account, or failing to record financial transactions."
+    },
+    {
+      "q": "Can I get immunity from the 200% penalty and prosecution under Section 270AA?",
+      "a": "Yes, but only if your case is classified as 'under-reporting' and NOT 'misreporting'. You must pay the demanded tax and interest within the notice period and file Form 68 within 30 days of receiving the assessment order, provided you do not appeal the tax demand."
+    },
+    {
+      "q": "How does the Income Tax Department catch fake expense claims filed by freelancers or small businesses?",
+      "a": "The department uses automated data-matching algorithms via the Insights Portal and AIS. It cross-references your claimed expenses against vendor GST returns, high-value transaction databases, and industry-standard profit margins to flag unnatural or unsupported deductions."
+    }
+  ],
+  "reader_pass": true
+}
