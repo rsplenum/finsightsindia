@@ -120,10 +120,18 @@ def build_image_tool() -> Any:
                 api_key = os.environ.get("GEMINI_API_KEY")
                 if not api_key:
                     return f"![Illustration: {prompt}](../../assets/images/placeholder.jpg)"
+                
+                # Enforce Varsity Style constraints
+                varsity_prompt = (
+                    f"{prompt}. Ensure the artwork is a Varsity style illustration, minimalist, "
+                    "with a pure white background that blends seamlessly into web designs, "
+                    "and compatible with dark mode aesthetics (high contrast, clean lines)."
+                )
+                
                 try:
-                    url = f"https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key={api_key}"
+                    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:predict?key={api_key}"
                     payload = {
-                        "instances": [{"prompt": prompt}],
+                        "instances": [{"prompt": varsity_prompt}],
                         "parameters": {"sampleCount": 1}
                     }
                     res = requests.post(url, json=payload)
