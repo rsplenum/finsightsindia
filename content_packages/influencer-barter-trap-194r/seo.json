@@ -1,0 +1,38 @@
+{
+  "slug": "influencer-barter-trap-194r",
+  "title": "Received Free Brand Products Without TDS? Fix Your Section 194R Tax Liability Before An Income Tax Notice Arrives",
+  "description": "If brands sent you free products worth over ₹20,000 without deducting Section 194R TDS, you remain legally required to pay income tax on their Fair Market Value under Section 28(iv). Discover how to declare retained barter gifts in ITR-3/ITR-4, pay advance tax, prove returned items with courier documentation, and completely eliminate your exposure to 1% monthly interest and audit penalties.",
+  "intent": "Commercial / Tax Remediation",
+  "faqs": [
+    {
+      "q": "What happens if a brand never deducted 10% TDS u/s 194R on a high-value product I kept?",
+      "a": "A brand's failure to deduct TDS u/s 194R does not exempt you from income tax liability. Under Section 28(iv) of the Income-tax Act, you are legally obligated to report the Fair Market Value (FMV) or actual purchase cost of all retained products as professional income in Form ITR-3 or ITR-4 and pay self-assessment tax. Failing to declare this income exposes you to tax audit reassessments and penalties."
+    },
+    {
+      "q": "Are free products under the ₹20,000 threshold completely tax-free for influencers?",
+      "a": "No. The ₹20,000 aggregate threshold under Section 194R strictly governs the brand's requirement to deduct TDS. If the aggregate annual benefit exceeds ₹20,000 from a single deductor, 10% TDS applies to the entire amount. However, regardless of whether TDS was deducted, all retained in-kind benefits constitute taxable business/professional income under Section 28(iv) and must be included in your gross receipts."
+    },
+    {
+      "q": "How can I prove to the Income Tax Department that I returned a product after reviewing it?",
+      "a": "Under Question 8 of CBDT Circular No. 12/2022, returned items do not attract Section 194R TDS or Section 28(iv) taxability. To defend against tax scrutiny, you must maintain verifiable documentary proof: physical courier receipts, written agreements/emails detailing the return terms, return waybills, and signed acknowledgment receipts from the brand or agency."
+    },
+    {
+      "q": "How is the taxable value determined for custom goods, unreleased prototypes, or review items?",
+      "a": "For purchased goods, the taxable value is the actual purchase price incurred by the brand. For self-manufactured goods, it is the standard retail price charged to regular customers. For non-commercial goods, custom designer apparel, or unreleased prototypes lacking a public price, you should obtain a written valuation or cost confirmation statement from the sponsoring brand to substantiate your declared ITR value."
+    },
+    {
+      "q": "What penalties apply if Section 194R TDS was mandatory but omitted during a brand collaboration?",
+      "a": "The brand (deductor) faces interest charges u/s 201(1A) at 1% per month for delayed deduction and 1.5% per month for delayed payment, along with potential 100% tax penalties u/s 271C. For the influencer (recipient), failing to report the in-kind receipt u/s 28(iv) results in tax reassessment, interest on unpaid self-assessment tax, and penalties for misreporting income."
+    }
+  ],
+  "title_alts": [
+    "The Influencer Barter Trap: What Happens When Brands Don't Deduct 10% TDS u/s 194R On Free Gifts?",
+    "Kept Retained Barter Items Over ₹20,000? How Section 28(iv) Exposes Influencers to Unpaid Income Tax Penalties",
+    "Brand Sent Free Products Without Form 16A? Step-by-Step Resolution to Clear Your Section 194R Scrutiny Risk"
+  ],
+  "writingStyle": "The Forensic Auditor",
+  "protagonist": "Ava, lifestyle creator who kept a ₹1.4L review laptop",
+  "primaryFear": "The free product is taxable income and the brand never deducted TDS",
+  "style_pass": true,
+  "revision_rounds": 1
+}

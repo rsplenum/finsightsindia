@@ -1,0 +1,4 @@
+draft_v1_chars=7127
+eval_round_0: verdict=FAIL score=6
+revise_1_chars=5103
+eval_round_1: verdict=PASS score=8
