@@ -1,0 +1,101 @@
+---
+title: "The Section 143(1) TDS Arrears Demand: How to Shift the Burden When Your Employer Defaults"
+category: "tds"
+categoryName: "Direct Tax"
+readTime: "7 min read"
+updatedDate: "FY 2025-26"
+statutoryAct: "Section 143(1) & Section 205 of the Income Tax Act, 1961"
+summary: "You received an automated demand for ₹50,000 in unpaid tax because your employer deducted TDS but went bankrupt and never deposited it. Here is the exact legal mechanism to freeze the demand and shift the recovery burden back to the deductor."
+writingStyle: "The Diplomat"
+---
+
+import NoticeTrap from "../../components/mdx/NoticeTrap.astro";
+import CardPremium from "../../components/CardPremium.astro";
+
+You open an email from the Centralized Processing Centre (CPC) containing your Section 143(1) Intimation. You expect a refund. Instead, the PDF mathematically recalculates your return and slaps you with a tax demand for ₹50,000, plus interest. 
+
+You check your payslips. Your employer clearly deducted the ₹50,000 as Tax Deducted at Source (TDS). But when you check your Form 26AS and Annual Information Statement (AIS), the TDS credit is completely missing. 
+
+Your employer—whether they are a struggling startup or a bankrupt contractor—deducted your money but used it for working capital instead of depositing it with the government. 
+
+The machine does not care about your employer's bankruptcy. The CPC algorithm only reads the data feed from Form 26AS. If the deposit isn't there, the algorithm automatically issues a demand against you. It expects you to pay the tax twice.
+
+![A taxpayer staring in shock at an unexpected tax demand document.](../../assets/images/shocked_taxpayer.jpg)
+
+<CardPremium>
+### TL;DR
+- **The Trigger:** An employer or client deducts TDS from your payment but fails to deposit it with the government, causing a mismatch in your Form 26AS.
+- **The Machine's Reaction:** The CPC algorithm automatically rejects your TDS claim and issues a Section 143(1) tax demand directly against you, complete with interest.
+- **The Defense (Section 205):** You are legally protected from double taxation. By formally invoking Section 205, you can legally freeze the demand and force the tax department to recover the money directly from the defaulting employer.
+</CardPremium>
+
+## The Historical Intent & Algorithmic Shift
+
+To understand how to dismantle this automated demand, you must understand the mechanical evolution of the TDS system. 
+
+1. **The Physical Era:** Decades ago, TDS credit was granted based on physical TDS certificates (Form 16/16A). If your employer gave you the paper certificate, you got the credit. However, this led to massive revenue leakage as companies issued fake certificates without actually depositing the cash into the treasury.
+2. **The Algorithmic Wall:** To plug the leakage, the CBDT introduced a strict algorithmic barrier. The CPC was reprogrammed to blindly trust a single source of truth: **Form 26AS**. If the PAN of the deductor hasn't transferred the cash to the treasury linked to your PAN, the credit does not exist.
+3. **The Unintended Victim:** This mechanical shift perfectly solved the government's revenue problem, but it created a severe collateral victim: the honest employee. The algorithm cannot distinguish between an employee who is faking a TDS claim and an employee who was robbed by their own employer. 
+
+This creates a terrifying standoff. The Income Tax Department holds you liable because they didn't get the money. You hold the department liable because they have the power to arrest the employer. Who blinks first?
+
+## The Legal Hinge: Section 205
+
+You do not have to blink. The law is explicitly written to protect you from this exact systemic failure. 
+
+The marginal difference between a taxpayer who panics and pays the ₹50,000 demand, and the taxpayer who walks away free, is the invocation of a single line of law: **Section 205 of the Income Tax Act.**
+
+Section 205 explicitly states: 
+> *"Where tax is deductible at the source under the foregoing provisions of this Chapter, the assessee shall not be called upon to pay the tax himself to the Section extent to which tax has been deducted from that income."*
+
+This is your absolute legal shield. The moment the employer deducts the tax from your salary or invoice, that money legally ceases to be your liability. It becomes a debt owed by the employer to the Central Government. The Income Tax Department cannot recover a debt from you that you have already paid to their designated collection agent (your employer).
+
+## The Procedural Checkmate: Shifting the Burden
+
+While Section 205 is your shield, you cannot simply ignore the Section 143(1) demand. If you ignore it, the automated system will eventually freeze your bank accounts or adjust the ₹50,000 against your future tax refunds under Section 245. 
+
+You must act as a legal diplomat. You must formally shift the jurisdiction of the recovery from your Assessing Officer to the **TDS Assessing Officer**. 
+
+Here is the exact step-by-step mechanism to execute the shift:
+
+### Step 1: Do Not File a Revised Return
+Your first instinct might be to file a revised return to remove the disputed income so the tax demand drops. **Do not do this.** If you remove the income, you are effectively accepting that the employer never paid you. You must maintain your original filing claiming the TDS.
+
+### Step 2: Gather the Evidentiary Chain
+You must prove to the Assessing Officer that the deduction actually occurred. The CPC algorithm won't believe you, so you need human intervention. Gather:
+- Your employment contract or vendor agreement.
+- Your payslips or the specific invoices showing the gross amount and the exact TDS deducted.
+- Your bank statements proving you only received the *net* amount. 
+
+### Step 3: File a Formal Grievance & Response
+Log into the e-Filing portal. You must perform two actions:
+1. **Respond to Outstanding Demand:** Go to `Pending Actions > Response to Outstanding Demand`. Select "Disagree with demand." State the reason as: *"Demand is due to TDS deducted but not deposited by the employer."*
+2. **Submit the Section 205 Letter:** File a grievance to your Jurisdictional Assessing Officer (JAO). Attach your evidentiary chain and a formal letter invoking Section 205. 
+
+<NoticeTrap title="The Form 26AS Discrepancy Trap">
+**The Trigger:** Your employer deposited the TDS but filed their TDS Return (Form 24Q/26Q) with a typo in your PAN. The money is in the government treasury, but it is floating in a suspense account and hasn't hit your Form 26AS.
+
+**The Solution:** Section 205 does not apply here because it's a clerical error, not a default. You must force the employer to file a "Correction Statement" for their TDS return. The moment they fix the PAN, the CPC algorithm will automatically refresh your Form 26AS, and the Section 143(1) demand will extinguish itself.
+</NoticeTrap>
+
+<NoticeTrap title="The Section 245 Refund Adjustment Trap">
+**The Trigger:** You ignored the ₹50,000 demand from AY 2023-24. In AY 2024-25, you are owed a legitimate tax refund of ₹60,000. The CPC automatically triggers Section 245, wiping out the old demand and only refunding you ₹10,000.
+
+**The Solution:** You must prevent this by responding to the Section 245 intimation within 30 days, explicitly stating that the outstanding demand is stayed under Section 205 due to employer default. If they adjust it anyway, you must file a Writ Petition in the High Court; multiple High Courts have ordered the tax department to reverse such illegal adjustments with interest.
+</NoticeTrap>
+
+## The Central Board's Mandate
+
+If your Assessing Officer attempts to bully you into paying the demand because "the system won't let them close it," you hold the ultimate trump card. 
+
+The Central Board of Direct Taxes (CBDT) issued **Instruction No. 275/29/2014-IT(B)**, explicitly directing all Assessing Officers that when an employer fails to deposit TDS, the AO is **barred** from enforcing the demand against the employee. Instead, the AO is legally required to transfer the case to the TDS Wing, which has the power to initiate prosecution, attach the employer's bank accounts, and arrest the directors under Section 276B.
+
+You are not fighting the Income Tax Department; you are simply pointing them toward their actual target. 
+
+<CardPremium>
+### The Burden-Shift Checklist
+- [ ] **Verify the Default:** Confirm the missing TDS by downloading your Form 26AS and AIS from the e-Filing portal.
+- [ ] **Secure the Evidence:** Export all payslips, invoices, and bank statements showing the net credit to your account.
+- [ ] **Disagree with the Demand:** Respond to the outstanding demand on the portal within 30 days, explicitly disagreeing due to employer default.
+- [ ] **Invoke Section 205:** File a written grievance quoting Section 205 and CBDT Instruction No. 275/29/2014-IT(B), forcing the AO to target the employer. 
+</CardPremium>
