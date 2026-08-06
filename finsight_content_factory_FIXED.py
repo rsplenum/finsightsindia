@@ -477,15 +477,28 @@ def run_factory(job: ArticleJob, interactive_alpha: bool = True) -> FactoryResul
     print(f"\n📦 Package: {pkg}\n   Published: {style_pass or FORCE_PUBLISH_ON_FAIL}\n")
     return result
 
-ARTICLES: list[ArticleJob] = [
-    ArticleJob(
-        topic="The Section 194R Forensic Audit",
-        filename="influencer-barter-trap-194r",
-        category="tds", category_name="Freelancers & Creators",
-        protagonist="Ava", primary_fear="Tax on free products"
-    ),
-]
-
 if __name__ == "__main__":
-    for i, job in enumerate(ARTICLES):
+    print("\n--- Finsight Interactive Content Factory ---")
+    while True:
+        topic = input("📝 Enter Topic (or 'q' to quit): ").strip()
+        if topic.lower() == 'q':
+            break
+        if not topic:
+            continue
+            
+        filename = input("📁 Enter Filename Slug (e.g., freelance-tax-trap): ").strip()
+        category = input("📂 Enter Category [default: tds]: ").strip() or "tds"
+        category_name = input("🏷️  Enter Category Name [default: Compliance]: ").strip() or "Compliance"
+        
+        job = ArticleJob(
+            topic=topic,
+            filename=filename,
+            category=category,
+            category_name=category_name,
+        )
+        
         run_factory(job, interactive_alpha=True)
+        
+        cont = input("\n🔁 Generate another article? (y/n): ").strip().lower()
+        if cont != 'y':
+            break
