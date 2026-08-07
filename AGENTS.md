@@ -20,3 +20,8 @@ Consult these guides before working on related tasks:
 - [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
 - [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
 - [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+
+## Institutional Memory (CRITICAL)
+
+Before proposing technical solutions, making UI changes, or debugging build errors, you **MUST** read `src/data/engineering-solutions.json`.
+This file acts as our institutional memory. If a problem is listed there, you must strictly implement the documented solution to avoid repeating mistakes.

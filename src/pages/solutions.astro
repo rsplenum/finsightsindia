@@ -1,0 +1,77 @@
+---
+import Layout from '../layouts/Layout.astro';
+import solutions from '../data/engineering-solutions.json';
+---
+
+<Layout title="Engineering Solutions - FinSight INDIA" description="Institutional memory: Documented problems and their permanent solutions to avoid repeating mistakes.">
+	
+	<main class="min-h-screen bg-slate-50 dark:bg-navy-900 pt-24 pb-16">
+		<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+			
+			<div class="mb-12 text-center">
+				<h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4 flex items-center justify-center gap-3">
+					<span class="text-4xl">🛠️</span> Engineering Solutions
+				</h1>
+				<p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+					Institutional memory protocol. Once a problem is solved, it stays solved. We document our critical engineering fixes here to eliminate repeating mistakes.
+				</p>
+			</div>
+
+			<div class="space-y-8">
+				{solutions.map((item) => (
+					<div class="bg-white dark:bg-navy-800 rounded-2xl overflow-hidden shadow-sm border border-slate-200 dark:border-navy-700 relative">
+						
+                        {/* Category Tag */}
+                        <div class="absolute top-6 right-6">
+                            <span class="bg-navy-100 dark:bg-navy-900 text-navy-600 dark:text-navy-300 text-xs font-bold px-3 py-1.5 rounded-full border border-navy-200 dark:border-navy-700">
+                                {item.category}
+                            </span>
+                        </div>
+
+						<div class="p-6 md:p-8">
+							<div class="flex items-center gap-3 mb-6">
+								<span class="text-slate-400 dark:text-slate-500 font-mono text-sm">{item.date}</span>
+                                <span class="text-slate-300 dark:text-navy-600">•</span>
+                                <span class="text-slate-400 dark:text-slate-500 font-mono text-sm tracking-wider">{item.id}</span>
+							</div>
+							
+                            {/* Problem Section */}
+                            <div class="mb-6">
+                                <h3 class="flex items-center gap-2 text-sm font-bold text-rose-600 dark:text-rose-400 uppercase tracking-widest mb-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                    The Problem
+                                </h3>
+                                <p class="text-lg font-semibold text-slate-800 dark:text-slate-200 leading-relaxed">
+                                    {item.problem}
+                                </p>
+                            </div>
+
+                            {/* Solution Section */}
+                            <div class="mb-6 p-5 bg-emerald-50 dark:bg-emerald-900/10 rounded-xl border border-emerald-100 dark:border-emerald-900/50">
+                                <h3 class="flex items-center gap-2 text-sm font-bold text-emerald-600 dark:text-emerald-500 uppercase tracking-widest mb-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    The Permanent Solution
+                                </h3>
+                                <p class="text-slate-700 dark:text-slate-300">
+                                    <code class="font-mono text-sm bg-white dark:bg-navy-950 px-1.5 py-0.5 rounded text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 break-words block mt-2">
+                                        {item.solution}
+                                    </code>
+                                </p>
+                            </div>
+
+                            {/* Impact Section */}
+                            <div>
+                                <h3 class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">System Impact</h3>
+                                <p class="text-sm text-slate-600 dark:text-slate-400 italic">
+                                    {item.impact}
+                                </p>
+                            </div>
+						</div>
+					</div>
+				))}
+			</div>
+			
+		</div>
+	</main>
+	
+</Layout>

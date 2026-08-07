@@ -1,0 +1,42 @@
+[
+  {
+    "id": "sol-001",
+    "date": "2026-08-07",
+    "category": "Astro Framework",
+    "problem": "Astro MDX parser crashes during build when rendering standard mathematical formulas or text containing curly braces { }.",
+    "solution": "The MDX compiler interprets anything inside `{}` as a JavaScript expression. Never use raw curly braces in MDX files. Solution: Always use square brackets `[]` or escape the curly braces using backslashes `\\{ \\}`.",
+    "impact": "Prevents catastrophic build failures across the entire content pipeline."
+  },
+  {
+    "id": "sol-002",
+    "date": "2026-08-07",
+    "category": "Design System",
+    "problem": "White-background JPEG illustrations look terrible and break the aesthetic when a user switches the website to Dark Mode.",
+    "solution": "Apply a specific CSS filter chain to the image tag: `mix-blend-multiply dark:invert dark:mix-blend-screen`. This dynamically drops the white background in light mode and intelligently inverts the colors while retaining transparency in dark mode.",
+    "impact": "Maintains premium visual aesthetic across 100% of articles without requiring duplicate image assets."
+  },
+  {
+    "id": "sol-003",
+    "date": "2026-08-07",
+    "category": "User Experience (UX)",
+    "problem": "Textbook algebraic formulas create high cognitive load, causing readers to lose attention and bounce from the page.",
+    "solution": "Never use static math formulas (`A - B = C`). Instead, build interactive Astro Workbench components (like `Penalty270AWorkbench` or `NoticePenaltyWorkbench`). Use visual toggles, range sliders, and dynamic color changes (e.g., turning the UI red when a penalty triggers).",
+    "impact": "Dramatically increases reader retention and intuitively communicates complex tax mechanics."
+  },
+  {
+    "id": "sol-004",
+    "date": "2026-08-07",
+    "category": "UI Layout",
+    "problem": "Long article titles (80+ characters) cause breadcrumb components to wrap onto multiple lines, breaking the top-level layout grid.",
+    "solution": "Apply strict `max-width` and `truncate` CSS classes to the final breadcrumb item to enforce a single line with an ellipsis (`...`). Ensure zero SEO loss by retaining the full, untruncated string in the underlying `JSON-LD` Schema script.",
+    "impact": "Guarantees a pixel-perfect, MacOS-style breadcrumb navigation bar regardless of title length."
+  },
+  {
+    "id": "sol-005",
+    "date": "2026-08-02",
+    "category": "Development Workflow",
+    "problem": "Running the Astro dev server locks up the terminal window, preventing concurrent file modifications and command executions.",
+    "solution": "Always start the development server in background mode using `astro dev --background`. Manage the background process using `astro dev stop`, `astro dev status`, and `astro dev logs`.",
+    "impact": "Unlocks the terminal for concurrent workflow and faster iterative development."
+  }
+]
