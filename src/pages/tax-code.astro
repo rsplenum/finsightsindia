@@ -12,6 +12,13 @@ const uniqueCategories = [...new Set(articlesList.map(art => art.data.categoryNa
 
 // Dynamically load images for cover shots
 const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/*.{jpeg,jpg,png,gif,webp}');
+
+// Helper to extract image from MDX body
+const extractCoverFromMDX = (body) => {
+	if (!body) return null;
+	const match = body.match(/!\[.*?\]\([^)]*?\/assets\/images\/([^)]+)\)/);
+	return match ? match[1] : null;
+};
 ---
 
 <Layout 
@@ -73,9 +80,14 @@ const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/
 			<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8" id="faqCardGrid">
 				{articlesList.map(async (art, idx) => {
 					let imgSrc = null;
-					if (art.data.coverImage) {
-						const imgPath = `/src/assets/images/${art.data.coverImage}`;
+					
+					// Use frontmatter if Astro parsed it, otherwise fallback to regex extraction from body
+					const rawImageName = art.data.coverImage || extractCoverFromMDX(art.body);
+
+					if (rawImageName) {
+						const imgPath = `/src/assets/images/${rawImageName}`;
 						const imgLoader = images[imgPath];
+						
 						if (imgLoader) {
 							const imgModule = await imgLoader();
 							imgSrc = imgModule.default;
