@@ -1,0 +1,8 @@
+[
+  {
+    "id": 1,
+    "title": "Curator Mode for Creator Logs",
+    "description": "An interactive UI to select and batch-delete logs from the Creator Log page. Requires migrating Astro to hybrid SSR mode with the Node.js adapter to allow API routes to dynamically splice the underlying JSON file.",
+    "dateShelved": "2026-08-08"
+  }
+]

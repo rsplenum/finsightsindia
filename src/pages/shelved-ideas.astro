@@ -1,0 +1,108 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ideas from '../data/shelved-ideas.json';
+
+// Reverse so newest shelved ideas are at the top
+const reversedIdeas = [...ideas].reverse();
+---
+
+<Layout title="The Vault - Shelved Ideas" description="A repository of innovative ideas and features shelved for the future.">
+	
+	<main class="min-h-screen bg-slate-50 dark:bg-navy-900 pt-24 pb-16">
+		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+			
+			<div class="mb-12 text-center">
+				<h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4 flex items-center justify-center gap-3">
+					<span class="text-4xl">🗄️</span> The Idea Vault
+				</h1>
+				<p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+					A secure repository for highly innovative features, architectural designs, and conceptual workflows that have been temporarily shelved. We will return to these when the time is right.
+				</p>
+
+				<!-- Search Bar -->
+				<div class="max-w-2xl mx-auto mt-8 relative group">
+					<div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none transition-transform group-focus-within:scale-110 group-focus-within:text-gold-500">
+						<svg class="h-5 w-5 text-slate-400 dark:text-navy-400" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+						</svg>
+					</div>
+					<input type="text" id="ideas-search" placeholder="Search the vault..." class="block w-full pl-12 pr-4 py-4 bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-2xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-navy-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent shadow-sm transition-all duration-300 hover:shadow-md text-lg" />
+				</div>
+			</div>
+
+			<div class="relative border-l-2 border-slate-200 dark:border-navy-700 ml-4 md:ml-0 md:pl-0 pl-6 space-y-12" id="ideas-list">
+				{reversedIdeas.map((idea) => {
+					// Format the date nicely
+					const dateObj = new Date(idea.dateShelved);
+					const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+					return (
+						<div class="relative idea-card transition-all duration-300">
+							<!-- Timeline Dot -->
+							<div class="absolute -left-[35px] md:-left-[9px] top-1 h-5 w-5 rounded-full border-4 border-slate-50 dark:border-navy-900 bg-emerald-500 z-10 shadow-sm"></div>
+							
+							<div class="md:pl-8">
+								<div class="mb-2 flex items-center gap-3 text-sm font-mono text-slate-500 dark:text-slate-400">
+									<span class="bg-emerald-100 dark:bg-emerald-900/30 px-2 py-0.5 rounded text-xs font-bold text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/50">
+										Vault ID #{idea.id}
+									</span>
+									<span class="flex items-center gap-1">
+										<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+										Shelved on {dateStr}
+									</span>
+								</div>
+								
+								<div class="bg-white dark:bg-navy-800/80 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-navy-700 hover:shadow-md transition-shadow relative overflow-hidden group">
+									<div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-emerald-400 to-teal-600 opacity-50 group-hover:opacity-100 transition-opacity"></div>
+									<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">{idea.title}</h3>
+									<div class="prose prose-slate dark:prose-invert prose-p:leading-relaxed max-w-none text-slate-700 dark:text-slate-300 whitespace-pre-wrap font-medium">
+										{idea.description}
+									</div>
+								</div>
+							</div>
+						</div>
+					);
+				})}
+			</div>
+			
+			<div class="mt-16 text-center text-slate-500 dark:text-slate-400 font-mono text-sm">
+				— The Vault is Sealed — <br/>
+				Total Ideas: {ideas.length}
+			</div>
+			
+		</div>
+	</main>
+	
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const searchInput = document.getElementById('ideas-search') as HTMLInputElement;
+			const cards = document.querySelectorAll('.idea-card') as NodeListOf<HTMLElement>;
+
+			if (searchInput) {
+				searchInput.addEventListener('input', (e) => {
+					const query = (e.target as HTMLInputElement).value.toLowerCase();
+					
+					cards.forEach((card) => {
+						const text = card.textContent?.toLowerCase() || '';
+						if (text.includes(query)) {
+							card.style.display = 'block';
+						} else {
+							card.style.display = 'none';
+						}
+					});
+				});
+			}
+		});
+	</script>
+</Layout>
+
+<style>
+	:global(.prose pre) {
+		background-color: #0f172a !important;
+		border: 1px solid #1e293b;
+		border-radius: 0.5rem;
+	}
+	:global(.prose code) {
+		color: #e2e8f0 !important;
+	}
+</style>
