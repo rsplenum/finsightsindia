@@ -18,9 +18,19 @@ const reversedLogs = [...logs].reverse();
 				<p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
 					An unfiltered chronological archive of the instructions, architectural decisions, and creative thoughts that shaped the development of FinSight INDIA.
 				</p>
+
+				<!-- Search Bar -->
+				<div class="max-w-2xl mx-auto mt-8 relative group">
+					<div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none transition-transform group-focus-within:scale-110 group-focus-within:text-gold-500">
+						<svg class="h-5 w-5 text-slate-400 dark:text-navy-400" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+						</svg>
+					</div>
+					<input type="text" id="logs-search" placeholder="Search prompts, feedback, or concepts..." class="block w-full pl-12 pr-4 py-4 bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-2xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-navy-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent shadow-sm transition-all duration-300 hover:shadow-md text-lg" />
+				</div>
 			</div>
 
-			<div class="relative border-l-2 border-slate-200 dark:border-navy-700 ml-4 md:ml-0 md:pl-0 pl-6 space-y-12">
+			<div class="relative border-l-2 border-slate-200 dark:border-navy-700 ml-4 md:ml-0 md:pl-0 pl-6 space-y-12" id="logs-list">
 				{reversedLogs.map((log) => {
 					// Format the date nicely
 					const dateObj = new Date(log.timestamp);
@@ -28,7 +38,7 @@ const reversedLogs = [...logs].reverse();
 					const timeStr = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
 					return (
-						<div class="relative">
+						<div class="relative log-card transition-all duration-300">
 							<!-- Timeline Dot -->
 							<div class="absolute -left-[35px] md:-left-[9px] top-1 h-5 w-5 rounded-full border-4 border-slate-50 dark:border-navy-900 bg-gold-500 z-10 shadow-sm"></div>
 							
@@ -63,6 +73,27 @@ const reversedLogs = [...logs].reverse();
 		</div>
 	</main>
 	
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const searchInput = document.getElementById('logs-search') as HTMLInputElement;
+			const cards = document.querySelectorAll('.log-card') as NodeListOf<HTMLElement>;
+
+			if (searchInput) {
+				searchInput.addEventListener('input', (e) => {
+					const query = (e.target as HTMLInputElement).value.toLowerCase();
+					
+					cards.forEach((card) => {
+						const text = card.textContent?.toLowerCase() || '';
+						if (text.includes(query)) {
+							card.style.display = 'block';
+						} else {
+							card.style.display = 'none';
+						}
+					});
+				});
+			}
+		});
+	</script>
 </Layout>
 
 <style>
