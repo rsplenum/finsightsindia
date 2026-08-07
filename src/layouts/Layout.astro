@@ -147,6 +147,9 @@ const currentPath = Astro.url.pathname;
 						<a href="/faq" class={`nav-link text-sm font-medium px-3 py-2 rounded-lg transition-colors ${currentPath === '/faq' || currentPath === '/faq/' ? 'text-gold-500 active' : 'text-navy-500 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100'}`}>
 							FAQs
 						</a>
+						<a href="/creator-log" class={`nav-link text-sm font-medium px-3 py-2 rounded-lg transition-colors ${currentPath === '/creator-log' || currentPath === '/creator-log/' ? 'text-gold-500 active' : 'text-navy-500 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100'}`}>
+							Creator Log
+						</a>
 					</nav>
 
 					<!-- Right Controls -->
@@ -230,8 +233,12 @@ const currentPath = Astro.url.pathname;
 						Tax Code
 					</a>
 					<a href="/faq" class={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${currentPath.startsWith('/faq') ? 'bg-gold-500/10 text-gold-600 dark:text-gold-400' : 'text-navy-600 dark:text-navy-300 hover:bg-navy-100 dark:hover:bg-navy-800'}`}>
-						<svg class="w-5 h-5 opacity-60" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" /></svg>
+						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
 						FAQs
+					</a>
+					<a href="/creator-log" class={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${currentPath.startsWith('/creator-log') ? 'bg-gold-500/10 text-gold-600 dark:text-gold-400' : 'text-navy-600 dark:text-navy-300 hover:bg-navy-100 dark:hover:bg-navy-800'}`}>
+						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+						Creator Log
 					</a>
 					<a href="/about" class={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${currentPath.startsWith('/about') ? 'bg-gold-500/10 text-gold-600 dark:text-gold-400' : 'text-navy-600 dark:text-navy-300 hover:bg-navy-100 dark:hover:bg-navy-800'}`}>
 						<svg class="w-5 h-5 opacity-60" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" /></svg>

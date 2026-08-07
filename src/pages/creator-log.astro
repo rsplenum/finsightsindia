@@ -1,0 +1,78 @@
+---
+import Layout from '../layouts/Layout.astro';
+import logs from '../data/creator-logs.json';
+
+// Reverse logs so newest is at the top
+const reversedLogs = [...logs].reverse();
+---
+
+<Layout title="Creator Logs - FinSight INDIA" description="A behind-the-scenes log of the creation process for FinSight INDIA.">
+	
+	<main class="min-h-screen bg-slate-50 dark:bg-navy-900 pt-24 pb-16">
+		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+			
+			<div class="mb-12 text-center">
+				<h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4 flex items-center justify-center gap-3">
+					<span class="text-4xl">🧠</span> Creator's Brain Dump
+				</h1>
+				<p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+					An unfiltered chronological archive of the instructions, architectural decisions, and creative thoughts that shaped the development of FinSight INDIA.
+				</p>
+			</div>
+
+			<div class="relative border-l-2 border-slate-200 dark:border-navy-700 ml-4 md:ml-0 md:pl-0 pl-6 space-y-12">
+				{reversedLogs.map((log) => {
+					// Format the date nicely
+					const dateObj = new Date(log.timestamp);
+					const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+					const timeStr = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+					return (
+						<div class="relative">
+							<!-- Timeline Dot -->
+							<div class="absolute -left-[35px] md:-left-[9px] top-1 h-5 w-5 rounded-full border-4 border-slate-50 dark:border-navy-900 bg-gold-500 z-10 shadow-sm"></div>
+							
+							<div class="md:pl-8">
+								<div class="mb-2 flex items-center gap-3 text-sm font-mono text-slate-500 dark:text-slate-400">
+									<span class="bg-slate-200 dark:bg-navy-800 px-2 py-0.5 rounded text-xs font-bold text-slate-700 dark:text-slate-300">
+										Entry #{log.id}
+									</span>
+									<span class="flex items-center gap-1">
+										<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+										{dateStr} @ {timeStr}
+									</span>
+								</div>
+								
+								<div class="bg-white dark:bg-navy-800/80 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-navy-700 hover:shadow-md transition-shadow relative overflow-hidden group">
+									<div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-gold-400 to-amber-600"></div>
+									<div class="prose prose-slate dark:prose-invert prose-p:leading-relaxed max-w-none text-slate-700 dark:text-slate-300 whitespace-pre-wrap font-medium">
+										{log.message}
+									</div>
+								</div>
+							</div>
+						</div>
+					);
+				})}
+			</div>
+			
+			<div class="mt-16 text-center text-slate-500 dark:text-slate-400 font-mono text-sm">
+				— End of Current Logs — <br/>
+				Total Entries: {logs.length}
+			</div>
+			
+		</div>
+	</main>
+	
+</Layout>
+
+<style>
+	/* Add some flair to the code blocks if the user typed markdown */
+	:global(.prose pre) {
+		background-color: #0f172a !important;
+		border: 1px solid #1e293b;
+		border-radius: 0.5rem;
+	}
+	:global(.prose code) {
+		color: #e2e8f0 !important;
+	}
+</style>
