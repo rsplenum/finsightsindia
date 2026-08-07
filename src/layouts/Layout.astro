@@ -126,36 +126,40 @@ const currentPath = Astro.url.pathname;
 					
 					<!-- Desktop Navigation -->
 					<nav class="hidden lg:flex items-center gap-1">
-						<a href="/swp-planner" class={`nav-link text-sm font-medium px-3 py-2 rounded-lg transition-colors ${currentPath === '/swp-planner' || currentPath === '/swp-planner/' ? 'text-gold-500 active' : 'text-navy-500 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100'}`}>
-							SWP Planner
-						</a>
-						<a href="/sip-engine" class={`nav-link text-sm font-medium px-3 py-2 rounded-lg transition-colors ${currentPath === '/sip-engine' || currentPath === '/sip-engine/' ? 'text-gold-500 active' : 'text-navy-500 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100'}`}>
-							SIP Engine
-						</a>
-						<a href="/insurance-analyzer" class={`nav-link text-sm font-medium px-3 py-2 rounded-lg transition-colors ${currentPath === '/insurance-analyzer' || currentPath === '/insurance-analyzer/' ? 'text-gold-500 active' : 'text-navy-500 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100'}`}>
-							Policy Analyzer
-						</a>
-						<a href="/black-scholes" class={`nav-link text-sm font-medium px-3 py-2 rounded-lg transition-colors ${currentPath === '/black-scholes' || currentPath === '/black-scholes/' ? 'text-gold-500 active' : 'text-navy-500 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100'}`}>
-							Options Lab
-						</a>
-						<a href="/tax-calculator" class={`nav-link text-sm font-medium px-3 py-2 rounded-lg transition-colors ${currentPath === '/tax-calculator' || currentPath === '/tax-calculator/' ? 'text-gold-500 active' : 'text-navy-500 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100'}`}>
-							Tax Calculator
-						</a>
+						<!-- Calculators Dropdown -->
+						<div class="relative group">
+							<button class="nav-link text-sm font-medium px-3 py-2 rounded-lg transition-colors text-navy-500 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100 flex items-center gap-1">
+								Calculators
+								<svg class="w-3.5 h-3.5 opacity-60 group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+							</button>
+							<div class="absolute left-0 top-full mt-1 w-52 bg-white dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 translate-y-2 transition-all duration-300 transform origin-top-left z-50 p-2">
+								<a href="/swp-planner" class="block px-3 py-2.5 rounded-lg text-sm font-medium text-navy-600 dark:text-navy-300 hover:bg-navy-50 dark:hover:bg-navy-800 hover:text-gold-600 dark:hover:text-gold-400 transition-colors">SWP Planner</a>
+								<a href="/sip-engine" class="block px-3 py-2.5 rounded-lg text-sm font-medium text-navy-600 dark:text-navy-300 hover:bg-navy-50 dark:hover:bg-navy-800 hover:text-gold-600 dark:hover:text-gold-400 transition-colors">SIP Engine</a>
+								<a href="/tax-calculator" class="block px-3 py-2.5 rounded-lg text-sm font-medium text-navy-600 dark:text-navy-300 hover:bg-navy-50 dark:hover:bg-navy-800 hover:text-gold-600 dark:hover:text-gold-400 transition-colors">Tax Calculator</a>
+								<a href="/black-scholes" class="block px-3 py-2.5 rounded-lg text-sm font-medium text-navy-600 dark:text-navy-300 hover:bg-navy-50 dark:hover:bg-navy-800 hover:text-gold-600 dark:hover:text-gold-400 transition-colors">Options Lab</a>
+								<a href="/insurance-analyzer" class="block px-3 py-2.5 rounded-lg text-sm font-medium text-navy-600 dark:text-navy-300 hover:bg-navy-50 dark:hover:bg-navy-800 hover:text-gold-600 dark:hover:text-gold-400 transition-colors">Policy Analyzer</a>
+							</div>
+						</div>
+
 						<a href="/tax-code" class={`nav-link text-sm font-medium px-3 py-2 rounded-lg transition-colors ${currentPath.startsWith('/tax-code') ? 'text-gold-500 active' : 'text-navy-500 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100'}`}>
 							Tax Code
 						</a>
 						<a href="/faq" class={`nav-link text-sm font-medium px-3 py-2 rounded-lg transition-colors ${currentPath === '/faq' || currentPath === '/faq/' ? 'text-gold-500 active' : 'text-navy-500 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100'}`}>
 							FAQs
 						</a>
-						<a href="/creator-log" class={`nav-link text-sm font-medium px-3 py-2 rounded-lg transition-colors ${currentPath === '/creator-log' || currentPath === '/creator-log/' ? 'text-gold-500 active' : 'text-navy-500 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100'}`}>
-							Creator Log
-						</a>
-						<a href="/reels" class={`nav-link text-sm font-medium px-3 py-2 rounded-lg transition-colors ${currentPath === '/reels' || currentPath === '/reels/' ? 'text-gold-500 active' : 'text-navy-500 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100'}`}>
-							Reels Script
-						</a>
-						<a href="/solutions" class={`nav-link text-sm font-medium px-3 py-2 rounded-lg transition-colors ${currentPath === '/solutions' || currentPath === '/solutions/' ? 'text-gold-500 active' : 'text-navy-500 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100'}`}>
-							Solutions
-						</a>
+
+						<!-- Studio Dropdown -->
+						<div class="relative group">
+							<button class="nav-link text-sm font-medium px-3 py-2 rounded-lg transition-colors text-navy-500 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100 flex items-center gap-1">
+								Studio
+								<svg class="w-3.5 h-3.5 opacity-60 group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+							</button>
+							<div class="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 translate-y-2 transition-all duration-300 transform origin-top-right z-50 p-2">
+								<a href="/creator-log" class="block px-3 py-2.5 rounded-lg text-sm font-medium text-navy-600 dark:text-navy-300 hover:bg-navy-50 dark:hover:bg-navy-800 hover:text-gold-600 dark:hover:text-gold-400 transition-colors">Creator Log</a>
+								<a href="/reels" class="block px-3 py-2.5 rounded-lg text-sm font-medium text-navy-600 dark:text-navy-300 hover:bg-navy-50 dark:hover:bg-navy-800 hover:text-gold-600 dark:hover:text-gold-400 transition-colors">Reels Script</a>
+								<a href="/solutions" class="block px-3 py-2.5 rounded-lg text-sm font-medium text-navy-600 dark:text-navy-300 hover:bg-navy-50 dark:hover:bg-navy-800 hover:text-gold-600 dark:hover:text-gold-400 transition-colors">Solutions</a>
+							</div>
+						</div>
 					</nav>
 
 					<!-- Right Controls -->

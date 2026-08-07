@@ -12,14 +12,24 @@ import reelScripts from '../data/reel-scripts.json';
 				<h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4 flex items-center justify-center gap-3">
 					<span class="text-4xl">🎬</span> 100-Second Reels
 				</h1>
-				<p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+				<p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-8">
 					High-retention, anxiety-to-relief video scripts engineered for short-form platforms (Instagram Reels, YouTube Shorts).
 				</p>
+				
+				<!-- Search Bar -->
+				<div class="max-w-2xl mx-auto relative group">
+					<div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none transition-transform group-focus-within:scale-110 group-focus-within:text-gold-500">
+						<svg class="h-5 w-5 text-slate-400 dark:text-navy-400" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+						</svg>
+					</div>
+					<input type="text" id="reels-search" placeholder="Search topics, hooks, or scripts..." class="block w-full pl-12 pr-4 py-4 bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-2xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-navy-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent shadow-sm transition-all duration-300 hover:shadow-md text-lg" />
+				</div>
 			</div>
 
-			<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-8" id="reels-grid">
 				{reelScripts.map((reel) => (
-					<div class="bg-white dark:bg-navy-800 rounded-3xl overflow-hidden shadow-sm border border-slate-200 dark:border-navy-700 flex flex-col group hover:shadow-xl transition-all duration-300 relative">
+					<div class="reel-card bg-white dark:bg-navy-800 rounded-3xl overflow-hidden shadow-sm border border-slate-200 dark:border-navy-700 flex flex-col group hover:shadow-xl transition-all duration-300 relative">
 						
                         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-500 to-amber-500"></div>
 
@@ -79,4 +89,26 @@ import reelScripts from '../data/reel-scripts.json';
 		</div>
 	</main>
 	
+	<script>
+		// Client-side search filtering
+		document.addEventListener('DOMContentLoaded', () => {
+			const searchInput = document.getElementById('reels-search') as HTMLInputElement;
+			const cards = document.querySelectorAll('.reel-card') as NodeListOf<HTMLElement>;
+
+			if (searchInput) {
+				searchInput.addEventListener('input', (e) => {
+					const query = (e.target as HTMLInputElement).value.toLowerCase();
+					
+					cards.forEach((card) => {
+						const text = card.textContent?.toLowerCase() || '';
+						if (text.includes(query)) {
+							card.style.display = 'flex';
+						} else {
+							card.style.display = 'none';
+						}
+					});
+				});
+			}
+		});
+	</script>
 </Layout>
