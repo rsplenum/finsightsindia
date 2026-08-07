@@ -16,8 +16,14 @@ const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/
 // Helper to extract image from MDX body
 const extractCoverFromMDX = (body) => {
 	if (!body) return null;
-	const match = body.match(/!\[.*?\]\([^)]*?\/assets\/images\/([^)]+)\)/);
-	return match ? match[1] : null;
+	
+	const mdMatch = body.match(/!\[.*?\]\([^)]*?\/assets\/images\/([^)]+)\)/);
+	if (mdMatch) return mdMatch[1];
+	
+	const importMatch = body.match(/import\s+.*?\s+from\s+["'].*?\/assets\/images\/([^"']+)["']/);
+	if (importMatch) return importMatch[1];
+	
+	return null;
 };
 ---
 
