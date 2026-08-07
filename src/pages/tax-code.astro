@@ -1,126 +1,139 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
-import Hero from '../components/Hero.astro';
-import CardPremium from '../components/CardPremium.astro';
-import InputGroup from '../components/InputGroup.astro';
-import SectionTitle from '../components/SectionTitle.astro';
 
 // Fetch all MDX articles from the Content Collection
 const allArticles = await getCollection('direct-tax');
-// Optional: We can group them by bucket or sort them if needed. 
 const articlesList = allArticles;
 
 // Get unique categories
 const uniqueCategories = [...new Set(articlesList.map(art => art.data.categoryName))].filter(Boolean);
+
+// Dynamically load images for cover shots
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/*.{jpeg,jpg,png,gif,webp}');
 ---
 
 <Layout 
-	title="India Direct Tax Code 2025 & Calculators — SWP Intelligence"
+	title="India Direct Tax Code 2025 & Calculators — FinSight INDIA"
 	description="Comprehensive India Direct Tax Code guide featuring interactive slab calculators, capital gains rules, and quantitative master whitepapers under the Income Tax Act, 2025."
 >
 	
-	<Hero 
-		badge="AUTHENTIC INDIA DIRECT TAX CODE (FY 2025-26)"
-		title="India Direct Tax Intelligence Hub"
-		description="Step-by-step tax guidance, interactive slab calculators, capital gains rules, and quantitative master whitepapers under the Income Tax Act, 2025."
-	/>
-
-	<hr class="section-divider" />
-	
-	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 space-y-10">
-		
-
-
-		<!-- CATEGORIZED TOP DIRECT TAX MASTER WHITEPAPERS -->
-		<CardPremium class="max-w-7xl mx-auto space-y-6">
+	<main class="min-h-screen bg-slate-50 dark:bg-navy-900 pt-24 pb-24">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			
-			<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-navy-200 dark:border-white/10">
-				<div>
-					<SectionTitle title="Institutional Direct Tax Whitepapers (Symptom Index)" />
-					<p class="text-xs text-navy-500 dark:text-navy-400 font-sans mt-1">
-						The Top 100 most highly searched tax anxiety symptoms in India, mapped to exact statutory codes and live workbenches.
-					</p>
-				</div>
-				<span id="articleCount" class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 px-3 py-1.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 uppercase tracking-widest whitespace-nowrap">
-					{articlesList.length} Published Master Guides
-				</span>
-			</div>
-
-			<!-- Search and Filter Controls -->
-			<div class="space-y-4">
-				<div>
+			<div class="mb-16 text-center">
+				<h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4 flex items-center justify-center gap-3">
+					<span class="text-4xl">⚖️</span> Tax Code Vault
+				</h1>
+				<p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-10">
+					The ultimate index of India's most complex tax anxiety symptoms, mapped to their exact statutory codes and resolved with live workbenches.
+				</p>
+				
+				<!-- Giant Hero Search Bar -->
+				<div class="max-w-3xl mx-auto relative group z-20">
+					<div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none transition-transform group-focus-within:scale-110 group-focus-within:text-gold-500">
+						<svg class="h-6 w-6 text-slate-400 dark:text-navy-400" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+						</svg>
+					</div>
 					<input 
-						type="search" 
+						type="text" 
 						id="searchInput" 
-						placeholder="Search by title or symptom..." 
-						class="input-premium text-sm text-navy-900 dark:text-navy-100 placeholder:text-navy-400 dark:placeholder:text-navy-500 focus:outline-none w-full py-2.5 px-3.5"
+						placeholder="Search symptoms, notices, or sections (e.g., Section 148A)..." 
+						class="block w-full pl-16 pr-6 py-5 bg-white dark:bg-navy-800 border-2 border-transparent focus:border-gold-500 dark:border-navy-700 dark:focus:border-gold-500 rounded-3xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-navy-400 focus:outline-none shadow-lg transition-all duration-300 hover:shadow-xl text-lg sm:text-xl font-medium" 
 					/>
 				</div>
-				
-				<div class="flex flex-wrap gap-2" id="categoryFilters">
-					<button class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest badge-gold filter-btn active" data-filter="all">
-						All
-					</button>
-					{uniqueCategories.map(cat => (
-						<button class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest badge-safe opacity-70 hover:opacity-100 transition-opacity filter-btn" data-filter={cat}>
-							{cat}
+
+				<!-- Floating Categories Cloud (Horizontal Scroll) -->
+				<div class="mt-8 max-w-4xl mx-auto overflow-hidden relative">
+                    <!-- Fade edges -->
+                    <div class="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-slate-50 dark:from-navy-900 to-transparent z-10 pointer-events-none"></div>
+                    <div class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-slate-50 dark:from-navy-900 to-transparent z-10 pointer-events-none"></div>
+                    
+					<div class="flex overflow-x-auto gap-3 pb-4 pt-2 px-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] scroll-smooth snap-x" id="categoryFilters">
+						<button class="snap-start shrink-0 px-6 py-2.5 rounded-full text-sm font-bold uppercase tracking-widest border transition-all duration-300 filter-btn active bg-slate-900 text-white dark:bg-white dark:text-navy-900 border-transparent shadow-md" data-filter="all">
+							Everything
 						</button>
-					))}
+						{uniqueCategories.map(cat => (
+							<button class="snap-start shrink-0 px-6 py-2.5 rounded-full text-sm font-bold uppercase tracking-widest border border-slate-200 dark:border-navy-700 bg-white/50 dark:bg-navy-800/50 text-slate-600 dark:text-navy-300 hover:bg-slate-100 dark:hover:bg-navy-700 transition-all duration-300 filter-btn backdrop-blur-sm shadow-sm hover:shadow-md" data-filter={cat}>
+								{cat}
+							</button>
+						))}
+					</div>
 				</div>
 			</div>
 
-			<!-- Dynamic Master Article Cards Grid -->
-			<!-- Dynamic Master Article Cards Grid -->
-			<div id="noResultsMsg" class="hidden text-center py-12 text-navy-500 dark:text-navy-400 font-sans">
-				No articles found matching your criteria.
+			<div id="noResultsMsg" class="hidden text-center py-16 text-slate-500 dark:text-navy-400 font-sans">
+                <div class="text-6xl mb-4">🕵️‍♂️</div>
+				<h3 class="text-xl font-bold text-slate-800 dark:text-slate-200 mb-2">No anxiety found.</h3>
+                <p>Try searching for a different symptom or statutory code.</p>
 			</div>
 			
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-6 reveal-stagger" id="faqCardGrid">
-				{articlesList.map((art, idx) => (
+			<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8" id="faqCardGrid">
+				{articlesList.map((art, idx) => {
+					const imgPath = `/src/assets/images/${art.data.coverImage}`;
+					const imgPromise = images[imgPath] ? images[imgPath]() : null;
+
+					return (
 					<div 
-						class="faq-card bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-6 space-y-4 hover:border-navy-300 dark:hover:border-white/20 transition-all duration-200 ease-geist shadow-xs flex flex-col justify-between article-card"
+						class="article-card group bg-white dark:bg-navy-800 rounded-[2rem] overflow-hidden border border-slate-200 dark:border-navy-700 hover:border-gold-500/50 dark:hover:border-gold-500/50 hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 ease-out flex flex-col justify-between cursor-pointer relative"
 						data-title={art.data.title.toLowerCase()}
 						data-summary={art.data.summary.toLowerCase()}
 						data-category={art.data.categoryName}
+                        onclick={`window.location.href='/tax-code/${art.id}'`}
 					>
-						<div class="space-y-3">
-							<div class="flex items-center justify-between">
-								<span class="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-widest badge-safe">
-									🇮🇳 {art.data.categoryName}
+                        {/* Image Header */}
+                        <div class="relative h-64 w-full overflow-hidden bg-slate-50 dark:bg-navy-900/50 flex items-center justify-center p-6 border-b border-slate-100 dark:border-navy-700/50">
+                            {imgPromise ? (
+                                <Image 
+                                    src={imgPromise} 
+                                    alt={art.data.title} 
+                                    class="w-full h-full object-contain mix-blend-multiply dark:invert dark:mix-blend-screen group-hover:scale-105 transition-transform duration-700 ease-out"
+                                />
+                            ) : (
+                                <div class="text-6xl opacity-20 group-hover:scale-110 transition-transform duration-700">📄</div>
+                            )}
+                            
+                            <div class="absolute top-5 right-5">
+                                <span class="bg-white/90 dark:bg-navy-900/90 backdrop-blur-sm text-slate-900 dark:text-white text-[10px] font-bold px-3 py-1.5 rounded-full border border-slate-200 dark:border-navy-700 shadow-sm uppercase tracking-widest z-10">
+                                    Q0{idx + 1}
+                                </span>
+                            </div>
+                        </div>
+
+						<div class="p-8 flex-1 flex flex-col bg-white dark:bg-navy-800 relative z-10">
+							<div class="flex items-center justify-between mb-5">
+								<span class="text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+									{art.data.categoryName}
 								</span>
-								<span class="text-[10px] font-bold text-navy-400 dark:text-navy-500 uppercase tracking-widest">Q0{idx + 1}</span>
+                                <span class="text-xs font-bold text-slate-400 dark:text-navy-400 font-mono">
+                                    {art.data.readTime}
+                                </span>
 							</div>
 
-							<h3 class="text-lg font-bold text-navy-900 dark:text-navy-100 font-sans leading-snug">
+							<h3 class="text-xl font-extrabold text-slate-900 dark:text-white leading-tight mb-4 group-hover:text-gold-600 dark:group-hover:text-gold-400 transition-colors line-clamp-3">
 								{art.data.title}
 							</h3>
 
-							<div class="text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400 flex items-center gap-2">
-								<span>{art.data.readTime}</span>
-								<span>•</span>
-								<span class="text-emerald-600 dark:text-emerald-400 line-clamp-1">{art.data.statutoryAct}</span>
-							</div>
-
-							<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans line-clamp-3">
+							<p class="text-sm text-slate-600 dark:text-navy-300 leading-relaxed line-clamp-3 mb-8">
 								{art.data.summary}
 							</p>
-						</div>
 
-						<div class="space-y-3 pt-3 border-t border-navy-200 dark:border-navy-800">
-							<a 
-								href={`/tax-code/${art.id}`} 
-								class="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-md btn-gold text-center text-xs mt-2"
-							>
-								Read Full Interactive Whitepaper →
-							</a>
+                            <div class="mt-auto pt-5 border-t border-slate-100 dark:border-navy-700/50 flex items-center justify-between text-[11px] font-bold uppercase tracking-widest">
+                                <span class="text-slate-500 dark:text-navy-400 truncate max-w-[70%]">
+                                    {art.data.statutoryAct}
+                                </span>
+                                <span class="text-gold-600 dark:text-gold-400 group-hover:translate-x-1.5 transition-transform flex items-center gap-1">
+                                    Read <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                                </span>
+                            </div>
 						</div>
 					</div>
-				))}
+				)})}
 			</div>
 
-		</CardPremium>
-
+		</div>
 	</main>
 </Layout>
 
@@ -129,7 +142,6 @@ const uniqueCategories = [...new Set(articlesList.map(art => art.data.categoryNa
 		const searchInput = document.getElementById('searchInput');
 		const filterBtns = document.querySelectorAll('.filter-btn');
 		const articleCards = document.querySelectorAll('.article-card');
-		const articleCount = document.getElementById('articleCount');
 		const noResultsMsg = document.getElementById('noResultsMsg');
 		
 		let currentCategory = 'all';
@@ -153,10 +165,6 @@ const uniqueCategories = [...new Set(articlesList.map(art => art.data.categoryNa
 					(card as HTMLElement).style.display = 'none';
 				}
 			});
-
-			if (articleCount) {
-				articleCount.textContent = `${visibleCount} Published Master Guide${visibleCount === 1 ? '' : 's'}`;
-			}
 			
 			if (noResultsMsg) {
 				if (visibleCount === 0) {
@@ -179,15 +187,14 @@ const uniqueCategories = [...new Set(articlesList.map(art => art.data.categoryNa
 				
 				// Update active state of buttons
 				filterBtns.forEach(b => {
-					b.classList.remove('badge-gold', 'active');
-					b.classList.add('badge-safe', 'opacity-70');
+					b.classList.remove('bg-slate-900', 'text-white', 'dark:bg-white', 'dark:text-navy-900', 'border-transparent', 'active');
+					b.classList.add('bg-white/50', 'dark:bg-navy-800/50', 'text-slate-600', 'dark:text-navy-300', 'border-slate-200', 'dark:border-navy-700');
 				});
-				target.classList.remove('badge-safe', 'opacity-70');
-				target.classList.add('badge-gold', 'active');
+				target.classList.remove('bg-white/50', 'dark:bg-navy-800/50', 'text-slate-600', 'dark:text-navy-300', 'border-slate-200', 'dark:border-navy-700');
+				target.classList.add('bg-slate-900', 'text-white', 'dark:bg-white', 'dark:text-navy-900', 'border-transparent', 'active');
 				
 				filterArticles();
 			});
 		});
 	});
 </script>
-
