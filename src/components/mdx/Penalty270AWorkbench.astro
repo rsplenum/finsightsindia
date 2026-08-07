@@ -1,0 +1,139 @@
+---
+import InputGroup from '../InputGroup.astro';
+
+interface Props {
+  instruction?: string;
+}
+
+const { 
+  instruction = 'Simulate how the tax algorithm upgrades a routine tax addition into a 200% penalty. Toggle the "Misreporting" switch to see the catastrophic difference.' 
+} = Astro.props;
+---
+
+<div class="p-6 bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-xl space-y-8 shadow-sm my-10 not-prose">
+	<div class="flex items-center gap-3">
+		<span class="text-2xl">⚡</span>
+		<p class="text-sm font-bold text-navy-800 dark:text-navy-200">
+			{instruction}
+		</p>
+	</div>
+
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+		<InputGroup 
+			id="wbReturnedIncome"
+			label="Income Originally Declared"
+			tooltip="The total income you filed in your ITR."
+			prefix="₹"
+			value="1000000"
+		/>
+        <InputGroup 
+			id="wbAssessedIncome"
+			label="Income Assessed by Tax Officer"
+			tooltip="The final income determined by the AO after disallowing expenses or adding hidden income."
+			prefix="₹"
+			value="2500000"
+		/>
+	</div>
+    
+	<div class="flex flex-col gap-2 p-4 rounded-lg border bg-white dark:bg-navy-950 transition-colors" id="penaltyTypeContainer">
+		<div class="flex items-center justify-between">
+			<div class="space-y-1">
+				<label class="font-bold text-navy-900 dark:text-navy-100 text-sm">Classification Trigger</label>
+				<p class="text-xs text-navy-500 dark:text-navy-400" id="classificationDesc">Standard Under-reporting (Bona Fide Error)</p>
+			</div>
+			
+			<label class="relative inline-flex items-center cursor-pointer">
+				<input type="checkbox" id="wbMisreportingToggle" class="sr-only peer">
+				<div class="w-14 h-7 bg-navy-200 peer-focus:outline-none rounded-full peer dark:bg-navy-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-rose-600"></div>
+			</label>
+		</div>
+	</div>
+
+	<!-- Workbench Live Results Display -->
+	<div class="grid grid-cols-1 md:grid-cols-4 gap-4 pt-4 border-t border-navy-200 dark:border-navy-800">
+		<div class="p-4 bg-white dark:bg-navy-950 rounded-lg border border-navy-200 dark:border-navy-800 space-y-1 md:col-span-1">
+			<div class="text-[10px] font-bold text-navy-500 dark:text-navy-400 uppercase tracking-widest">Added Income</div>
+			<div id="wbUnderReportedAmount" class="text-xl font-bold text-navy-900 dark:text-navy-100">₹ 0</div>
+		</div>
+        
+        <div class="p-4 bg-white dark:bg-navy-950 rounded-lg border border-navy-200 dark:border-navy-800 space-y-1 md:col-span-1">
+			<div class="text-[10px] font-bold text-navy-500 dark:text-navy-400 uppercase tracking-widest">Tax on Addition (30%)</div>
+			<div id="wbTaxOnUnderReported" class="text-xl font-bold text-navy-900 dark:text-navy-100">₹ 0</div>
+		</div>
+
+		<div class="p-4 rounded-lg border space-y-1 transition-colors duration-300 md:col-span-2" id="penaltyResultCard">
+			<div class="flex items-center justify-between">
+				<div class="text-[10px] font-bold uppercase tracking-widest" id="penaltyRateLabel">SECTION 270A PENALTY (50%)</div>
+			</div>
+			<div id="wbTotalPenalty" class="text-2xl font-black">₹ 0</div>
+			<div class="text-[10px] font-medium opacity-80 pt-1" id="penaltySubtext">Manageable correction.</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	import { parseFormattedNumber, tableFormatter, setupFormattingField } from '../../utils/formatters';
+
+	function formatRupee(val: number): string {
+		if (isNaN(val)) return '₹0';
+		return `₹${tableFormatter.format(Math.round(val))}`;
+	}
+
+	function run270ACalc() {
+		const returned = parseFormattedNumber((document.getElementById('wbReturnedIncome') as HTMLInputElement)?.value || '0');
+		const assessed = parseFormattedNumber((document.getElementById('wbAssessedIncome') as HTMLInputElement)?.value || '0');
+        const isMisreporting = (document.getElementById('wbMisreportingToggle') as HTMLInputElement)?.checked;
+
+		// Calculate Under-Reported Income
+		let uri = assessed - returned;
+		if (uri < 0) uri = 0; // Prevent negative penalty
+
+		// Simple flat 30% tax assumption for the simulator to keep cognitive load low
+		const taxOnUri = uri * 0.30;
+		
+		// Penalty Rate
+		const penaltyRate = isMisreporting ? 2.0 : 0.5;
+		const totalPenalty = taxOnUri * penaltyRate;
+
+		// Update UI Elements
+        document.getElementById('wbUnderReportedAmount')!.innerText = formatRupee(uri);
+        document.getElementById('wbTaxOnUnderReported')!.innerText = formatRupee(taxOnUri);
+        document.getElementById('wbTotalPenalty')!.innerText = formatRupee(totalPenalty);
+
+		// Dynamic Styling based on Toggle
+		const penaltyCard = document.getElementById('penaltyResultCard')!;
+		const penaltyLabel = document.getElementById('penaltyRateLabel')!;
+		const subtext = document.getElementById('penaltySubtext')!;
+		const typeContainer = document.getElementById('penaltyTypeContainer')!;
+		const classDesc = document.getElementById('classificationDesc')!;
+
+		if (isMisreporting) {
+			penaltyCard.className = "p-4 rounded-lg border border-rose-500/50 bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 space-y-1 transition-colors duration-300 md:col-span-2 shadow-[0_0_15px_rgba(225,29,72,0.15)]";
+			penaltyLabel.innerText = "MISREPORTING PENALTY (200%)";
+			subtext.innerText = "⚠️ Financial Ruin: Penalty is double the tax itself.";
+			typeContainer.className = "flex flex-col gap-2 p-4 rounded-lg border border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/20 transition-colors";
+			classDesc.innerText = "Severe Misreporting (Algorithm caught fake expenses or suppression)";
+			classDesc.className = "text-xs font-bold text-rose-600 dark:text-rose-400";
+		} else {
+			penaltyCard.className = "p-4 rounded-lg border border-amber-500/50 bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 space-y-1 transition-colors duration-300 md:col-span-2";
+			penaltyLabel.innerText = "UNDER-REPORTING PENALTY (50%)";
+			subtext.innerText = "Standard addition. Can be reduced to 0% with Safe Harbor disclosure.";
+			typeContainer.className = "flex flex-col gap-2 p-4 rounded-lg border border-navy-200 dark:border-navy-700 bg-white dark:bg-navy-900 transition-colors";
+			classDesc.innerText = "Standard Under-reporting (Bona Fide Error / Disagreement)";
+			classDesc.className = "text-xs text-navy-500 dark:text-navy-400";
+		}
+	}
+
+	document.addEventListener('DOMContentLoaded', () => {
+		['wbReturnedIncome', 'wbAssessedIncome'].forEach(id => {
+			const el = document.getElementById(id);
+			if (el) setupFormattingField(el as HTMLInputElement, run270ACalc);
+		});
+        
+        const toggle = document.getElementById('wbMisreportingToggle');
+        if (toggle) toggle.addEventListener('change', run270ACalc);
+
+		const elInit = document.getElementById('wbReturnedIncome');
+		if(elInit) run270ACalc();
+	});
+</script>
