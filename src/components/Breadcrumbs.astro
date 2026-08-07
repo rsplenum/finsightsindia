@@ -17,24 +17,38 @@ const jsonLd = {
 };
 ---
 
-<nav aria-label="Breadcrumb" class="mb-6">
-  <ol class="flex items-center space-x-2 text-sm text-navy-600 dark:text-navy-400">
+<nav aria-label="Breadcrumb" class="mb-6 flex overflow-hidden">
+  <ol class="inline-flex items-center bg-white/80 dark:bg-navy-900/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-navy-200/80 dark:border-navy-800/80 shadow-sm text-xs font-medium max-w-full">
     {items.map((item, index) => {
       const isLast = index === items.length - 1;
+      const isFirst = index === 0;
+      
       return (
-        <li class="flex items-center">
-          {item.href && !isLast ? (
-            <a href={item.href} class="hover:text-gold-600 dark:hover:text-gold-500 transition-colors">
-              {item.label}
-            </a>
-          ) : (
-            <span class={isLast ? "text-navy-900 dark:text-navy-100 font-medium line-clamp-1" : ""} aria-current={isLast ? "page" : undefined}>
-              {item.label}
-            </span>
-          )}
+        <li class="flex items-center min-w-0">
+          <div class={`flex items-center gap-1.5 transition-colors min-w-0 ${isLast ? 'text-navy-900 dark:text-navy-100 cursor-default' : 'text-navy-500 dark:text-navy-400 hover:text-gold-600 dark:hover:text-gold-500'}`}>
+            
+            {/* Dynamic Icons */}
+            {isFirst ? (
+              <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            ) : isLast ? (
+              <svg class="w-3.5 h-3.5 opacity-60 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            ) : (
+              <svg class="w-3.5 h-3.5 opacity-80 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+            )}
+
+            {item.href && !isLast ? (
+              <a href={item.href} class="whitespace-nowrap flex-shrink-0">
+                {item.label}
+              </a>
+            ) : (
+              <span class="max-w-[120px] sm:max-w-[200px] md:max-w-[300px] truncate block" aria-current={isLast ? "page" : undefined} title={item.label}>
+                {item.label}
+              </span>
+            )}
+          </div>
           
           {!isLast && (
-            <svg class="w-4 h-4 mx-2 text-gold-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-3.5 h-3.5 ml-1.5 mr-1 text-navy-300 dark:text-navy-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
           )}
