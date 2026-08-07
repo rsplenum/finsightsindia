@@ -71,9 +71,16 @@ const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/
 			</div>
 			
 			<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8" id="faqCardGrid">
-				{articlesList.map((art, idx) => {
-					const imgPath = `/src/assets/images/${art.data.coverImage}`;
-					const imgPromise = images[imgPath] ? images[imgPath]() : null;
+				{articlesList.map(async (art, idx) => {
+					let imgSrc = null;
+					if (art.data.coverImage) {
+						const imgPath = `/src/assets/images/${art.data.coverImage}`;
+						const imgLoader = images[imgPath];
+						if (imgLoader) {
+							const imgModule = await imgLoader();
+							imgSrc = imgModule.default;
+						}
+					}
 
 					return (
 					<div 
@@ -85,9 +92,9 @@ const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/
 					>
                         {/* Image Header */}
                         <div class="relative h-64 w-full overflow-hidden bg-slate-50 dark:bg-navy-900/50 flex items-center justify-center p-6 border-b border-slate-100 dark:border-navy-700/50">
-                            {imgPromise ? (
+                            {imgSrc ? (
                                 <Image 
-                                    src={imgPromise} 
+                                    src={imgSrc} 
                                     alt={art.data.title} 
                                     class="w-full h-full object-contain mix-blend-multiply dark:invert dark:mix-blend-screen group-hover:scale-105 transition-transform duration-700 ease-out"
                                 />
