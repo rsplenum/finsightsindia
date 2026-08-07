@@ -1,0 +1,44 @@
+[
+  {
+    "id": "reel-001",
+    "title": "The Section 270A 200% Penalty Trap",
+    "articleSlug": "the-section-270a-200-penalty-trap",
+    "duration": "100s",
+    "hook": "Did you know the Income Tax Department uses an algorithm that can instantly multiply your tax penalty by 200% if they don't like your expenses?",
+    "script": [
+      {"time": "0:00 - 0:15", "visual": "Speaker holding a mock tax notice, looking stressed. Quick zoom in on the '200%' figure.", "audio": "Did you know the Income Tax Department uses an algorithm that can instantly multiply your tax penalty by 200% if they don't like your expenses? It's called the Section 270A Trap, and it's bankrupting freelancers and founders."},
+      {"time": "0:15 - 0:35", "visual": "Split screen. Left: 'Under-reporting (50%)'. Right: 'Misreporting (200%)'. A toggle switch flips between them.", "audio": "Here is how they get you. If an officer rejects your business expense—say, a travel bill—that's called 'under-reporting'. The penalty is 50%. Bad, but manageable. But if they label that exact same expense as 'fake' or 'misreported'?"},
+      {"time": "0:35 - 0:55", "visual": "Screen flashes red. The penalty number quadruples on screen.", "audio": "Boom. The algorithm automatically quadruples your penalty to 200%. If you owed 10 Lakhs in tax, you now owe 30 Lakhs. And you can't even apply for immunity anymore. You are locked in."},
+      {"time": "0:55 - 1:15", "visual": "Speaker holding up a shield with 'Section 270A(6)' written on it.", "audio": "But there is a 100% legal shield. Section 270A Sub-section 6. If you fully disclose the facts of your expense when you file your return, the penalty drops to 0%. Even if they disallow the expense, they cannot penalize you."},
+      {"time": "1:15 - 1:40", "visual": "Point to a link on screen. Text: 'Read the full guide on FinSight INDIA'.", "audio": "Don't get labeled. Document everything. Want to know how to spot the fatal flaw in their notice that makes the entire 200% penalty illegal? Read the full 5-minute breakdown on FinSight INDIA. Link in bio."}
+    ]
+  },
+  {
+    "id": "reel-002",
+    "title": "The Section 139(9) Defective Return Clock",
+    "articleSlug": "the-15-day-defective-return-clock-section-139-9",
+    "duration": "100s",
+    "hook": "You filed your taxes on time, paid what you owed, and thought you were safe. But what if a 15-day countdown just started that could erase your entire tax filing?",
+    "script": [
+      {"time": "0:00 - 0:15", "visual": "Speaker pointing to a ticking clock graphic over a tax return document.", "audio": "You filed your taxes on time, paid what you owed, and thought you were safe. But what if a 15-day countdown just started that could erase your entire tax filing? Welcome to Section 139(9)."},
+      {"time": "0:15 - 0:35", "visual": "Show an email notification from 'Income Tax Dept' landing in spam.", "audio": "The algorithm scans your return. If it finds a mismatch—like claiming a TDS credit without reporting the income—it sends a 'Defective Return' notice. And it usually goes straight to your spam folder."},
+      {"time": "0:35 - 0:55", "visual": "Graphic showing a tax return turning into dust.", "audio": "You have exactly 15 days to respond. If you miss that email? Section 139(9) treats your return as if you never filed it at all. It becomes void ab initio. Just like that, you are an absolute non-filer."},
+      {"time": "0:55 - 1:20", "visual": "Show compound interest formulas piling up.", "audio": "That means you lose your right to carry forward losses. You get hit with Section 234A interest compounding every month. And you face a flat 5,000 rupee late fee when you are finally forced to refile."},
+      {"time": "1:20 - 1:40", "visual": "Speaker looking directly at camera, serious tone.", "audio": "Check your portal. Don't rely on email. And if you want to know the 3 most common mismatches that trigger this death clock, read our full guide on FinSight INDIA. Don't let a technical glitch ruin your year."}
+    ]
+  },
+  {
+    "id": "reel-003",
+    "title": "The Freelance 44ADA Trap",
+    "articleSlug": "44ad-vs-44ada-freelance-trap",
+    "duration": "100s",
+    "hook": "Are you a freelancer trying to use the 8% tax loophole? Stop. You are walking into a massive audit trap.",
+    "script": [
+      {"time": "0:00 - 0:20", "visual": "Speaker holding a laptop with a Reddit thread titled 'How to pay 8% tax as a freelancer' visible.", "audio": "Are you a freelancer, designer, or coder trying to use the 8% tax loophole you saw on Reddit? Stop. You are walking into a massive audit trap that will cost you everything."},
+      {"time": "0:20 - 0:40", "visual": "Split screen: Kirana store (8%) vs Laptop worker (50%).", "audio": "Section 44AD lets businesses declare an 8% profit margin. But it was made for Kirana stores and traders, not you. If you provide a professional service, the law says you MUST use Section 44ADA. And that requires declaring a 50% profit margin."},
+      {"time": "0:40 - 1:00", "visual": "Show a 194J TDS certificate glowing ominously.", "audio": "Here is how they catch you. When your clients pay you, they deduct TDS under Section 194J for 'professional services'. The moment you file your return under the 8% business code, the algorithm spots the mismatch."},
+      {"time": "1:00 - 1:20", "visual": "Graphic of a tax notice slamming down.", "audio": "It flags your return for scrutiny. They will reject your 8% claim, bump your profit to 50% or higher, and hit you with a massive penalty for misreporting your income."},
+      {"time": "1:20 - 1:40", "visual": "Speaker pointing to link.", "audio": "44ADA is not a punishment, it's a legal shield. Learn how to use it properly, and discover the 'Agency Arbitrage' loophole that legally drops your tax rate, in our full guide on FinSight INDIA."}
+    ]
+  }
+]
