@@ -14,7 +14,7 @@
       {
         "time": "0:15 - 0:35",
         "visual": "Split screen. Left: 'Under-reporting (50%)'. Right: 'Misreporting (200%)'. A toggle switch flips between them.",
-        "audio": "Here is how they get you. If an officer rejects your business expense\u2014say, a travel bill\u2014that's called 'under-reporting'. The penalty is 50%. Bad, but manageable. But if they label that exact same expense as 'fake' or 'misreported'?"
+        "audio": "Here is how they get you. If an officer rejects your business expense—say, a travel bill—that's called 'under-reporting'. The penalty is 50%. Bad, but manageable. But if they label that exact same expense as 'fake' or 'misreported'?"
       },
       {
         "time": "0:35 - 0:55",
@@ -48,7 +48,7 @@
       {
         "time": "0:15 - 0:35",
         "visual": "Show an email notification from 'Income Tax Dept' landing in spam.",
-        "audio": "The algorithm scans your return. If it finds a mismatch\u2014like claiming a TDS credit without reporting the income\u2014it sends a 'Defective Return' notice. And it usually goes straight to your spam folder."
+        "audio": "The algorithm scans your return. If it finds a mismatch—like claiming a TDS credit without reporting the income—it sends a 'Defective Return' notice. And it usually goes straight to your spam folder."
       },
       {
         "time": "0:35 - 0:55",
@@ -104,7 +104,7 @@
   {
     "id": "reel-004",
     "title": "Tax Loss Harvesting March 31st",
-    "articleSlug": "tax-loss-harvesting-march-31-guide",
+    "articleSlug": "capital-markets-ltcg-budget-guide",
     "duration": "100s",
     "hook": "You just made 5 Lakhs in the stock market this year! Congratulations, the government now wants 62,000 rupees in tax. But what if I told you there's a legal loophole to wipe that tax bill to zero?",
     "script": [
@@ -138,7 +138,7 @@
   {
     "id": "reel-005",
     "title": "The Section 54 Tax Shield",
-    "articleSlug": "selling-house-ltcg-section-54-exemption",
+    "articleSlug": "inherited-house-sale-tax-guide",
     "duration": "100s",
     "hook": "You just sold your flat for 1.5 Crore. The buyer deducted 1% TDS, and now the Income Tax department is hunting for their 10 Lakh cut. Here is how to legally give them nothing.",
     "script": [
@@ -172,7 +172,7 @@
   {
     "id": "reel-006",
     "title": "The MNC RSU Trap",
-    "articleSlug": "mnc-rsu-vesting-double-taxation-trap",
+    "articleSlug": "startup-esops-double-taxation-guide",
     "duration": "100s",
     "hook": "You work at Amazon or Google. Your RSUs just vested, but a third of your shares mysteriously disappeared. You weren't robbed. You were just hit by the Sell-To-Cover trap.",
     "script": [
@@ -234,6 +234,856 @@
         "time": "1:20 - 1:40",
         "visual": "Speaker pointing aggressively to the camera. '2B Payment Lock' shield appears.",
         "audio": "Stop paying the GST portion to vendors until it reflects in your portal. It is the only leverage you have. Run the numbers on our interactive Supplier Default Simulator to see your exact risk. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-008",
+    "title": "The 80G Fake Donation Scam",
+    "articleSlug": "80g-fake-donation-scam-notice",
+    "duration": "100s",
+    "hook": "Thought you were a genius for buying a ₹1 Lakh donation receipt to save tax? The Income Tax algorithm just caught you.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Visual of someone holding cash and a tax receipt, looking smug. Suddenly, a red siren flashes.",
+        "audio": "Thought you were a genius for \"buying\" a ₹1 Lakh donation receipt to save tax? The Income Tax algorithm just caught you. Here is exactly how the 80G Fake Donation scam collapsed."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "Fast-paced animation of money going from Bank -> NGO -> Cash back to user.",
+        "audio": "You sent ₹1 Lakh to a charity via NEFT. They secretly gave you ₹90k back in cash. You claimed the deduction, saved ₹30k in tax, and thought you won."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "AI scanning a server rack. A red 'DELETED' stamp hits the NGO.",
+        "audio": "But the IT department didn't audit you. They audited the NGO. They caught the cash withdrawals, retroactively cancelled the NGO's registration, and then—the algorithm did the rest."
+      },
+      {
+        "time": "0:55 - 1:15",
+        "visual": "Thousands of emails flying out to stick figures. A massive red text overlay: '200% PENALTY'.",
+        "audio": "It flagged every single PAN card linked to that NGO. You just got an automated Section 148A reassessment notice. They add the ₹1 Lakh back to your income, charge you the tax, AND hit you with a brutal 200% penalty for misreporting."
+      },
+      {
+        "time": "1:15 - 1:40",
+        "visual": "A shield icon with 'ITR-U' written on it.",
+        "audio": "The only legal way out? If the assessment isn't final, file an Updated Return (ITR-U) immediately. You'll pay a 25% premium, but it grants you absolute immunity from that 200% penalty. Don't fight the algorithm. It will win."
+      }
+    ]
+  },
+  {
+    "id": "reel-009",
+    "title": "The Agency Arbitrage Loophole",
+    "articleSlug": "agency-arbitrage-loophole",
+    "duration": "100s",
+    "hook": "Are you a freelancer scaling past ₹75 Lakhs this year? The government is about to punish you for growing.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Visual of a freelancer looking happily at a laptop showing '₹75,00,000'. Then the screen ticks to '₹75,00,001' and a massive '35% TAX RATE' stamp hits the screen.",
+        "audio": "Are you a freelancer scaling past ₹75 Lakhs this year? The government is about to punish you for growing."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A shield with 'Section 44ADA' shatters into pieces.",
+        "audio": "Under Section 44ADA, you only pay tax on 50% of your income. But the moment you cross ₹75 Lakhs, that shield shatters. You are forced into mandatory tax audits, and your income is thrown into the brutal 30% slab rate. Add the high-earner surcharge, and you're losing over 35% of your profit!"
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A split screen. On the left: 'Individual - 35% Tax'. On the right: 'Pvt Ltd Company - 25% Tax'.",
+        "audio": "The loophole? Stop operating as a freelancer and start operating as an Agency. By registering a Private Limited Company, you can opt for Section 115BAA, which drops your corporate tax rate to a flat 25%."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A diagram showing money flowing from the Company into a 'Founder Salary' bucket (10% tax) and a 'Corporate Vault' (25% tax).",
+        "audio": "You pay yourself a moderate founder's salary to take advantage of the lower personal tax slabs. The rest of the profit stays inside the company, capped at 25%. On a ₹1.5 Crore revenue business, this simple legal wrapper can save you over ₹16 Lakhs in a single year!"
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Warning sign flashing 'NO DIVIDENDS'.",
+        "audio": "Just remember the golden rule: Never pull the profit out as a dividend, or you'll get double-taxed! Keep the money in the company and invest it from there. Scale smart, pay less tax, and follow FinSights for more business survival guides!"
+      }
+    ]
+  },
+  {
+    "id": "reel-010",
+    "title": "The Crypto Cyber Cell Trap",
+    "articleSlug": "crypto-tax-forensic-audit-guide",
+    "duration": "100s",
+    "hook": "You sold your crypto on Binance P2P, got the cash in your bank, and thought you were safe. Until the Cyber Cell freezes your account.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Binance P2P screen followed by a 'Bank Account Frozen' SMS.",
+        "audio": "You sold your crypto on Binance P2P, got the cash in your bank, and thought you were safe. Three days later, the Cyber Cell freezes your account, and you are a suspect in a money laundering case."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A tracking beacon hitting Form 26AS.",
+        "audio": "Welcome to the Indian Crypto Nightmare. The government didn't try to track the blockchain, they choked the fiat off-ramps. Section 194S forces Indian exchanges to deduct a 1% TDS on every sale, instantly alerting the Income Tax algorithms to your exact trading volume."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "Stolen cash flowing from victim to scammer, then into the P2P seller's account.",
+        "audio": "Trying to bypass it using P2P? If a scammer buys your USDT using stolen cash, the police trace it straight to your bank account. You're left fighting an FIR in another state."
+      },
+      {
+        "time": "0:55 - 1:15",
+        "visual": "A red cross over 'Ethereum Loss', 30% tax eating the entire net profit.",
+        "audio": "And the 30% tax? It gets worse. Losses are dead. If you make 10 Lakhs in Bitcoin and lose 8 Lakhs in Ethereum, you still owe 3 Lakhs in tax. You can't offset anything. Your effective tax rate could be over 60%!"
+      },
+      {
+        "time": "1:15 - 1:40",
+        "visual": "'FinSight INDIA' logo glowing.",
+        "audio": "Stop day trading. The math is mathematically suicidal. Use compliant exchanges and never trade P2P with unverified users. Read our full crypto forensic guide on FinSight INDIA to survive the crackdown. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-011",
+    "title": "The Debt Fund Massacre",
+    "articleSlug": "debt-mutual-fund-massacre",
+    "duration": "100s",
+    "hook": "Thought you were smarter than your parents by choosing Debt Mutual Funds over FDs? The government just changed the rules, and you are now in the exact same boat.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Visual of a taxpayer comparing an FD document and a Debt Mutual Fund statement.",
+        "audio": "Thought you were smarter than your parents by choosing Debt Mutual Funds over FDs? The government just changed the rules, and you are now in the exact same boat."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A massive stamp comes down on the Debt Fund statement reading 'SECTION 50AA'.",
+        "audio": "Welcome to the Debt Fund Massacre. Under Section 50AA, the golden era of indexation is officially dead."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A chart showing a 30% tax slab crushing the returns of the Debt Fund.",
+        "audio": "For years, HNIs used indexation to pay a fraction of the tax on their debt portfolios. The government closed the loophole by declaring that ANY mutual fund with less than 35% domestic equity is now a Short-Term Capital Asset. Forever. It doesn't matter if you hold it for 10 years; you will pay your marginal slab rate, up to 30%."
+      },
+      {
+        "time": "0:55 - 1:15",
+        "visual": "An investor trying to buy a house with Debt Fund money, getting rejected by a tax portal.",
+        "audio": "And the worst part? Because it's legally a Short-Term asset, you can no longer use Debt Funds to claim Section 54F exemptions for buying real estate."
+      },
+      {
+        "time": "1:15 - 1:40",
+        "visual": "A shield icon over the words 'Arbitrage Funds'.",
+        "audio": "The smart money has already moved. If you want debt-like stability with equity taxation, you need to look at Arbitrage Funds or Equity Savings Funds. And if you bought your Debt Funds before April 1, 2023? Never sell them. They are grandfathered and completely safe."
+      }
+    ]
+  },
+  {
+    "id": "reel-012",
+    "title": "The E-commerce 40 Lakh GST Myth",
+    "articleSlug": "ecommerce-gst-mythbuster-guide",
+    "duration": "100s",
+    "hook": "Every YouTube guru tells you: 'You don't need a GST number until your sales hit 40 Lakhs.' If you sell on Amazon, that advice will get you heavily penalized.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "'40 Lakh GST Free' headline crossed out with a red 'PENALTY' stamp.",
+        "audio": "Every YouTube guru tells you: 'You don't need a GST number until your sales hit 40 Lakhs.' If you sell on Amazon or Flipkart, that advice will get you heavily penalized."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "Section 22 morphing into Section 24, threshold dropping to ₹0.",
+        "audio": "Section 22 gives you the 40 Lakh limit. But Section 24 of the GST Act completely nullifies it for e-commerce. If you sell physical goods on a third-party marketplace, your threshold is exactly ZERO. You need a GST number from Day 1."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "Amazon logo transmitting a 1% TCS data packet to a government server.",
+        "audio": "How will they find out? The government built a 'Digital Tollbooth'. E-commerce platforms are legally forced to act as tax informants. Amazon deducts 1% TCS on your sales and reports your PAN directly to the tax department."
+      },
+      {
+        "time": "0:55 - 1:15",
+        "visual": "A compounding interest meter rapidly increasing.",
+        "audio": "The moment that 1% hits their servers, your cover is blown. If you haven't filed your GSTR-3B returns, an automated demand notice is triggered, complete with 18% compounding interest."
+      },
+      {
+        "time": "1:15 - 1:40",
+        "visual": "Speaker pointing to screen, FinSight INDIA logo.",
+        "audio": "And no, the simplified Composition Scheme won't save you—it bans inter-state sales! Register as a regular taxpayer and harvest your Input Tax Credit. Read the full GST Mythbuster guide on FinSight INDIA to protect your margins. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-013",
+    "title": "F&O Trading Loss Trap",
+    "articleSlug": "fo-trading-loss-setoff-guide",
+    "duration": "100s",
+    "hook": "You just lost 5 Lakhs in F&O trading. Can you use that loss to legally reduce the tax on your salary? The answer could trigger an immediate audit.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Speaker pointing to a massive red trading chart plummeting.",
+        "audio": "You just lost 5 Lakhs in F&O trading. Your immediate instinct is financial damage control: 'Can I use this loss to reduce the tax on my 20 Lakh salary?' The answer is absolutely not. And trying it will trigger an immediate audit."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A massive steel firewall appears between a 'Trading Loss' pile and a 'Salary' vault.",
+        "audio": "Section 71 of the Income Tax Act explicitly prevents you from offsetting business losses against salary income. There is a hard firewall. Your salary tax is calculated completely independently of your trading disaster."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "Screen flashes red. A 'MISMATCH NOTICE' slams down over a tax return.",
+        "audio": "If you try to hide the loss to avoid an audit, the algorithm will catch you. Your broker already reported every trade to the government. If your ITR doesn't match your AIS, you will get a notice."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A shield icon blocks the firewall. 'Section 43(5): Non-Speculative Business' glows.",
+        "audio": "But here is the loophole. F&O is legally a 'Non-Speculative Business'. You can offset that 5 Lakh loss against your rental income, freelance profits, or even short-term capital gains in the same year."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing aggressively to the camera. '8-Year Carry Forward' text appears.",
+        "audio": "And you can carry the remainder forward for 8 years to shield future profits. But only if you file ITR-3 before July 31st. Don't lose your tax shield. Read our full guide on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-014",
+    "title": "The 20% LRS TCS Trap",
+    "articleSlug": "foreign-remittance-lrs-tcs-guide",
+    "duration": "100s",
+    "hook": "Sending money abroad for a vacation or buying US stocks? The government is intercepting your transfers with a brutal 20% tax penalty. Here is how to stop it.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "A digital wire transfer is intercepted mid-air by a massive claw labeled '20% TCS'.",
+        "audio": "Sending money abroad for a vacation or buying US stocks? The government is now intercepting your transfers with a brutal 20% Tax Collected at Source. It's called the LRS Trap."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A limit line showing 7 Lakhs. Money spilling over the top is instantly taxed 20%.",
+        "audio": "If you send more than 7 Lakh rupees abroad in a financial year for investments or travel, your bank will automatically deduct a massive 20% on every rupee above the limit and send it to the government."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "An international credit card swiped in Dubai, instantly generating a 20% surcharge bill.",
+        "audio": "Think you can bypass it by swiping your international credit card in Dubai? Think again. The RBI mandates issuers to track your PAN limit. Your next statement will carry that 20% surcharge."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A government vault opening, refunding the 20% straight into 'Advance Tax'.",
+        "audio": "But this is NOT a fee. It's pre-paid tax sitting in your Form 26AS. You can claim it as a refund when you file your ITR. Or better yet, offset it instantly against your quarterly Advance Tax to restore your cash flow immediately."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing to the camera. 'FinSight Matrix' flashes on screen.",
+        "audio": "Don't let your money rot in the government's bank account. Learn how to map your exact TCS liability using our Scenario Matrix on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-015",
+    "title": "Founder Wealth Extraction Trap",
+    "articleSlug": "founder-salary-vs-dividend-strategy",
+    "duration": "100s",
+    "hook": "You made 1 Crore in profit in your private limited company. If you transfer it to your personal account without a strategy, you will lose nearly 50% to the government.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "A 1 Crore profit pie chart instantly shrinks to half its size.",
+        "audio": "You made 1 Crore in profit in your private limited company. If you transfer it to your personal account without a strategy, you will lose nearly 50% of it to the government. Here is the ultimate founder's war."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A heavy anvil labeled 'Double Taxation' drops on a dividend check.",
+        "audio": "If you take it as a dividend, you trigger the Double Taxation Trap. The company pays 25% corporate tax, and then you pay 30% personal tax on what's left. Your effective tax rate becomes a staggering 47.5%."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A scale balancing 'Salary' and 'Personal Tax 30%'.",
+        "audio": "If you take it as salary, the company saves corporate tax, but you still get destroyed by the 30% personal income tax slab. So what's the Grandmaster's move?"
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A glowing document drops: 'Section 194J & 44ADA'.",
+        "audio": "The Professional Consultant Loophole. Bill your own company for professional services under Section 194J. The company writes off 100% of the cost, and you use Section 44ADA to declare a 50% tax-free margin. You just halved your personal tax liability legally."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Warning sign: 'Deemed Dividend'. Speaker pointing down.",
+        "audio": "But never take a 0% interest personal loan from your company. The government will instantly tax it as a Deemed Dividend. Learn the exact Golden Ratio extraction strategy on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-016",
+    "title": "Freelance USD GST Trap",
+    "articleSlug": "freelance-export-gst-usd-guide",
+    "duration": "100s",
+    "hook": "You earn USD as a freelancer from foreign clients. You think Indian GST rules don't apply to you? You are walking into a massive FEMA audit trap.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Freelancer coding on a laptop, receiving USD. A GST officer appears ominously behind them.",
+        "audio": "You earn USD as a freelancer from US or UK clients. You think because your clients are foreign, Indian GST rules don't apply to you? That assumption could destroy your business."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A digital gauge hits 20 Lakhs and flashes red.",
+        "audio": "The moment your total global income crosses 20 Lakh rupees, GST registration is legally mandatory. Even if 100% of your clients are outside India. But here is the secret the government doesn't advertise."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "An invoice gets stamped with a massive green '0% GST' mark.",
+        "audio": "Export of Services is a 'Zero-Rated Supply'. This means you must register and file returns, but you can legally pay 0% GST. You just have to file a Letter of Undertaking, or LUT, every single year."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A bank document labeled 'FIRC' glowing like a shield.",
+        "audio": "But if you receive USD via PayPal or Stripe, and it hits your bank account as INR, the GST officer will demand 18% tax. You MUST obtain a FIRC from your bank for every transaction to prove it was foreign exchange."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker looking directly at camera. 'FinSight INDIA' logo appears.",
+        "audio": "Execute this correctly, and you can claim cash refunds for the GST you paid on your laptop and servers. Don't operate in the dark. Read our full export compliance guide on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-017",
+    "title": "The Home Loan Tax Illusion",
+    "articleSlug": "home-loan-interest-limit-survival",
+    "duration": "100s",
+    "hook": "Taking a 1 Crore home loan for the tax benefits? The math is dead, and the government is quietly letting you bleed.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "A glossy bank brochure promising massive tax savings instantly turns to dust.",
+        "audio": "You are taking a 1 Crore home loan, and the bank manager is selling you on the massive tax savings. What they aren't telling you is that the math died a decade ago, and you are walking into a financial illusion."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A 7.5 Lakh interest mountain, with only a tiny 2 Lakh chunk protected by a shield.",
+        "audio": "At 8.5% interest, you will pay over 7.5 Lakhs in interest the first year. But Section 24(b) caps your tax deduction at just 2 Lakhs. That limit hasn't changed since 2014. The remaining 5.5 Lakhs vanishes with zero tax benefit."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "Two figures joining forces, the 2 Lakh shield doubles to 4 Lakhs.",
+        "audio": "If you are married and your spouse works, never take a loan as a single applicant. Always co-borrow. The 2 Lakh limit applies per taxpayer. You just doubled your tax shield to 4 Lakhs instantly."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A giant 'New Tax Regime' eraser wiping out the home loan deduction entirely.",
+        "audio": "But here is the final betrayal. If you switch to the New Tax Regime to get lower slab rates, the government completely abolishes the home loan interest deduction for self-occupied properties. You get absolutely nothing."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing with urgency. 'FinSight INDIA' logo.",
+        "audio": "A home loan is no longer a magical tax-saving instrument. Run the regime math before you sign anything. Learn how to structure your EMIs correctly on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-018",
+    "title": "The Influencer Barter Trap",
+    "articleSlug": "influencer-barter-trap-194r",
+    "duration": "100s",
+    "hook": "You just unboxed a free 1.4 Lakh laptop for your channel. The brand is happy. You are happy. Until the Income Tax Department demands 40,000 rupees in hard cash for a laptop you never even bought.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Creator holding a brand-new gaming laptop, transition to a red tax demand notice.",
+        "audio": "You just unboxed a free 1.4 Lakh laptop for your channel. The brand is happy. You are happy. Until the Income Tax Department demands 40,000 rupees in hard cash for a laptop you never even bought."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "Split screen: Brand's accounting software sending data to the Income Tax AI server.",
+        "audio": "Welcome to the Barter Trap. When a brand sends you a gift worth over 20,000 rupees, their accounting software automatically beams it to the government as a marketing expense against your PAN. It's sitting quietly in your Annual Information Statement right now."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "Section 194R and 28(iv) flashing on screen.",
+        "audio": "The algorithm treats that laptop exactly like a briefcase full of cash. If you keep the product and don't declare its market value as income, a scrutiny notice is already being drafted. And no, giving it away in a giveaway doesn't erase your liability."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "Shield icon with Section 44ADA appearing over the creator.",
+        "audio": "But you have a legal shield. Section 44ADA. You can legally cut the taxable value of that gift in half. Or, you can just return the product and keep the courier receipt as absolute proof."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Point to a link on screen. FinSight INDIA logo.",
+        "audio": "Don't let free gear bankrupt you. Learn the 360-degree defense strategy against the Section 194R trap on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-019",
+    "title": "The July 31st Deadline Cascade",
+    "articleSlug": "missed-itr-deadline-penalty-guide",
+    "duration": "100s",
+    "hook": "You missed the July 31st tax deadline. You think you just have to pay a small 5,000 rupee fine? Wrong. You just triggered an automated cascade of financial destruction.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Calendar zooming past July 31st. A giant red siren goes off.",
+        "audio": "You missed the July 31st tax deadline. You think you just have to pay a small 5,000 rupee fine? Wrong. You just triggered an automated cascade of financial destruction."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "Stock market portfolio burning up.",
+        "audio": "Phase one: The Loss Wipeout. Do you trade stocks or F&O? By missing the deadline, the algorithm permanently strips away your legal right to carry forward any losses. If you lost 5 Lakhs, it's gone forever. You can never use it to offset future taxes."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "Section 234F machine toll blocking a 'Submit' button.",
+        "audio": "Phase two: The Machine Toll. Under Section 234F, the government removed all human discretion. The e-filing portal literally locks your 'Submit' button until a payment gateway confirms you paid the 5,000 rupee penalty. You cannot negotiate."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "Calendar zooming toward December 31st and dropping into a black hole called ITR-U.",
+        "audio": "And phase three: The Hard Cutoff. If you miss the December 31st belated deadline, the window slams shut. You are forced into the ITR-U trap, where the penalty instantly jumps to a massive 25 to 50% of your total tax."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Pointing to screen. FinSight INDIA logo.",
+        "audio": "Is there any way out? If your income is below the exemption limit, you can bypass the machine. Read the full survival guide on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-020",
+    "title": "The Moonlighting Data Collision",
+    "articleSlug": "moonlighting-dual-employment-tax-guide",
+    "duration": "100s",
+    "hook": "You secretly took a second weekend job to beat inflation. The money is great. But your HR department and the Income Tax AI are about to completely destroy your career.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "A stressed employee coding at night. Screen splits between two different company logos.",
+        "audio": "You secretly took a second weekend job to beat inflation. The money is great. But your HR department and the Income Tax AI are about to completely destroy your career."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "Two identical tax deduction formulas colliding and creating an explosion on the July 31st ITR portal.",
+        "audio": "When you hold two formal jobs, both companies automatically grant you the basic exemption and standard deduction. Come tax season, the government's algorithm detects this 'Data Collision.' It strips the duplicate exemptions, shoving your income into the 30% bracket."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "An HR manager looking at an EPF portal showing two simultaneous deposits.",
+        "audio": "Suddenly, you owe a massive unexpected tax bill with penal interest. But it gets worse. Your primary HR department catches you because your second job deposited money into your UAN. Two EPF contributions in one month? You're fired."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "Shield icon with '194J Consultant' glowing.",
+        "audio": "How do you survive? Never let the second job put you on formal payroll. Insist on being an independent contractor under Section 194J. Your EPF stays completely clean, invisible to HR."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Point to a link on screen. FinSight INDIA logo.",
+        "audio": "And the best part? It unlocks the 44ADA loophole, legally cutting your side-hustle tax bill in half. Don't moonlight blind. Get the full survival blueprint on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-021",
+    "title": "The ₹3.75 Lakh Tax Regime Lie",
+    "articleSlug": "new-vs-old-regime-guide",
+    "duration": "100s",
+    "hook": "Stop running complicated Excel sheets to decide between the Old and New Tax Regimes. The government made the New Regime the default, and there is only one mathematical number that actually matters.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Frustrated employee surrounded by messy Excel sheets, PPF, and LIC documents.",
+        "audio": "Stop running complicated Excel sheets to decide between the Old and New Tax Regimes. The government made the New Regime the default, and there is only one mathematical number that actually matters."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "Giant glowing number '₹3,75,000' appears.",
+        "audio": "3 Lakh, 75 Thousand Rupees. That is the exact breakeven point. Unless your total itemized deductions—like 80C, health insurance, and HRA—cross this massive hurdle, the New Regime will leave more cash in your bank account."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A scale tipping. 80C and Standard Deduction look tiny compared to the 3.75 Lakh weight.",
+        "audio": "Without a massive home loan interest claim, hitting that number is almost impossible. The New Regime gives you such a massive head start on lower tax brackets that the Old Regime just can't catch up."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A padlock snaps shut over a freelancer's tax return.",
+        "audio": "But beware the freelancer lock-in. If you earn even a single rupee of business or freelance income and switch to the Old Regime, the law only lets you switch back once in your entire life. You are permanently locked in."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Point to a link on screen. FinSight INDIA logo.",
+        "audio": "Don't guess with your money. Use our exact mathematical threshold calculator and discover the hidden NPS loophole on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-022",
+    "title": "The RNOR Global Wealth Shield",
+    "articleSlug": "nri-rnor-status-tax-shield",
+    "duration": "100s",
+    "hook": "Moving back to India after years abroad? The moment you land, the Indian government wants to tax your US stocks and Dubai rental income. Unless you trigger the ultimate diplomatic immunity.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "An airplane landing in India. Global assets (stocks, houses) suddenly get trapped in a massive red tax net.",
+        "audio": "Moving back to India after years abroad? The moment you land, the Indian government wants to tax your US stocks and Dubai rental income at peak rates. Unless you trigger the ultimate diplomatic immunity."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A golden forcefield labeled 'RNOR' surrounds the global assets, repelling the tax net.",
+        "audio": "It's called RNOR status: Resident but Not Ordinarily Resident. It is a temporary golden bridge. If you were an NRI for 9 of the last 10 years, India promises not to touch your global wealth for up to 3 years."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A ticking clock (3 Years). A calendar pages flipping fast.",
+        "audio": "Your foreign salary? Tax-free. Capital gains from US tech stocks? Tax-free. But the clock is ticking. After this 3-year grace period, the shield collapses, and your worldwide income is ruthlessly taxed by India."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "Schedule FA form flashing red with a '10 LAKH PENALTY' stamp.",
+        "audio": "And here is the ultimate trap: Even during your tax-free period, if you fail to declare every single foreign asset in Schedule FA, the Black Money Act triggers an automatic, non-negotiable 10 Lakh rupee penalty."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Point to a link on screen. FinSight INDIA logo.",
+        "audio": "Use this 3-year window to liquidate and repatriate. Discover the exact transition strategy and the RFC account loophole on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-023",
+    "title": "The Reddit Freelance Loophole Trap",
+    "articleSlug": "reddit-44ada-eligibility-trap",
+    "duration": "100s",
+    "hook": "Did you claim 50% tax-free income under Section 44ADA because a Reddit post told you it was a 'freelance loophole'? Congratulations, you just triggered a Defective Return Notice.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Influencer reading Reddit on a laptop, hits submit, flashes red DEFECTIVE RETURN NOTICE.",
+        "audio": "Did you claim 50% tax-free income under Section 44ADA because a Reddit post told you it was a 'freelance loophole'? Congratulations, you just triggered a Defective Return Notice."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A list of professions with green checkmarks. Digital Marketer and Crypto Trader with red X's.",
+        "audio": "Section 44ADA is NOT for everyone with a laptop. The law strictly reserves it for doctors, lawyers, engineers, and hardcore software developers. If you are a digital marketer, dropshipper, or crypto trader, you do not qualify."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A robot scanning an ITR form. Flags Business Code clashing with Section 44ADA.",
+        "audio": "When you file your ITR-4, the government's algorithm checks your Business Code. If you select 'Advertising' but claim 44ADA, the system instantly flags it as legally impossible and rejects your return. If you ignore it, you become a non-filer facing massive penalties."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "Split screen showing 44ADA (50% Profit) vs 44AD (6% Profit).",
+        "audio": "Here is the ironic part: By trying to cheat the system, you played yourself! Digital marketers are businesses. That means you qualify for Section 44AD, where you only have to declare 6% profit on digital receipts, not 50%!"
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Shield icon breaking the tax bill. Call to action on screen.",
+        "audio": "Stop taking tax advice from anonymous avatars. If you got a Defective Notice, you have 15 days to file a revised return. Shift to 44AD or build a real P&L under ITR-3. Follow FinSights for real tax strategies that actually hold up in an audit!"
+      }
+    ]
+  },
+  {
+    "id": "reel-024",
+    "title": "The Rent-to-Parents HRA Trap",
+    "articleSlug": "rent-to-parents-hra-exemption-guide",
+    "duration": "100s",
+    "hook": "Are you paying rent to your parents to claim a massive HRA tax exemption? You might be walking directly into a 200% penalty trap set by the Income Tax Department's AI grid.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Taxpayer happily transferring money to a parent. Screen flashes red: 'AIS MISMATCH - 200% PENALTY'.",
+        "audio": "Are you paying rent to your parents to claim a massive HRA tax exemption? You might be walking directly into a 200% penalty trap set by the Income Tax Department's new AI grid."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "Split screen. Left: Taxpayer claiming 3 Lakhs HRA. Right: Mother's ITR showing zero rental income. A laser links the two.",
+        "audio": "The days of fake rent receipts are dead. Today, the government's Annual Information Statement algorithm instantly links your PAN to your parents' PAN. If you claim 3 Lakhs as rent, but your parent doesn't declare that exact amount as income, you are instantly flagged for scrutiny."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A formal rent agreement gets slammed with a gavel. 'Section 194-IB' appears.",
+        "audio": "And it gets worse. You can't just transfer money. You need a formal, notarized rent agreement. The house MUST be in their name. And if your monthly rent exceeds 50,000 rupees? You are legally required to deduct 5% TDS. Miss that, and your entire exemption is completely disallowed."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A slider adjusting rent, finding the perfect 'sweet spot'. Tax bill drops.",
+        "audio": "But there is a legal way to do it right. You shouldn't blindly pay your entire salary as rent. You need to calculate the exact mathematical sweet spot where your exemption is maximized, and your parents can use their 30% standard deduction to absorb the income tax-free."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing at a link. 'FinSight INDIA' logo.",
+        "audio": "Stop using your family as a casual tax loophole. Treat them like a ruthless corporate landlord. Want to find your exact HRA sweet spot without triggering an audit? Check out the interactive calculator on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-025",
+    "title": "The SaaS Credit Card Trap",
+    "articleSlug": "saas-credit-card-trap",
+    "duration": "100s",
+    "hook": "Are you paying for Facebook Ads or AWS servers with your corporate credit card? You might be falling into the deadliest tax trap for small businesses.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "An entrepreneur happily swiping a corporate credit card. A massive red stamp reading 'DISALLOWED' slams over the card.",
+        "audio": "Are you paying for Facebook Ads or AWS servers with your corporate credit card? You might be falling into the deadliest tax trap for small businesses."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A split screen. On the left, money going to AWS. On the right, the Indian Government with an empty hand.",
+        "audio": "When you swipe your card, Visa and Mastercard send the full amount to the foreign tech giant. But under Section 195, the Income Tax department requires YOU to deduct withholding tax before that money leaves India."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A Profit & Loss statement. The expense line item is crossed out in red ink, and the profit number doubles.",
+        "audio": "What happens if you don't? The government uses Section 40(a)(i). They completely disallow the expense. If you spent 15 Lakhs on ads, they erase it from your books. Your taxable profit instantly jumps by 15 Lakhs, and you owe massive taxes on money you already spent!"
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "An invoice with a new line item added: 'Gross Up Tax paid from own pocket'.",
+        "audio": "The solution? Stop swiping. Switch to invoice billing. If the tech giant refuses to take a tax cut, you must 'Gross Up' the payment—meaning you pay the tax from your own pocket directly to the Indian government."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "A shield icon with 'Form 15CA/CB' written on it.",
+        "audio": "It makes the software slightly more expensive, but it saves you from being financially ruined in a tax audit. File your Form 15CA, get their Tax Residency Certificate, and consult your CA today. Follow FinSights for more business survival guides!"
+      }
+    ]
+  },
+  {
+    "id": "reel-026",
+    "title": "The Section 54F Capital Gains Hack",
+    "articleSlug": "section-54f-crypto-property-hack",
+    "duration": "100s",
+    "hook": "Sitting on a massive windfall from unlisted startup equity or crypto? The government expects a massive cut. But there's a legal loophole to erase that tax bill to absolute zero.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "An investor celebrating a ₹5 Crore windfall from selling equity. A grim reaper with '12.5% Tax' suddenly appears.",
+        "audio": "Sitting on a massive windfall from unlisted startup equity, mutual funds, or crypto? The government expects a massive cut. But there's a legal loophole called Section 54F to erase that tax bill to absolute zero."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A massive vault of cash is poured directly into a glowing residential house. The tax bill evaporates.",
+        "audio": "Unlike normal exemptions where you just reinvest your profit, Section 54F requires you to reinvest your ENTIRE sale proceeds into a residential house. If you pour your entire windfall into Indian real estate, your capital gains tax is completely forgiven."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A billionaire laughing in a Worli penthouse. A massive steel gate labeled '10 Crore Cap' slams down.",
+        "audio": "Startup founders were using this to buy 50 Crore penthouses entirely tax-free. But the government got smart. They recently slammed the door shut, introducing a hard 10 Crore limit. Anything above that gets brutally taxed."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A calendar flipping to July 31st. A bank vault labeled 'CGAS'.",
+        "audio": "And it is a high-wire act. You can't just keep the cash in your savings account while you look for a house. If you haven't bought before the ITR deadline, you must lock the funds in a designated Capital Gains Account Scheme, or the exemption vanishes."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing at the screen. 'FinSight INDIA' logo glows.",
+        "audio": "Plus, if you already own more than one house, you are completely disqualified. It is the ultimate alchemy for your wealth, but one misstep costs you everything. Read the full Section 54F guide on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-027",
+    "title": "The Section 87A Rebate Trap",
+    "articleSlug": "section-87a-rebate-denial-trap",
+    "duration": "100s",
+    "hook": "Did you hear the Budget 2025 news that income up to ₹12 Lakhs is completely tax-free? If you trade stocks, you are in for a brutal surprise.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "An Indian student looking confidently at a tax calculator showing '₹10 Lakhs Income'. Then the screen turns red and stamps a '₹1,00,000 TAX DEMAND' on their face.",
+        "audio": "Did you hear the Budget 2025 news that income up to ₹12 Lakhs is completely tax-free? If you trade stocks, you are in for a brutal surprise."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A news headline reads '₹12 Lakhs Income is Tax-Free!'. A magnifying glass zooms in to reveal tiny text: 'Conditions Apply.'",
+        "audio": "The government heavily marketed the expanded Section 87A rebate, promising that anyone earning under ₹12 Lakhs in the New Tax Regime owes zero tax. But that rebate is highly conditional. It works for salaries and businesses, but it completely breaks down for capital gains."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A graph showing Short Term Capital Gains (STCG) hitting a 20% flat tax wall, and Long Term Capital Gains (LTCG) hitting a 12.5% wall.",
+        "audio": "If you make 9 Lakhs from short-term stock trading, it's not taxed at slab rates. It's taxed at a flat 20% under Section 111A. And if you think the rebate will save you, think again. The tax portal heavily restricts Section 87A against short-term gains, and for long-term gains? The law explicitly bans you from using the rebate entirely!"
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A split screen. Left side: Student pays ₹1 Lakh tax on ₹9L STCG. Right side: Student pays ₹0 tax on ₹9L F&O Business Income.",
+        "audio": "The only guaranteed protection you have is the new 4 Lakh basic exemption limit. Anything above that from stock delivery hits the special rate trap. Ironically, if you make that same 9 Lakhs doing Intraday or F&O, it's treated as normal business income and the rebate makes it 100% tax-free!"
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "A shield icon breaking the tax bill. Call to action on screen.",
+        "audio": "Don't fall for the headline trap. Know exactly what type of income you are generating before you assume it's tax-free. Follow FinSights for real tax strategies that actually hold up in an audit!"
+      }
+    ]
+  },
+  {
+    "id": "reel-028",
+    "title": "The SFT Surveillance Grid",
+    "articleSlug": "sft-high-value-transaction-notice",
+    "duration": "100s",
+    "hook": "Did you just buy a ₹15 Lakh car? Or drop ₹10 Lakhs into a mutual fund? You might feel rich, but the Income Tax Department just painted a digital target on your back.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Visual of a taxpayer buying a luxury car. The camera zooms out to reveal they are being watched through a digital sniper scope labeled 'Project Insight'.",
+        "audio": "Did you just buy a ₹15 Lakh car? Or drop ₹10 Lakhs into a mutual fund? You might feel rich, but the Income Tax Department just painted a digital target on your back."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A server rack with glowing red lights and the text 'Section 285BA'.",
+        "audio": "Welcome to the era of algorithmic surveillance. Under Section 285BA, the government doesn't need to raid your house anymore. They built an autonomous grid called the SFT—Statement of Financial Transactions."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "Icons representing a car, a credit card, and mutual funds, all transmitting signals to a central server.",
+        "audio": "Car dealerships, banks, and mutual funds are now automated informants. If you spend over ₹10 Lakhs on a car, deposit ₹10 Lakhs in cash, or pay a ₹1 Lakh credit card bill in cash, their servers instantly ping the government."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A split screen showing an ITR with '₹8L Income' on the left and an SFT flag with '₹25L Spending' on the right. A massive red 'MISMATCH' siren goes off.",
+        "audio": "The AI compares your declared income to your spending. If you report ₹8 Lakhs of salary but buy a ₹15 Lakh car, the system detects a severe liquidity mismatch and automatically triggers a scrutiny audit."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "A taxpayer downloading a document labeled 'AIS'. 'FinSight INDIA' logo glows.",
+        "audio": "Your only defense is preemptive reconciliation. Download your Annual Information Statement before filing your taxes. If the algorithm is ruthless, your paper trail must be flawless. Read our full survival guide on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-029",
+    "title": "The Section 142(1) Credit Card Trap",
+    "articleSlug": "the-high-value-sft-trap-section-142-1",
+    "duration": "100s",
+    "hook": "You paid a ₹10 Lakh credit card bill from past savings, but your current ITR declares only ₹5 Lakhs. The algorithmic mismatch just triggered a Section 142(1) tax inquiry.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Speaker holding a massive credit card bill. Screen flashes red with 'Section 142(1) Inquiry'.",
+        "audio": "You paid a ₹10 Lakh credit card bill from past savings, but your current ITR declares only ₹5 Lakhs. The algorithmic mismatch just triggered a terrifying Section 142(1) tax inquiry."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "An animated scale. Left side: 'Income Tracking'. Right side slams down: 'Consumption Tracking'.",
+        "audio": "The government fundamentally changed the rules. They stopped tracking what you claim to earn, and started tracking what you actually spend. The algorithm takes your lifestyle and subtracts your declared income."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "An honest taxpayer takes a sabbatical. '₹0 Income' appears. They buy a car with savings. Red flags explode.",
+        "audio": "Because time exists, honest people get trapped. You earned ₹15 Lakhs five years ago, saved it, and spent it today while your current income is zero. To the machine, that's a mathematically impossible anomaly."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A compliance portal dropdown menu. A cursor hovers over 'Out of Earlier Savings'.",
+        "audio": "When the Section 142(1) e-Campaign notice arrives, do not panic. Do not revise your ITR to fake your income. You just need the Holy Trinity of proof: Identity, Genuineness, and Creditworthiness."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing aggressively to the camera. 'FinSight INDIA' logo.",
+        "audio": "Respond in the portal. Categorize it as past savings or a family gift. Understand the exact chess moves required to dismantle a Section 142(1) inquiry before it destroys your wealth. Read the full guide on FinSight INDIA."
+      }
+    ]
+  },
+  {
+    "id": "reel-030",
+    "title": "The Section 143(1) TDS Double Tax Trap",
+    "articleSlug": "the-section-143-1-tds-arrears-demand",
+    "duration": "100s",
+    "hook": "Your employer deducted ₹50,000 from your salary for tax, went bankrupt, and never paid the government. Now the Income Tax algorithm is demanding YOU pay it again.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Speaker looking at an email. A tax demand of ₹50,000 pops out of the screen. Speaker looks confused.",
+        "audio": "Your employer deducted ₹50,000 from your salary for tax, went bankrupt, and never paid the government. Now the Income Tax algorithm is demanding YOU pay it again."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A robotic arm stamps 'Form 26AS' onto a document. The document is empty. The robot points an angry finger at the employee.",
+        "audio": "Welcome to the Section 143(1) double tax trap. The CPC algorithm blindly trusts Form 26AS. If your employer pocketed your TDS instead of depositing it, the machine doesn't care. It expects you to pay the tax twice."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "Speaker holds up a glowing shield labeled 'Section 205'. The robotic arm bounces off it.",
+        "audio": "But you have an absolute legal shield: Section 205. The moment the employer deducts the tax, it legally ceases to be your liability. You cannot be called upon to pay tax that has already been deducted."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A chessboard. The employee piece slides out of the way, forcing the government piece to attack the employer piece.",
+        "audio": "You must act as a legal diplomat. Do not revise your return. Instead, file a grievance invoking Section 205 and CBDT Instruction No. 275. You force the tax department to shift the recovery burden directly onto the defaulting employer."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing at link. 'FinSight INDIA' logo.",
+        "audio": "Don't let them bully you into paying for someone else's crime. Learn the exact step-by-step mechanism to freeze the demand and walk away free. Read the full guide on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-031",
+    "title": "The 10-Year Retroactive Reassessment",
+    "articleSlug": "the-section-148-escaped-assessment-nightmare",
+    "duration": "100s",
+    "hook": "You forgot to declare foreign RSUs three years ago. You thought the statute of limitations had passed. Then the algorithmic reassessment notice arrives.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Speaker crossing out days on a calendar. The calendar suddenly flips back 10 years.",
+        "audio": "You forgot to declare foreign RSUs or a crypto wallet three years ago. You thought the statute of limitations had passed and you were safe. But what if the algorithm can travel back up to 10 years to audit you?"
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A glowing digital globe. Data streams from US brokerages and crypto exchanges funnel straight into the Indian CPC servers.",
+        "audio": "Welcome to the Section 148 Escaped Assessment nightmare. The Income Tax Department no longer relies on suspicion. They rely on algorithmic telemetry and global CRS data. If you didn't declare it in Schedule FA, the machine knows."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "An iron vault door with '3 YEARS' written on it. A sledgehammer labeled '₹50 LAKHS' smashes through it.",
+        "audio": "Normally, they can only go back 3 years. But if the machine values your escaped foreign asset at ₹50 Lakhs or more, the legal limit shatters. They can reach back up to 10 years to tax you at maximum penal rates."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "Speaker holding a 'Section 148A(b)' notice. He casually blocks a punch with it.",
+        "audio": "But you can collapse their jurisdiction before they even touch your bank account. It's all about valuation. If you use the mandatory Section 148A(b) show-cause phase to prove your actual cost-basis is under 50 Lakhs, they are legally barred from proceeding."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing confidently to the camera. 'FinSight INDIA' logo.",
+        "audio": "The algorithm has infinite memory, but the law has strict boundaries. Learn how to weaponize the procedural rules to crush a reassessment notice. Read the forensic audit guide on FinSight INDIA."
+      }
+    ]
+  },
+  {
+    "id": "reel-032",
+    "title": "The ₹25,000 Zero-Tax Penalty",
+    "articleSlug": "the-section-271a-bookkeeping-trap",
+    "duration": "100s",
+    "hook": "You had a great freelance year but made zero profit after expenses. You owe zero tax. So why is the algorithm slapping you with a non-negotiable ₹25,000 penalty?",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Speaker showing a tax return with '₹0 Tax Owed' in big green letters. Suddenly, a red ₹25,000 penalty stamp obliterates it.",
+        "audio": "You had a great freelance year but made zero profit after expenses. You owe zero tax. So why is the algorithm slapping you with a non-negotiable ₹25,000 penalty?"
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "An airport security scanner. A 'Section 44ADA VIP Lane' sign gets ripped down.",
+        "audio": "Because you fell into the Presumptive Exit Trap. When your freelance receipts cross ₹50 Lakhs, or your business crosses ₹2 Crores, you are kicked out of the Section 44ADA VIP lane. You must go through the main security scanner."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A massive stack of ledgers, cash books, and carbon-copied bills falls onto a desk.",
+        "audio": "That scanner is Section 44AA. It legally mandates you to maintain meticulous books of account: cash books, journals, ledgers, and original bills. The moment you file ITR-3 and say you don't have them, the trap springs."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A robotic eye scans a shoebox full of faded receipts and flashes 'REJECTED: 271A Penalty'.",
+        "audio": "The algorithm doesn't care that your tax liability is zero. Section 271A is a behavioral fine for blinding the system. And no, handing your CA a shoebox of faded Starbucks receipts will not save you."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing to link. 'FinSight INDIA' logo.",
+        "audio": "If you are transitioning from grind to scale, you need to think like an institution. Stop mixing personal expenses. Digitize your audit trail. Learn how to avoid the deadly bookkeeping trap on FinSight INDIA. Link in bio."
       }
     ]
   }
