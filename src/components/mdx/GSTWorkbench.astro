@@ -1,0 +1,134 @@
+---
+import InputGroup from '../InputGroup.astro';
+
+interface Props {
+  defaultInvoiceValue?: number;
+  defaultDelayMonths?: number;
+}
+
+const { 
+  defaultInvoiceValue = 500000, 
+  defaultDelayMonths = 24
+} = Astro.props;
+---
+
+<div class="my-10 border-y border-slate-200 dark:border-slate-800 py-6 relative not-prose">
+
+	<div class="flex items-center gap-3 mb-8">
+        <div class="h-6 w-6 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        </div>
+        <div>
+            <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest m-0">Supplier Default Simulator</h3>
+        </div>
+	</div>
+
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+		<InputGroup 
+			id="wbGstInvoiceValue"
+			label="Base Invoice Value (Excl. GST)"
+			helpText="The cost of raw materials or services purchased from the vendor."
+            prefix="₹"
+			value={defaultInvoiceValue.toString()}
+            type="number"
+		/>
+        <InputGroup 
+			id="wbGstDelayMonths"
+			label="Months Since Wrongful ITC Claim"
+			helpText="How long the GST department waited to send the ASMT-10 notice."
+			suffix="Months"
+			value={defaultDelayMonths.toString()}
+            type="number"
+		/>
+	</div>
+
+    <input type="hidden" id="wbGstRate" value="0.18" />
+    <input type="hidden" id="wbGstInterestRate" value="0.18" />
+
+    <div class="p-5 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800/80 mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <div class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Total Paid to Vendor</div>
+            <div id="wbGstTotalPaid" class="text-xl font-medium text-slate-900 dark:text-white">₹ 0</div>
+        </div>
+        <div class="w-px h-10 bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
+        <div>
+            <div class="text-[11px] font-bold text-rose-500 dark:text-rose-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                Blocked ITC (18%)
+            </div>
+            <div id="wbGstBlockedItc" class="text-xl font-medium text-rose-600 dark:text-rose-400">₹ 0</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 mb-8">
+        <div class="p-4 rounded-2xl border border-rose-200 bg-rose-50 dark:border-rose-900/50 dark:bg-rose-950/20 flex flex-col items-center justify-center text-center gap-1">
+            <div class="text-[11px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-widest">Penal Interest (18% p.a.)</div>
+            <div id="wbGstInterestPenalty" class="text-4xl font-light text-rose-600 dark:text-rose-400 tracking-tighter">₹ 0</div>
+        </div>
+        <div class="p-4 rounded-2xl border border-orange-200 bg-orange-50 dark:border-orange-900/50 dark:bg-orange-950/20 flex flex-col items-center justify-center text-center gap-1">
+            <div class="text-[11px] font-bold text-orange-600 dark:text-orange-400 uppercase tracking-widest">Total Cash Loss to Business</div>
+            <div id="wbGstTotalLoss" class="text-4xl font-light text-orange-600 dark:text-orange-400 tracking-tighter">₹ 0</div>
+        </div>
+    </div>
+
+	<!-- Defense Lock Box -->
+	<div class="p-5 rounded-2xl border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50 dark:bg-emerald-950/20 flex gap-4">
+        <div class="mt-0.5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-600 dark:text-emerald-400"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        </div>
+        <div>
+            <div class="text-[11px] font-bold uppercase text-emerald-700 dark:text-emerald-400 tracking-widest mb-1.5">The 2B Payment Lock</div>
+            <div class="text-[13px] text-emerald-800 dark:text-emerald-300/90 leading-relaxed font-medium">
+                To prevent this <span id="wbGstTotalLossHighlight" class="font-bold underline decoration-emerald-400/50 underline-offset-2">₹0</span> hemorrhage, update your vendor contracts immediately: <span class="italic text-emerald-900 dark:text-emerald-100">"Payment of the 18% GST component will be strictly withheld until the invoice successfully reflects in our GSTR-2B."</span>
+            </div>
+        </div>
+	</div>
+</div>
+
+<script>
+	import { parseFormattedNumber, tableFormatter, setupFormattingField } from '../../utils/formatters';
+
+	function formatRupee(val: number): string {
+		if (isNaN(val) || val < 0) return '₹0';
+		return tableFormatter.format(Math.round(val));
+	}
+
+	function runGstCalc() {
+		const invoiceValue = parseFormattedNumber((document.getElementById('wbGstInvoiceValue') as HTMLInputElement)?.value || '0');
+		const delayMonths = parseFormattedNumber((document.getElementById('wbGstDelayMonths') as HTMLInputElement)?.value || '0');
+        const gstRate = parseFloat((document.getElementById('wbGstRate') as HTMLInputElement)?.value || '0.18');
+        const interestRate = parseFloat((document.getElementById('wbGstInterestRate') as HTMLInputElement)?.value || '0.18'); // 18% p.a.
+
+        // Math
+        const gstAmount = invoiceValue * gstRate;
+        const totalPaid = invoiceValue + gstAmount;
+        
+        // Interest calculation: (ITC Amount * 18% * Months) / 12
+        const interestPenalty = (gstAmount * interestRate * delayMonths) / 12;
+        
+        // Total cash loss is the ITC you have to pay back (because the vendor stole it) + the interest penalty
+        const totalLoss = gstAmount + interestPenalty;
+
+        // DOM Updates
+        const elTotalPaid = document.getElementById('wbGstTotalPaid');
+        const elBlockedItc = document.getElementById('wbGstBlockedItc');
+        const elInterestPenalty = document.getElementById('wbGstInterestPenalty');
+        const elTotalLoss = document.getElementById('wbGstTotalLoss');
+        const elLossHighlight = document.getElementById('wbGstTotalLossHighlight');
+
+        if (elTotalPaid) elTotalPaid.innerText = formatRupee(totalPaid);
+        if (elBlockedItc) elBlockedItc.innerText = formatRupee(gstAmount);
+        if (elInterestPenalty) elInterestPenalty.innerText = formatRupee(interestPenalty);
+        if (elTotalLoss) elTotalLoss.innerText = formatRupee(totalLoss);
+        if (elLossHighlight) elLossHighlight.innerText = formatRupee(totalLoss);
+	}
+
+	document.addEventListener('DOMContentLoaded', () => {
+		['wbGstInvoiceValue', 'wbGstDelayMonths'].forEach(id => {
+			const el = document.getElementById(id);
+			if (el) setupFormattingField(el as HTMLInputElement, runGstCalc);
+		});
+		
+		const elInit = document.getElementById('wbGstInvoiceValue');
+		if(elInit) runGstCalc();
+	});
+</script>

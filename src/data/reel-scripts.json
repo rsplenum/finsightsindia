@@ -202,5 +202,39 @@
         "audio": "Don't let the algorithm catch you blind. Use our interactive Vesting Simulator to calculate your exact Schedule FA risk before you file. Link in bio."
       }
     ]
+  },
+  {
+    "id": "reel-007",
+    "title": "The GST ITC Mismatch Trap",
+    "articleSlug": "gst-itc-mismatch-supplier-default-trap",
+    "duration": "100s",
+    "hook": "You paid your vendor 1 Lakh rupees, plus 18,000 in GST. You have the invoice. You have the bank statement. But two years later, the government freezes your account and demands you pay that 18,000 again. Why?",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Speaker holding up a tax invoice with an 18% GST line item highlighted. Sudden transition to a red GST ASMT-10 notice.",
+        "audio": "You paid your vendor 1 Lakh rupees, plus 18,000 in GST. You have the invoice. You have the bank statement. But two years later, the government freezes your account and demands you pay that 18,000 again. Why? Because your vendor stole it."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "Split screen: Honest business owner paying money -> Shady vendor pocketing the cash and laughing -> Government pointing angry finger at the honest owner.",
+        "audio": "Welcome to the ITC Mismatch Trap. Under Section 16(2)(c) of the GST Act, the government doesn't care if you paid the tax to your vendor. If your vendor pockets the cash and never files his GSTR-1, the government holds YOU legally responsible."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A massive algorithmic iron wall dropping down with 'GSTR-2B' written on it. The business owner hits the wall.",
+        "audio": "They erected an algorithmic iron wall called GSTR-2B. If the vendor's invoice doesn't auto-populate in your 2B portal, your Input Tax Credit is legally dead. If you claim it anyway to save your working capital?"
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "Compounding interest graphic explodes on screen: 18% P.A. PENALTY.",
+        "audio": "The system will flag you. They will force you to reverse the credit, pay the 18,000 out of your own pocket, AND they will slap you with a non-negotiable 18% compounding penal interest for every day you held onto it."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing aggressively to the camera. '2B Payment Lock' shield appears.",
+        "audio": "Stop paying the GST portion to vendors until it reflects in your portal. It is the only leverage you have. Run the numbers on our interactive Supplier Default Simulator to see your exact risk. Link in bio."
+      }
+    ]
   }
 ]
