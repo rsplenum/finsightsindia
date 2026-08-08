@@ -10,6 +10,7 @@ const directTaxCollection = defineCollection({
     readTime: z.string(),
     updatedDate: z.string(),
     statutoryAct: z.string(),
+    statutoryAct2025: z.string().optional(),
     summary: z.string(),
   }),
 });
