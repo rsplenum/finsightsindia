@@ -14,7 +14,7 @@
       {
         "time": "0:15 - 0:35",
         "visual": "Split screen. Left: 'Under-reporting (50%)'. Right: 'Misreporting (200%)'. A toggle switch flips between them.",
-        "audio": "Here is how they get you. If an officer rejects your business expense—say, a travel bill—that's called 'under-reporting'. The penalty is 50%. Bad, but manageable. But if they label that exact same expense as 'fake' or 'misreported'?"
+        "audio": "Here is how they get you. If an officer rejects your business expense\u2014say, a travel bill\u2014that's called 'under-reporting'. The penalty is 50%. Bad, but manageable. But if they label that exact same expense as 'fake' or 'misreported'?"
       },
       {
         "time": "0:35 - 0:55",
@@ -48,7 +48,7 @@
       {
         "time": "0:15 - 0:35",
         "visual": "Show an email notification from 'Income Tax Dept' landing in spam.",
-        "audio": "The algorithm scans your return. If it finds a mismatch—like claiming a TDS credit without reporting the income—it sends a 'Defective Return' notice. And it usually goes straight to your spam folder."
+        "audio": "The algorithm scans your return. If it finds a mismatch\u2014like claiming a TDS credit without reporting the income\u2014it sends a 'Defective Return' notice. And it usually goes straight to your spam folder."
       },
       {
         "time": "0:35 - 0:55",
@@ -242,27 +242,27 @@
     "title": "The 80G Fake Donation Scam",
     "articleSlug": "80g-fake-donation-scam-notice",
     "duration": "100s",
-    "hook": "Thought you were a genius for buying a ₹1 Lakh donation receipt to save tax? The Income Tax algorithm just caught you.",
+    "hook": "Thought you were a genius for buying a \u20b91 Lakh donation receipt to save tax? The Income Tax algorithm just caught you.",
     "script": [
       {
         "time": "0:00 - 0:15",
         "visual": "Visual of someone holding cash and a tax receipt, looking smug. Suddenly, a red siren flashes.",
-        "audio": "Thought you were a genius for \"buying\" a ₹1 Lakh donation receipt to save tax? The Income Tax algorithm just caught you. Here is exactly how the 80G Fake Donation scam collapsed."
+        "audio": "Thought you were a genius for \"buying\" a \u20b91 Lakh donation receipt to save tax? The Income Tax algorithm just caught you. Here is exactly how the 80G Fake Donation scam collapsed."
       },
       {
         "time": "0:15 - 0:35",
         "visual": "Fast-paced animation of money going from Bank -> NGO -> Cash back to user.",
-        "audio": "You sent ₹1 Lakh to a charity via NEFT. They secretly gave you ₹90k back in cash. You claimed the deduction, saved ₹30k in tax, and thought you won."
+        "audio": "You sent \u20b91 Lakh to a charity via NEFT. They secretly gave you \u20b990k back in cash. You claimed the deduction, saved \u20b930k in tax, and thought you won."
       },
       {
         "time": "0:35 - 0:55",
         "visual": "AI scanning a server rack. A red 'DELETED' stamp hits the NGO.",
-        "audio": "But the IT department didn't audit you. They audited the NGO. They caught the cash withdrawals, retroactively cancelled the NGO's registration, and then—the algorithm did the rest."
+        "audio": "But the IT department didn't audit you. They audited the NGO. They caught the cash withdrawals, retroactively cancelled the NGO's registration, and then\u2014the algorithm did the rest."
       },
       {
         "time": "0:55 - 1:15",
         "visual": "Thousands of emails flying out to stick figures. A massive red text overlay: '200% PENALTY'.",
-        "audio": "It flagged every single PAN card linked to that NGO. You just got an automated Section 148A reassessment notice. They add the ₹1 Lakh back to your income, charge you the tax, AND hit you with a brutal 200% penalty for misreporting."
+        "audio": "It flagged every single PAN card linked to that NGO. You just got an automated Section 148A reassessment notice. They add the \u20b91 Lakh back to your income, charge you the tax, AND hit you with a brutal 200% penalty for misreporting."
       },
       {
         "time": "1:15 - 1:40",
@@ -276,17 +276,17 @@
     "title": "The Agency Arbitrage Loophole",
     "articleSlug": "agency-arbitrage-loophole",
     "duration": "100s",
-    "hook": "Are you a freelancer scaling past ₹75 Lakhs this year? The government is about to punish you for growing.",
+    "hook": "Are you a freelancer scaling past \u20b975 Lakhs this year? The government is about to punish you for growing.",
     "script": [
       {
         "time": "0:00 - 0:15",
-        "visual": "Visual of a freelancer looking happily at a laptop showing '₹75,00,000'. Then the screen ticks to '₹75,00,001' and a massive '35% TAX RATE' stamp hits the screen.",
-        "audio": "Are you a freelancer scaling past ₹75 Lakhs this year? The government is about to punish you for growing."
+        "visual": "Visual of a freelancer looking happily at a laptop showing '\u20b975,00,000'. Then the screen ticks to '\u20b975,00,001' and a massive '35% TAX RATE' stamp hits the screen.",
+        "audio": "Are you a freelancer scaling past \u20b975 Lakhs this year? The government is about to punish you for growing."
       },
       {
         "time": "0:15 - 0:35",
         "visual": "A shield with 'Section 44ADA' shatters into pieces.",
-        "audio": "Under Section 44ADA, you only pay tax on 50% of your income. But the moment you cross ₹75 Lakhs, that shield shatters. You are forced into mandatory tax audits, and your income is thrown into the brutal 30% slab rate. Add the high-earner surcharge, and you're losing over 35% of your profit!"
+        "audio": "Under Section 44ADA, you only pay tax on 50% of your income. But the moment you cross \u20b975 Lakhs, that shield shatters. You are forced into mandatory tax audits, and your income is thrown into the brutal 30% slab rate. Add the high-earner surcharge, and you're losing over 35% of your profit!"
       },
       {
         "time": "0:35 - 0:55",
@@ -296,7 +296,7 @@
       {
         "time": "0:55 - 1:20",
         "visual": "A diagram showing money flowing from the Company into a 'Founder Salary' bucket (10% tax) and a 'Corporate Vault' (25% tax).",
-        "audio": "You pay yourself a moderate founder's salary to take advantage of the lower personal tax slabs. The rest of the profit stays inside the company, capped at 25%. On a ₹1.5 Crore revenue business, this simple legal wrapper can save you over ₹16 Lakhs in a single year!"
+        "audio": "You pay yourself a moderate founder's salary to take advantage of the lower personal tax slabs. The rest of the profit stays inside the company, capped at 25%. On a \u20b91.5 Crore revenue business, this simple legal wrapper can save you over \u20b916 Lakhs in a single year!"
       },
       {
         "time": "1:20 - 1:40",
@@ -387,7 +387,7 @@
       },
       {
         "time": "0:15 - 0:35",
-        "visual": "Section 22 morphing into Section 24, threshold dropping to ₹0.",
+        "visual": "Section 22 morphing into Section 24, threshold dropping to \u20b90.",
         "audio": "Section 22 gives you the 40 Lakh limit. But Section 24 of the GST Act completely nullifies it for e-commerce. If you sell physical goods on a third-party marketplace, your threshold is exactly ZERO. You need a GST number from Day 1."
       },
       {
@@ -403,7 +403,7 @@
       {
         "time": "1:15 - 1:40",
         "visual": "Speaker pointing to screen, FinSight INDIA logo.",
-        "audio": "And no, the simplified Composition Scheme won't save you—it bans inter-state sales! Register as a regular taxpayer and harvest your Input Tax Credit. Read the full GST Mythbuster guide on FinSight INDIA to protect your margins. Link in bio."
+        "audio": "And no, the simplified Composition Scheme won't save you\u2014it bans inter-state sales! Register as a regular taxpayer and harvest your Input Tax Credit. Read the full GST Mythbuster guide on FinSight INDIA to protect your margins. Link in bio."
       }
     ]
   },
@@ -681,7 +681,7 @@
   },
   {
     "id": "reel-021",
-    "title": "The ₹3.75 Lakh Tax Regime Lie",
+    "title": "The \u20b93.75 Lakh Tax Regime Lie",
     "articleSlug": "new-vs-old-regime-guide",
     "duration": "100s",
     "hook": "Stop running complicated Excel sheets to decide between the Old and New Tax Regimes. The government made the New Regime the default, and there is only one mathematical number that actually matters.",
@@ -693,8 +693,8 @@
       },
       {
         "time": "0:15 - 0:35",
-        "visual": "Giant glowing number '₹3,75,000' appears.",
-        "audio": "3 Lakh, 75 Thousand Rupees. That is the exact breakeven point. Unless your total itemized deductions—like 80C, health insurance, and HRA—cross this massive hurdle, the New Regime will leave more cash in your bank account."
+        "visual": "Giant glowing number '\u20b93,75,000' appears.",
+        "audio": "3 Lakh, 75 Thousand Rupees. That is the exact breakeven point. Unless your total itemized deductions\u2014like 80C, health insurance, and HRA\u2014cross this massive hurdle, the New Regime will leave more cash in your bank account."
       },
       {
         "time": "0:35 - 0:55",
@@ -840,7 +840,7 @@
       {
         "time": "0:55 - 1:20",
         "visual": "An invoice with a new line item added: 'Gross Up Tax paid from own pocket'.",
-        "audio": "The solution? Stop swiping. Switch to invoice billing. If the tech giant refuses to take a tax cut, you must 'Gross Up' the payment—meaning you pay the tax from your own pocket directly to the Indian government."
+        "audio": "The solution? Stop swiping. Switch to invoice billing. If the tech giant refuses to take a tax cut, you must 'Gross Up' the payment\u2014meaning you pay the tax from your own pocket directly to the Indian government."
       },
       {
         "time": "1:20 - 1:40",
@@ -858,7 +858,7 @@
     "script": [
       {
         "time": "0:00 - 0:15",
-        "visual": "An investor celebrating a ₹5 Crore windfall from selling equity. A grim reaper with '12.5% Tax' suddenly appears.",
+        "visual": "An investor celebrating a \u20b95 Crore windfall from selling equity. A grim reaper with '12.5% Tax' suddenly appears.",
         "audio": "Sitting on a massive windfall from unlisted startup equity, mutual funds, or crypto? The government expects a massive cut. But there's a legal loophole called Section 54F to erase that tax bill to absolute zero."
       },
       {
@@ -888,17 +888,17 @@
     "title": "The Section 87A Rebate Trap",
     "articleSlug": "section-87a-rebate-denial-trap",
     "duration": "100s",
-    "hook": "Did you hear the Budget 2025 news that income up to ₹12 Lakhs is completely tax-free? If you trade stocks, you are in for a brutal surprise.",
+    "hook": "Did you hear the Budget 2025 news that income up to \u20b912 Lakhs is completely tax-free? If you trade stocks, you are in for a brutal surprise.",
     "script": [
       {
         "time": "0:00 - 0:15",
-        "visual": "An Indian student looking confidently at a tax calculator showing '₹10 Lakhs Income'. Then the screen turns red and stamps a '₹1,00,000 TAX DEMAND' on their face.",
-        "audio": "Did you hear the Budget 2025 news that income up to ₹12 Lakhs is completely tax-free? If you trade stocks, you are in for a brutal surprise."
+        "visual": "An Indian student looking confidently at a tax calculator showing '\u20b910 Lakhs Income'. Then the screen turns red and stamps a '\u20b91,00,000 TAX DEMAND' on their face.",
+        "audio": "Did you hear the Budget 2025 news that income up to \u20b912 Lakhs is completely tax-free? If you trade stocks, you are in for a brutal surprise."
       },
       {
         "time": "0:15 - 0:35",
-        "visual": "A news headline reads '₹12 Lakhs Income is Tax-Free!'. A magnifying glass zooms in to reveal tiny text: 'Conditions Apply.'",
-        "audio": "The government heavily marketed the expanded Section 87A rebate, promising that anyone earning under ₹12 Lakhs in the New Tax Regime owes zero tax. But that rebate is highly conditional. It works for salaries and businesses, but it completely breaks down for capital gains."
+        "visual": "A news headline reads '\u20b912 Lakhs Income is Tax-Free!'. A magnifying glass zooms in to reveal tiny text: 'Conditions Apply.'",
+        "audio": "The government heavily marketed the expanded Section 87A rebate, promising that anyone earning under \u20b912 Lakhs in the New Tax Regime owes zero tax. But that rebate is highly conditional. It works for salaries and businesses, but it completely breaks down for capital gains."
       },
       {
         "time": "0:35 - 0:55",
@@ -907,7 +907,7 @@
       },
       {
         "time": "0:55 - 1:20",
-        "visual": "A split screen. Left side: Student pays ₹1 Lakh tax on ₹9L STCG. Right side: Student pays ₹0 tax on ₹9L F&O Business Income.",
+        "visual": "A split screen. Left side: Student pays \u20b91 Lakh tax on \u20b99L STCG. Right side: Student pays \u20b90 tax on \u20b99L F&O Business Income.",
         "audio": "The only guaranteed protection you have is the new 4 Lakh basic exemption limit. Anything above that from stock delivery hits the special rate trap. Ironically, if you make that same 9 Lakhs doing Intraday or F&O, it's treated as normal business income and the rebate makes it 100% tax-free!"
       },
       {
@@ -922,27 +922,27 @@
     "title": "The SFT Surveillance Grid",
     "articleSlug": "sft-high-value-transaction-notice",
     "duration": "100s",
-    "hook": "Did you just buy a ₹15 Lakh car? Or drop ₹10 Lakhs into a mutual fund? You might feel rich, but the Income Tax Department just painted a digital target on your back.",
+    "hook": "Did you just buy a \u20b915 Lakh car? Or drop \u20b910 Lakhs into a mutual fund? You might feel rich, but the Income Tax Department just painted a digital target on your back.",
     "script": [
       {
         "time": "0:00 - 0:15",
         "visual": "Visual of a taxpayer buying a luxury car. The camera zooms out to reveal they are being watched through a digital sniper scope labeled 'Project Insight'.",
-        "audio": "Did you just buy a ₹15 Lakh car? Or drop ₹10 Lakhs into a mutual fund? You might feel rich, but the Income Tax Department just painted a digital target on your back."
+        "audio": "Did you just buy a \u20b915 Lakh car? Or drop \u20b910 Lakhs into a mutual fund? You might feel rich, but the Income Tax Department just painted a digital target on your back."
       },
       {
         "time": "0:15 - 0:35",
         "visual": "A server rack with glowing red lights and the text 'Section 285BA'.",
-        "audio": "Welcome to the era of algorithmic surveillance. Under Section 285BA, the government doesn't need to raid your house anymore. They built an autonomous grid called the SFT—Statement of Financial Transactions."
+        "audio": "Welcome to the era of algorithmic surveillance. Under Section 285BA, the government doesn't need to raid your house anymore. They built an autonomous grid called the SFT\u2014Statement of Financial Transactions."
       },
       {
         "time": "0:35 - 0:55",
         "visual": "Icons representing a car, a credit card, and mutual funds, all transmitting signals to a central server.",
-        "audio": "Car dealerships, banks, and mutual funds are now automated informants. If you spend over ₹10 Lakhs on a car, deposit ₹10 Lakhs in cash, or pay a ₹1 Lakh credit card bill in cash, their servers instantly ping the government."
+        "audio": "Car dealerships, banks, and mutual funds are now automated informants. If you spend over \u20b910 Lakhs on a car, deposit \u20b910 Lakhs in cash, or pay a \u20b91 Lakh credit card bill in cash, their servers instantly ping the government."
       },
       {
         "time": "0:55 - 1:20",
-        "visual": "A split screen showing an ITR with '₹8L Income' on the left and an SFT flag with '₹25L Spending' on the right. A massive red 'MISMATCH' siren goes off.",
-        "audio": "The AI compares your declared income to your spending. If you report ₹8 Lakhs of salary but buy a ₹15 Lakh car, the system detects a severe liquidity mismatch and automatically triggers a scrutiny audit."
+        "visual": "A split screen showing an ITR with '\u20b98L Income' on the left and an SFT flag with '\u20b925L Spending' on the right. A massive red 'MISMATCH' siren goes off.",
+        "audio": "The AI compares your declared income to your spending. If you report \u20b98 Lakhs of salary but buy a \u20b915 Lakh car, the system detects a severe liquidity mismatch and automatically triggers a scrutiny audit."
       },
       {
         "time": "1:20 - 1:40",
@@ -956,12 +956,12 @@
     "title": "The Section 142(1) Credit Card Trap",
     "articleSlug": "the-high-value-sft-trap-section-142-1",
     "duration": "100s",
-    "hook": "You paid a ₹10 Lakh credit card bill from past savings, but your current ITR declares only ₹5 Lakhs. The algorithmic mismatch just triggered a Section 142(1) tax inquiry.",
+    "hook": "You paid a \u20b910 Lakh credit card bill from past savings, but your current ITR declares only \u20b95 Lakhs. The algorithmic mismatch just triggered a Section 142(1) tax inquiry.",
     "script": [
       {
         "time": "0:00 - 0:15",
         "visual": "Speaker holding a massive credit card bill. Screen flashes red with 'Section 142(1) Inquiry'.",
-        "audio": "You paid a ₹10 Lakh credit card bill from past savings, but your current ITR declares only ₹5 Lakhs. The algorithmic mismatch just triggered a terrifying Section 142(1) tax inquiry."
+        "audio": "You paid a \u20b910 Lakh credit card bill from past savings, but your current ITR declares only \u20b95 Lakhs. The algorithmic mismatch just triggered a terrifying Section 142(1) tax inquiry."
       },
       {
         "time": "0:15 - 0:35",
@@ -970,8 +970,8 @@
       },
       {
         "time": "0:35 - 0:55",
-        "visual": "An honest taxpayer takes a sabbatical. '₹0 Income' appears. They buy a car with savings. Red flags explode.",
-        "audio": "Because time exists, honest people get trapped. You earned ₹15 Lakhs five years ago, saved it, and spent it today while your current income is zero. To the machine, that's a mathematically impossible anomaly."
+        "visual": "An honest taxpayer takes a sabbatical. '\u20b90 Income' appears. They buy a car with savings. Red flags explode.",
+        "audio": "Because time exists, honest people get trapped. You earned \u20b915 Lakhs five years ago, saved it, and spent it today while your current income is zero. To the machine, that's a mathematically impossible anomaly."
       },
       {
         "time": "0:55 - 1:20",
@@ -990,12 +990,12 @@
     "title": "The Section 143(1) TDS Double Tax Trap",
     "articleSlug": "the-section-143-1-tds-arrears-demand",
     "duration": "100s",
-    "hook": "Your employer deducted ₹50,000 from your salary for tax, went bankrupt, and never paid the government. Now the Income Tax algorithm is demanding YOU pay it again.",
+    "hook": "Your employer deducted \u20b950,000 from your salary for tax, went bankrupt, and never paid the government. Now the Income Tax algorithm is demanding YOU pay it again.",
     "script": [
       {
         "time": "0:00 - 0:15",
-        "visual": "Speaker looking at an email. A tax demand of ₹50,000 pops out of the screen. Speaker looks confused.",
-        "audio": "Your employer deducted ₹50,000 from your salary for tax, went bankrupt, and never paid the government. Now the Income Tax algorithm is demanding YOU pay it again."
+        "visual": "Speaker looking at an email. A tax demand of \u20b950,000 pops out of the screen. Speaker looks confused.",
+        "audio": "Your employer deducted \u20b950,000 from your salary for tax, went bankrupt, and never paid the government. Now the Income Tax algorithm is demanding YOU pay it again."
       },
       {
         "time": "0:15 - 0:35",
@@ -1038,8 +1038,8 @@
       },
       {
         "time": "0:35 - 0:55",
-        "visual": "An iron vault door with '3 YEARS' written on it. A sledgehammer labeled '₹50 LAKHS' smashes through it.",
-        "audio": "Normally, they can only go back 3 years. But if the machine values your escaped foreign asset at ₹50 Lakhs or more, the legal limit shatters. They can reach back up to 10 years to tax you at maximum penal rates."
+        "visual": "An iron vault door with '3 YEARS' written on it. A sledgehammer labeled '\u20b950 LAKHS' smashes through it.",
+        "audio": "Normally, they can only go back 3 years. But if the machine values your escaped foreign asset at \u20b950 Lakhs or more, the legal limit shatters. They can reach back up to 10 years to tax you at maximum penal rates."
       },
       {
         "time": "0:55 - 1:20",
@@ -1055,20 +1055,20 @@
   },
   {
     "id": "reel-032",
-    "title": "The ₹25,000 Zero-Tax Penalty",
+    "title": "The \u20b925,000 Zero-Tax Penalty",
     "articleSlug": "the-section-271a-bookkeeping-trap",
     "duration": "100s",
-    "hook": "You had a great freelance year but made zero profit after expenses. You owe zero tax. So why is the algorithm slapping you with a non-negotiable ₹25,000 penalty?",
+    "hook": "You had a great freelance year but made zero profit after expenses. You owe zero tax. So why is the algorithm slapping you with a non-negotiable \u20b925,000 penalty?",
     "script": [
       {
         "time": "0:00 - 0:15",
-        "visual": "Speaker showing a tax return with '₹0 Tax Owed' in big green letters. Suddenly, a red ₹25,000 penalty stamp obliterates it.",
-        "audio": "You had a great freelance year but made zero profit after expenses. You owe zero tax. So why is the algorithm slapping you with a non-negotiable ₹25,000 penalty?"
+        "visual": "Speaker showing a tax return with '\u20b90 Tax Owed' in big green letters. Suddenly, a red \u20b925,000 penalty stamp obliterates it.",
+        "audio": "You had a great freelance year but made zero profit after expenses. You owe zero tax. So why is the algorithm slapping you with a non-negotiable \u20b925,000 penalty?"
       },
       {
         "time": "0:15 - 0:35",
         "visual": "An airport security scanner. A 'Section 44ADA VIP Lane' sign gets ripped down.",
-        "audio": "Because you fell into the Presumptive Exit Trap. When your freelance receipts cross ₹50 Lakhs, or your business crosses ₹2 Crores, you are kicked out of the Section 44ADA VIP lane. You must go through the main security scanner."
+        "audio": "Because you fell into the Presumptive Exit Trap. When your freelance receipts cross \u20b950 Lakhs, or your business crosses \u20b92 Crores, you are kicked out of the Section 44ADA VIP lane. You must go through the main security scanner."
       },
       {
         "time": "0:35 - 0:55",
@@ -1084,6 +1084,74 @@
         "time": "1:20 - 1:40",
         "visual": "Speaker pointing to link. 'FinSight INDIA' logo.",
         "audio": "If you are transitioning from grind to scale, you need to think like an institution. Stop mixing personal expenses. Digitize your audit trail. Learn how to avoid the deadly bookkeeping trap on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-033",
+    "title": "The F&O 10 Crore Audit Trap",
+    "articleSlug": "fo-trading-turnover-audit",
+    "duration": "100s",
+    "hook": "If you trade Nifty options on your phone, you might accidentally be operating a 10 Crore Corporation in the eyes of the Income Tax Department.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Speaker pacing nervously with a phone showing a trading app. A massive '10 CRORE TURNOVER' warning pops up.",
+        "audio": "If you trade Nifty options on your phone, you might accidentally be operating a 10 Crore Corporation in the eyes of the Income Tax Department."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A mechanical scale labeled 'Absolute Sum' calculating total volume instead of net profit.",
+        "audio": "It's called the F&O Turnover Trap. When you trade derivatives, the government calculates your turnover as the ABSOLUTE SUM of your profits AND your losses."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "Profit of \u20b91000 and Loss of \u20b91000 merging into a Turnover of \u20b92000.",
+        "audio": "Make a 1000 rupee profit? Turnover is 1000. Make a 1000 rupee loss? Your turnover isn't zero, it's 2000! With zero brokerage and daily trades, a 50k capital account can easily cross 10 Crores in absolute turnover."
+      },
+      {
+        "time": "0:55 - 1:15",
+        "visual": "A robotic auditor stamps 'AUDIT MANDATORY', then a human officer stamps 'EXPENSES REJECTED'.",
+        "audio": "Cross 10 Crores, and a Tax Audit by a CA becomes mandatory. But here's the paradox: The algorithm treats you like a massive business to force an audit, but when you try to claim your home rent or laptop as a business expense, the human tax officer rejects it, claiming trading is just your hobby!"
+      },
+      {
+        "time": "1:15 - 1:40",
+        "visual": "Speaker pointing to screen. FinSight INDIA logo.",
+        "audio": "The fix? Track your absolute turnover. Stop before you hit the limit, and NEVER claim indirect expenses if you have a full-time salary. Simulate your exact audit risk on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-034",
+    "title": "The \u20b910 Crore F&O Turnover Trap",
+    "articleSlug": "fo-trading-turnover-audit",
+    "duration": "100s",
+    "hook": "Did you know a \u20b950,000 trading account can trigger a \u20b910 Crore corporate tax audit?",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Speaker standing in front of a glowing red warning sign that says '10 CRORE TURNOVER'.",
+        "audio": "Did you know a \u20b950,000 trading account can trigger a \u20b910 Crore corporate tax audit? The Income Tax algorithm is trapping retail traders."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A whiteboard drawing showing a small pile of cash getting spun through a washing machine, inflating into a massive vault.",
+        "audio": "When you trade Futures and Options, the tax portal doesn't care about your net profit. It calculates 'Absolute Turnover'. That means every profit AND every loss you make is added together."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "Screen shows 20 trades a day multiplying rapidly into huge numbers.",
+        "audio": "If you are scalping with 50,000 rupees and do 20 trades a day, you will easily cross the 10 Crore turnover limit. Suddenly, you are forced into a mandatory corporate tax audit."
+      },
+      {
+        "time": "0:55 - 1:15",
+        "visual": "A human tax officer stamps 'REJECTED' on a laptop and rent receipt.",
+        "audio": "And here is the catch-22. When you try to claim your laptop or rent as business expenses to lower your tax, the human tax officer rejects it, saying you're just a hobbyist."
+      },
+      {
+        "time": "1:15 - 1:40",
+        "visual": "Point to a link on screen. Text: 'Read the full guide on FinSight INDIA'.",
+        "audio": "You get punished by the algorithm for being a corporation, and punished by the human for being a hobbyist. Want to know how the smart traders carry forward F&O losses safely? Read the full breakdown on FinSight INDIA."
       }
     ]
   }

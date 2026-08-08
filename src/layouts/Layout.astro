@@ -156,6 +156,7 @@ const currentPath = Astro.url.pathname;
 							</button>
 							<div class="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 translate-y-2 transition-all duration-300 transform origin-top-right z-50 p-2">
 								<a href="/creator-log" class="block px-3 py-2.5 rounded-lg text-sm font-medium text-navy-600 dark:text-navy-300 hover:bg-navy-50 dark:hover:bg-navy-800 hover:text-gold-600 dark:hover:text-gold-400 transition-colors">Creator Log</a>
+								<a href="/research-ledger" class="block px-3 py-2.5 rounded-lg text-sm font-medium text-navy-600 dark:text-navy-300 hover:bg-navy-50 dark:hover:bg-navy-800 hover:text-gold-600 dark:hover:text-gold-400 transition-colors">Research Ledger</a>
 								<a href="/reels" class="block px-3 py-2.5 rounded-lg text-sm font-medium text-navy-600 dark:text-navy-300 hover:bg-navy-50 dark:hover:bg-navy-800 hover:text-gold-600 dark:hover:text-gold-400 transition-colors">Reels Script</a>
 								<a href="/solutions" class="block px-3 py-2.5 rounded-lg text-sm font-medium text-navy-600 dark:text-navy-300 hover:bg-navy-50 dark:hover:bg-navy-800 hover:text-gold-600 dark:hover:text-gold-400 transition-colors">Solutions</a>
 								<a href="/standards" class="block px-3 py-2.5 rounded-lg text-sm font-medium text-navy-600 dark:text-navy-300 hover:bg-navy-50 dark:hover:bg-navy-800 hover:text-gold-600 dark:hover:text-gold-400 transition-colors">Standards</a>
@@ -251,6 +252,10 @@ const currentPath = Astro.url.pathname;
 					<a href="/creator-log" class={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${currentPath.startsWith('/creator-log') ? 'bg-gold-500/10 text-gold-600 dark:text-gold-400' : 'text-navy-600 dark:text-navy-300 hover:bg-navy-100 dark:hover:bg-navy-800'}`}>
 						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
 						Creator Log
+					</a>
+					<a href="/research-ledger" class={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${currentPath.startsWith('/research-ledger') ? 'bg-gold-500/10 text-gold-600 dark:text-gold-400' : 'text-navy-600 dark:text-navy-300 hover:bg-navy-100 dark:hover:bg-navy-800'}`}>
+						<svg class="w-5 h-5 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+						Research Ledger
 					</a>
 					<a href="/reels" class={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${currentPath.startsWith('/reels') ? 'bg-gold-500/10 text-gold-600 dark:text-gold-400' : 'text-navy-600 dark:text-navy-300 hover:bg-navy-100 dark:hover:bg-navy-800'}`}>
 						<svg class="w-5 h-5 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
