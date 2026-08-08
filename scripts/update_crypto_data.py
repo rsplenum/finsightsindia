@@ -12,35 +12,35 @@ def update_reel_scripts():
     
     new_reel = {
         "id": new_id,
-        "title": "The P2P Crypto Bank Freeze Trap",
-        "articleSlug": "p2p-crypto-bank-freeze-trap",
+        "title": "The Mid-Year Job Switch Tax Bomb",
+        "articleSlug": "mid-year-job-switch-tax-trap",
         "duration": "100s",
-        "hook": "Selling USDT on Binance? You might wake up to find your entire bank account frozen by the Cyber Cell.",
+        "hook": "Did you switch jobs this year? If you didn't submit this one piece of paper, you might wake up to an ₹80,000 tax demand in July.",
         "script": [
             {
                 "time": "0:00 - 0:15",
-                "visual": "Speaker holding a phone showing 'Binance P2P Success' while standing next to an ATM with police tape on it.",
-                "audio": "Selling USDT on Binance? You might wake up tomorrow to find your entire salary account frozen by the Cyber Cell."
+                "visual": "Speaker holding up a large sign that says 'FORM 12B' while a giant red 'TAX DEMAND' stamp flashes on screen.",
+                "audio": "Did you switch jobs this year? If you didn't submit Form 12B to your new HR, you are walking straight into a massive tax trap."
             },
             {
                 "time": "0:15 - 0:35",
-                "visual": "Diagram showing a scammer stealing money from a victim and immediately using it to buy crypto from the trader.",
-                "audio": "Here is the trap: Scammers steal money from a victim, then use that stolen money to buy your crypto on P2P to wash it. When the victim files a police report, the police trace the money directly to you."
+                "visual": "Diagram showing 'Company A' giving a ₹3 Lakh tax-free limit, and 'Company B' giving the exact same limit again.",
+                "audio": "Here is what happens. When you join a new company, their payroll software assumes you had zero income before joining. So, they give you the full ₹3 Lakh tax-free basic exemption limit all over again."
             },
             {
                 "time": "0:35 - 0:55",
-                "visual": "Screen shows a 10,000 rupee trade freezing a 15 Lakh rupee account balance.",
-                "audio": "The worst part? Even if you only sold 10,000 rupees of crypto, the bank will often lazily freeze your entire life savings. You can't pay rent. You can't pay your EMIs."
+                "visual": "Screen shows the Income Tax Portal aggregating the two Form 16s and stripping the duplicate exemption, causing the tax bar to skyrocket.",
+                "audio": "You enjoy a higher monthly paycheck for the rest of the year. But in July, the Income Tax portal aggregates both of your Form 16s. It spots the duplicate exemption, strips it away, and pushes you into a much higher tax slab."
             },
             {
                 "time": "0:55 - 1:15",
-                "visual": "Speaker holding a burner phone/debit card. Text says 'Burner Account'.",
-                "audio": "How do you protect yourself? Never accept third-party transfers, demand Video KYC, and most importantly... keep a separate burner bank account strictly for P2P trading."
+                "visual": "A fiery 'Section 234B & 234C' penalty label drops onto the screen.",
+                "audio": "The worst part? Because your TDS was artificially low all year, you failed to pay adequate Advance Tax. The portal instantly slaps you with a 1% per month penalty under Sections 234B and 234C."
             },
             {
                 "time": "1:15 - 1:40",
                 "visual": "Point to a link on screen. Text: 'Read the full guide on FinSight INDIA'.",
-                "audio": "Want to know how to use High Court rulings to unfreeze your money if you get caught? Read the full defensive breakdown on FinSight INDIA."
+                "audio": "Don't let a job switch ruin your July. Want to know exactly how to fill out Form 12B or how to manually pay Advance Tax in March to kill the penalty? Read the full defensive breakdown on FinSight INDIA."
             }
         ]
     }
@@ -61,7 +61,7 @@ def update_creator_logs():
     new_log = {
         "id": new_id,
         "timestamp": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "message": "Finalized the 'p2p-crypto-bank-freeze-trap' article using the strict Swarm-Draft-Mold workflow. Executed deep legal research into CrPC Section 102 and High Court proportionality rulings before drafting. Generated bespoke spot illustrations matching the pure white background standard, and appended the 100s reel script."
+        "message": "Finalized the 'mid-year-job-switch-tax-trap' article. Implemented the strict 5-step narrative framework focusing on the Form 12B omission, duplicate exemptions, and Section 234B/C penalties. Generated bespoke illustrations with the pure white background standard and appended the 100s Reel script."
     }
     
     data.append(new_log)

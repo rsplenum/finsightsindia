@@ -1188,5 +1188,39 @@
         "audio": "Want to know how to use High Court rulings to unfreeze your money if you get caught? Read the full defensive breakdown on FinSight INDIA."
       }
     ]
+  },
+  {
+    "id": "reel-036",
+    "title": "The Mid-Year Job Switch Tax Bomb",
+    "articleSlug": "mid-year-job-switch-tax-trap",
+    "duration": "100s",
+    "hook": "Did you switch jobs this year? If you didn't submit this one piece of paper, you might wake up to an \u20b980,000 tax demand in July.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Speaker holding up a large sign that says 'FORM 12B' while a giant red 'TAX DEMAND' stamp flashes on screen.",
+        "audio": "Did you switch jobs this year? If you didn't submit Form 12B to your new HR, you are walking straight into a massive tax trap."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "Diagram showing 'Company A' giving a \u20b93 Lakh tax-free limit, and 'Company B' giving the exact same limit again.",
+        "audio": "Here is what happens. When you join a new company, their payroll software assumes you had zero income before joining. So, they give you the full \u20b93 Lakh tax-free basic exemption limit all over again."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "Screen shows the Income Tax Portal aggregating the two Form 16s and stripping the duplicate exemption, causing the tax bar to skyrocket.",
+        "audio": "You enjoy a higher monthly paycheck for the rest of the year. But in July, the Income Tax portal aggregates both of your Form 16s. It spots the duplicate exemption, strips it away, and pushes you into a much higher tax slab."
+      },
+      {
+        "time": "0:55 - 1:15",
+        "visual": "A fiery 'Section 234B & 234C' penalty label drops onto the screen.",
+        "audio": "The worst part? Because your TDS was artificially low all year, you failed to pay adequate Advance Tax. The portal instantly slaps you with a 1% per month penalty under Sections 234B and 234C."
+      },
+      {
+        "time": "1:15 - 1:40",
+        "visual": "Point to a link on screen. Text: 'Read the full guide on FinSight INDIA'.",
+        "audio": "Don't let a job switch ruin your July. Want to know exactly how to fill out Form 12B or how to manually pay Advance Tax in March to kill the penalty? Read the full defensive breakdown on FinSight INDIA."
+      }
+    ]
   }
 ]
