@@ -1,106 +1,86 @@
 ---
 import InputGroup from '../InputGroup.astro';
-
-interface Props {
-  defaultSalePrice?: number;
-  defaultPurchasePrice?: number;
-  instruction?: string;
-}
-
-const { 
-  defaultSalePrice = 15000000, 
-  defaultPurchasePrice = 5000000, 
-  instruction = 'Simulate the Section 54 loophole. Watch how reinvesting your profit legally forces the government to erase your 12.5% tax bill.' 
-} = Astro.props;
 ---
 
-<div class="p-6 md:p-8 bg-gradient-to-br from-navy-50 to-white dark:from-navy-900 dark:to-navy-950 border border-navy-200 dark:border-navy-800 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] space-y-8 my-10 not-prose relative overflow-hidden group/card transition-all duration-500 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)]">
-    
-    {/* Decorative blur blob */}
-    <div class="absolute -top-24 -right-24 w-48 h-48 bg-gold-400/10 dark:bg-gold-400/5 rounded-full blur-3xl group-hover/card:scale-150 transition-transform duration-700 pointer-events-none"></div>
-
-	<div class="flex items-center gap-3 border-b border-navy-100 dark:border-navy-800 pb-4">
-        <div class="h-8 w-8 rounded-full bg-navy-100 dark:bg-navy-800 flex items-center justify-center text-navy-600 dark:text-navy-300">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+<div class="my-10 border-y border-slate-200 dark:border-slate-800 py-8 relative not-prose">
+    <div class="flex items-center gap-3 mb-8">
+        <div class="h-6 w-6 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
         </div>
         <div>
-            <h3 class="text-sm font-bold text-navy-900 dark:text-white uppercase tracking-widest m-0">The Section 54 Simulator</h3>
-            <p class="text-xs text-navy-500 dark:text-navy-400 m-0 mt-0.5">{instruction}</p>
+            <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest m-0">The Section 54 Simulator</h3>
         </div>
 	</div>
 
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+	<div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
 		<InputGroup 
-			id="wbSec54SalePrice"
+			id="wbSec54Consideration"
 			label="Total Sale Value (Consideration)"
-			tooltip="The final price at which the property was sold."
+			helpText="The final price at which the property was sold."
 			prefix="₹"
-			value={defaultSalePrice.toString()}
+			value="15000000"
+            type="number"
 		/>
         <InputGroup 
 			id="wbSec54PurchasePrice"
 			label="Original Purchase Price"
-			tooltip="The price at which you acquired the property (No Indexation applies post-July 2024)."
+			helpText="The price at which you acquired the property (No Indexation post-July 2024)."
 			prefix="₹"
-			value={defaultPurchasePrice.toString()}
+			value="5000000"
+            type="number"
 		/>
 	</div>
 
-    <div class="p-5 bg-navy-900 dark:bg-black rounded-xl border border-navy-800 shadow-inner relative z-10">
-        <div class="flex justify-between items-center mb-4">
-            <div class="text-xs font-bold text-navy-300 uppercase tracking-widest">Base Capital Gain</div>
-            <div id="wbSec54GrossGain" class="text-2xl font-black text-white font-mono tracking-tight">₹ 0</div>
+    <div class="p-5 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800/80 mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <div class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Base Capital Gain</div>
+            <div id="wbSec54BaseGain" class="text-xl font-medium text-slate-900 dark:text-white">₹1,00,00,000</div>
         </div>
-        <div class="flex justify-between items-center pt-3 border-t border-navy-800">
-            <div class="text-xs font-bold text-rose-400 uppercase tracking-widest flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <div class="w-px h-10 bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
+        <div>
+            <div class="text-[10px] font-bold text-rose-500 dark:text-rose-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
                 Initial Tax Demand (12.5%)
             </div>
-            <div id="wbSec54InitialTax" class="text-lg font-bold text-rose-400 font-mono">₹ 0</div>
+            <div id="wbSec54InitialTax" class="text-xl font-medium text-rose-600 dark:text-rose-400">₹13,00,000</div>
         </div>
     </div>
 
-    <div class="space-y-6 relative z-10">
-        <div class="flex items-center gap-2">
-            <div class="h-[1px] flex-1 bg-navy-200 dark:bg-navy-800"></div>
-            <span class="text-[10px] font-bold text-navy-400 dark:text-navy-500 uppercase tracking-widest">Activate Legal Shields</span>
-            <div class="h-[1px] flex-1 bg-navy-200 dark:bg-navy-800"></div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="space-y-2">
-                <InputGroup 
-                    id="wbSec54NewHouse"
-                    label="Reinvested in New House (Sec 54)"
-                    tooltip="Money deposited in CGAS or used to buy/construct a new residential house."
-                    prefix="₹"
-                    value="0"
-                />
-                <div class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold text-right" id="wbSec54HouseExemption">Exempts up to ₹0</div>
-            </div>
-            <div class="space-y-2">
-                <InputGroup 
-                    id="wbSec54Bonds"
-                    label="Invested in 54EC Bonds (Max ₹50L)"
-                    tooltip="Money locked in NHAI/REC bonds for 5 years."
-                    prefix="₹"
-                    value="0"
-                />
-                <div class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold text-right" id="wbSec54BondExemption">Exempts up to ₹0</div>
-            </div>
-        </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+        <InputGroup 
+            id="wbSec54ReinvestNewHouse"
+            label="Reinvested in New House"
+            helpText="Money deposited in CGAS or used to buy a new residential house."
+            prefix="₹"
+            value="0"
+            type="number"
+            formattedId="wbSec54Shield1Amt"
+            formattedClass="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800/50"
+            formattedDefault="Shields ₹0 of gain"
+        />
+        <InputGroup 
+            id="wbSec54InvestBonds"
+            label="Invested in 54EC Bonds (Max 50L)"
+            helpText="Money locked in NHAI/REC bonds for 5 years."
+            prefix="₹"
+            value="0"
+            type="number"
+            max="5000000"
+            formattedId="wbSec54Shield2Amt"
+            formattedClass="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800/50"
+            formattedDefault="Shields ₹0 of gain"
+        />
     </div>
 
-	<!-- Final Output -->
-	<div id="wbSec54FinalBox" class="p-6 rounded-xl border-2 transition-all duration-300 relative z-10">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div>
-                <div id="wbSec54FinalLabel" class="text-xs font-black uppercase tracking-widest mb-1">Final Tax Payable (inc. 4% cess)</div>
-                <div class="text-xs opacity-80" id="wbSec54StatusMsg">Enter values to calculate.</div>
-            </div>
-            <div id="wbSec54FinalTax" class="text-4xl font-black font-mono tracking-tighter">₹ 0</div>
+    <div id="wbSec54FinalBox" class="p-6 rounded-2xl border transition-colors duration-300 border-rose-200 bg-rose-50 dark:border-rose-900/50 dark:bg-rose-950/20 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div>
+            <div class="text-[11px] font-bold uppercase tracking-widest mb-1 transition-colors duration-300" id="wbSec54FinalLabel">Final Tax Payable (Inc. 4% Cess)</div>
+            <div class="text-[12px] opacity-80 transition-colors duration-300" id="wbSec54FinalSubLabel">Tax demand active. Increase shields to erase.</div>
         </div>
-	</div>
+        <div id="wbSec54FinalTax" class="text-3xl font-light tracking-tight transition-colors duration-300 text-rose-600 dark:text-rose-400">
+            ₹13,00,000
+        </div>
+    </div>
 </div>
 
 <script>
@@ -112,78 +92,80 @@ const {
 	}
 
 	function runSec54Calc() {
-		const sale = parseFormattedNumber((document.getElementById('wbSec54SalePrice') as HTMLInputElement)?.value || '0');
-		const purchase = parseFormattedNumber((document.getElementById('wbSec54PurchasePrice') as HTMLInputElement)?.value || '0');
-        const newHouseRaw = parseFormattedNumber((document.getElementById('wbSec54NewHouse') as HTMLInputElement)?.value || '0');
-        const bondsRaw = parseFormattedNumber((document.getElementById('wbSec54Bonds') as HTMLInputElement)?.value || '0');
-
-        // 54EC limit is strictly 50L
-        const bondsInvested = Math.min(bondsRaw, 5000000);
+		const saleValue = parseFormattedNumber((document.getElementById('wbSec54Consideration') as HTMLInputElement)?.value || '0');
+		const purchasePrice = parseFormattedNumber((document.getElementById('wbSec54PurchasePrice') as HTMLInputElement)?.value || '0');
         
-        // Ensure inputs don't display more than allowed visually? 
-        // We just calculate on capped values but leave input raw to show them the limit.
+        const newHouseAmt = parseFormattedNumber((document.getElementById('wbSec54ReinvestNewHouse') as HTMLInputElement)?.value || '0');
+        let bondsAmt = parseFormattedNumber((document.getElementById('wbSec54InvestBonds') as HTMLInputElement)?.value || '0');
         
-        const grossGain = Math.max(0, sale - purchase);
-        const initialTax = grossGain * 0.125 * 1.04;
-
-        // Exemptions are capped at the actual gross gain
-        const totalExemption = Math.min(grossGain, newHouseRaw + bondsInvested);
-        const taxableGain = Math.max(0, grossGain - totalExemption);
-        
-        const finalTax = taxableGain * 0.125 * 1.04;
-
-        // DOM Updates
-        const elGross = document.getElementById('wbSec54GrossGain');
-        const elInitial = document.getElementById('wbSec54InitialTax');
-        const elFinal = document.getElementById('wbSec54FinalTax');
-        const elFinalBox = document.getElementById('wbSec54FinalBox');
-        const elFinalLabel = document.getElementById('wbSec54FinalLabel');
-        const elStatus = document.getElementById('wbSec54StatusMsg');
-        
-        const elHouseExempt = document.getElementById('wbSec54HouseExemption');
-        const elBondExempt = document.getElementById('wbSec54BondExemption');
-
-        if (elGross) elGross.innerText = formatRupee(grossGain);
-        if (elInitial) elInitial.innerText = formatRupee(initialTax);
-        if (elFinal) elFinal.innerText = formatRupee(finalTax);
-
-        if (elHouseExempt) {
-            elHouseExempt.innerText = `Shields ₹${tableFormatter.format(Math.round(newHouseRaw))} of gain`;
-        }
-        if (elBondExempt) {
-            if (bondsRaw > 5000000) {
-                elBondExempt.className = "text-[10px] text-rose-500 font-bold text-right";
-                elBondExempt.innerText = `⚠️ Capped at ₹50,00,000 max shield`;
-            } else {
-                elBondExempt.className = "text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold text-right";
-                elBondExempt.innerText = `Shields ₹${tableFormatter.format(Math.round(bondsInvested))} of gain`;
+        // Max bond logic
+        if (bondsAmt > 5000000) {
+            bondsAmt = 5000000;
+            const bondInput = document.getElementById('wbSec54InvestBonds') as HTMLInputElement;
+            if(bondInput && document.activeElement !== bondInput) {
+                bondInput.value = '50,00,000';
             }
         }
 
-        if (elFinalBox && elFinalLabel && elStatus) {
-            if (grossGain === 0) {
-                elFinalBox.className = "p-6 rounded-xl border-2 border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900/50 transition-all duration-300 relative z-10 text-navy-400 dark:text-navy-500";
-                elFinalLabel.className = "text-xs font-bold uppercase tracking-widest mb-1";
-                elStatus.innerText = "No capital gain. No tax shields required.";
-            } else if (finalTax === 0) {
-                elFinalBox.className = "p-6 rounded-xl border-2 border-emerald-500/50 bg-emerald-50 dark:bg-emerald-950/20 transition-all duration-300 relative z-10 text-emerald-700 dark:text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.15)]";
-                elFinalLabel.className = "text-xs font-black uppercase tracking-widest mb-1";
-                elStatus.innerText = "Loophole successfully executed. 100% Tax Erased.";
+        // Base Logic
+        const baseGain = Math.max(0, saleValue - purchasePrice);
+        const baseTax = baseGain * 0.125 * 1.04;
+
+        // Exemptions
+        const maxShield = baseGain; // You can't shield more than you gained
+        const houseShield = Math.min(newHouseAmt, maxShield);
+        const bondShield = Math.min(bondsAmt, maxShield - houseShield);
+        
+        const totalShield = houseShield + bondShield;
+        const taxableGain = Math.max(0, baseGain - totalShield);
+        const finalTax = taxableGain * 0.125 * 1.04;
+
+        // DOM Updates
+        const elBaseGain = document.getElementById('wbSec54BaseGain');
+        const elInitialTax = document.getElementById('wbSec54InitialTax');
+        const elFinalTax = document.getElementById('wbSec54FinalTax');
+        
+        const elShield1Amt = document.getElementById('wbSec54Shield1Amt');
+        const elShield2Amt = document.getElementById('wbSec54Shield2Amt');
+
+        const elFinalBox = document.getElementById('wbSec54FinalBox');
+        const elFinalLabel = document.getElementById('wbSec54FinalLabel');
+        const elFinalSubLabel = document.getElementById('wbSec54FinalSubLabel');
+
+        if (elBaseGain) elBaseGain.innerText = formatRupee(baseGain);
+        if (elInitialTax) elInitialTax.innerText = formatRupee(baseTax);
+        if (elFinalTax) elFinalTax.innerText = formatRupee(finalTax);
+
+        if (elShield1Amt) elShield1Amt.innerText = `Shields ${formatRupee(houseShield)} of gain`;
+        if (elShield2Amt) elShield2Amt.innerText = `Shields ${formatRupee(bondShield)} of gain`;
+
+        // Color shifts
+        if (elFinalBox && elFinalLabel && elFinalSubLabel && elFinalTax) {
+            if (finalTax <= 0) {
+                // Erased state
+                elFinalBox.className = "p-6 rounded-2xl border transition-colors duration-300 border-emerald-200 bg-emerald-50 dark:border-emerald-900/50 dark:bg-emerald-950/20 flex flex-col sm:flex-row justify-between items-center gap-4";
+                elFinalLabel.className = "text-[11px] font-bold uppercase tracking-widest mb-1 transition-colors duration-300 text-emerald-700 dark:text-emerald-400";
+                elFinalSubLabel.className = "text-[12px] opacity-80 transition-colors duration-300 text-emerald-600 dark:text-emerald-500";
+                elFinalSubLabel.innerText = "Tax demand completely erased.";
+                elFinalTax.className = "text-3xl font-light tracking-tight transition-colors duration-300 text-emerald-600 dark:text-emerald-400";
             } else {
-                elFinalBox.className = "p-6 rounded-xl border-2 border-rose-500 bg-rose-50 dark:bg-rose-950/30 transition-all duration-300 relative z-10 text-rose-700 dark:text-rose-400 shadow-[0_0_20px_rgba(244,63,94,0.2)]";
-                elFinalLabel.className = "text-xs font-black uppercase tracking-widest mb-1";
-                elStatus.innerText = "Tax demand active. Increase shields to erase.";
+                // Active state
+                elFinalBox.className = "p-6 rounded-2xl border transition-colors duration-300 border-rose-200 bg-rose-50 dark:border-rose-900/50 dark:bg-rose-950/20 flex flex-col sm:flex-row justify-between items-center gap-4";
+                elFinalLabel.className = "text-[11px] font-bold uppercase tracking-widest mb-1 transition-colors duration-300 text-rose-700 dark:text-rose-400";
+                elFinalSubLabel.className = "text-[12px] opacity-80 transition-colors duration-300 text-rose-600 dark:text-rose-500";
+                elFinalSubLabel.innerText = "Tax demand active. Increase shields to erase.";
+                elFinalTax.className = "text-3xl font-light tracking-tight transition-colors duration-300 text-rose-600 dark:text-rose-400";
             }
         }
 	}
 
 	document.addEventListener('DOMContentLoaded', () => {
-		['wbSec54SalePrice', 'wbSec54PurchasePrice', 'wbSec54NewHouse', 'wbSec54Bonds'].forEach(id => {
+		['wbSec54Consideration', 'wbSec54PurchasePrice', 'wbSec54ReinvestNewHouse', 'wbSec54InvestBonds'].forEach(id => {
 			const el = document.getElementById(id);
 			if (el) setupFormattingField(el as HTMLInputElement, runSec54Calc);
 		});
 		
-		const elInit = document.getElementById('wbSec54SalePrice');
+		const elInit = document.getElementById('wbSec54Consideration');
 		if(elInit) runSec54Calc();
 	});
 </script>
