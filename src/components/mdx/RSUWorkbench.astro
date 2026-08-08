@@ -1,0 +1,138 @@
+---
+import InputGroup from '../InputGroup.astro';
+
+interface Props {
+  defaultShares?: number;
+  defaultPrice?: number;
+  instruction?: string;
+}
+
+const { 
+  defaultShares = 100, 
+  defaultPrice = 150, 
+  instruction = 'Simulate your Vesting Day. Watch how the US Broker auto-liquidates your shares to pay the Indian government.' 
+} = Astro.props;
+---
+
+<div class="p-6 md:p-8 bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] space-y-8 my-10 not-prose relative overflow-hidden group/card transition-all duration-500 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)]">
+    
+    {/* Decorative blur blob */}
+    <div class="absolute -top-24 -right-24 w-48 h-48 bg-rose-500/10 dark:bg-rose-500/10 rounded-full blur-3xl group-hover/card:scale-150 transition-transform duration-700 pointer-events-none"></div>
+
+	<div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
+        <div class="h-8 w-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+        </div>
+        <div>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest m-0">RSU Vesting Simulator</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 m-0 mt-0.5">{instruction}</p>
+        </div>
+	</div>
+
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+		<InputGroup 
+			id="wbRsuShares"
+			label="Total RSUs Vested"
+			tooltip="The number of shares vesting on this date."
+			value={defaultShares.toString()}
+            type="number"
+		/>
+        <InputGroup 
+			id="wbRsuPrice"
+			label="Vesting Price (USD)"
+			tooltip="The Fair Market Value (FMV) of the stock on the day it vests."
+			prefix="$"
+			value={defaultPrice.toString()}
+            type="number"
+		/>
+	</div>
+
+    {/* Hidden inputs for exchange rate and tax bracket, can be exposed if needed, fixed for simplicity */}
+    <input type="hidden" id="wbRsuFxRate" value="83.5" />
+    <input type="hidden" id="wbRsuTaxRate" value="0.312" />
+
+    <div class="p-5 bg-slate-900 dark:bg-black rounded-xl border border-slate-800 shadow-inner relative z-10">
+        <div class="flex justify-between items-center mb-4">
+            <div class="text-xs font-bold text-slate-300 uppercase tracking-widest">Total Vest Value (Perquisite)</div>
+            <div id="wbRsuGrossValue" class="text-2xl font-black text-white font-mono tracking-tight">₹ 0</div>
+        </div>
+        <div class="flex justify-between items-center pt-3 border-t border-slate-800">
+            <div class="text-xs font-bold text-rose-400 uppercase tracking-widest flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                Sell-To-Cover Tax (31.2%)
+            </div>
+            <div id="wbRsuTaxRupees" class="text-lg font-bold text-rose-400 font-mono">- ₹ 0</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 relative z-10">
+        <div class="p-4 rounded-xl border border-rose-200 bg-rose-50 dark:border-rose-900/50 dark:bg-rose-950/20 text-center">
+            <div class="text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-widest mb-1">Shares Liquidated for Tax</div>
+            <div id="wbRsuSharesSold" class="text-3xl font-black text-rose-600 dark:text-rose-400 font-mono tracking-tighter">0</div>
+        </div>
+        <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50 dark:border-emerald-900/50 dark:bg-emerald-950/20 text-center">
+            <div class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-1">Net Shares Deposited</div>
+            <div id="wbRsuSharesKept" class="text-3xl font-black text-emerald-600 dark:text-emerald-400 font-mono tracking-tighter">0</div>
+        </div>
+    </div>
+
+	<!-- Black Money Act Warning -->
+	<div class="p-4 mt-4 rounded-lg border border-orange-500/30 bg-orange-500/10 flex gap-3 relative z-10">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        <div>
+            <div class="text-xs font-black uppercase text-orange-700 dark:text-orange-400 tracking-widest mb-1">Schedule FA Risk Radar Active</div>
+            <div class="text-xs text-orange-800/80 dark:text-orange-300/80 leading-relaxed">
+                If you fail to declare these <span id="wbRsuKeptHighlight" class="font-bold">0</span> foreign shares in Schedule FA of your ITR, you will face a mandatory <span class="font-bold text-rose-600 dark:text-rose-400">₹10 Lakh penalty</span> under the Black Money Act.
+            </div>
+        </div>
+	</div>
+</div>
+
+<script>
+	import { parseFormattedNumber, tableFormatter, setupFormattingField } from '../../utils/formatters';
+
+	function formatRupee(val: number): string {
+		if (isNaN(val) || val < 0) return '₹0';
+		return `₹${tableFormatter.format(Math.round(val))}`;
+	}
+
+	function runRsuCalc() {
+		const shares = parseFormattedNumber((document.getElementById('wbRsuShares') as HTMLInputElement)?.value || '0');
+		const price = parseFormattedNumber((document.getElementById('wbRsuPrice') as HTMLInputElement)?.value || '0');
+        const fxRate = parseFloat((document.getElementById('wbRsuFxRate') as HTMLInputElement)?.value || '83.5');
+        const taxRate = parseFloat((document.getElementById('wbRsuTaxRate') as HTMLInputElement)?.value || '0.312');
+
+        // Math
+        const grossUsd = shares * price;
+        const grossInr = grossUsd * fxRate;
+        
+        const taxUsd = grossUsd * taxRate;
+        const taxInr = taxUsd * fxRate;
+
+        const sharesSold = Math.ceil(taxUsd / price); // Brokers always round up
+        const sharesKept = Math.max(0, shares - sharesSold);
+
+        // DOM Updates
+        const elGrossValue = document.getElementById('wbRsuGrossValue');
+        const elTaxRupees = document.getElementById('wbRsuTaxRupees');
+        const elSharesSold = document.getElementById('wbRsuSharesSold');
+        const elSharesKept = document.getElementById('wbRsuSharesKept');
+        const elKeptHighlight = document.getElementById('wbRsuKeptHighlight');
+
+        if (elGrossValue) elGrossValue.innerText = formatRupee(grossInr);
+        if (elTaxRupees) elTaxRupees.innerText = `- ${formatRupee(taxInr)}`;
+        if (elSharesSold) elSharesSold.innerText = sharesSold.toString();
+        if (elSharesKept) elSharesKept.innerText = sharesKept.toString();
+        if (elKeptHighlight) elKeptHighlight.innerText = sharesKept.toString();
+	}
+
+	document.addEventListener('DOMContentLoaded', () => {
+		['wbRsuShares', 'wbRsuPrice'].forEach(id => {
+			const el = document.getElementById(id);
+			if (el) setupFormattingField(el as HTMLInputElement, runRsuCalc);
+		});
+		
+		const elInit = document.getElementById('wbRsuShares');
+		if(elInit) runRsuCalc();
+	});
+</script>

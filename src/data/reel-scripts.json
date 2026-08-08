@@ -168,5 +168,39 @@
         "audio": "Can you buy a house in Dubai? No. Can you buy two houses? Only once in your life. Use our interactive Section 54 simulator to gamify your tax savings. Link in bio."
       }
     ]
+  },
+  {
+    "id": "reel-006",
+    "title": "The MNC RSU Trap",
+    "articleSlug": "mnc-rsu-vesting-double-taxation-trap",
+    "duration": "100s",
+    "hook": "You work at Amazon or Google. Your RSUs just vested, but a third of your shares mysteriously disappeared. You weren't robbed. You were just hit by the Sell-To-Cover trap.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Speaker standing next to an E*Trade portal graphic showing '100 Shares Granted' and '69 Shares Deposited'.",
+        "audio": "You work at Amazon or Google. Your RSUs just vested. You were promised 100 shares, but your brokerage account only shows 69. You weren't robbed. You were just hit by the Sell-To-Cover trap."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A salary slip drops down. The RSU value is forcefully stuffed into the 'Salary' box.",
+        "audio": "The moment those shares vest, the Indian government treats them as pure salary. If those 100 shares are worth 10 Lakhs, your salary just jumped by 10 Lakhs. And because you are in the 30% bracket, you owe a massive tax bill immediately."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A mechanical claw reaches into the 100 shares, rips away 31 of them, and drops them into a government vault.",
+        "audio": "But you don't have the cash to pay it. So your US broker executes a ruthless maneuver. They auto-liquidate 30% of your shares, send the cash to the Indian government as TDS, and hand you the leftovers."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "Screen flashes red. 'BLACK MONEY ACT: 10 LAKH PENALTY'.",
+        "audio": "But that's just the start. If you hold those remaining 69 shares and fail to declare them in Schedule FA of your tax return, you trigger the Black Money Act. The penalty is a mandatory, non-negotiable 10 Lakh rupees, even if you never made a single rupee of profit."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing down to link. 'FinSight INDIA' logo glows.",
+        "audio": "Don't let the algorithm catch you blind. Use our interactive Vesting Simulator to calculate your exact Schedule FA risk before you file. Link in bio."
+      }
+    ]
   }
 ]
