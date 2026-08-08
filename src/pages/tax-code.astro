@@ -2,6 +2,8 @@
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
+import fs from 'node:fs';
+import path from 'node:path';
 
 // Fetch all MDX articles from the Content Collection
 const allArticles = await getCollection('direct-tax');
@@ -58,8 +60,11 @@ const extractCoverFromMDX = (body) => {
 					/>
 				</div>
 
-				<!-- Floating Categories Cloud (Horizontal Scroll) -->
-				<div class="mt-8 max-w-4xl mx-auto overflow-hidden relative">
+				<!-- Filters and Sorting Container -->
+				<div class="mt-8 flex flex-col md:flex-row items-center justify-between gap-6 max-w-5xl mx-auto z-10 relative">
+					
+					<!-- Floating Categories Cloud (Horizontal Scroll) -->
+					<div class="flex-1 w-full overflow-hidden relative">
                     <!-- Fade edges -->
                     <div class="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-slate-50 dark:from-navy-900 to-transparent z-10 pointer-events-none"></div>
                     <div class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-slate-50 dark:from-navy-900 to-transparent z-10 pointer-events-none"></div>
@@ -73,6 +78,46 @@ const extractCoverFromMDX = (body) => {
 								{cat}
 							</button>
 						))}
+					</div>
+					</div>
+					
+					<!-- Elegant Sort Dropdown -->
+					<div class="relative group z-50 shrink-0">
+						<button class="flex items-center gap-2 px-6 py-2.5 bg-white/80 dark:bg-navy-800/80 backdrop-blur-md border border-slate-200 dark:border-navy-700 rounded-full text-sm font-bold uppercase tracking-widest text-slate-700 dark:text-navy-300 shadow-sm hover:shadow-lg hover:border-gold-500/50 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-gold-500/30">
+							<svg class="w-4 h-4 text-gold-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+							<span id="activeSortLabel">Recommended</span>
+							<svg class="w-4 h-4 ml-1 opacity-50 group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+						</button>
+						
+						<!-- Dropdown Menu -->
+						<div class="absolute right-0 top-full mt-3 w-56 bg-white/95 dark:bg-navy-800/95 backdrop-blur-xl border border-slate-200/50 dark:border-navy-700/50 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-400 ease-out transform origin-top scale-95 group-hover:scale-100 flex flex-col overflow-hidden z-50 py-2">
+							<button class="sort-btn flex items-center justify-between px-5 py-3 text-sm font-bold text-slate-700 dark:text-navy-200 hover:bg-slate-50 dark:hover:bg-navy-700/50 transition-colors w-full text-left" data-sort="default" data-label="Recommended">
+								Recommended
+								<span class="sort-indicator hidden text-gold-500">●</span>
+							</button>
+							<button class="sort-btn flex items-center justify-between px-5 py-3 text-sm font-bold text-slate-700 dark:text-navy-200 hover:bg-slate-50 dark:hover:bg-navy-700/50 transition-colors w-full text-left" data-sort="latest" data-label="Latest Release">
+								Latest Release
+								<span class="sort-indicator hidden text-gold-500">●</span>
+							</button>
+							<button class="sort-btn flex items-center justify-between px-5 py-3 text-sm font-bold text-slate-700 dark:text-navy-200 hover:bg-slate-50 dark:hover:bg-navy-700/50 transition-colors w-full text-left" data-sort="oldest" data-label="Oldest">
+								Oldest First
+								<span class="sort-indicator hidden text-gold-500">●</span>
+							</button>
+							<div class="h-px bg-slate-100 dark:bg-navy-700/50 my-1 mx-4"></div>
+							<button class="sort-btn flex items-center justify-between px-5 py-3 text-sm font-bold text-slate-700 dark:text-navy-200 hover:bg-slate-50 dark:hover:bg-navy-700/50 transition-colors w-full text-left" data-sort="quick" data-label="Quickest Read">
+								Quickest Read
+								<span class="sort-indicator hidden text-gold-500">●</span>
+							</button>
+							<button class="sort-btn flex items-center justify-between px-5 py-3 text-sm font-bold text-slate-700 dark:text-navy-200 hover:bg-slate-50 dark:hover:bg-navy-700/50 transition-colors w-full text-left" data-sort="deep" data-label="Deep Dives">
+								Deep Dives
+								<span class="sort-indicator hidden text-gold-500">●</span>
+							</button>
+							<div class="h-px bg-slate-100 dark:bg-navy-700/50 my-1 mx-4"></div>
+							<button class="sort-btn flex items-center justify-between px-5 py-3 text-sm font-bold text-slate-700 dark:text-navy-200 hover:bg-slate-50 dark:hover:bg-navy-700/50 transition-colors w-full text-left" data-sort="az" data-label="A to Z">
+								Alphabetical (A-Z)
+								<span class="sort-indicator hidden text-gold-500">●</span>
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -100,12 +145,29 @@ const extractCoverFromMDX = (body) => {
 						}
 					}
 
+					const readTimeNum = parseInt(art.data.readTime) || 0;
+					
+					// Get exact file creation timestamp for accurate Latest/Oldest sorting
+					let timestamp = 0;
+					try {
+						// Note: art.id contains the slug, sometimes with extension if using older Astro versions. 
+						// Using art.id + '.mdx' works for Content Collections.
+						const fullPath = path.join(process.cwd(), 'src/content/direct-tax', art.id + (art.id.endsWith('.mdx') ? '' : '.mdx'));
+						const stats = fs.statSync(fullPath);
+						timestamp = stats.mtimeMs || stats.birthtimeMs || 0; // fallback to mtime if birthtime fails on linux
+					} catch(e) {
+						timestamp = 0;
+					}
+
 					return (
 					<div 
 						class="article-card group bg-white dark:bg-navy-800 rounded-[2rem] overflow-hidden border border-slate-200 dark:border-navy-700 hover:border-gold-500/50 dark:hover:border-gold-500/50 hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 ease-out flex flex-col justify-between cursor-pointer relative"
 						data-title={art.data.title.toLowerCase()}
 						data-summary={art.data.summary.toLowerCase()}
 						data-category={art.data.categoryName}
+						data-readtime={readTimeNum}
+						data-timestamp={timestamp}
+						data-index={idx}
                         onclick={`window.location.href='/tax-code/${art.id}'`}
 					>
                         {/* Image Header */}
@@ -166,11 +228,15 @@ const extractCoverFromMDX = (body) => {
 	document.addEventListener('DOMContentLoaded', () => {
 		const searchInput = document.getElementById('searchInput');
 		const filterBtns = document.querySelectorAll('.filter-btn');
+		const sortBtns = document.querySelectorAll('.sort-btn');
 		const articleCards = document.querySelectorAll('.article-card');
+		const gridContainer = document.getElementById('faqCardGrid');
 		const noResultsMsg = document.getElementById('noResultsMsg');
+		const activeSortLabel = document.getElementById('activeSortLabel');
 		
 		let currentCategory = 'all';
 		let currentSearch = '';
+		let currentSort = 'default';
 
 		function filterArticles() {
 			let visibleCount = 0;
@@ -221,5 +287,72 @@ const extractCoverFromMDX = (body) => {
 				filterArticles();
 			});
 		});
+
+		function sortArticles() {
+			if (!gridContainer) return;
+			
+			const cardsArray = Array.from(gridContainer.children) as HTMLElement[];
+			
+			cardsArray.sort((a, b) => {
+				if (currentSort === 'latest') {
+					return parseFloat(b.getAttribute('data-timestamp') || '0') - parseFloat(a.getAttribute('data-timestamp') || '0');
+				} else if (currentSort === 'oldest') {
+					return parseFloat(a.getAttribute('data-timestamp') || '0') - parseFloat(b.getAttribute('data-timestamp') || '0');
+				} else if (currentSort === 'quick') {
+					return parseInt(a.getAttribute('data-readtime') || '0') - parseInt(b.getAttribute('data-readtime') || '0');
+				} else if (currentSort === 'deep') {
+					return parseInt(b.getAttribute('data-readtime') || '0') - parseInt(a.getAttribute('data-readtime') || '0');
+				} else if (currentSort === 'az') {
+					return (a.getAttribute('data-title') || '').localeCompare(b.getAttribute('data-title') || '');
+				} else {
+					// Default index sort
+					return parseInt(a.getAttribute('data-index') || '0') - parseInt(b.getAttribute('data-index') || '0');
+				}
+			});
+
+			// Re-append in sorted order (this automatically moves them)
+			cardsArray.forEach(card => {
+				// Add a tiny stagger animation for that premium feel
+				card.style.opacity = '0';
+				card.style.transform = 'translateY(10px)';
+				gridContainer.appendChild(card);
+				
+				setTimeout(() => {
+					card.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+					card.style.opacity = '1';
+					card.style.transform = 'translateY(0)';
+				}, 50);
+			});
+		}
+
+		sortBtns.forEach(btn => {
+			btn.addEventListener('click', (e) => {
+				const target = e.currentTarget as HTMLButtonElement;
+				currentSort = target.getAttribute('data-sort') || 'default';
+				
+				// Update UI Label
+				if (activeSortLabel) {
+					activeSortLabel.textContent = target.getAttribute('data-label') || 'Recommended';
+				}
+
+				// Update active indicator
+				sortBtns.forEach(b => {
+					const indicator = b.querySelector('.sort-indicator');
+					if (indicator) indicator.classList.add('hidden');
+				});
+				const activeIndicator = target.querySelector('.sort-indicator');
+				if (activeIndicator) activeIndicator.classList.remove('hidden');
+
+				sortArticles();
+			});
+		});
+
+		// Initialize default sort indicator
+		const defaultSortBtn = document.querySelector('.sort-btn[data-sort="default"]');
+		if (defaultSortBtn) {
+			const indicator = defaultSortBtn.querySelector('.sort-indicator');
+			if (indicator) indicator.classList.remove('hidden');
+		}
+
 	});
 </script>
