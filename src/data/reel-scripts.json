@@ -6,11 +6,31 @@
     "duration": "100s",
     "hook": "Did you know the Income Tax Department uses an algorithm that can instantly multiply your tax penalty by 200% if they don't like your expenses?",
     "script": [
-      {"time": "0:00 - 0:15", "visual": "Speaker holding a mock tax notice, looking stressed. Quick zoom in on the '200%' figure.", "audio": "Did you know the Income Tax Department uses an algorithm that can instantly multiply your tax penalty by 200% if they don't like your expenses? It's called the Section 270A Trap, and it's bankrupting freelancers and founders."},
-      {"time": "0:15 - 0:35", "visual": "Split screen. Left: 'Under-reporting (50%)'. Right: 'Misreporting (200%)'. A toggle switch flips between them.", "audio": "Here is how they get you. If an officer rejects your business expense—say, a travel bill—that's called 'under-reporting'. The penalty is 50%. Bad, but manageable. But if they label that exact same expense as 'fake' or 'misreported'?"},
-      {"time": "0:35 - 0:55", "visual": "Screen flashes red. The penalty number quadruples on screen.", "audio": "Boom. The algorithm automatically quadruples your penalty to 200%. If you owed 10 Lakhs in tax, you now owe 30 Lakhs. And you can't even apply for immunity anymore. You are locked in."},
-      {"time": "0:55 - 1:15", "visual": "Speaker holding up a shield with 'Section 270A(6)' written on it.", "audio": "But there is a 100% legal shield. Section 270A Sub-section 6. If you fully disclose the facts of your expense when you file your return, the penalty drops to 0%. Even if they disallow the expense, they cannot penalize you."},
-      {"time": "1:15 - 1:40", "visual": "Point to a link on screen. Text: 'Read the full guide on FinSight INDIA'.", "audio": "Don't get labeled. Document everything. Want to know how to spot the fatal flaw in their notice that makes the entire 200% penalty illegal? Read the full 5-minute breakdown on FinSight INDIA. Link in bio."}
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Speaker holding a mock tax notice, looking stressed. Quick zoom in on the '200%' figure.",
+        "audio": "Did you know the Income Tax Department uses an algorithm that can instantly multiply your tax penalty by 200% if they don't like your expenses? It's called the Section 270A Trap, and it's bankrupting freelancers and founders."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "Split screen. Left: 'Under-reporting (50%)'. Right: 'Misreporting (200%)'. A toggle switch flips between them.",
+        "audio": "Here is how they get you. If an officer rejects your business expense\u2014say, a travel bill\u2014that's called 'under-reporting'. The penalty is 50%. Bad, but manageable. But if they label that exact same expense as 'fake' or 'misreported'?"
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "Screen flashes red. The penalty number quadruples on screen.",
+        "audio": "Boom. The algorithm automatically quadruples your penalty to 200%. If you owed 10 Lakhs in tax, you now owe 30 Lakhs. And you can't even apply for immunity anymore. You are locked in."
+      },
+      {
+        "time": "0:55 - 1:15",
+        "visual": "Speaker holding up a shield with 'Section 270A(6)' written on it.",
+        "audio": "But there is a 100% legal shield. Section 270A Sub-section 6. If you fully disclose the facts of your expense when you file your return, the penalty drops to 0%. Even if they disallow the expense, they cannot penalize you."
+      },
+      {
+        "time": "1:15 - 1:40",
+        "visual": "Point to a link on screen. Text: 'Read the full guide on FinSight INDIA'.",
+        "audio": "Don't get labeled. Document everything. Want to know how to spot the fatal flaw in their notice that makes the entire 200% penalty illegal? Read the full 5-minute breakdown on FinSight INDIA. Link in bio."
+      }
     ]
   },
   {
@@ -20,11 +40,31 @@
     "duration": "100s",
     "hook": "You filed your taxes on time, paid what you owed, and thought you were safe. But what if a 15-day countdown just started that could erase your entire tax filing?",
     "script": [
-      {"time": "0:00 - 0:15", "visual": "Speaker pointing to a ticking clock graphic over a tax return document.", "audio": "You filed your taxes on time, paid what you owed, and thought you were safe. But what if a 15-day countdown just started that could erase your entire tax filing? Welcome to Section 139(9)."},
-      {"time": "0:15 - 0:35", "visual": "Show an email notification from 'Income Tax Dept' landing in spam.", "audio": "The algorithm scans your return. If it finds a mismatch—like claiming a TDS credit without reporting the income—it sends a 'Defective Return' notice. And it usually goes straight to your spam folder."},
-      {"time": "0:35 - 0:55", "visual": "Graphic showing a tax return turning into dust.", "audio": "You have exactly 15 days to respond. If you miss that email? Section 139(9) treats your return as if you never filed it at all. It becomes void ab initio. Just like that, you are an absolute non-filer."},
-      {"time": "0:55 - 1:20", "visual": "Show compound interest formulas piling up.", "audio": "That means you lose your right to carry forward losses. You get hit with Section 234A interest compounding every month. And you face a flat 5,000 rupee late fee when you are finally forced to refile."},
-      {"time": "1:20 - 1:40", "visual": "Speaker looking directly at camera, serious tone.", "audio": "Check your portal. Don't rely on email. And if you want to know the 3 most common mismatches that trigger this death clock, read our full guide on FinSight INDIA. Don't let a technical glitch ruin your year."}
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Speaker pointing to a ticking clock graphic over a tax return document.",
+        "audio": "You filed your taxes on time, paid what you owed, and thought you were safe. But what if a 15-day countdown just started that could erase your entire tax filing? Welcome to Section 139(9)."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "Show an email notification from 'Income Tax Dept' landing in spam.",
+        "audio": "The algorithm scans your return. If it finds a mismatch\u2014like claiming a TDS credit without reporting the income\u2014it sends a 'Defective Return' notice. And it usually goes straight to your spam folder."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "Graphic showing a tax return turning into dust.",
+        "audio": "You have exactly 15 days to respond. If you miss that email? Section 139(9) treats your return as if you never filed it at all. It becomes void ab initio. Just like that, you are an absolute non-filer."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "Show compound interest formulas piling up.",
+        "audio": "That means you lose your right to carry forward losses. You get hit with Section 234A interest compounding every month. And you face a flat 5,000 rupee late fee when you are finally forced to refile."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker looking directly at camera, serious tone.",
+        "audio": "Check your portal. Don't rely on email. And if you want to know the 3 most common mismatches that trigger this death clock, read our full guide on FinSight INDIA. Don't let a technical glitch ruin your year."
+      }
     ]
   },
   {
@@ -34,11 +74,99 @@
     "duration": "100s",
     "hook": "Are you a freelancer trying to use the 8% tax loophole? Stop. You are walking into a massive audit trap.",
     "script": [
-      {"time": "0:00 - 0:20", "visual": "Speaker holding a laptop with a Reddit thread titled 'How to pay 8% tax as a freelancer' visible.", "audio": "Are you a freelancer, designer, or coder trying to use the 8% tax loophole you saw on Reddit? Stop. You are walking into a massive audit trap that will cost you everything."},
-      {"time": "0:20 - 0:40", "visual": "Split screen: Kirana store (8%) vs Laptop worker (50%).", "audio": "Section 44AD lets businesses declare an 8% profit margin. But it was made for Kirana stores and traders, not you. If you provide a professional service, the law says you MUST use Section 44ADA. And that requires declaring a 50% profit margin."},
-      {"time": "0:40 - 1:00", "visual": "Show a 194J TDS certificate glowing ominously.", "audio": "Here is how they catch you. When your clients pay you, they deduct TDS under Section 194J for 'professional services'. The moment you file your return under the 8% business code, the algorithm spots the mismatch."},
-      {"time": "1:00 - 1:20", "visual": "Graphic of a tax notice slamming down.", "audio": "It flags your return for scrutiny. They will reject your 8% claim, bump your profit to 50% or higher, and hit you with a massive penalty for misreporting your income."},
-      {"time": "1:20 - 1:40", "visual": "Speaker pointing to link.", "audio": "44ADA is not a punishment, it's a legal shield. Learn how to use it properly, and discover the 'Agency Arbitrage' loophole that legally drops your tax rate, in our full guide on FinSight INDIA."}
+      {
+        "time": "0:00 - 0:20",
+        "visual": "Speaker holding a laptop with a Reddit thread titled 'How to pay 8% tax as a freelancer' visible.",
+        "audio": "Are you a freelancer, designer, or coder trying to use the 8% tax loophole you saw on Reddit? Stop. You are walking into a massive audit trap that will cost you everything."
+      },
+      {
+        "time": "0:20 - 0:40",
+        "visual": "Split screen: Kirana store (8%) vs Laptop worker (50%).",
+        "audio": "Section 44AD lets businesses declare an 8% profit margin. But it was made for Kirana stores and traders, not you. If you provide a professional service, the law says you MUST use Section 44ADA. And that requires declaring a 50% profit margin."
+      },
+      {
+        "time": "0:40 - 1:00",
+        "visual": "Show a 194J TDS certificate glowing ominously.",
+        "audio": "Here is how they catch you. When your clients pay you, they deduct TDS under Section 194J for 'professional services'. The moment you file your return under the 8% business code, the algorithm spots the mismatch."
+      },
+      {
+        "time": "1:00 - 1:20",
+        "visual": "Graphic of a tax notice slamming down.",
+        "audio": "It flags your return for scrutiny. They will reject your 8% claim, bump your profit to 50% or higher, and hit you with a massive penalty for misreporting your income."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing to link.",
+        "audio": "44ADA is not a punishment, it's a legal shield. Learn how to use it properly, and discover the 'Agency Arbitrage' loophole that legally drops your tax rate, in our full guide on FinSight INDIA."
+      }
+    ]
+  },
+  {
+    "id": "reel-004",
+    "title": "Tax Loss Harvesting March 31st",
+    "articleSlug": "tax-loss-harvesting-march-31-guide",
+    "duration": "100s",
+    "hook": "You just made 5 Lakhs in the stock market this year! Congratulations, the government now wants 62,000 rupees in tax. But what if I told you there's a legal loophole to wipe that tax bill to zero?",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Visual of an investor looking at a green portfolio, celebrating. Suddenly, a giant tax bill slaps them in the face.",
+        "audio": "You just made 5 Lakhs in the stock market this year! Congratulations, the government now wants 62,000 rupees in tax. But what if I told you there's a legal loophole to wipe that tax bill to zero?"
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "Split screen. On the left, 'Realized Profit'. On the right, 'Unrealized Loss' with a dying stock chart.",
+        "audio": "It's called Tax Loss Harvesting. While the government is eager to tax your realized profits, they pretend your unrealized losses don't exist. If you have a stock that's down by 4 Lakhs, it gives you zero tax benefit."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A calendar zooming in on March 31st, 3:30 PM, with a ticking clock.",
+        "audio": "Until you hit the SELL button. If you sell that losing stock before March 31st, it becomes a 'Realized Loss.' You can now subtract that 4 Lakh loss from your 5 Lakh profit. You just saved 50,000 rupees in pure cash!"
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "The American flag with a 'Wash Sale' ban sign, transitioning to an Indian flag with a green checkmark.",
+        "audio": "And the best part? Unlike the US, India has no 'Wash Sale' rule. You can sell your losing stock at 10 AM to book the tax loss, and literally buy the exact same stock back at 10:05 AM. Your portfolio stays the same, but your tax bill disappears."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "A person filing ITR-2 with a shield icon.",
+        "audio": "Just make sure you do it before the market closes on March 31st. Follow FinSights for more wealth preservation secrets!"
+      }
+    ]
+  },
+  {
+    "id": "reel-005",
+    "title": "The Section 54 Tax Shield",
+    "articleSlug": "selling-house-ltcg-section-54-exemption",
+    "duration": "100s",
+    "hook": "You just sold your flat for 1.5 Crore. The buyer deducted 1% TDS, and now the Income Tax department is hunting for their 10 Lakh cut. Here is how to legally give them nothing.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "A massive 1.5 Crore bank transfer pops up on a phone screen. A red '1% TDS' stamp slams down.",
+        "audio": "You just sold your flat for 1.5 Crore. Before the money even hits your account, the buyer deducts a 1% TDS. That 1% is a flare shot directly to the tax department, telling them you are flush with cash."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A pie chart showing a 1 Crore profit. A giant 12.5% slice is pulled away by a government hand.",
+        "audio": "Under the new tax regime, the government wants 12.5% of your profit. If you made a 1 Crore profit, they want 12.5 Lakhs in pure cash. But you can use a legal loophole called Section 54 to erase it completely."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A shiny new house appears, and the tax slice magically returns to the taxpayer.",
+        "audio": "The government doesn't actually want your cash sitting idle. If you use that profit to buy a new residential house within 2 years, your tax drops to absolute zero. You keep your wealth, the real estate market gets stimulated."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A ticking clock (6 Months). A '54EC Bonds' certificate is stamped.",
+        "audio": "Don't want another house? You can lock up to 50 Lakhs in government highway bonds for 5 years. But you only have exactly 6 months from the date of the sale to buy them. Wait 6 months and 1 day, and the tax shield evaporates."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing to the screen. 'FinSight INDIA' logo.",
+        "audio": "Can you buy a house in Dubai? No. Can you buy two houses? Only once in your life. Use our interactive Section 54 simulator to gamify your tax savings. Link in bio."
+      }
     ]
   }
 ]
