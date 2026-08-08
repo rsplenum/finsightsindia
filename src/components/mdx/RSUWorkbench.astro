@@ -12,7 +12,7 @@ const {
 } = Astro.props;
 ---
 
-<div class="my-10 border-y border-slate-200 dark:border-slate-800 py-8 relative not-prose">
+<div class="my-10 border-y border-slate-200 dark:border-slate-800 py-6 relative not-prose">
 
 	<div class="flex items-center gap-3 mb-8">
         <div class="h-6 w-6 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400">
@@ -55,18 +55,18 @@ const {
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
                 Sell-To-Cover Tax (31.2%)
             </div>
-            <div id="wbRsuTaxRupees" class="text-lg font-medium text-rose-600 dark:text-rose-400">- ₹ 0</div>
+            <div id="wbRsuTaxRupees" class="text-xl font-medium text-rose-600 dark:text-rose-400">- ₹ 0</div>
         </div>
     </div>
 
     <div class="grid grid-cols-2 gap-4 mb-8">
         <div class="p-4 rounded-2xl border border-rose-200 bg-rose-50 dark:border-rose-900/50 dark:bg-rose-950/20 flex flex-col items-center justify-center text-center gap-1">
-            <div class="text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-widest">Shares Sold For Tax</div>
-            <div id="wbRsuSharesSold" class="text-4xl font-light text-rose-600 dark:text-rose-400 tracking-tighter">0</div>
+            <div class="text-[11px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-widest">Shares Sold For Tax</div>
+            <div id="wbRsuSharesSold" class="text-5xl font-light text-rose-600 dark:text-rose-400 tracking-tighter">0</div>
         </div>
         <div class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50 dark:border-emerald-900/50 dark:bg-emerald-950/20 flex flex-col items-center justify-center text-center gap-1">
-            <div class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Net Shares Deposited</div>
-            <div id="wbRsuSharesKept" class="text-4xl font-light text-emerald-600 dark:text-emerald-400 tracking-tighter">0</div>
+            <div class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Net Shares Deposited</div>
+            <div id="wbRsuSharesKept" class="text-5xl font-light text-emerald-600 dark:text-emerald-400 tracking-tighter">0</div>
         </div>
     </div>
 
@@ -89,7 +89,7 @@ const {
 
 	function formatRupee(val: number): string {
 		if (isNaN(val) || val < 0) return '₹0';
-		return `₹${tableFormatter.format(Math.round(val))}`;
+		return tableFormatter.format(Math.round(val));
 	}
 
 	function runRsuCalc() {

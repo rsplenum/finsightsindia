@@ -2,7 +2,7 @@
 import InputGroup from '../InputGroup.astro';
 ---
 
-<div class="my-10 border-y border-slate-200 dark:border-slate-800 py-8 relative not-prose">
+<div class="my-10 border-y border-slate-200 dark:border-slate-800 py-6 relative not-prose">
     <div class="flex items-center gap-3 mb-8">
         <div class="h-6 w-6 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400">
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
@@ -74,10 +74,10 @@ import InputGroup from '../InputGroup.astro';
 
     <div id="wbSec54FinalBox" class="p-6 rounded-2xl border transition-colors duration-300 border-rose-200 bg-rose-50 dark:border-rose-900/50 dark:bg-rose-950/20 flex flex-col sm:flex-row justify-between items-center gap-4">
         <div>
-            <div class="text-[11px] font-bold uppercase tracking-widest mb-1 transition-colors duration-300" id="wbSec54FinalLabel">Final Tax Payable (Inc. 4% Cess)</div>
-            <div class="text-[12px] opacity-80 transition-colors duration-300" id="wbSec54FinalSubLabel">Tax demand active. Increase shields to erase.</div>
+            <div class="text-[12px] font-bold uppercase tracking-widest mb-1 transition-colors duration-300" id="wbSec54FinalLabel">Final Tax Payable (Inc. 4% Cess)</div>
+            <div class="text-[13px] opacity-80 transition-colors duration-300" id="wbSec54FinalSubLabel">Tax demand active. Increase shields to erase.</div>
         </div>
-        <div id="wbSec54FinalTax" class="text-3xl font-light tracking-tight transition-colors duration-300 text-rose-600 dark:text-rose-400">
+        <div id="wbSec54FinalTax" class="text-4xl font-light tracking-tight transition-colors duration-300 text-rose-600 dark:text-rose-400">
             ₹13,00,000
         </div>
     </div>
@@ -88,7 +88,7 @@ import InputGroup from '../InputGroup.astro';
 
 	function formatRupee(val: number): string {
 		if (isNaN(val) || val < 0) return '₹0';
-		return `₹${tableFormatter.format(Math.round(val))}`;
+		return tableFormatter.format(Math.round(val));
 	}
 
 	function runSec54Calc() {
@@ -147,14 +147,14 @@ import InputGroup from '../InputGroup.astro';
                 elFinalLabel.className = "text-[11px] font-bold uppercase tracking-widest mb-1 transition-colors duration-300 text-emerald-700 dark:text-emerald-400";
                 elFinalSubLabel.className = "text-[12px] opacity-80 transition-colors duration-300 text-emerald-600 dark:text-emerald-500";
                 elFinalSubLabel.innerText = "Tax demand completely erased.";
-                elFinalTax.className = "text-3xl font-light tracking-tight transition-colors duration-300 text-emerald-600 dark:text-emerald-400";
+                elFinalTax.className = "text-4xl font-light tracking-tight transition-colors duration-300 text-emerald-600 dark:text-emerald-400";
             } else {
                 // Active state
                 elFinalBox.className = "p-6 rounded-2xl border transition-colors duration-300 border-rose-200 bg-rose-50 dark:border-rose-900/50 dark:bg-rose-950/20 flex flex-col sm:flex-row justify-between items-center gap-4";
-                elFinalLabel.className = "text-[11px] font-bold uppercase tracking-widest mb-1 transition-colors duration-300 text-rose-700 dark:text-rose-400";
-                elFinalSubLabel.className = "text-[12px] opacity-80 transition-colors duration-300 text-rose-600 dark:text-rose-500";
+                elFinalLabel.className = "text-[12px] font-bold uppercase tracking-widest mb-1 transition-colors duration-300 text-rose-700 dark:text-rose-400";
+                elFinalSubLabel.className = "text-[13px] opacity-80 transition-colors duration-300 text-rose-600 dark:text-rose-500";
                 elFinalSubLabel.innerText = "Tax demand active. Increase shields to erase.";
-                elFinalTax.className = "text-3xl font-light tracking-tight transition-colors duration-300 text-rose-600 dark:text-rose-400";
+                elFinalTax.className = "text-4xl font-light tracking-tight transition-colors duration-300 text-rose-600 dark:text-rose-400";
             }
         }
 	}
