@@ -10,6 +10,7 @@ coverImage: "esop-narrative-anxiety.jpg"
 ---
 
 import NoticeTrap from '../../components/mdx/NoticeTrap.astro';
+import RSUWorkbench from '../../components/mdx/RSUWorkbench.astro';
 
 ![ESOP Anxiety Hook](../../assets/images/esop-narrative-anxiety.jpg)
 
@@ -101,9 +102,39 @@ He should wait until the IPO, or until a larger VC buys out early employees (a S
 If you work for Amazon India or Google India, you aren't getting ESOPs; you are getting RSUs (Restricted Stock Units) of the US parent company. RSUs don't have a "Strike Price." The moment they vest, the entire value is taxed as a perquisite. 
 Furthermore, you MUST declare these shares in **Schedule FA (Foreign Assets)** of your ITR-2. Even a single un-declared Google share triggers a flat ₹10 Lakh penalty under the Black Money Act.
 
+### RSU Sell-to-Cover Simulator
+*Calculate exactly how many shares your US broker will auto-liquidate to pay the Indian government.*
+
+<RSUWorkbench />
+
 ## 8. 💡 Key Takeaway Summary & Actionable Checklist
 
 *   **Never Exercise Blindly:** Unless you have the cash on hand to pay 30% of the FMV difference, do not exercise your options. Wait for a liquidity event.
 *   **Check the Startup's Status:** Ask your founders if the company is registered under Section 80-IAC with the DPIIT. If yes, you can safely exercise and defer the tax.
-*   **File ITR-2:** ESOPs usually require moving away from the simple ITR-1 form.
 *   **Declare Foreign RSUs:** If your company is headquartered abroad, you must fill out Schedule FA to avoid draconian Black Money Act penalties.
+
+---
+
+## 9. Reel Script #006: The MNC RSU Trap
+
+*For our creators: Here is the 100-second storyboard for social media.*
+
+<div class="p-6 bg-slate-900 rounded-2xl border border-slate-800 my-8 shadow-xl">
+<h4 class="text-emerald-400 font-bold uppercase tracking-widest text-xs mb-4 mt-0">100-Second Reel Script</h4>
+<div class="space-y-4 text-slate-300 text-sm">
+<p><strong class="text-white">0:00 - 0:15 [Visual: E*Trade portal graphic showing '100 Shares Granted' and '69 Shares Deposited']</strong><br/>
+"You work at Amazon or Google. Your RSUs just vested. You were promised 100 shares, but your brokerage account only shows 69. You weren't robbed. You were just hit by the Sell-To-Cover trap."</p>
+
+<p><strong class="text-white">0:15 - 0:35 [Visual: A salary slip drops down. RSU value stuffed into the 'Salary' box]</strong><br/>
+"The moment those shares vest, the Indian government treats them as pure salary. If those 100 shares are worth 10 Lakhs, your salary just jumped by 10 Lakhs. And because you are in the 30% bracket, you owe a massive tax bill immediately."</p>
+
+<p><strong class="text-white">0:35 - 0:55 [Visual: Mechanical claw rips away 31 shares into a government vault]</strong><br/>
+"But you don't have the cash to pay it. So your US broker executes a ruthless maneuver. They auto-liquidate 30% of your shares, send the cash to the Indian government as TDS, and hand you the leftovers."</p>
+
+<p><strong class="text-white">0:55 - 1:20 [Visual: Screen flashes red. 'BLACK MONEY ACT: 10 LAKH PENALTY']</strong><br/>
+"But that's just the start. If you hold those remaining 69 shares and fail to declare them in Schedule FA of your tax return, you trigger the Black Money Act. The penalty is a mandatory, non-negotiable 10 Lakh rupees, even if you never made a single rupee of profit."</p>
+
+<p><strong class="text-white">1:20 - 1:40 [Visual: Speaker pointing down to link. FinSight INDIA logo]</strong><br/>
+"Don't let the algorithm catch you blind. Use our interactive Vesting Simulator to calculate your exact Schedule FA risk before you file. Link in bio."</p>
+</div>
+</div>
