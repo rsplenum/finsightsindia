@@ -3,96 +3,64 @@ import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const allArticles = await getCollection('direct-tax');
-const articleEntries = allArticles.slice(0, 3).map(art => [art.id, art.data]);
+const articleCount = allArticles.length;
+const articleEntries = allArticles.slice(0, 6).map(art => [art.id, art.data]);
 ---
 
-<Layout title="FinSight India — Financial Intelligence Platform for Everyone" description="India's most trusted financial intelligence platform. Monte Carlo retirement simulators, SIP engines, insurance analyzers, options pricing, and 100+ expert tax articles.">
+<Layout title="FinSight India — Financial Decision Intelligence Platform" description="Transforming financial calculations into guided, explainable decision intelligence. Tax optimization, retirement longevity, insurance deconstruction, and wealth accumulation.">
 
 	<!-- ====================================================
-	     HERO SECTION — Etihad Bureau-Inspired Asymmetric Split
+	     1. HERO SECTION — Intent-Driven Decision Intelligence
 	     ==================================================== -->
 	<section class="hero-glow relative overflow-hidden">
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-36">
-			<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-28">
+			<div class="text-center max-w-4xl mx-auto space-y-8 reveal">
 				
-				<!-- Left Column: Value Proposition -->
-				<div class="lg:col-span-7 space-y-8 reveal">
-					<div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-gold-500/10 border border-gold-500/20 rounded-full">
-						<div class="w-2 h-2 rounded-full bg-emerald-500 animate-glow-pulse"></div>
-						<span class="text-xs font-semibold tracking-wider text-gold-600 dark:text-gold-400 uppercase">100% Free • Client-Side • No Data Leaves Your Device</span>
-					</div>
+				<div class="inline-flex items-center gap-2 px-4 py-1.5 bg-gold-500/10 border border-gold-500/20 rounded-full">
+					<div class="w-2 h-2 rounded-full bg-emerald-500 animate-glow-pulse"></div>
+					<span class="text-xs font-semibold tracking-wider text-gold-600 dark:text-gold-400 uppercase">Decision Intelligence • 100% Client-Side • Privacy-First</span>
+				</div>
 
-					<h1 class="text-hero text-navy-900 dark:text-navy-100">
-						India's Financial Intelligence Platform,
-						<span class="text-gradient-gold"> Built for Everyone.</span>
-					</h1>
+				<h1 class="text-hero text-navy-900 dark:text-navy-100 font-extrabold tracking-tight">
+					What financial decision are you trying to make today?
+				</h1>
 
-					<p class="text-lg sm:text-xl text-navy-500 dark:text-navy-400 leading-relaxed max-w-2xl">
-						Institutional-grade Monte Carlo simulators, insurance deconstructors, options pricing labs, and the deepest library of tax research in the country — all running on your device, completely free.
-					</p>
+				<p class="text-lg sm:text-xl text-navy-600 dark:text-navy-300 leading-relaxed max-w-3xl mx-auto">
+					FinSight transforms raw financial calculations into guided, explainable decision intelligence. Connect deep tax research with institutional quantitative models to make confident choices.
+				</p>
 
-					<div class="flex flex-col sm:flex-row gap-4">
-						<a href="/swp-planner" class="btn-gold text-center">
-							<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 0 0-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" /></svg>
-							Explore Calculators
-						</a>
-						<a href="/tax-code" class="btn-ghost text-center">
-							<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>
-							Read Tax Research
-						</a>
+				<!-- QUICK INTENT SELECTOR PILLS -->
+				<div class="pt-2">
+					<p class="text-xs font-bold uppercase tracking-widest text-navy-400 dark:text-navy-500 mb-4">Select your decision intent to navigate:</p>
+					<div class="flex flex-wrap justify-center gap-2.5 max-w-4xl mx-auto">
+						<button data-intent="hub-tax" class="intent-btn group flex items-center gap-2 px-4 py-2.5 rounded-full bg-navy-100/80 dark:bg-navy-800/80 border border-navy-200 dark:border-navy-700 hover:border-gold-500/50 hover:bg-gold-500/10 transition-all text-xs sm:text-sm font-medium text-navy-800 dark:text-navy-200 cursor-pointer">
+							<span>💼</span>
+							<span>"Legally reduce my income tax"</span>
+							<span class="text-gold-500 group-hover:translate-y-0.5 transition-transform">↓</span>
+						</button>
+						<button data-intent="hub-retirement" class="intent-btn group flex items-center gap-2 px-4 py-2.5 rounded-full bg-navy-100/80 dark:bg-navy-800/80 border border-navy-200 dark:border-navy-700 hover:border-gold-500/50 hover:bg-gold-500/10 transition-all text-xs sm:text-sm font-medium text-navy-800 dark:text-navy-200 cursor-pointer">
+							<span>🌴</span>
+							<span>"Survive 30+ years of retirement"</span>
+							<span class="text-gold-500 group-hover:translate-y-0.5 transition-transform">↓</span>
+						</button>
+						<button data-intent="hub-insurance" class="intent-btn group flex items-center gap-2 px-4 py-2.5 rounded-full bg-navy-100/80 dark:bg-navy-800/80 border border-navy-200 dark:border-navy-700 hover:border-gold-500/50 hover:bg-gold-500/10 transition-all text-xs sm:text-sm font-medium text-navy-800 dark:text-navy-200 cursor-pointer">
+							<span>📜</span>
+							<span>"Evaluate guaranteed insurance policy ROI"</span>
+							<span class="text-gold-500 group-hover:translate-y-0.5 transition-transform">↓</span>
+						</button>
+						<button data-intent="hub-wealth" class="intent-btn group flex items-center gap-2 px-4 py-2.5 rounded-full bg-navy-100/80 dark:bg-navy-800/80 border border-navy-200 dark:border-navy-700 hover:border-gold-500/50 hover:bg-gold-500/10 transition-all text-xs sm:text-sm font-medium text-navy-800 dark:text-navy-200 cursor-pointer">
+							<span>📈</span>
+							<span>"Calculate required monthly SIP"</span>
+							<span class="text-gold-500 group-hover:translate-y-0.5 transition-transform">↓</span>
+						</button>
+						<button data-intent="hub-hedging" class="intent-btn group flex items-center gap-2 px-4 py-2.5 rounded-full bg-navy-100/80 dark:bg-navy-800/80 border border-navy-200 dark:border-navy-700 hover:border-gold-500/50 hover:bg-gold-500/10 transition-all text-xs sm:text-sm font-medium text-navy-800 dark:text-navy-200 cursor-pointer">
+							<span>🛡️</span>
+							<span>"Protect portfolio from market crashes"</span>
+							<span class="text-gold-500 group-hover:translate-y-0.5 transition-transform">↓</span>
+						</button>
 					</div>
 				</div>
 
-				<!-- Right Column: Floating Preview Card -->
-				<div class="lg:col-span-5 reveal" style="transition-delay: 200ms;">
-					<div class="card-glass rounded-2xl p-6 sm:p-8 space-y-6 relative">
-						<div class="card-glow absolute inset-0 rounded-2xl pointer-events-none"></div>
-						
-						<!-- Mini SWP Preview -->
-						<div class="relative z-10 space-y-5">
-							<div class="flex items-center justify-between">
-								<span class="text-caption text-navy-500 dark:text-navy-400">Retirement Simulation Preview</span>
-								<span class="badge-safe">Live Demo</span>
-							</div>
-
-							<div class="space-y-4">
-								<div class="flex justify-between items-baseline">
-									<span class="stat-label">Portfolio Corpus</span>
-									<span class="stat-value text-xl text-navy-900 dark:text-navy-100">₹1,00,00,000</span>
-								</div>
-								<div class="flex justify-between items-baseline">
-									<span class="stat-label">Monthly Withdrawal</span>
-									<span class="stat-value text-xl text-gold-500">₹50,000</span>
-								</div>
-								<div class="h-px bg-navy-200 dark:bg-navy-700"></div>
-								<div class="flex justify-between items-baseline">
-									<span class="stat-label">Projected Endurance</span>
-									<span class="stat-value text-2xl text-emerald-500">30 Years</span>
-								</div>
-							</div>
-
-							<!-- Mini chart bars -->
-							<div class="flex items-end gap-1 h-20">
-								<div class="flex-1 rounded-t bg-emerald-500/20 dark:bg-emerald-500/30" style="height: 100%"></div>
-								<div class="flex-1 rounded-t bg-emerald-500/25 dark:bg-emerald-500/35" style="height: 95%"></div>
-								<div class="flex-1 rounded-t bg-emerald-500/30 dark:bg-emerald-500/40" style="height: 88%"></div>
-								<div class="flex-1 rounded-t bg-emerald-500/35 dark:bg-emerald-500/45" style="height: 82%"></div>
-								<div class="flex-1 rounded-t bg-emerald-500/40 dark:bg-emerald-500/50" style="height: 75%"></div>
-								<div class="flex-1 rounded-t bg-gold-500/30 dark:bg-gold-500/40" style="height: 68%"></div>
-								<div class="flex-1 rounded-t bg-gold-500/35 dark:bg-gold-500/45" style="height: 60%"></div>
-								<div class="flex-1 rounded-t bg-gold-500/40 dark:bg-gold-500/50" style="height: 52%"></div>
-								<div class="flex-1 rounded-t bg-gold-500/45 dark:bg-gold-500/55" style="height: 44%"></div>
-								<div class="flex-1 rounded-t bg-amber-500/30 dark:bg-amber-500/40" style="height: 35%"></div>
-								<div class="flex-1 rounded-t bg-amber-500/35 dark:bg-amber-500/45" style="height: 28%"></div>
-								<div class="flex-1 rounded-t bg-amber-500/40 dark:bg-amber-500/50" style="height: 20%"></div>
-							</div>
-
-							<p class="text-xs text-navy-400 dark:text-navy-500 text-center">
-								10,000 Monte Carlo simulations • Inflation-adjusted
-							</p>
-						</div>
-					</div>
-				</div>
 			</div>
 		</div>
 	</section>
@@ -100,105 +68,377 @@ const articleEntries = allArticles.slice(0, 3).map(art => [art.id, art.data]);
 	<hr class="section-divider" />
 
 	<!-- ====================================================
-	     CALCULATOR MODULES — Responsive Card Grid
+	     2. SCROLL TEXT HIGHLIGHT NARRATIVE (Etihad-Style typography)
 	     ==================================================== -->
-	<section class="section-glow relative py-16 sm:py-24">
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-			<div class="text-center mb-12 sm:mb-16 reveal">
-				<span class="text-caption text-gold-500">Institutional-Grade Tools</span>
-				<h2 class="text-section text-navy-900 dark:text-navy-100 mt-3">
-					Every Calculator You'll Ever Need
+	<section class="py-16 sm:py-24 bg-navy-900 text-white relative overflow-hidden">
+		<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+			<span class="text-xs font-bold uppercase tracking-widest text-gold-400">The Decision Paradigm Shift</span>
+			<h2 id="highlightText" class="text-xl sm:text-3xl lg:text-4xl font-semibold leading-relaxed sm:leading-relaxed max-w-4xl mx-auto flex flex-wrap justify-center items-center">
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">Most</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">financial</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">tools</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">give</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">you</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">a</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">number</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">and</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">stop</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">there.</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">FinSight</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">connects</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">statutory</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">law,</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">stochastic</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">mathematics,</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">and</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">explainable</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">recommendations</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">so</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">you</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-navy-400 opacity-30">can</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-gold-400 font-bold">make</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-gold-400 font-bold">confident</span>
+				<span class="highlight-word inline-block mr-2 mb-1.5 transition-all duration-200 text-gold-400 font-bold">decisions.</span>
+			</h2>
+		</div>
+	</section>
+
+	<hr class="section-divider" />
+
+	<!-- ====================================================
+	     3. STACKING CARDS DECK (Etihad Bureau Inspired Motion)
+	     Unified Decision Hubs (Problem -> Understanding -> Calculation -> Recommendation)
+	     ==================================================== -->
+	<section class="py-12 sm:py-20 relative">
+		<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+			
+			<div class="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
+				<span class="text-caption text-gold-500">Interactive Decision Frameworks</span>
+				<h2 class="text-section text-navy-900 dark:text-navy-100 mt-2">
+					Explore Decision Hubs
 				</h2>
-				<p class="mt-4 text-navy-500 dark:text-navy-400 max-w-2xl mx-auto leading-relaxed">
-					From retirement planning to options hedging — our engines process millions of computations entirely on your device. Zero data leaves your browser.
+				<p class="mt-2 text-navy-500 dark:text-navy-400 leading-relaxed text-sm sm:text-base">
+					Select or scroll through each decision framework. Deep legal research, calculation engines, and exact recommendations united in one place.
 				</p>
 			</div>
 
-			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 reveal-stagger">
+			<!-- DECK CONTAINER -->
+			<div class="relative space-y-8 md:space-y-12">
 				
-				<!-- SWP Retirement Planner -->
-				<a href="/swp-planner" class="card-premium card-glow rounded-2xl p-7 flex flex-col h-full group reveal cursor-pointer">
-					<div class="w-12 h-12 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/15 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-						<svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" /></svg>
-					</div>
-					<h3 class="text-card-title text-navy-900 dark:text-navy-100 mb-2">SWP Retirement Planner</h3>
-					<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed flex-grow">
-						10,000 Monte Carlo simulations stress-testing your retirement corpus against inflation, market volatility, and LTCG tax friction.
-					</p>
-					<div class="mt-5 flex items-center gap-2 text-xs font-semibold text-gold-500 group-hover:gap-3 transition-all duration-300">
-						Launch Simulator <span class="text-sm">→</span>
-					</div>
-				</a>
+				<!-- STACK CARD 1: TAX OPTIMIZATION -->
+				<div id="hub-tax" class="relative z-10 bg-white dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-3xl p-5 sm:p-8 lg:p-10 shadow-xl scroll-mt-24">
+					<div class="space-y-6 sm:space-y-8">
+						<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-navy-200 dark:border-navy-800 pb-5">
+							<div class="space-y-1.5">
+								<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold uppercase tracking-wider">
+									<span>💼 Decision #1</span>
+									<span>•</span>
+									<span>Tax Optimization</span>
+								</div>
+								<h3 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-navy-900 dark:text-navy-100">
+									"How can I legally minimize my direct income tax?"
+								</h3>
+								<p class="text-xs sm:text-sm text-navy-500 dark:text-navy-400 max-w-2xl">
+									Don't just calculate tax liability — compare New vs Old Regime, analyze Section 87A rebate denial traps, and optimize statutory deductions (44ADA, HRA, 80C).
+								</p>
+							</div>
+							<a href="/tax-calculator" class="btn-gold shrink-0 text-center text-xs sm:text-sm">
+								Open Tax Engine →
+							</a>
+						</div>
 
-				<!-- SIP Accumulation Engine -->
-				<a href="/sip-engine" class="card-premium card-glow rounded-2xl p-7 flex flex-col h-full group reveal cursor-pointer">
-					<div class="w-12 h-12 rounded-xl bg-gold-500/10 dark:bg-gold-500/15 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-						<svg class="w-6 h-6 text-gold-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" /></svg>
-					</div>
-					<h3 class="text-card-title text-navy-900 dark:text-navy-100 mb-2">SIP Accumulation Engine</h3>
-					<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed flex-grow">
-						Stochastic purchasing power simulator with multi-asset GBM, goal-seek reverse mode, and optional Black-Scholes put hedging.
-					</p>
-					<div class="mt-5 flex items-center gap-2 text-xs font-semibold text-gold-500 group-hover:gap-3 transition-all duration-300">
-						Launch Engine <span class="text-sm">→</span>
-					</div>
-				</a>
+						<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+							<!-- Step 1 & 2: Problem & Research -->
+							<div class="lg:col-span-7 space-y-3">
+								<span class="text-xs font-bold uppercase tracking-widest text-navy-400 dark:text-navy-500 block">1. Legal & Research Foundation</span>
+								<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+									<a href="/tax-code/new-vs-old-regime-guide" class="p-3.5 rounded-2xl bg-navy-50 dark:bg-navy-800/60 border border-navy-200 dark:border-navy-700/80 hover:border-gold-500/50 transition-all space-y-1 group">
+										<span class="text-[10px] font-bold text-amber-500 uppercase">Regime Selection</span>
+										<h5 class="text-xs sm:text-sm font-bold text-navy-900 dark:text-navy-100 group-hover:text-gold-500 transition-colors">New vs Old Break-Even Guide</h5>
+										<p class="text-[11px] sm:text-xs text-navy-500 dark:text-navy-400 line-clamp-2">Exact deduction threshold where Old Regime beats New Regime.</p>
+									</a>
+									<a href="/tax-code/44ad-vs-44ada-freelance-trap" class="p-3.5 rounded-2xl bg-navy-50 dark:bg-navy-800/60 border border-navy-200 dark:border-navy-700/80 hover:border-gold-500/50 transition-all space-y-1 group">
+										<span class="text-[10px] font-bold text-amber-500 uppercase">Presumptive Tax</span>
+										<h5 class="text-xs sm:text-sm font-bold text-navy-900 dark:text-navy-100 group-hover:text-gold-500 transition-colors">44ADA Freelance & Consultant Rules</h5>
+										<p class="text-[11px] sm:text-xs text-navy-500 dark:text-navy-400 line-clamp-2">Pay tax on only 50% of gross receipts legally under Section 44ADA.</p>
+									</a>
+									<a href="/tax-code/rent-to-parents-hra-exemption-guide" class="p-3.5 rounded-2xl bg-navy-50 dark:bg-navy-800/60 border border-navy-200 dark:border-navy-700/80 hover:border-gold-500/50 transition-all space-y-1 group">
+										<span class="text-[10px] font-bold text-amber-500 uppercase">HRA Exemption</span>
+										<h5 class="text-xs sm:text-sm font-bold text-navy-900 dark:text-navy-100 group-hover:text-gold-500 transition-colors">Rent to Parents Exemption</h5>
+										<p class="text-[11px] sm:text-xs text-navy-500 dark:text-navy-400 line-clamp-2">Complete legal framework and banking paper trail rules.</p>
+									</a>
+									<a href="/tax-code/section-87a-rebate-denial-trap" class="p-3.5 rounded-2xl bg-navy-50 dark:bg-navy-800/60 border border-navy-200 dark:border-navy-700/80 hover:border-gold-500/50 transition-all space-y-1 group">
+										<span class="text-[10px] font-bold text-amber-500 uppercase">Notice Prevention</span>
+										<h5 class="text-xs sm:text-sm font-bold text-navy-900 dark:text-navy-100 group-hover:text-gold-500 transition-colors">Section 87A Rebate Denial Trap</h5>
+										<p class="text-[11px] sm:text-xs text-navy-500 dark:text-navy-400 line-clamp-2">Why short-term capital gains ruin 87A tax rebates.</p>
+									</a>
+								</div>
+							</div>
 
-				<!-- Insurance ROI Analyzer -->
-				<a href="/insurance-analyzer" class="card-premium card-glow rounded-2xl p-7 flex flex-col h-full group reveal cursor-pointer">
-					<div class="w-12 h-12 rounded-xl bg-navy-500/10 dark:bg-navy-500/15 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-						<svg class="w-6 h-6 text-navy-600 dark:text-navy-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" /></svg>
+							<!-- Step 3 & 4: Calculation & Actionable Decision -->
+							<div class="lg:col-span-5 bg-gold-500/10 dark:bg-navy-800/90 border border-gold-500/30 rounded-2xl p-5 flex flex-col justify-between space-y-4">
+								<div class="space-y-2.5">
+									<div class="flex items-center justify-between">
+										<span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gold-600 dark:text-gold-400">2. Decision Recommendation</span>
+										<span class="badge-safe text-[10px]">FY 2025-26</span>
+									</div>
+									<h4 class="text-sm sm:text-base font-bold text-navy-900 dark:text-navy-100">Key Decision Rule</h4>
+									<ul class="text-xs text-navy-700 dark:text-navy-300 space-y-2 leading-relaxed">
+										<li class="flex items-start gap-2">
+											<span class="text-emerald-500 font-bold">✓</span>
+											<span>If total deductions exceed <strong>₹3,75,000</strong>, the <strong>Old Tax Regime</strong> saves more cash.</span>
+										</li>
+										<li class="flex items-start gap-2">
+											<span class="text-emerald-500 font-bold">✓</span>
+											<span>If income is below <strong>₹12,00,000</strong> under New Regime, tax is effectively <strong>₹0</strong> with 87A.</span>
+										</li>
+									</ul>
+								</div>
+								<a href="/tax-calculator" class="w-full btn-gold text-center py-2.5 text-xs font-bold uppercase tracking-wider">
+									Run Line-By-Line Tax Comparison
+								</a>
+							</div>
+						</div>
 					</div>
-					<h3 class="text-card-title text-navy-900 dark:text-navy-100 mb-2">Insurance ROI Analyzer</h3>
-					<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed flex-grow">
-						Unmask guaranteed income policy returns with Newton-Raphson XIRR, inflation-adjusted PV, and synthetic 3-way replication.
-					</p>
-					<div class="mt-5 flex items-center gap-2 text-xs font-semibold text-gold-500 group-hover:gap-3 transition-all duration-300">
-						Analyze Policy <span class="text-sm">→</span>
-					</div>
-				</a>
-
-				<!-- Options Pricing Lab -->
-				<a href="/black-scholes" class="card-premium card-glow rounded-2xl p-7 flex flex-col h-full group reveal cursor-pointer">
-					<div class="w-12 h-12 rounded-xl bg-rose-500/10 dark:bg-rose-500/15 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-						<svg class="w-6 h-6 text-rose-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6" /></svg>
-					</div>
-					<h3 class="text-card-title text-navy-900 dark:text-navy-100 mb-2">Options Pricing Lab</h3>
-					<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed flex-grow">
-						Interactive Black-Scholes engine for European options. Premiums, d₁/d₂ probabilities, and all Greeks (Δ, Γ, Θ, ν) in real-time.
-					</p>
-					<div class="mt-5 flex items-center gap-2 text-xs font-semibold text-gold-500 group-hover:gap-3 transition-all duration-300">
-						Price Options <span class="text-sm">→</span>
-					</div>
-				</a>
-
-				<!-- Direct Tax Code 2025 -->
-				<a href="/tax-code" class="card-premium card-glow rounded-2xl p-7 flex flex-col h-full group reveal cursor-pointer">
-					<div class="w-12 h-12 rounded-xl bg-amber-500/10 dark:bg-amber-500/15 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-						<svg class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
-					</div>
-					<h3 class="text-card-title text-navy-900 dark:text-navy-100 mb-2">Direct Tax Code 2025</h3>
-					<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed flex-grow">
-						New vs Old Regime comparison, slab calculators, and long-form whitepapers with embedded interactive workbenches.
-					</p>
-					<div class="mt-5 flex items-center gap-2 text-xs font-semibold text-gold-500 group-hover:gap-3 transition-all duration-300">
-						Explore Tax Code <span class="text-sm">→</span>
-					</div>
-				</a>
-
-				<!-- GST Hub — Coming Soon -->
-				<div class="card-premium rounded-2xl p-7 flex flex-col h-full reveal opacity-70 relative overflow-hidden">
-					<div class="absolute top-4 right-4">
-						<span class="badge-gold">Coming Soon</span>
-					</div>
-					<div class="w-12 h-12 rounded-xl bg-navy-200/50 dark:bg-navy-800/50 flex items-center justify-center mb-5">
-						<svg class="w-6 h-6 text-navy-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>
-					</div>
-					<h3 class="text-card-title text-navy-900 dark:text-navy-100 mb-2">GST Intelligence Hub</h3>
-					<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed flex-grow">
-						GST slab calculator, ITC eligibility checker, GSTR filing tracker, and 50 expert whitepapers on Goods & Services Tax.
-					</p>
 				</div>
+
+				<!-- STACK CARD 2: RETIREMENT LONGEVITY -->
+				<div id="hub-retirement" class="relative z-20 bg-white dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-3xl p-5 sm:p-8 lg:p-10 shadow-xl scroll-mt-24">
+					<div class="space-y-6 sm:space-y-8">
+						<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-navy-200 dark:border-navy-800 pb-5">
+							<div class="space-y-1.5">
+								<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider">
+									<span>🌴 Decision #2</span>
+									<span>•</span>
+									<span>Retirement Longevity</span>
+								</div>
+								<h3 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-navy-900 dark:text-navy-100">
+									"Will my corpus survive 30+ years of retirement?"
+								</h3>
+								<p class="text-xs sm:text-sm text-navy-500 dark:text-navy-400 max-w-2xl">
+									Stress-test your SWP withdrawals against market sequence-of-returns risk, inflation compounding, and capital gains tax friction over 10,000 Monte Carlo simulations.
+								</p>
+							</div>
+							<a href="/swp-planner" class="btn-gold shrink-0 text-center text-xs sm:text-sm">
+								Launch SWP Monte Carlo →
+							</a>
+						</div>
+
+						<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+							<div class="lg:col-span-7 space-y-3">
+								<span class="text-xs font-bold uppercase tracking-widest text-navy-400 dark:text-navy-500 block">1. Retirement Tax & Friction Analysis</span>
+								<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+									<a href="/tax-code/capital-markets-ltcg-budget-guide" class="p-3.5 rounded-2xl bg-navy-50 dark:bg-navy-800/60 border border-navy-200 dark:border-navy-700/80 hover:border-gold-500/50 transition-all space-y-1 group">
+										<span class="text-[10px] font-bold text-emerald-500 uppercase">Capital Gains</span>
+										<h5 class="text-xs sm:text-sm font-bold text-navy-900 dark:text-navy-100 group-hover:text-gold-500 transition-colors">New LTCG & STCG Tax Rules</h5>
+										<p class="text-[11px] sm:text-xs text-navy-500 dark:text-navy-400 line-clamp-2">How 12.5% LTCG affects safe withdrawal rate.</p>
+									</a>
+									<a href="/tax-code/debt-mutual-fund-massacre" class="p-3.5 rounded-2xl bg-navy-50 dark:bg-navy-800/60 border border-navy-200 dark:border-navy-700/80 hover:border-gold-500/50 transition-all space-y-1 group">
+										<span class="text-[10px] font-bold text-emerald-500 uppercase">Fixed Income</span>
+										<h5 class="text-xs sm:text-sm font-bold text-navy-900 dark:text-navy-100 group-hover:text-gold-500 transition-colors">Debt Mutual Fund Tax Rules</h5>
+										<p class="text-[11px] sm:text-xs text-navy-500 dark:text-navy-400 line-clamp-2">Slab-rate taxation on conservative debt allocations.</p>
+									</a>
+								</div>
+							</div>
+
+							<div class="lg:col-span-5 bg-emerald-500/10 dark:bg-navy-800/90 border border-emerald-500/30 rounded-2xl p-5 flex flex-col justify-between space-y-4">
+								<div class="space-y-2.5">
+									<div class="flex items-center justify-between">
+										<span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">2. Decision Recommendation</span>
+										<span class="badge-safe text-[10px]">10k Monte Carlo</span>
+									</div>
+									<h4 class="text-sm sm:text-base font-bold text-navy-900 dark:text-navy-100">Safe Withdrawal Rule</h4>
+									<ul class="text-xs text-navy-700 dark:text-navy-300 space-y-2 leading-relaxed">
+										<li class="flex items-start gap-2">
+											<span class="text-emerald-500 font-bold">✓</span>
+											<span>Keep initial SWP rate below <strong>4.0% - 4.5%</strong> for 95%+ 30-year survival.</span>
+										</li>
+										<li class="flex items-start gap-2">
+											<span class="text-emerald-500 font-bold">✓</span>
+											<span>Rebalance equity/debt annually to insulate against sequence risk.</span>
+										</li>
+									</ul>
+								</div>
+								<a href="/swp-planner" class="w-full btn-gold text-center py-2.5 text-xs font-bold uppercase tracking-wider">
+									Simulate 30-Year Survival
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- STACK CARD 3: INSURANCE DECONSTRUCTION -->
+				<div id="hub-insurance" class="relative z-30 bg-white dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-3xl p-5 sm:p-8 lg:p-10 shadow-xl scroll-mt-24">
+					<div class="space-y-6 sm:space-y-8">
+						<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-navy-200 dark:border-navy-800 pb-5">
+							<div class="space-y-1.5">
+								<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-wider">
+									<span>📜 Decision #3</span>
+									<span>•</span>
+									<span>Insurance Deconstruction</span>
+								</div>
+								<h3 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-navy-900 dark:text-navy-100">
+									"Is my guaranteed income policy actually a good investment?"
+								</h3>
+								<p class="text-xs sm:text-sm text-navy-500 dark:text-navy-400 max-w-2xl">
+									Strip away insurance brochure marketing. Use Newton-Raphson solvers to calculate the true XIRR and compare against Buy Term + Invest the Rest.
+								</p>
+							</div>
+							<a href="/insurance-analyzer" class="btn-gold shrink-0 text-center text-xs sm:text-sm">
+								Deconstruct Policy →
+							</a>
+						</div>
+
+						<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+							<div class="lg:col-span-7 space-y-3">
+								<span class="text-xs font-bold uppercase tracking-widest text-navy-400 dark:text-navy-500 block">1. Legal & Tax Frame</span>
+								<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+									<a href="/tax-code/influencer-barter-trap-194r" class="p-3.5 rounded-2xl bg-navy-50 dark:bg-navy-800/60 border border-navy-200 dark:border-navy-700/80 hover:border-gold-500/50 transition-all space-y-1 group">
+										<span class="text-[10px] font-bold text-blue-500 uppercase">Maturity Tax</span>
+										<h5 class="text-xs sm:text-sm font-bold text-navy-900 dark:text-navy-100 group-hover:text-gold-500 transition-colors">Section 10(10D) Exemption Rules</h5>
+										<p class="text-[11px] sm:text-xs text-navy-500 dark:text-navy-400 line-clamp-2">The ₹5 Lakh annual premium ceiling for tax-free maturity.</p>
+									</a>
+								</div>
+							</div>
+
+							<div class="lg:col-span-5 bg-blue-500/10 dark:bg-navy-800/90 border border-blue-500/30 rounded-2xl p-5 flex flex-col justify-between space-y-4">
+								<div class="space-y-2.5">
+									<div class="flex items-center justify-between">
+										<span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">2. Decision Recommendation</span>
+										<span class="badge-safe text-[10px]">XIRR Math</span>
+									</div>
+									<h4 class="text-sm sm:text-base font-bold text-navy-900 dark:text-navy-100">True Return Verdict</h4>
+									<ul class="text-xs text-navy-700 dark:text-navy-300 space-y-2 leading-relaxed">
+										<li class="flex items-start gap-2">
+											<span class="text-amber-500 font-bold">!</span>
+											<span>Most endowment plans offer real returns of only <strong>4.8% - 5.5% XIRR</strong> — barely beating inflation.</span>
+										</li>
+										<li class="flex items-start gap-2">
+											<span class="text-emerald-500 font-bold">✓</span>
+											<span>Separating Pure Term Insurance from Mutual Funds yields up to <strong>3x greater wealth</strong>.</span>
+										</li>
+									</ul>
+								</div>
+								<a href="/insurance-analyzer" class="w-full btn-gold text-center py-2.5 text-xs font-bold uppercase tracking-wider">
+									Calculate Real Policy XIRR
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- STACK CARD 4: WEALTH ACCUMULATION -->
+				<div id="hub-wealth" class="relative z-40 bg-white dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-3xl p-5 sm:p-8 lg:p-10 shadow-xl scroll-mt-24">
+					<div class="space-y-6 sm:space-y-8">
+						<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-navy-200 dark:border-navy-800 pb-5">
+							<div class="space-y-1.5">
+								<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold-500/10 text-gold-600 dark:text-gold-400 text-xs font-bold uppercase tracking-wider">
+									<span>📈 Decision #4</span>
+									<span>•</span>
+									<span>SIP & Wealth Building</span>
+								</div>
+								<h3 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-navy-900 dark:text-navy-100">
+									"How much monthly SIP do I need for my target wealth?"
+								</h3>
+								<p class="text-xs sm:text-sm text-navy-500 dark:text-navy-400 max-w-2xl">
+									Simulate multi-asset purchasing power, annual step-up SIP compounding, and reverse goal-seek to know your exact required monthly contribution.
+								</p>
+							</div>
+							<a href="/sip-engine" class="btn-gold shrink-0 text-center text-xs sm:text-sm">
+								Launch SIP Engine →
+							</a>
+						</div>
+
+						<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+							<div class="lg:col-span-7 space-y-3">
+								<span class="text-xs font-bold uppercase tracking-widest text-navy-400 dark:text-navy-500 block">1. Wealth Strategy Guides</span>
+								<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+									<a href="/tax-code/foreign-remittance-lrs-tcs-guide" class="p-3.5 rounded-2xl bg-navy-50 dark:bg-navy-800/60 border border-navy-200 dark:border-navy-700/80 hover:border-gold-500/50 transition-all space-y-1 group">
+										<span class="text-[10px] font-bold text-gold-500 uppercase">Global Investing</span>
+										<h5 class="text-xs sm:text-sm font-bold text-navy-900 dark:text-navy-100 group-hover:text-gold-500 transition-colors">LRS Remittance & TCS Guide</h5>
+										<p class="text-[11px] sm:text-xs text-navy-500 dark:text-navy-400 line-clamp-2">Navigating 20% TCS on foreign stocks and US ETF investments.</p>
+									</a>
+								</div>
+							</div>
+
+							<div class="lg:col-span-5 bg-gold-500/10 dark:bg-navy-800/90 border border-gold-500/30 rounded-2xl p-5 flex flex-col justify-between space-y-4">
+								<div class="space-y-2.5">
+									<div class="flex items-center justify-between">
+										<span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gold-600 dark:text-gold-400">2. Decision Recommendation</span>
+										<span class="badge-safe text-[10px]">Step-Up Power</span>
+									</div>
+									<h4 class="text-sm sm:text-base font-bold text-navy-900 dark:text-navy-100">Step-Up SIP Rule</h4>
+									<ul class="text-xs text-navy-700 dark:text-navy-300 space-y-2 leading-relaxed">
+										<li class="flex items-start gap-2">
+											<span class="text-emerald-500 font-bold">✓</span>
+											<span>Increasing your SIP by <strong>10% annually</strong> cuts required time by almost <strong>30%</strong> to reach ₹1 Cr real value.</span>
+										</li>
+									</ul>
+								</div>
+								<a href="/sip-engine" class="w-full btn-gold text-center py-2.5 text-xs font-bold uppercase tracking-wider">
+									Run SIP Goal Calculation
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- STACK CARD 5: DOWNSIDE PROTECTION -->
+				<div id="hub-hedging" class="relative z-50 bg-white dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-3xl p-5 sm:p-8 lg:p-10 shadow-xl scroll-mt-24">
+					<div class="space-y-6 sm:space-y-8">
+						<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-navy-200 dark:border-navy-800 pb-5">
+							<div class="space-y-1.5">
+								<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 text-xs font-bold uppercase tracking-wider">
+									<span>🛡️ Decision #5</span>
+									<span>•</span>
+									<span>Derivatives & Hedging</span>
+								</div>
+								<h3 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-navy-900 dark:text-navy-100">
+									"How do I protect my equity portfolio from severe drawdowns?"
+								</h3>
+								<p class="text-xs sm:text-sm text-navy-500 dark:text-navy-400 max-w-2xl">
+									Price European put options using Black-Scholes formulas and evaluate option Greeks (Delta, Gamma, Theta, Vega) to calculate annual hedging drag vs crash protection.
+								</p>
+							</div>
+							<a href="/black-scholes" class="btn-gold shrink-0 text-center text-xs sm:text-sm">
+								Launch Options Lab →
+							</a>
+						</div>
+
+						<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+							<div class="lg:col-span-7 space-y-3">
+								<span class="text-xs font-bold uppercase tracking-widest text-navy-400 dark:text-navy-500 block">1. Risk & F&O Taxation</span>
+								<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+									<a href="/tax-code/fo-trading-loss-setoff-guide" class="p-3.5 rounded-2xl bg-navy-50 dark:bg-navy-800/60 border border-navy-200 dark:border-navy-700/80 hover:border-gold-500/50 transition-all space-y-1 group">
+										<span class="text-[10px] font-bold text-rose-500 uppercase">F&O Tax Rules</span>
+										<h5 class="text-xs sm:text-sm font-bold text-navy-900 dark:text-navy-100 group-hover:text-gold-500 transition-colors">F&O Loss Setoff & Tax Audit Guide</h5>
+										<p class="text-[11px] sm:text-xs text-navy-500 dark:text-navy-400 line-clamp-2">How to set off derivative losses and calculate turnover under 44AB.</p>
+									</a>
+								</div>
+							</div>
+
+							<div class="lg:col-span-5 bg-rose-500/10 dark:bg-navy-800/90 border border-rose-500/30 rounded-2xl p-5 flex flex-col justify-between space-y-4">
+								<div class="space-y-2.5">
+									<div class="flex items-center justify-between">
+										<span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">2. Decision Recommendation</span>
+										<span class="badge-safe text-[10px]">Black-Scholes</span>
+									</div>
+									<h4 class="text-sm sm:text-base font-bold text-navy-900 dark:text-navy-100">Hedging Cost Tradeoff</h4>
+									<ul class="text-xs text-navy-700 dark:text-navy-300 space-y-2 leading-relaxed">
+										<li class="flex items-start gap-2">
+											<span class="text-rose-500 font-bold">!</span>
+											<span>Rolling put option protection incurs an annual premium drag of approximately <strong>1.5% - 2.2%</strong> on equity returns.</span>
+										</li>
+									</ul>
+								</div>
+								<a href="/black-scholes" class="w-full btn-gold text-center py-2.5 text-xs font-bold uppercase tracking-wider">
+									Price Options & Greeks
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
 			</div>
 		</div>
 	</section>
@@ -206,74 +446,43 @@ const articleEntries = allArticles.slice(0, 3).map(art => [art.id, art.data]);
 	<hr class="section-divider" />
 
 	<!-- ====================================================
-	     TRUST SIGNALS — By The Numbers
+	     4. ALL RESEARCH WHITEPAPERS GRID
 	     ==================================================== -->
 	<section class="py-16 sm:py-24">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 reveal-stagger">
-				<div class="text-center reveal">
-					<div class="stat-value text-3xl sm:text-4xl text-navy-900 dark:text-navy-100">10,000</div>
-					<p class="stat-label mt-2">Monte Carlo Simulations</p>
-					<p class="text-xs text-navy-400 dark:text-navy-500 mt-1">Per retirement scenario</p>
-				</div>
-				<div class="text-center reveal">
-					<div class="stat-value text-3xl sm:text-4xl text-gold-500">100%</div>
-					<p class="stat-label mt-2">Client-Side Processing</p>
-					<p class="text-xs text-navy-400 dark:text-navy-500 mt-1">Zero data leaves your device</p>
-				</div>
-				<div class="text-center reveal">
-					<div class="stat-value text-3xl sm:text-4xl text-navy-900 dark:text-navy-100">5+</div>
-					<p class="stat-label mt-2">Quantitative Engines</p>
-					<p class="text-xs text-navy-400 dark:text-navy-500 mt-1">SWP, SIP, Insurance, Options, Tax</p>
-				</div>
-				<div class="text-center reveal">
-					<div class="stat-value text-3xl sm:text-4xl text-emerald-500">₹0</div>
-					<p class="stat-label mt-2">Completely Free</p>
-					<p class="text-xs text-navy-400 dark:text-navy-500 mt-1">No ads, no subscriptions, forever</p>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<hr class="section-divider" />
-
-	<!-- ====================================================
-	     FEATURED TAX RESEARCH ARTICLES
-	     ==================================================== -->
-	<section class="section-glow relative py-16 sm:py-24">
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-			<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10 reveal">
+			<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10">
 				<div>
-					<span class="text-caption text-gold-500">Expert Research</span>
+					<span class="text-caption text-gold-500">Tax Research Repository</span>
 					<h2 class="text-section text-navy-900 dark:text-navy-100 mt-2">
-						Latest Tax Whitepapers
+						Deep-Dive Analysis & Legal Guides
 					</h2>
+					<p class="text-xs sm:text-sm text-navy-500 dark:text-navy-400 mt-1">Understanding the legal code before computing numbers.</p>
 				</div>
 				<a href="/tax-code" class="btn-ghost text-sm">
-					View All Articles <span>→</span>
+					View All {articleCount} Articles <span>→</span>
 				</a>
 			</div>
 
-			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 reveal-stagger">
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 				{articleEntries.map(([slug, article]) => (
-					<a href={`/tax-code/${slug}`} class="card-premium rounded-2xl overflow-hidden group reveal cursor-pointer">
-						<!-- Category Header -->
+					<a href={`/tax-code/${slug}`} class="card-premium rounded-2xl overflow-hidden group reveal cursor-pointer flex flex-col h-full">
 						<div class="px-6 py-4 bg-navy-50 dark:bg-navy-800/50 border-b border-navy-200 dark:border-navy-700">
 							<div class="flex items-center justify-between">
 								<span class="badge-gold">{article.categoryName}</span>
 								<span class="text-xs text-navy-400 dark:text-navy-500">{article.readTime}</span>
 							</div>
 						</div>
-						<!-- Content -->
-						<div class="p-6 space-y-3">
-							<h3 class="text-card-title text-navy-900 dark:text-navy-100 group-hover:text-gold-500 transition-colors line-clamp-2">
-								{article.title}
-							</h3>
-							<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed line-clamp-3">
-								{article.summary}
-							</p>
-							<div class="flex items-center gap-2 text-xs font-semibold text-gold-500 group-hover:gap-3 transition-all duration-300 pt-2">
-								Read Whitepaper <span class="text-sm">→</span>
+						<div class="p-6 space-y-3 flex-grow flex flex-col justify-between">
+							<div>
+								<h3 class="text-card-title text-navy-900 dark:text-navy-100 group-hover:text-gold-500 transition-colors line-clamp-2">
+									{article.title}
+								</h3>
+								<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed line-clamp-3 mt-2">
+									{article.summary}
+								</p>
+							</div>
+							<div class="flex items-center gap-2 text-xs font-semibold text-gold-500 group-hover:gap-3 transition-all duration-300 pt-4">
+								Read Analysis <span class="text-sm">→</span>
 							</div>
 						</div>
 					</a>
@@ -285,26 +494,117 @@ const articleEntries = allArticles.slice(0, 3).map(art => [art.id, art.data]);
 	<hr class="section-divider" />
 
 	<!-- ====================================================
-	     BOTTOM CTA SECTION
+	     5. TRUST & TRANSPARENCY SIGNALS
 	     ==================================================== -->
-	<section class="hero-glow relative py-20 sm:py-28">
-		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 reveal">
-			<h2 class="text-section text-navy-900 dark:text-navy-100">
-				Your Financial Future
-				<span class="text-gradient-gold"> Deserves Better Tools.</span>
-			</h2>
-			<p class="mt-5 text-lg text-navy-500 dark:text-navy-400 max-w-2xl mx-auto leading-relaxed">
-				Stop guessing. Start simulating. Every calculation runs 100% on your device — your financial data never touches a server.
-			</p>
-			<div class="flex flex-col sm:flex-row justify-center gap-4 mt-10">
-				<a href="/swp-planner" class="btn-gold text-center">
-					Start Planning Your Retirement
-				</a>
-				<a href="/sip-engine" class="btn-ghost text-center">
-					Build Your Wealth with SIPs
-				</a>
+	<section class="py-16 sm:py-24 bg-navy-50/50 dark:bg-navy-900/40">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 text-center">
+				<div>
+					<div class="stat-value text-3xl sm:text-4xl text-navy-900 dark:text-navy-100">100%</div>
+					<p class="stat-label mt-2">Client-Side Processing</p>
+					<p class="text-xs text-navy-400 dark:text-navy-500 mt-1">Zero financial data leaves your browser</p>
+				</div>
+				<div>
+					<div class="stat-value text-3xl sm:text-4xl text-gold-500">0</div>
+					<p class="stat-label mt-2">Product Commissions</p>
+					<p class="text-xs text-navy-400 dark:text-navy-500 mt-1">Unbiased math without affiliate kickbacks</p>
+				</div>
+				<div>
+					<div class="stat-value text-3xl sm:text-4xl text-emerald-500">10,000</div>
+					<p class="stat-label mt-2">Monte Carlo Simulations</p>
+					<p class="text-xs text-navy-400 dark:text-navy-500 mt-1">Full stochastic distribution modeling</p>
+				</div>
+				<div>
+					<div class="stat-value text-3xl sm:text-4xl text-navy-900 dark:text-navy-100">{articleCount}</div>
+					<p class="stat-label mt-2">Tax Research Guides</p>
+					<p class="text-xs text-navy-400 dark:text-navy-500 mt-1">Written with statutory law references</p>
+				</div>
 			</div>
 		</div>
 	</section>
 
 </Layout>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const highlightContainer = document.getElementById('highlightText');
+		const words = document.querySelectorAll('.highlight-word');
+		const buttons = document.querySelectorAll('.intent-btn');
+
+		// 1. Intent pill smooth scrolling
+		buttons.forEach(btn => {
+			btn.addEventListener('click', () => {
+				const targetId = btn.getAttribute('data-intent');
+				if (!targetId) return;
+				const targetCard = document.getElementById(targetId);
+				if (targetCard) {
+					// Clear the navbar
+					const cardTopOffset = 88;
+
+					const cardPosition = targetCard.getBoundingClientRect().top + window.pageYOffset;
+					const offsetPosition = cardPosition - cardTopOffset;
+
+					window.scrollTo({
+						top: Math.max(0, offsetPosition),
+						behavior: 'smooth'
+					});
+
+					targetCard.classList.add('ring-2', 'ring-gold-500');
+					setTimeout(() => {
+						targetCard.classList.remove('ring-2', 'ring-gold-500');
+					}, 2000);
+				}
+			});
+		});
+
+		// 2. High-performance scroll animation handlers
+		function updateWordHighlight() {
+			if (!highlightContainer || words.length === 0) return;
+			const rect = highlightContainer.getBoundingClientRect();
+			const windowHeight = window.innerHeight;
+
+			const start = windowHeight * 0.85;
+			const end = windowHeight * 0.25;
+
+			let progress = (start - rect.top) / (start - end);
+			progress = Math.max(0, Math.min(1, progress));
+
+			const activeIndex = Math.floor(progress * words.length);
+
+			words.forEach((word, idx) => {
+				if (idx <= activeIndex) {
+					word.classList.remove('text-navy-400', 'opacity-30');
+					word.classList.add('opacity-100');
+					if (!word.classList.contains('text-gold-400')) {
+						word.classList.add('text-white');
+					}
+				} else {
+					word.classList.add('text-navy-400', 'opacity-30');
+					word.classList.remove('opacity-100');
+					if (!word.classList.contains('text-gold-400')) {
+						word.classList.remove('text-white');
+					}
+				}
+			});
+		}
+
+		// Optimized single-ticking 60fps scroll & resize listener
+		let isTicking = false;
+		function onScrollOrResize() {
+			if (!isTicking) {
+				window.requestAnimationFrame(() => {
+					updateWordHighlight();
+					isTicking = false;
+				});
+				isTicking = true;
+			}
+		}
+
+		window.addEventListener('scroll', onScrollOrResize, { passive: true });
+		window.addEventListener('resize', onScrollOrResize, { passive: true });
+
+		// Initial execution
+		updateWordHighlight();
+	});
+</script>
+
