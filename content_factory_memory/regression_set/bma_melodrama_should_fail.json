@@ -1,0 +1,7 @@
+{
+  "case_id": "bma_melodrama_should_fail",
+  "gate": "gate2_draft",
+  "input": "Getting this notice feels like a ransom demand from the taxman - your $50 account has been taken hostage and the department is holding it for a ten lakh rupee ransom.",
+  "expected_result": "FAIL",
+  "note": "Should fail M10 (banned filler/melodrama - 'ransom' is explicitly on the Part F ban list). This case exists specifically to catch a future rule change that accidentally loosens M10 enforcement - a regression set with only PASS cases would never notice that."
+}
