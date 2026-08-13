@@ -1,0 +1,79 @@
+---
+---
+<div class="w-full bg-slate-50 dark:bg-slate-900 rounded-2xl p-6 sm:p-10 my-8 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden font-sans">
+  
+  <!-- Magazine-style grid background -->
+  <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+  
+  <div class="relative z-10 flex flex-col items-center w-full">
+    <div class="text-center mb-10">
+        <h3 class="text-slate-800 dark:text-slate-200 text-sm sm:text-base font-black tracking-[0.2em] uppercase mb-2">Foreign Software Payments</h3>
+        <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm max-w-xl mx-auto">
+          The moment you swipe your corporate card, your GST obligation splits into two distinct paths.
+        </p>
+    </div>
+    
+    <!-- Responsive Tree Structure using Flexbox -->
+    <div class="flex flex-col items-center w-full mt-4">
+      
+      <!-- Root Node (Card Swipe) -->
+      <div class="relative flex flex-col items-center">
+        <div class="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 shadow-md flex items-center justify-center z-10 relative overflow-hidden">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+          </svg>
+        </div>
+        <div class="mt-3 px-4 py-1.5 bg-white dark:bg-slate-800 rounded-full text-xs font-bold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shadow-sm tracking-wide uppercase">
+          Company Card Swipe
+        </div>
+      </div>
+      
+      <!-- Vertical Trunk -->
+      <div class="w-0.5 h-8 bg-slate-300 dark:bg-slate-700"></div>
+      
+      <!-- Branches Container -->
+      <div class="flex justify-between w-full max-w-2xl relative">
+         <!-- Horizontal Bar bridging the two columns -->
+         <!-- Spans from 25% (center of left column) to 75% (center of right column) -->
+         <div class="absolute top-0 left-[25%] right-[25%] h-0.5 bg-slate-300 dark:bg-slate-700"></div>
+         
+         <!-- Left Branch -->
+         <div class="flex flex-col items-center w-1/2 px-2 sm:px-6">
+           <div class="w-0.5 h-8 bg-slate-300 dark:bg-slate-700"></div>
+           <div class="w-full mt-0 bg-white dark:bg-slate-800 border-t-4 border-emerald-500 rounded-xl p-5 flex flex-col items-center text-center shadow-md">
+              <div class="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900 flex items-center justify-center mb-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div class="text-emerald-700 dark:text-emerald-400 font-bold uppercase text-xs sm:text-sm tracking-wider">
+                Seller Charged Indian GST
+              </div>
+              <div class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">
+                Standard ITC Claim
+              </div>
+           </div>
+         </div>
+         
+         <!-- Right Branch -->
+         <div class="flex flex-col items-center w-1/2 px-2 sm:px-6">
+           <div class="w-0.5 h-8 bg-slate-300 dark:bg-slate-700"></div>
+           <div class="w-full mt-0 bg-white dark:bg-slate-800 border-t-4 border-amber-500 rounded-xl p-5 flex flex-col items-center text-center shadow-md">
+              <div class="w-10 h-10 rounded-full bg-amber-50 dark:bg-amber-900 flex items-center justify-center mb-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <div class="text-amber-700 dark:text-amber-400 font-bold uppercase text-xs sm:text-sm tracking-wider">
+                You Self-Pay GST (RCM)
+              </div>
+              <div class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">
+                No GST on Invoice
+              </div>
+           </div>
+         </div>
+
+      </div>
+    </div>
+  </div>
+</div>

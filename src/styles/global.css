@@ -755,3 +755,14 @@
 :where(.dark) .table-premium tbody tr:hover {
   background: rgba(212, 175, 55, 0.06);
 }
+
+/* Hide number input spin buttons globally */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+

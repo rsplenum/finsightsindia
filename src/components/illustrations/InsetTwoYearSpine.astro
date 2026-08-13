@@ -1,0 +1,45 @@
+---
+// InsetTwoYearSpine.astro
+---
+<div class="my-8 bg-white dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-2xl shadow-sm p-6 sm:p-8">
+  <h4 class="text-xs font-bold text-navy-500 dark:text-navy-400 uppercase tracking-widest mb-6">The Two-Year Timing Effect</h4>
+
+  <div class="space-y-6">
+    <!-- Year 1 -->
+    <div class="bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-900/50 rounded-xl p-5 relative overflow-hidden">
+      <div class="absolute right-0 top-0 bottom-0 w-1 bg-rose-500"></div>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div class="text-sm font-bold text-rose-800 dark:text-rose-400">Year 1: Accrual</div>
+          <p class="text-xs text-rose-600 dark:text-rose-500 mt-1">Invoice booked, but 45-day clock missed across March 31.</p>
+        </div>
+        <div class="sm:text-right">
+          <div class="font-mono text-lg font-bold text-rose-600 dark:text-rose-400">+ ₹50 Lakh</div>
+          <div class="text-xs font-bold uppercase tracking-wider text-rose-500 dark:text-rose-500">Add-Back (Tax Up)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Arrow -->
+    <div class="flex justify-center -my-3 relative z-10">
+      <div class="bg-white dark:bg-navy-900 border border-navy-200 dark:border-navy-700 w-8 h-8 rounded-full flex items-center justify-center text-navy-400 dark:text-navy-500">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+      </div>
+    </div>
+
+    <!-- Year 2 -->
+    <div class="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-900/50 rounded-xl p-5 relative overflow-hidden">
+      <div class="absolute right-0 top-0 bottom-0 w-1 bg-emerald-500"></div>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div class="text-sm font-bold text-emerald-800 dark:text-emerald-400">Year 2: Payment</div>
+          <p class="text-xs text-emerald-600 dark:text-emerald-500 mt-1">Invoice finally paid to the supplier in April.</p>
+        </div>
+        <div class="sm:text-right">
+          <div class="font-mono text-lg font-bold text-emerald-600 dark:text-emerald-400">- ₹50 Lakh</div>
+          <div class="text-xs font-bold uppercase tracking-wider text-emerald-500 dark:text-emerald-500">Allowed (Tax Down)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

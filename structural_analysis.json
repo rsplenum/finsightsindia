@@ -1,0 +1,352 @@
+{
+  "the-section-148-escaped-assessment-nightmare.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "startup-esops-double-taxation-guide.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": true,
+    "History": true,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "the-section-271a-bookkeeping-trap.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "mid-year-job-switch-tax-trap.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": true,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": true,
+    "Checklist": false
+  },
+  "inherited-house-sale-tax-guide.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "44ad-vs-44ada-freelance-trap.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "crypto-tax-forensic-audit-guide.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "p2p-crypto-bank-freeze-trap.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": true,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": true,
+    "Checklist": false
+  },
+  "home-loan-interest-limit-survival.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "founder-salary-vs-dividend-strategy.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "reddit-44ada-eligibility-trap.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "the-high-value-sft-trap-section-142-1.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "foreign-remittance-lrs-tcs-guide.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "new-vs-old-regime-guide.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "gst-itc-mismatch-supplier-default-trap.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": true,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "the-section-143-1-tds-arrears-demand.mdx": {
+    "TLDR": true,
+    "NoticeTrap": false,
+    "Scene": true,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": true,
+    "Checklist": false
+  },
+  "missed-itr-deadline-penalty-guide.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "the-section-270a-200-penalty-trap.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "sft-high-value-transaction-notice.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "80g-fake-donation-scam-notice.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": true,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "fo-trading-loss-setoff-guide.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "section-54f-crypto-property-hack.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "nri-rnor-status-tax-shield.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "the-15-day-defective-return-clock-section-139-9.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "freelance-export-gst-usd-guide.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "rent-to-parents-hra-exemption-guide.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "agency-arbitrage-loophole.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "section-87a-rebate-denial-trap.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "moonlighting-dual-employment-tax-guide.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "capital-markets-ltcg-budget-guide.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "influencer-barter-trap-194r.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "fo-trading-turnover-audit.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": true,
+    "Checklist": true
+  },
+  "ecommerce-gst-mythbuster-guide.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "debt-mutual-fund-massacre.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  },
+  "saas-credit-card-trap.mdx": {
+    "TLDR": true,
+    "NoticeTrap": true,
+    "Scene": false,
+    "History": false,
+    "Mechanism": false,
+    "Defense": false,
+    "Edge_Cases": false,
+    "Checklist": false
+  }
+}

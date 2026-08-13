@@ -73,6 +73,51 @@ export async function createLineChart(canvasId: string, data: any, activeViewMod
 			fill: false
 		}));
 	}
+	const timelinePlugin = {
+		id: 'retirementTimeline',
+		beforeDraw: (chart: any) => {
+			if (activeViewMode !== 'percentiles') return;
+			const ctx = chart.ctx;
+			const xAxis = chart.scales.x;
+			const chartArea = chart.chartArea;
+
+			ctx.save();
+			const drawLine = (yearIndex: number, color: string, text: string) => {
+				if (yearIndex < 0 || yearIndex >= labels.length) return;
+				const xPos = xAxis.getPixelForTick(yearIndex);
+				
+				ctx.beginPath();
+				ctx.setLineDash([5, 5]);
+				ctx.moveTo(xPos, chartArea.top);
+				ctx.lineTo(xPos, chartArea.bottom);
+				ctx.lineWidth = 1.5;
+				ctx.strokeStyle = color;
+				ctx.stroke();
+
+				ctx.fillStyle = color;
+				ctx.font = 'bold 10px sans-serif';
+				ctx.textAlign = 'left';
+				ctx.textBaseline = 'top';
+				ctx.fillText(text, xPos + 6, chartArea.top + 6);
+			};
+
+			const horizon = labels.length - 1;
+			if (data.p10) {
+				const depletionIndex = data.p10.findIndex((v: number, i: number) => i > 0 && v <= 0);
+				if (depletionIndex > 0 && depletionIndex <= horizon) {
+					drawLine(depletionIndex, isDark ? 'rgba(239, 68, 68, 0.8)' : 'rgba(220, 38, 38, 0.8)', 'Danger: Rock-Bottom Depletion');
+					const startX = xAxis.getPixelForTick(depletionIndex);
+					const endX = xAxis.getPixelForTick(horizon);
+					ctx.fillStyle = isDark ? 'rgba(239, 68, 68, 0.05)' : 'rgba(220, 38, 38, 0.05)';
+					ctx.fillRect(startX, chartArea.top, endX - startX, chartArea.bottom - chartArea.top);
+				}
+			}
+
+			drawLine(horizon, isDark ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)', 'Expected Lifespan');
+
+			ctx.restore();
+		}
+	};
 
 	return new Chart(ctx, {
 		type: 'line',
@@ -90,6 +135,7 @@ export async function createLineChart(canvasId: string, data: any, activeViewMod
 			},
 			plugins: {
 				legend: { display: false },
+				retirementTimeline: true,
 				tooltip: {
 					backgroundColor: isDark ? '#000000' : '#0f172a',
 					borderColor: isDark ? 'rgba(255, 255, 255, 0.15)' : '#334155',
@@ -134,7 +180,8 @@ export async function createLineChart(canvasId: string, data: any, activeViewMod
 					title: { display: true, text: 'Value (₹)', color: axisTitleColor, font: { family: 'Inter', size: 11 } }
 				}
 			}
-		}
+		},
+		plugins: [timelinePlugin]
 	});
 }
 

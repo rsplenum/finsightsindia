@@ -260,10 +260,14 @@ import SectionTitle from '../components/SectionTitle.astro';
 							<div id="engineCSurplus" class="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400 mt-1">₹0</div>
 							<p id="engineCText" class="text-xs text-navy-600 dark:text-navy-400 mt-3 leading-relaxed">Evaluating equity volatility arbitrage...</p>
 						</div>
-						<div class="mt-auto pt-4 border-t border-navy-100 dark:border-navy-800 w-full">
+						<div class="mt-auto pt-4 border-t border-navy-100 dark:border-navy-800 w-full space-y-2">
 							<div class="flex items-center justify-between w-full">
 								<span class="text-xs font-medium text-navy-500 dark:text-navy-400">Term Insurance Paid:</span>
 								<span class="text-xs font-bold text-rose-600 dark:text-rose-400" id="valRiskCostC">₹0</span>
+							</div>
+							<div class="flex items-center justify-between w-full pb-1">
+								<span class="text-xs font-medium text-navy-500 dark:text-navy-400">Est. 12.5% LTCG Tax Drag:</span>
+								<span class="text-xs font-bold text-rose-600 dark:text-rose-400" id="valTaxDragC">-₹0</span>
 							</div>
 						</div>
 					</CardPremium>
@@ -272,9 +276,16 @@ import SectionTitle from '../components/SectionTitle.astro';
 
 				<div class="p-4 bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg text-xs text-navy-600 dark:text-navy-400 leading-relaxed space-y-1">
 					<strong class="font-bold text-navy-900 dark:text-navy-100 block uppercase tracking-widest text-[10px]">The Bottom Line:</strong>
-					<span id="replicationTakeaway">
+					<p id="replicationTakeaway" class="block mt-1">
 						By unbundling insurance from investment, purchasing pure Term Life + Accident cover, and investing the rest, you fund the exact same income payouts while keeping substantial surplus wealth.
-					</span>
+					</p>
+				</div>
+
+				<div class="relative w-full h-[250px] bg-white dark:bg-navy-950 border border-navy-200 dark:border-navy-800 rounded-lg p-4 flex flex-col justify-center">
+					<h4 class="text-[10px] uppercase font-bold tracking-widest text-navy-500 dark:text-navy-400 mb-2">Net Cash Flow Profile</h4>
+					<div class="flex-1 w-full relative">
+						<canvas id="cashflowChart" class="w-full h-full"></canvas>
+					</div>
 				</div>
 
 			</div>
@@ -322,6 +333,66 @@ import SectionTitle from '../components/SectionTitle.astro';
 		tableFormatter, 
 		setupFormattingField 
 	} from '../utils/formatters';
+
+	let cashflowChartInstance: any = null;
+
+	async function renderCashflowChart(ledger: any[]) {
+		const canvas = document.getElementById('cashflowChart') as HTMLCanvasElement;
+		if (!canvas) return;
+
+		const { Chart } = await import('chart.js/auto');
+
+		if (cashflowChartInstance) {
+			cashflowChartInstance.destroy();
+			cashflowChartInstance = null;
+		}
+
+		const ctx = canvas.getContext('2d');
+		if (!ctx) return;
+
+		const labels = ledger.map(l => `Yr ${l.year}`);
+		const data = ledger.map(l => Math.sign(l.net) * Math.sqrt(Math.abs(l.net)));
+		const bgColors = data.map(val => val < 0 ? 'rgba(244, 63, 94, 0.8)' : 'rgba(16, 185, 129, 0.8)'); // Rose-500 for out, Emerald-500 for in
+
+		const isDark = document.documentElement.classList.contains('dark');
+		const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : '#e2e8f0';
+		const tickTextColor = isDark ? '#a1a1aa' : '#64748b';
+
+		cashflowChartInstance = new Chart(ctx, {
+			type: 'bar',
+			data: {
+				labels,
+				datasets: [{
+					label: 'Net Cash Flow',
+					data,
+					backgroundColor: bgColors,
+					borderRadius: 4
+				}]
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				plugins: {
+					legend: { display: false },
+					tooltip: {
+						callbacks: {
+							label: (ctx) => ` ${formatShortRupee(ledger[ctx.dataIndex].net)}`
+						}
+					}
+				},
+				scales: {
+					x: { grid: { display: false }, ticks: { color: tickTextColor, font: { size: 10 } } },
+					y: {
+						grid: { color: gridColor },
+						ticks: { 
+							color: tickTextColor, font: { size: 10 },
+							callback: (val) => formatShortRupee(Math.sign(val as number) * Math.pow(val as number, 2))
+						}
+					}
+				}
+			}
+		});
+	}
 
 	function syncRiskCostsFromCover() {
 		const termCover = parseFormattedNumber((document.getElementById('inTermCover') as HTMLInputElement)?.value || '0');
@@ -378,19 +449,29 @@ import SectionTitle from '../components/SectionTitle.astro';
 			if (yr === payoutEndYear) yearPayout += inputs.maturityBenefit;
 
 			let netCash = yearPayout - yearPremium;
-			let discountFactor = Math.pow(1 + (inputs.inflationRate / 100), yr);
-			let realPayoutValue = yearPayout / discountFactor;
+            
+			// Premium is paid at start of year (yr - 1), Payout is received at end of year (yr)
+			let premiumDiscountFactor = Math.pow(1 + (inputs.inflationRate / 100), yr - 1);
+			let payoutDiscountFactor = Math.pow(1 + (inputs.inflationRate / 100), yr);
+            
+			let realPremiumValue = yearPremium / premiumDiscountFactor;
+			let realPayoutValue = yearPayout / payoutDiscountFactor;
 
 			totalNominalPayout += yearPayout;
 			totalRealPayout += realPayoutValue;
 
 			ledger.push({
-				year: yr, premiumOut: yearPremium, payoutIn: yearPayout, net: netCash, realValue: realPayoutValue
+				year: yr, premiumOut: yearPremium, payoutIn: yearPayout, net: netCash, realValue: realPayoutValue, realPremium: realPremiumValue
 			});
 
-			let cfDate = new Date(startDate);
-			cfDate.setFullYear(startDate.getFullYear() + (yr - 1));
-			if (netCash !== 0) cashFlowsForXirr.push({ amount: netCash, date: cfDate });
+			let cfDatePremium = new Date(startDate);
+			cfDatePremium.setFullYear(startDate.getFullYear() + (yr - 1));
+            
+			let cfDatePayout = new Date(startDate);
+			cfDatePayout.setFullYear(startDate.getFullYear() + yr);
+
+            if (yearPremium !== 0) cashFlowsForXirr.push({ amount: -yearPremium, date: cfDatePremium });
+            if (yearPayout !== 0) cashFlowsForXirr.push({ amount: yearPayout, date: cfDatePayout });
 		}
 
 		const bundledXirrRaw = calculateXIRR(cashFlowsForXirr);
@@ -399,21 +480,36 @@ import SectionTitle from '../components/SectionTitle.astro';
 		let balanceSafe = 0;
 		let balanceEquity = 0;
 
+		let totalEquityCapitalInvested = 0;
 		for (let yr = 1; yr <= totalYears; yr++) {
 			let investableThisYear = (yr <= inputs.ppt) ? investableCapital : 0;
 			let payoutDemandedThisYear = ledger[yr-1].payoutIn;
+            totalEquityCapitalInvested += investableThisYear;
+
+			// Add premium at start of year, then compound everything
+			balanceSafe = balanceSafe + investableThisYear;
+			balanceEquity = balanceEquity + investableThisYear;
 
 			balanceSafe = balanceSafe * (1 + (inputs.safeRate / 100));
 			balanceEquity = balanceEquity * (1 + (inputs.equityRate / 100));
 
-			balanceSafe = balanceSafe + investableThisYear - payoutDemandedThisYear;
-			balanceEquity = balanceEquity + investableThisYear - payoutDemandedThisYear;
+			// Payouts are received at the end of the year
+			balanceSafe = balanceSafe - payoutDemandedThisYear;
+			balanceEquity = balanceEquity - payoutDemandedThisYear;
 		}
+
+        // Apply 12.5% LTCG Tax Drag on Equity DIY
+        let equityTaxDrag = 0;
+        if (balanceEquity > 0) {
+            let taxableGain = Math.max(0, balanceEquity - totalEquityCapitalInvested - 125000);
+            equityTaxDrag = taxableGain * 0.125;
+            balanceEquity -= equityTaxDrag;
+        }
 
 		return {
 			engineA: { xirr: bundledXirr.toFixed(2) + '%', totalNominalPayout, totalRealPayout },
 			engineB: { finalArbitrageProfit: balanceSafe, riskCostPaid: totalRiskCost * inputs.ppt },
-			engineC: { finalArbitrageProfit: balanceEquity, riskCostPaid: totalRiskCost * inputs.ppt },
+			engineC: { finalArbitrageProfit: balanceEquity, riskCostPaid: totalRiskCost * inputs.ppt, taxDrag: equityTaxDrag },
 			ledger
 		};
 	}
@@ -467,11 +563,13 @@ import SectionTitle from '../components/SectionTitle.astro';
 
 		const engineCSurplusEl = document.getElementById('engineCSurplus');
 		const engineCRiskCostEl = document.getElementById('valRiskCostC');
+		const engineCTaxDragEl = document.getElementById('valTaxDragC');
 		const engineCTextEl = document.getElementById('engineCText');
 		const equityProfit = results.engineC.finalArbitrageProfit;
 
 		if (engineCSurplusEl) engineCSurplusEl.innerText = formatShortRupee(equityProfit);
 		if (engineCRiskCostEl) engineCRiskCostEl.innerText = formatShortRupee(results.engineC.riskCostPaid);
+		if (engineCTaxDragEl) engineCTaxDragEl.innerText = `-${formatShortRupee(results.engineC.taxDrag)}`;
 
 		if (engineCTextEl) {
 			if (equityProfit > 0) {
@@ -505,7 +603,7 @@ import SectionTitle from '../components/SectionTitle.astro';
 		let cumulativeReal = 0;
 		const ledger = results.ledger || [];
 		for (let i = 0; i < ledger.length; i++) {
-			cumulativeReal += ledger[i].realValue - ledger[i].premiumOut;
+			cumulativeReal += ledger[i].realValue - ledger[i].realPremium;
 			if (cumulativeReal > 0) { breakEvenYear = `Year ${ledger[i].year}`; break; }
 		}
 
@@ -516,6 +614,9 @@ import SectionTitle from '../components/SectionTitle.astro';
 		if (frictionalGstEl) frictionalGstEl.innerText = tableFormatter.format(Math.round(totalGstPaid));
 		if (frictionalCommissionEl) frictionalCommissionEl.innerText = tableFormatter.format(Math.round(estCommission));
 		if (frictionalBreakEvenEl) frictionalBreakEvenEl.innerText = breakEvenYear;
+
+        // Render Chart
+        renderCashflowChart(ledger);
 	}
 
 	document.addEventListener('DOMContentLoaded', () => {

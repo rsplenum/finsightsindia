@@ -5,7 +5,7 @@ const directTaxCollection = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/direct-tax' }),
   schema: z.object({
     title: z.string(),
-    category: z.enum(['slabs', 'gains', 'deductions', 'tds', 'advance']),
+    category: z.enum(['slabs', 'gains', 'deductions', 'tds', 'advance', 'indirect']),
     categoryName: z.string(),
     readTime: z.string(),
     updatedDate: z.string(),

@@ -1,0 +1,16 @@
+{
+  "pillars": {
+    "black_money_act_schedule_fa": {
+      "slug": "schedule-fa-bma-penalty",
+      "title": "The Schedule FA BMA Penalty Deep Dive",
+      "registered": "2026-08-10T19:26:11.109912Z",
+      "spokes": [
+        {
+          "slug": "fast-ds-2026-explainer",
+          "title": "FAST-DS 2026: What It Actually Covers",
+          "linked": "2026-08-10T19:26:11.110723Z"
+        }
+      ]
+    }
+  }
+}

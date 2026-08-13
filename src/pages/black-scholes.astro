@@ -33,7 +33,7 @@ import SectionTitle from '../components/SectionTitle.astro';
 						tooltip="Current Asset Price in the spot market."
 						prefix="₹"
 						suffix="Current Asset Price"
-						value="100"
+						value="24000"
 					/>
 					<InputGroup 
 						id="bsStrike"
@@ -41,7 +41,7 @@ import SectionTitle from '../components/SectionTitle.astro';
 						tooltip="The price at which the option can be exercised."
 						prefix="₹"
 						suffix="Exercise Price"
-						value="100"
+						value="24000"
 					/>
 					<div class="space-y-4">
 						<InputGroup 
@@ -71,7 +71,15 @@ import SectionTitle from '../components/SectionTitle.astro';
 						tooltip="Annualized implied volatility (standard deviation)."
 						suffix="% Volatility"
 						type="number"
-						value="20.0"
+						value="15.0"
+					/>
+					<InputGroup 
+						id="bsDivYield"
+						label="Dividend Yield (q)"
+						tooltip="Continuous annual dividend yield (e.g. Nifty is ~1.2%)."
+						suffix="% Annual"
+						type="number"
+						value="1.2"
 					/>
 				</div>
 			</CardPremium>
@@ -127,77 +135,124 @@ import SectionTitle from '../components/SectionTitle.astro';
 						<p class="text-xs text-navy-500 dark:text-navy-400 mt-1">First and second-order partial derivatives relative to price, time, and volatility.</p>
 					</div>
 
-					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-						<!-- Delta (Call & Put) -->
-						<div class="p-4 bg-navy-50 dark:bg-navy-900 rounded-lg border border-navy-200 dark:border-navy-800">
+					<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+						<!-- Delta -->
+						<div class="p-4 bg-navy-50 dark:bg-navy-900 rounded-lg border border-navy-200 dark:border-navy-800 flex flex-col justify-between">
 							<div class="flex justify-between items-baseline mb-2">
-								<span class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Delta (Δ) — Price Velocity</span>
-								<span class="text-[9px] font-bold text-navy-500 dark:text-navy-400">∂V / ∂S</span>
+								<span class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Delta (Δ)</span>
+								<span class="text-[9px] font-bold text-navy-500 dark:text-navy-400">Velocity</span>
 							</div>
-							<div class="space-y-1.5 text-xs text-navy-600 dark:text-navy-400 mt-2">
+							<div class="space-y-1.5 text-xs text-navy-600 dark:text-navy-400 mt-1">
 								<div class="flex justify-between border-b border-navy-200 dark:border-navy-800 pb-1">
-									<span>Call Delta (Δc):</span>
+									<span>Call:</span>
 									<span id="valDeltaCall" class="font-bold text-emerald-600 dark:text-emerald-400">+0.0000</span>
 								</div>
 								<div class="flex justify-between pt-0.5">
-									<span>Put Delta (Δp):</span>
+									<span>Put:</span>
 									<span id="valDeltaPut" class="font-bold text-rose-600 dark:text-rose-400">-0.0000</span>
 								</div>
 							</div>
-							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-3 leading-tight">
-								Change in option price per ₹1 move in spot price.
+							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-3 pt-2 border-t border-navy-200 dark:border-navy-800 leading-tight">
+								If Nifty goes up ₹100, the call option goes up approx ₹<span id="ctxDeltaCall" class="font-bold text-navy-700 dark:text-navy-300">0</span>.
 							</div>
 						</div>
 
 						<!-- Gamma -->
 						<div class="p-4 bg-navy-50 dark:bg-navy-900 rounded-lg border border-navy-200 dark:border-navy-800 flex flex-col justify-between">
 							<div class="flex justify-between items-baseline mb-2">
-								<span class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Gamma (Γ) — Acceleration</span>
-								<span class="text-[9px] font-bold text-navy-500 dark:text-navy-400">∂²V / ∂S²</span>
+								<span class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Gamma (Γ)</span>
+								<span class="text-[9px] font-bold text-navy-500 dark:text-navy-400">Acceleration</span>
 							</div>
 							<div class="text-xl font-extrabold text-navy-900 dark:text-navy-100 mt-1">
 								<span id="valGamma">0.000000</span>
 							</div>
-							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-3 leading-tight">
-								Rate of change in Delta per ₹1 move in spot price.
+							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-3 pt-2 border-t border-navy-200 dark:border-navy-800 leading-tight">
+								Rate of change in Delta per ₹1 move in spot price. Higher near ATM.
 							</div>
 						</div>
 
-						<!-- Theta (Daily Decay) -->
-						<div class="p-4 bg-navy-50 dark:bg-navy-900 rounded-lg border border-navy-200 dark:border-navy-800">
+						<!-- Theta -->
+						<div class="p-4 bg-navy-50 dark:bg-navy-900 rounded-lg border border-navy-200 dark:border-navy-800 flex flex-col justify-between">
 							<div class="flex justify-between items-baseline mb-2">
-								<span class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Theta (Θ) — Time Decay</span>
-								<span class="text-[9px] font-bold text-navy-500 dark:text-navy-400">∂V / ∂t</span>
+								<span class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Theta (Θ)</span>
+								<span class="text-[9px] font-bold text-navy-500 dark:text-navy-400">Time Decay</span>
 							</div>
-							<div class="space-y-1.5 text-xs text-navy-600 dark:text-navy-400 mt-2">
+							<div class="space-y-1.5 text-xs text-navy-600 dark:text-navy-400 mt-1">
 								<div class="flex justify-between border-b border-navy-200 dark:border-navy-800 pb-1">
-									<span>Call Theta:</span>
+									<span>Call:</span>
 									<span id="valThetaCall" class="font-bold text-amber-600 dark:text-amber-400">-₹0.0000</span>
 								</div>
 								<div class="flex justify-between pt-0.5">
-									<span>Put Theta:</span>
+									<span>Put:</span>
 									<span id="valThetaPut" class="font-bold text-amber-600 dark:text-amber-400">-₹0.0000</span>
 								</div>
 							</div>
-							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-3 leading-tight">
-								Daily rupee erosion in option value as time passes.
+							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-3 pt-2 border-t border-navy-200 dark:border-navy-800 leading-tight">
+								Every day you hold this option, it loses approx ₹<span id="ctxThetaCall" class="font-bold text-navy-700 dark:text-navy-300">0</span> in time value.
 							</div>
 						</div>
 
 						<!-- Vega -->
 						<div class="p-4 bg-navy-50 dark:bg-navy-900 rounded-lg border border-navy-200 dark:border-navy-800 flex flex-col justify-between">
 							<div class="flex justify-between items-baseline mb-2">
-								<span class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Vega (ν) — Volatility Sens.</span>
-								<span class="text-[9px] font-bold text-navy-500 dark:text-navy-400">∂V / ∂σ</span>
+								<span class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Vega (ν)</span>
+								<span class="text-[9px] font-bold text-navy-500 dark:text-navy-400">Volatility</span>
 							</div>
 							<div class="text-xl font-extrabold text-cyan-600 dark:text-cyan-400 mt-1">
-								₹<span id="valVega">0.0000</span> <span class="text-[10px] uppercase font-bold tracking-widest text-navy-500 dark:text-navy-400">/ 1% IV</span>
+								₹<span id="valVega">0.0000</span>
 							</div>
-							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-3 leading-tight">
-								Price change per 1 percentage point change in Implied Volatility.
+							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-3 pt-2 border-t border-navy-200 dark:border-navy-800 leading-tight">
+								If IV rises 1%, your option gains approx ₹<span id="ctxVega" class="font-bold text-navy-700 dark:text-navy-300">0</span>.
 							</div>
 						</div>
 
+						<!-- Rho -->
+						<div class="p-4 bg-navy-50 dark:bg-navy-900 rounded-lg border border-navy-200 dark:border-navy-800 flex flex-col justify-between">
+							<div class="flex justify-between items-baseline mb-2">
+								<span class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Rho (ρ)</span>
+								<span class="text-[9px] font-bold text-navy-500 dark:text-navy-400">Interest Rates</span>
+							</div>
+							<div class="space-y-1.5 text-xs text-navy-600 dark:text-navy-400 mt-1">
+								<div class="flex justify-between border-b border-navy-200 dark:border-navy-800 pb-1">
+									<span>Call:</span>
+									<span id="valRhoCall" class="font-bold text-indigo-600 dark:text-indigo-400">+0.0000</span>
+								</div>
+								<div class="flex justify-between pt-0.5">
+									<span>Put:</span>
+									<span id="valRhoPut" class="font-bold text-indigo-600 dark:text-indigo-400">-0.0000</span>
+								</div>
+							</div>
+							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-3 pt-2 border-t border-navy-200 dark:border-navy-800 leading-tight">
+								Price change per 1% change in risk-free rate.
+							</div>
+						</div>
+
+					</div>
+				</CardPremium>
+
+				<!-- IV Solver Card -->
+				<CardPremium class="space-y-4">
+					<div class="border-b border-navy-200 dark:border-navy-800 pb-3">
+						<SectionTitle title="Implied Volatility (IV) Solver" />
+						<p class="text-xs text-navy-500 dark:text-navy-400 mt-1">Input the market price of an option to reverse-engineer the market's volatility expectation.</p>
+					</div>
+					<div class="flex items-end gap-4">
+						<div class="w-1/2">
+							<label class="block text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400 mb-1">Target Premium (₹)</label>
+							<input type="number" id="ivTargetPrice" class="w-full bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-lg px-3 py-2 text-sm text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-gold-500" placeholder="e.g. 150" />
+						</div>
+						<div class="w-1/2">
+							<label class="block text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400 mb-1">Option Type</label>
+							<select id="ivOptionType" class="w-full bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-lg px-3 py-2 text-sm text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-gold-500">
+								<option value="call">Call Option</option>
+								<option value="put">Put Option</option>
+							</select>
+						</div>
+					</div>
+					<button id="btnSolveIV" class="w-full bg-navy-900 dark:bg-navy-100 text-white dark:text-navy-900 font-medium py-2 rounded-lg text-sm hover:bg-navy-800 dark:hover:bg-white transition-colors">Solve for IV</button>
+					<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-4 mt-2">
+						<div class="text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400 text-center">Calculated Implied Volatility</div>
+						<div id="valSolvedIV" class="text-2xl font-extrabold text-navy-900 dark:text-navy-100 text-center mt-1">--</div>
 					</div>
 				</CardPremium>
 
@@ -208,7 +263,7 @@ import SectionTitle from '../components/SectionTitle.astro';
 </Layout>
 
 <script>
-	import { calculateBlackScholes } from '../utils/blackScholes';
+	import { calculateBlackScholes, impliedVolatility } from '../utils/blackScholes';
 	import { parseFormattedNumber, setupFormattingField } from '../utils/formatters';
 
 	function getNumValue(id: string, defaultVal: number): number {
@@ -219,17 +274,18 @@ import SectionTitle from '../components/SectionTitle.astro';
 	}
 
 	function updateBlackScholesUI() {
-		const spot = getNumValue('bsSpot', 100);
-		const strike = getNumValue('bsStrike', 100);
+		const spot = getNumValue('bsSpot', 24000);
+		const strike = getNumValue('bsStrike', 24000);
 		const days = parseFloat((document.getElementById('bsDays') as HTMLInputElement)?.value || '30');
 		const rate = parseFloat((document.getElementById('bsRate') as HTMLInputElement)?.value || '7.0');
-		const vol = parseFloat((document.getElementById('bsVol') as HTMLInputElement)?.value || '20.0');
+		const vol = parseFloat((document.getElementById('bsVol') as HTMLInputElement)?.value || '15.0');
+		const divYield = parseFloat((document.getElementById('bsDivYield') as HTMLInputElement)?.value || '1.2');
 
 		const timeYears = Math.max(0.0001, days / 365);
 		const timeYearsEl = document.getElementById('bsTimeYears');
 		if (timeYearsEl) timeYearsEl.innerText = `${timeYears.toFixed(3)} Yrs`;
 
-		const result = calculateBlackScholes(spot, strike, timeYears, rate, vol);
+		const result = calculateBlackScholes(spot, strike, timeYears, rate, vol, divYield);
 
 		const callEl = document.getElementById('valCallPrice');
 		const putEl = document.getElementById('valPutPrice');
@@ -261,6 +317,54 @@ import SectionTitle from '../components/SectionTitle.astro';
 
 		const vegaEl = document.getElementById('valVega');
 		if (vegaEl) vegaEl.innerText = result.vegaPerPercent.toFixed(4);
+
+		const rhoCallEl = document.getElementById('valRhoCall');
+		const rhoPutEl = document.getElementById('valRhoPut');
+		if (rhoCallEl) rhoCallEl.innerText = `${result.rhoCallPerPercent >= 0 ? '+' : ''}${result.rhoCallPerPercent.toFixed(4)}`;
+		if (rhoPutEl) rhoPutEl.innerText = `${result.rhoPutPerPercent.toFixed(4)}`;
+
+		const ctxDeltaCall = document.getElementById('ctxDeltaCall');
+		if (ctxDeltaCall) ctxDeltaCall.innerText = (result.deltaCall * 100).toFixed(0);
+		
+		const ctxThetaCall = document.getElementById('ctxThetaCall');
+		if (ctxThetaCall) ctxThetaCall.innerText = Math.abs(result.thetaCallDaily).toFixed(0);
+		
+		const ctxVega = document.getElementById('ctxVega');
+		if (ctxVega) ctxVega.innerText = result.vegaPerPercent.toFixed(0);
+	}
+
+	function solveIV() {
+		const targetPriceEl = document.getElementById('ivTargetPrice') as HTMLInputElement;
+		const optionTypeEl = document.getElementById('ivOptionType') as HTMLSelectElement;
+		const solvedIvEl = document.getElementById('valSolvedIV');
+		
+		if (!targetPriceEl || !targetPriceEl.value || !solvedIvEl) return;
+		
+		const targetPrice = parseFloat(targetPriceEl.value);
+		const type = optionTypeEl.value as 'call' | 'put';
+		
+		const spot = getNumValue('bsSpot', 24000);
+		const strike = getNumValue('bsStrike', 24000);
+		const days = parseFloat((document.getElementById('bsDays') as HTMLInputElement)?.value || '30');
+		const rate = parseFloat((document.getElementById('bsRate') as HTMLInputElement)?.value || '7.0');
+		const divYield = parseFloat((document.getElementById('bsDivYield') as HTMLInputElement)?.value || '1.2');
+		const timeYears = Math.max(0.0001, days / 365);
+		
+		solvedIvEl.innerText = 'Calculating...';
+		
+		setTimeout(() => {
+			const iv = impliedVolatility(type, targetPrice, spot, strike, timeYears, rate, divYield);
+			if (iv !== null) {
+				solvedIvEl.innerText = `${(iv * 100).toFixed(2)}%`;
+				const volInput = document.getElementById('bsVol') as HTMLInputElement;
+				if (volInput) {
+					volInput.value = (iv * 100).toFixed(2);
+					updateBlackScholesUI();
+				}
+			} else {
+				solvedIvEl.innerText = 'No Solution';
+			}
+		}, 50);
 	}
 
 	document.addEventListener('DOMContentLoaded', () => {
@@ -270,13 +374,16 @@ import SectionTitle from '../components/SectionTitle.astro';
 		if (bsSpotEl) setupFormattingField(bsSpotEl, updateBlackScholesUI);
 		if (bsStrikeEl) setupFormattingField(bsStrikeEl, updateBlackScholesUI);
 
-		['bsDays', 'bsRate', 'bsVol'].forEach(id => {
+		['bsDays', 'bsRate', 'bsVol', 'bsDivYield'].forEach(id => {
 			const el = document.getElementById(id);
 			if (el) {
 				el.addEventListener('input', updateBlackScholesUI);
 				el.addEventListener('change', updateBlackScholesUI);
 			}
 		});
+
+		const btnSolve = document.getElementById('btnSolveIV');
+		if (btnSolve) btnSolve.addEventListener('click', solveIV);
 
 		updateBlackScholesUI();
 	});

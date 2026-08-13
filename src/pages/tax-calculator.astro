@@ -5,11 +5,6 @@ import Hero from '../components/Hero.astro';
 import CardPremium from '../components/CardPremium.astro';
 import InputGroup from '../components/InputGroup.astro';
 import SectionTitle from '../components/SectionTitle.astro';
-
-// Fetch all MDX articles from the Content Collection
-const allArticles = await getCollection('direct-tax');
-// Optional: We can group them by bucket or sort them if needed. 
-const articlesList = allArticles;
 ---
 
 <Layout title="India Direct Tax Code 2025 & Calculators — SWP Intelligence">
@@ -17,7 +12,7 @@ const articlesList = allArticles;
 	<Hero 
 		badge="COMPUTATIONAL TAX ENGINE (FY 2025-26)"
 		title="Interactive Slab & Scenario Engine"
-		description="Run institutional-grade math on your gross income. Instantly visualize your effective tax rates, deductions, and mathematically optimal regime choices."
+		description="Run institutional-grade math on your gross income. Instantly visualize your effective tax rates, itemized deductions, and mathematically optimal regime choices."
 	/>
 
 	<hr class="section-divider" />
@@ -25,7 +20,7 @@ const articlesList = allArticles;
 	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 space-y-10">
 		
 		<!-- INTERACTIVE INDIA TAX REGIME CALCULATOR PANEL -->
-		<CardPremium class="max-w-6xl mx-auto space-y-6">
+		<CardPremium class="max-w-7xl mx-auto space-y-6">
 			
 			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-navy-200 dark:border-white/10 pb-4">
 				<div>
@@ -38,62 +33,178 @@ const articlesList = allArticles;
 			</div>
 
 			<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+				
 				<!-- Inputs Column (5/12) -->
-				<div class="lg:col-span-5 space-y-4">
-					<InputGroup 
-						id="inIndiaSalary"
-						label="Gross Annual Income / Salary"
-						tooltip="Your total yearly income before any tax deductions or exemptions."
-						prefix="₹"
-						suffix="Gross Income"
-						value="15,00,000"
-					/>
-					<InputGroup 
-						id="inIndiaDeductions"
-						label="Old Regime Deductions (80C, 80D, HRA)"
-						tooltip="Total exemptions claimed under the Old Tax Regime (e.g., ₹1.5L 80C + ₹50k 80D + HRA/Home Loan Interest)."
-						prefix="₹"
-						suffix="Total Deductions"
-						value="2,50,000"
-					/>
-					<p class="text-[11px] text-navy-500 dark:text-navy-400 font-mono px-1">Includes ₹1.5L 80C + ₹50k 80D + HRA/Interest.</p>
+				<div class="lg:col-span-5 space-y-6">
+					
+					<!-- Income & Demographics -->
+					<div>
+						<div class="border-b border-navy-200 dark:border-navy-800 pb-2 mb-4">
+							<h3 class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Income & Demographics</h3>
+						</div>
+						<div class="space-y-4">
+							<InputGroup id="inGrossSalary" label="Gross Salary" tooltip="Total yearly salary before exemptions" prefix="₹" value="15,00,000" />
+							<InputGroup id="inOtherIncome" label="Other Income" tooltip="Interest, capital gains (normal slab rate), house property, etc." prefix="₹" value="0" />
+							<div class="space-y-1">
+								<label class="block text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">Age Bracket</label>
+								<select id="inAgeBracket" class="w-full bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-lg px-3 py-2 text-sm text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-gold-500">
+									<option value="below60">Below 60 Years</option>
+									<option value="60_80">60 to 80 Years (Senior)</option>
+									<option value="above80">Above 80 Years (Super Senior)</option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<!-- HRA Exemption -->
+					<div>
+						<div class="border-b border-navy-200 dark:border-navy-800 pb-2 mb-4">
+							<h3 class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">HRA Exemption (Old Regime)</h3>
+						</div>
+						<div class="space-y-4">
+							<div class="grid grid-cols-2 gap-4">
+								<InputGroup id="inBasicSalary" label="Basic Salary" prefix="₹" value="7,50,000" />
+								<InputGroup id="inHraReceived" label="HRA Received" prefix="₹" value="3,00,000" />
+							</div>
+							<div class="grid grid-cols-2 gap-4 items-end">
+								<InputGroup id="inRentPaid" label="Rent (Annual)" prefix="₹" value="2,40,000" />
+								<div class="space-y-1">
+									<label class="block text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">City Type</label>
+									<select id="inIsMetro" class="w-full bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-lg px-3 py-2 text-sm text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-gold-500">
+										<option value="true">Metro (50%)</option>
+										<option value="false" selected>Non-Metro (40%)</option>
+									</select>
+								</div>
+							</div>
+							<div class="text-[10px] text-navy-500 dark:text-navy-400 bg-navy-50 dark:bg-navy-900 p-2 rounded border border-navy-200 dark:border-navy-800 flex justify-between">
+								<span>Computed Exempt HRA:</span>
+								<span id="valHraExempt" class="font-bold text-navy-900 dark:text-navy-100">₹0</span>
+							</div>
+						</div>
+					</div>
+
+					<!-- Itemized Deductions -->
+					<div>
+						<div class="border-b border-navy-200 dark:border-navy-800 pb-2 mb-4">
+							<h3 class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Deductions (Old Regime)</h3>
+						</div>
+						<div class="grid grid-cols-2 gap-4">
+							<InputGroup id="inSec80c" label="Section 80C" tooltip="Max ₹1.5L" prefix="₹" value="1,50,000" />
+							<InputGroup id="inSec80d" label="Section 80D" tooltip="Health Insurance. Max ₹1L." prefix="₹" value="25,000" />
+							<InputGroup id="inSec80ccd" label="80CCD(1B)" tooltip="NPS tier-1. Max ₹50k" prefix="₹" value="50,000" />
+							<InputGroup id="inHomeLoan" label="Home Loan Int." tooltip="Section 24(b). Max ₹2L." prefix="₹" value="0" />
+						</div>
+					</div>
 				</div>
 
 				<!-- Outputs Column (7/12) -->
-				<div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
-					<!-- New Tax Regime Card -->
-					<div class="p-5 card-premium border-emerald-500/30 rounded-lg space-y-3">
-						<div class="flex justify-between items-center text-[10px] font-bold tracking-widest">
-							<span class="text-emerald-600 dark:text-emerald-400 uppercase">NEW REGIME (DEFAULT)</span>
-							<span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 text-[9px] uppercase">FY 25-26</span>
+				<div class="lg:col-span-7 space-y-6">
+					
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+						<!-- New Tax Regime Card -->
+						<div class="p-5 card-premium border-emerald-500/30 rounded-lg space-y-3">
+							<div class="flex justify-between items-center text-[10px] font-bold tracking-widest">
+								<span class="text-emerald-600 dark:text-emerald-400 uppercase">NEW REGIME (DEFAULT)</span>
+								<span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 text-[9px] uppercase">FY 25-26</span>
+							</div>
+							<div class="space-y-1">
+								<div class="text-[10px] uppercase font-bold tracking-widest text-navy-500 dark:text-navy-400">Total Tax Payable:</div>
+								<div id="valNewTax" class="text-3xl font-black text-navy-900 dark:text-navy-100">₹ 0</div>
+							</div>
+							<div class="pt-3 border-t border-navy-200 dark:border-white/10 text-[10px] text-navy-500 dark:text-navy-400 space-y-1.5 uppercase font-bold tracking-widest">
+								<div id="valNewEffectiveRate" class="font-bold text-navy-800 dark:text-navy-200">Effective Rate: 0.0%</div>
+							</div>
 						</div>
-						<div class="space-y-1">
-							<div class="text-[10px] uppercase font-bold tracking-widest text-navy-500 dark:text-navy-400">Total Tax Payable:</div>
-							<div id="valNewTax" class="text-2xl font-black text-navy-900 dark:text-navy-100">₹ 0</div>
-						</div>
-						<div class="pt-3 border-t border-navy-200 dark:border-white/10 text-[10px] text-navy-500 dark:text-navy-400 space-y-1.5 uppercase font-bold tracking-widest">
-							<div>Std Deduction: ₹75,000</div>
-							<div>Sec 87A: Up to ₹12.75L Free</div>
-							<div id="valNewEffectiveRate" class="font-bold text-navy-800 dark:text-navy-200 mt-2">Effective Rate: 0.0%</div>
+
+						<!-- Old Tax Regime Card -->
+						<div class="p-5 card-premium rounded-lg space-y-3">
+							<div class="flex justify-between items-center text-[10px] font-bold tracking-widest">
+								<span class="text-navy-500 dark:text-navy-400 uppercase">OLD REGIME (OPTIONAL)</span>
+								<span class="px-2 py-0.5 rounded bg-navy-200 dark:bg-navy-800 text-navy-600 dark:text-navy-400 text-[9px] uppercase">FY 25-26</span>
+							</div>
+							<div class="space-y-1">
+								<div class="text-[10px] uppercase font-bold tracking-widest text-navy-500 dark:text-navy-400">Total Tax Payable:</div>
+								<div id="valOldTax" class="text-3xl font-bold text-navy-900 dark:text-navy-100">₹ 0</div>
+							</div>
+							<div class="pt-3 border-t border-navy-200 dark:border-white/10 text-[10px] text-navy-500 dark:text-navy-400 space-y-1.5 uppercase font-bold tracking-widest">
+								<div id="valOldEffectiveRate" class="font-bold text-navy-800 dark:text-navy-200">Effective Rate: 0.0%</div>
+							</div>
 						</div>
 					</div>
 
-					<!-- Old Tax Regime Card -->
-					<div class="p-5 card-premium rounded-lg space-y-3">
-						<div class="flex justify-between items-center text-[10px] font-bold tracking-widest">
-							<span class="text-navy-500 dark:text-navy-400 uppercase">OLD REGIME (OPTIONAL)</span>
-							<span class="px-2 py-0.5 rounded bg-navy-200 dark:bg-navy-800 text-navy-600 dark:text-navy-400 text-[9px] uppercase">WITH DEDUCTIONS</span>
-						</div>
-						<div class="space-y-1">
-							<div class="text-[10px] uppercase font-bold tracking-widest text-navy-500 dark:text-navy-400">Total Tax Payable:</div>
-							<div id="valOldTax" class="text-2xl font-bold text-navy-900 dark:text-navy-100">₹ 0</div>
-						</div>
-						<div class="pt-3 border-t border-navy-200 dark:border-white/10 text-[10px] text-navy-500 dark:text-navy-400 space-y-1.5 uppercase font-bold tracking-widest">
-							<div>Std Deduction: ₹50,000</div>
-							<div>Deductions: <span id="valOldDeductionsText">₹2,50,000</span></div>
-							<div id="valOldEffectiveRate" class="font-bold text-navy-800 dark:text-navy-200 mt-2">Effective Rate: 0.0%</div>
+					<!-- Slab Breakdown -->
+					<div class="bg-navy-50 dark:bg-navy-900 rounded-lg border border-navy-200 dark:border-navy-800 p-5 space-y-4">
+						<h3 class="text-xs font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Tax Computation Breakdown</h3>
+						<div class="overflow-x-auto">
+							<table class="w-full text-left text-xs">
+								<thead>
+									<tr class="border-b border-navy-200 dark:border-navy-800 text-[10px] uppercase text-navy-500 tracking-widest">
+										<th class="py-2">Component</th>
+										<th class="py-2 text-right text-emerald-600 dark:text-emerald-400 w-28">New Regime</th>
+										<th class="py-2 text-right w-28">Old Regime</th>
+									</tr>
+								</thead>
+								<tbody class="divide-y divide-navy-200 dark:divide-navy-800 text-navy-900 dark:text-navy-100">
+									<tr>
+										<td class="py-2">Gross Income</td>
+										<td class="py-2 text-right font-mono" id="brNewGross">0</td>
+										<td class="py-2 text-right font-mono" id="brOldGross">0</td>
+									</tr>
+									<tr>
+										<td class="py-2">Exemptions (HRA)</td>
+										<td class="py-2 text-right font-mono text-navy-400">-</td>
+										<td class="py-2 text-right font-mono" id="brOldExempt">0</td>
+									</tr>
+									<tr>
+										<td class="py-2">Itemized Deductions</td>
+										<td class="py-2 text-right font-mono text-navy-400">-</td>
+										<td class="py-2 text-right font-mono" id="brOldDed">0</td>
+									</tr>
+									<tr>
+										<td class="py-2">Standard Deduction</td>
+										<td class="py-2 text-right font-mono" id="brNewStd">0</td>
+										<td class="py-2 text-right font-mono" id="brOldStd">0</td>
+									</tr>
+									<tr class="font-bold bg-black/5 dark:bg-white/5">
+										<td class="py-2 px-2">Taxable Income</td>
+										<td class="py-2 px-2 text-right font-mono" id="brNewTaxable">0</td>
+										<td class="py-2 px-2 text-right font-mono" id="brOldTaxable">0</td>
+									</tr>
+									<tr>
+										<td class="py-2">Base Tax (per Slabs)</td>
+										<td class="py-2 text-right font-mono" id="brNewBase">0</td>
+										<td class="py-2 text-right font-mono" id="brOldBase">0</td>
+									</tr>
+									<tr>
+										<td class="py-2">Sec 87A Rebate</td>
+										<td class="py-2 text-right font-mono text-emerald-600" id="brNewRebate">0</td>
+										<td class="py-2 text-right font-mono text-emerald-600" id="brOldRebate">0</td>
+									</tr>
+									<tr>
+										<td class="py-2">Surcharge</td>
+										<td class="py-2 text-right font-mono" id="brNewSur">0</td>
+										<td class="py-2 text-right font-mono" id="brOldSur">0</td>
+									</tr>
+									<tr>
+										<td class="py-2">Marginal Relief</td>
+										<td class="py-2 text-right font-mono text-emerald-600" id="brNewMarginal">0</td>
+										<td class="py-2 text-right font-mono text-emerald-600" id="brOldMarginal">0</td>
+									</tr>
+									<tr>
+										<td class="py-2">Health & Ed Cess (4%)</td>
+										<td class="py-2 text-right font-mono" id="brNewCess">0</td>
+										<td class="py-2 text-right font-mono" id="brOldCess">0</td>
+									</tr>
+									<tr class="font-black text-sm text-navy-900 dark:text-white">
+										<td class="py-3">Total Tax Liability</td>
+										<td class="py-3 text-right font-mono text-emerald-600 dark:text-emerald-400" id="brNewTotal">0</td>
+										<td class="py-3 text-right font-mono" id="brOldTotal">0</td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
 					</div>
+					
 				</div>
 			</div>
 
@@ -103,35 +214,86 @@ const articlesList = allArticles;
 </Layout>
 
 <script>
-	import { calculateIndiaTaxEngine } from '../utils/tax';
+	import { calculateIndiaTaxEngine, type TaxInput } from '../utils/tax';
 	import { parseFormattedNumber, tableFormatter, setupFormattingField } from '../utils/formatters';
 
 	function formatRupee(val: number): string {
 		if (isNaN(val)) return '₹0';
 		return `₹${tableFormatter.format(Math.round(val))}`;
 	}
+    
+    function formatNegative(val: number): string {
+        if (val === 0) return '0';
+        return `-${formatRupee(val)}`;
+    }
 
 	function calculateIndiaTax() {
-		const grossSalary = parseFormattedNumber((document.getElementById('inIndiaSalary') as HTMLInputElement)?.value || '1500000');
-		const userDeductions = parseFormattedNumber((document.getElementById('inIndiaDeductions') as HTMLInputElement)?.value || '250000');
+        const input: TaxInput = {
+            grossSalary: parseFormattedNumber((document.getElementById('inGrossSalary') as HTMLInputElement)?.value || '0'),
+            otherIncome: parseFormattedNumber((document.getElementById('inOtherIncome') as HTMLInputElement)?.value || '0'),
+            ageBracket: (document.getElementById('inAgeBracket') as HTMLSelectElement)?.value as any || 'below60',
+            
+            basicSalary: parseFormattedNumber((document.getElementById('inBasicSalary') as HTMLInputElement)?.value || '0'),
+            hraReceived: parseFormattedNumber((document.getElementById('inHraReceived') as HTMLInputElement)?.value || '0'),
+            rentPaid: parseFormattedNumber((document.getElementById('inRentPaid') as HTMLInputElement)?.value || '0'),
+            isMetro: (document.getElementById('inIsMetro') as HTMLSelectElement)?.value === 'true',
+            
+            sec80c: parseFormattedNumber((document.getElementById('inSec80c') as HTMLInputElement)?.value || '0'),
+            sec80d: parseFormattedNumber((document.getElementById('inSec80d') as HTMLInputElement)?.value || '0'),
+            sec80ccd1b: parseFormattedNumber((document.getElementById('inSec80ccd') as HTMLInputElement)?.value || '0'),
+            homeLoanInterest: parseFormattedNumber((document.getElementById('inHomeLoan') as HTMLInputElement)?.value || '0'),
+        };
 
-		const oldDedText = document.getElementById('valOldDeductionsText');
-		if (oldDedText) oldDedText.innerText = formatRupee(userDeductions);
+		const result = calculateIndiaTaxEngine(input);
 
-		const result = calculateIndiaTaxEngine(grossSalary, userDeductions);
-
-		// Update UI DOM
+		// Update UI DOM - Top level
 		const newTaxEl = document.getElementById('valNewTax');
 		const oldTaxEl = document.getElementById('valOldTax');
 		const newEffEl = document.getElementById('valNewEffectiveRate');
 		const oldEffEl = document.getElementById('valOldEffectiveRate');
 		const badgeEl = document.getElementById('indiaSavingsBadge');
 
-		if (newTaxEl) newTaxEl.innerText = formatRupee(result.newTax);
-		if (oldTaxEl) oldTaxEl.innerText = formatRupee(result.oldTax);
+		if (newTaxEl) newTaxEl.innerText = formatRupee(result.newRegime.totalTax);
+		if (oldTaxEl) oldTaxEl.innerText = formatRupee(result.oldRegime.totalTax);
+		if (newEffEl) newEffEl.innerText = `Effective Rate: ${result.newRegime.effectiveRate}%`;
+		if (oldEffEl) oldEffEl.innerText = `Effective Rate: ${result.oldRegime.effectiveRate}%`;
 
-		if (newEffEl) newEffEl.innerText = `Effective Rate: ${result.newEffectiveRate}%`;
-		if (oldEffEl) oldEffEl.innerText = `Effective Rate: ${result.oldEffectiveRate}%`;
+        // Update HRA Exempt tag
+        const hraTag = document.getElementById('valHraExempt');
+        if (hraTag) hraTag.innerText = formatRupee(result.oldRegime.exemptions); // Since HRA is the only exemption currently
+
+        // Update Breakdown Table
+        const setHtml = (id: string, val: string) => { const el = document.getElementById(id); if (el) el.innerText = val; };
+        
+        setHtml('brNewGross', formatRupee(result.newRegime.grossIncome));
+        setHtml('brOldGross', formatRupee(result.oldRegime.grossIncome));
+        
+        setHtml('brOldExempt', formatNegative(result.oldRegime.exemptions));
+        setHtml('brOldDed', formatNegative(result.oldRegime.deductions));
+        
+        setHtml('brNewStd', formatNegative(result.newRegime.standardDeduction));
+        setHtml('brOldStd', formatNegative(result.oldRegime.standardDeduction));
+        
+        setHtml('brNewTaxable', formatRupee(result.newRegime.taxableIncome));
+        setHtml('brOldTaxable', formatRupee(result.oldRegime.taxableIncome));
+        
+        setHtml('brNewBase', formatRupee(result.newRegime.baseTax - result.newRegime.rebate87A));
+        setHtml('brOldBase', formatRupee(result.oldRegime.baseTax - result.oldRegime.rebate87A));
+        
+        setHtml('brNewRebate', formatNegative(result.newRegime.rebate87A));
+        setHtml('brOldRebate', formatNegative(result.oldRegime.rebate87A));
+        
+        setHtml('brNewSur', formatRupee(result.newRegime.surcharge));
+        setHtml('brOldSur', formatRupee(result.oldRegime.surcharge));
+        
+        setHtml('brNewMarginal', formatNegative(result.newRegime.marginalRelief));
+        setHtml('brOldMarginal', formatNegative(result.oldRegime.marginalRelief));
+        
+        setHtml('brNewCess', formatRupee(result.newRegime.cess));
+        setHtml('brOldCess', formatRupee(result.oldRegime.cess));
+        
+        setHtml('brNewTotal', formatRupee(result.newRegime.totalTax));
+        setHtml('brOldTotal', formatRupee(result.oldRegime.totalTax));
 
 		if (badgeEl) {
 			if (result.isNewBetter) {
@@ -148,10 +310,22 @@ const articlesList = allArticles;
 	}
 
 	document.addEventListener('DOMContentLoaded', () => {
-		['inIndiaSalary', 'inIndiaDeductions'].forEach(id => {
+		const inputIds = [
+            'inGrossSalary', 'inOtherIncome', 'inBasicSalary', 'inHraReceived', 'inRentPaid', 
+            'inSec80c', 'inSec80d', 'inSec80ccd', 'inHomeLoan'
+        ];
+        
+        inputIds.forEach(id => {
 			const el = document.getElementById(id);
 			if (el) setupFormattingField(el as HTMLInputElement, calculateIndiaTax);
 		});
+
+        ['inAgeBracket', 'inIsMetro'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('change', calculateIndiaTax);
+            }
+        });
 
 		calculateIndiaTax();
 	});

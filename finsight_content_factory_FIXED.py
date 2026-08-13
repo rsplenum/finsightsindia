@@ -22,6 +22,7 @@ import os
 import re
 import time
 import base64
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -162,6 +163,8 @@ PACKAGE_ROOT = Path(os.environ.get("FINSIGHT_PACKAGE_OUT", "content_packages"))
 MODEL_RIGID = os.environ.get("FINSIGHT_LLM_RIGID", "gemini/gemini-3.6-flash")
 MODEL_CREATIVE = os.environ.get("FINSIGHT_LLM_CREATIVE", "gemini/gemini-3.6-flash")
 MAX_STYLE_RETRIES = int(os.environ.get("FINSIGHT_MAX_STYLE_RETRIES", "2"))
+MAX_TOKENS_BUDGET = 2_000_000
+GLOBAL_TOKEN_COUNT = 0
 FORCE_PUBLISH_ON_FAIL = os.environ.get("FINSIGHT_FORCE_PUBLISH_ON_FAIL", "0") == "1"
 
 
@@ -220,9 +223,23 @@ def task_raw(task: Any) -> str:
     return getattr(out, "raw", None) or str(out)
 
 def run_crew(agents: list[Any], tasks: list[Any], label: str) -> str:
+    global GLOBAL_TOKEN_COUNT
     print(f"\n── Crew segment: {label} ({len(tasks)} task(s)) ──")
     crew = Crew(agents=agents, tasks=tasks, process=Process.sequential, verbose=True)
     result = crew.kickoff()
+    
+    try:
+        usage = getattr(result, "token_usage", None)
+        if usage:
+            tokens = getattr(usage, "total_tokens", 0)
+            GLOBAL_TOKEN_COUNT += tokens
+            print(f"   [Tokens Used: {tokens} | Total Session: {GLOBAL_TOKEN_COUNT}/{MAX_TOKENS_BUDGET}]")
+            if GLOBAL_TOKEN_COUNT > MAX_TOKENS_BUDGET:
+                print(f"FATAL: Hard cost cap exceeded ({MAX_TOKENS_BUDGET} tokens). Shutting down.")
+                sys.exit(1)
+    except Exception:
+        pass
+        
     return getattr(result, "raw", None) or str(result)
 
 def ensure_frontmatter(mdx: str, job: ArticleJob, seo: dict[str, Any]) -> str:

@@ -1,0 +1,137 @@
+export interface SWPInputs {
+    initialCorpus: number;
+    monthlyWithdrawal: number;
+    annualStepUp: number;
+    expectedReturn: number;
+    expectedInflation: number;
+    ltcgTax: number;
+    horizonYears: number;
+    useGuardrails?: boolean;
+    hedgingDragCost?: number;
+    hedgingFloorLimit?: number;
+    bsEnabled?: boolean;
+}
+
+export interface SWPDeterministicOutput {
+    years: number[];
+    withdrawals: number[];
+    taxes: number[];
+    growth: number[];
+    balances: number[];
+    netMonthly: number[];
+}
+
+export function runDeterministicSWP(inputs: SWPInputs): SWPDeterministicOutput {
+    const {
+        initialCorpus = 10000000,
+        monthlyWithdrawal = 50000,
+        annualStepUp = 5,
+        expectedReturn = 12,
+        expectedInflation = 6,
+        ltcgTax = 12.5,
+        horizonYears = 30,
+        useGuardrails = false,
+        hedgingDragCost = 1.85,
+        hedgingFloorLimit = -10,
+        bsEnabled = false
+    } = inputs;
+
+    const mu = expectedReturn / 100;
+    const taxRate = ltcgTax / 100;
+    const dragCost = hedgingDragCost / 100;
+    const escalationFactor = (1 + expectedInflation / 100) * (1 + annualStepUp / 100);
+
+    const startingPaycheck = monthlyWithdrawal;
+    const initialAnnualWithdrawal = startingPaycheck * 12;
+    const initialWithdrawalRate = initialCorpus > 0 ? initialAnnualWithdrawal / initialCorpus : 0;
+    const maxSafeWithdrawalRate = initialWithdrawalRate * 1.20;
+
+    let currentBalance = initialCorpus;
+    let costBasis = initialCorpus;
+
+    const years = [0];
+    const withdrawals = [0];
+    const taxes = [0];
+    const growth = [0];
+    const balances = [initialCorpus];
+    const netMonthly = [startingPaycheck];
+
+    for (let year = 1; year <= horizonYears; year++) {
+        if (currentBalance <= 0) {
+            years.push(year);
+            withdrawals.push(0);
+            taxes.push(0);
+            growth.push(0);
+            balances.push(0);
+            netMonthly.push(0);
+            continue;
+        }
+
+        const idealAnnualPaycheck = initialAnnualWithdrawal * Math.pow(escalationFactor, year - 1);
+        const requiredCapitalBuffer = maxSafeWithdrawalRate > 0 ? idealAnnualPaycheck / maxSafeWithdrawalRate : 0;
+
+        let actualAnnualPaycheck;
+        if (useGuardrails && currentBalance < requiredCapitalBuffer && maxSafeWithdrawalRate > 0) {
+            actualAnnualPaycheck = currentBalance * maxSafeWithdrawalRate;
+        } else {
+            actualAnnualPaycheck = idealAnnualPaycheck;
+        }
+
+        let currentReturn = mu;
+        if (bsEnabled) {
+            currentReturn = currentReturn - dragCost;
+        }
+        
+        const grownBalance = currentBalance * (1 + currentReturn);
+        const yearGrowth = grownBalance - currentBalance;
+
+        const capitalGain = Math.max(0, grownBalance - costBasis);
+        const gainRatio = grownBalance > 0 ? capitalGain / grownBalance : 0;
+
+        const actualWithdrawal = Math.min(actualAnnualPaycheck, grownBalance);
+
+        if (actualWithdrawal <= 0) {
+            years.push(year);
+            withdrawals.push(0);
+            taxes.push(0);
+            growth.push(yearGrowth);
+            balances.push(0);
+            netMonthly.push(0);
+            currentBalance = 0;
+            continue;
+        }
+
+        const gainPortionInWithdrawal = actualWithdrawal * gainRatio;
+        const principalPortionInWithdrawal = actualWithdrawal * (1 - gainRatio);
+        const ltcgTaxAmount = gainPortionInWithdrawal * taxRate;
+
+        const totalOutflow = actualWithdrawal + ltcgTaxAmount;
+
+        let finalBalance = 0;
+        if (grownBalance < totalOutflow) {
+            finalBalance = 0;
+            costBasis = 0;
+        } else {
+            finalBalance = grownBalance - totalOutflow;
+            costBasis = Math.max(0, costBasis - principalPortionInWithdrawal);
+        }
+
+        years.push(year);
+        withdrawals.push(actualWithdrawal);
+        taxes.push(ltcgTaxAmount);
+        growth.push(yearGrowth);
+        balances.push(finalBalance);
+        netMonthly.push(actualWithdrawal > 0 ? (actualWithdrawal - ltcgTaxAmount) / 12 : 0);
+
+        currentBalance = finalBalance;
+    }
+
+    return {
+        years,
+        withdrawals,
+        taxes,
+        growth,
+        balances,
+        netMonthly
+    };
+}

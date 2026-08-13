@@ -61,18 +61,28 @@ import ButtonGold from '../components/ButtonGold.astro';
 
 					<hr class="section-divider" />
 
-					<!-- Section 2: Escalation & Market Expectations -->
+					<!-- Section 2: Macro Economics & Market Expectations -->
 					<div class="space-y-4">
-						<SectionTitle title="02 / Escalation & Expected Rates" />
+						<SectionTitle title="02 / Macro Economics & Expected Rates" />
 
 						<div class="grid grid-cols-1 sm:grid-cols-2 reveal-stagger gap-6">
 							<InputGroup 
-								id="stepUp"
-								label="Annual Step-Up (Inflation)"
-								tooltip="The percentage by which your monthly paycheck increases each year to keep pace with inflation."
+								id="expectedInflation"
+								label="Expected Inflation %"
+								tooltip="The expected annual rate of inflation over your retirement horizon."
 								suffix="% / yr"
 								type="number"
 								value="6.0"
+								min="0" max="20" step="0.5" required={true}
+							/>
+
+							<InputGroup 
+								id="stepUp"
+								label="Lifestyle Step-Up %"
+								tooltip="Extra annual paycheck increase ON TOP of inflation for lifestyle upgrades. Set to 0 to simply maintain purchasing power."
+								suffix="% / yr"
+								type="number"
+								value="0.0"
 								min="0" max="20" step="0.5" required={true}
 							/>
 
@@ -84,6 +94,16 @@ import ButtonGold from '../components/ButtonGold.astro';
 								type="number"
 								value="12.0"
 								min="0" max="30" step="0.5" required={true}
+							/>
+
+							<InputGroup 
+								id="annualVolatility"
+								label="Market Volatility %"
+								tooltip="How wildly the market swings each year. NIFTY 50 is ~15%. Aggressive small-cap portfolios can be 20%+"
+								suffix="% vol"
+								type="number"
+								value="15.0"
+								min="5" max="50" step="0.5" required={true}
 							/>
 						</div>
 					</div>
@@ -182,6 +202,11 @@ import ButtonGold from '../components/ButtonGold.astro';
 							<span class="text-sm font-semibold">Stress-Test Your Retirement (10,000 Scenarios)</span>
 						</ButtonGold>
 					</div>
+
+					<div id="inputSanityWarning" class="hidden mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/30 rounded-lg text-xs text-amber-800 dark:text-amber-300 leading-relaxed font-sans flex items-start gap-2">
+						<svg class="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+						<span id="inputSanityMessage"></span>
+					</div>
 				</form>
 			</CardPremium>
 
@@ -277,9 +302,36 @@ import ButtonGold from '../components/ButtonGold.astro';
 								<div class="grid grid-cols-2 md:grid-cols-5 reveal-stagger gap-6">
 									<div><div class="stat-label uppercase tracking-wider">Duration</div><div id="tier2Duration" class="text-sm sm:text-base font-bold text-navy-900 dark:text-navy-100">--</div></div>
 									<div><div class="stat-label uppercase tracking-wider">Total Gross</div><div id="tier2Gross" class="text-sm sm:text-base font-bold text-navy-900 dark:text-navy-100">--</div></div>
-									<div><div class="stat-label text-rose-600 dark:text-rose-400 uppercase tracking-wider">Taxes Paid</div><div id="tier2Taxes" class="text-sm sm:text-base font-bold text-rose-600 dark:text-rose-400">--</div></div>
+									<div>
+										<div class="stat-label text-rose-600 dark:text-rose-400 uppercase tracking-wider flex items-center gap-1">
+											Taxes Paid
+											<button type="button" id="toggleTaxFormulaBtn" class="text-rose-400 hover:text-rose-600 dark:text-rose-500 dark:hover:text-rose-300">
+												<svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+											</button>
+										</div>
+										<div id="tier2Taxes" class="text-sm sm:text-base font-bold text-rose-600 dark:text-rose-400">--</div>
+									</div>
 									<div><div class="stat-label text-gold-500 dark:text-gold-400 uppercase tracking-wider">Net In-Hand</div><div id="tier2Net" class="text-sm sm:text-base font-bold text-gold-500 dark:text-gold-400">--</div></div>
 									<div><div class="stat-label text-gold-500 dark:text-gold-400 uppercase tracking-wider">Bal Remaining</div><div id="tier2BalanceRemaining" class="text-sm sm:text-base font-bold text-gold-500 dark:text-gold-400">--</div></div>
+									
+									<div id="taxFormulaPanel" class="hidden col-span-2 md:col-span-5 mt-1 p-4 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 rounded-lg text-xs font-sans text-navy-700 dark:text-navy-300">
+										<div class="font-bold text-navy-900 dark:text-navy-100 mb-2">How are taxes calculated?</div>
+										<div class="space-y-2">
+											<p>Taxes are calculated yearly on the portfolio's growth.</p>
+											<div class="bg-white dark:bg-navy-900 p-3 rounded border border-navy-200 dark:border-navy-800 font-mono text-[10px] sm:text-xs text-navy-800 dark:text-navy-200 overflow-x-auto">
+												<div class="mb-1 text-navy-500 dark:text-navy-400">// 1. Determine capital gains ratio for the year</div>
+												<div>CapitalGain = Max(0, CurrentBalance - CostBasis)</div>
+												<div class="mb-2">GainRatio = CapitalGain / CurrentBalance</div>
+												
+												<div class="mb-1 text-navy-500 dark:text-navy-400">// 2. Apply ratio to the withdrawal</div>
+												<div>TaxableGain = WithdrawalAmount × GainRatio</div>
+												
+												<div class="mb-1 text-navy-500 dark:text-navy-400">// 3. Calculate Long-Term Capital Gains Tax (LTCG)</div>
+												<div>AnnualTax = TaxableGain × 12.5%</div>
+											</div>
+											<p class="text-[10px] text-navy-500 dark:text-navy-400 pt-1">*The Cost Basis is dynamically adjusted downwards as you withdraw the principal portion.</p>
+										</div>
+									</div>
 								</div>
 							</div>
 
@@ -305,9 +357,10 @@ import ButtonGold from '../components/ButtonGold.astro';
 									<h4 class="text-xs font-bold tracking-tight text-navy-800 dark:text-navy-100">Paycheck Growth vs. Savings Balance</h4>
 									<p class="text-xs text-navy-500 dark:text-navy-400">Net monthly paycheck scaling with inflation alongside underlying corpus growth.</p>
 								</div>
-								<div class="flex items-center gap-6 text-xs font-medium self-start sm:self-auto">
-									<span class="flex items-center gap-1.5 text-navy-900 dark:text-navy-100"><span class="w-2.5 h-2.5 rounded-full bg-navy-900 dark:bg-white"></span> Net Monthly Paycheck</span>
-									<span class="flex items-center gap-1.5 text-gold-500 dark:text-gold-400"><span class="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400"></span> Savings Balance</span>
+								<div class="flex items-center gap-6 text-xs font-medium self-start sm:self-auto flex-wrap">
+									<span class="flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400"><span class="w-2.5 h-2.5 rounded-full bg-indigo-600 dark:bg-indigo-400"></span> Actual Income</span>
+									<span class="flex items-center gap-1.5 text-amber-600 dark:text-amber-400"><span class="w-2.5 h-2.5 rounded-full bg-amber-600 dark:bg-amber-400"></span> Target Income</span>
+									<span class="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400"><span class="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400"></span> Savings Balance</span>
 								</div>
 							</div>
 							<div class="relative w-full h-52 bg-white dark:bg-navy-950 rounded-lg p-3 border border-navy-200 dark:border-navy-800">
@@ -350,9 +403,18 @@ import ButtonGold from '../components/ButtonGold.astro';
 								<h3 class="text-lg font-bold text-navy-900 dark:text-navy-100">Yearly Inflation Escalation Schedule</h3>
 								<p class="text-xs text-navy-500 dark:text-navy-400 mt-0.5">Year-by-year breakdown of net monthly income, net annual withdrawal, taxes, corpus additions, and balance.</p>
 							</div>
-							<span id="scheduleStepUpBadge" class="text-xs text-navy-600 dark:text-navy-400 bg-navy-100 dark:bg-navy-900 border border-navy-200 dark:border-white/10 px-2.5 py-1 rounded-md font-medium self-start sm:self-auto">
-								+6% Inflation & +5% Step-Up
-							</span>
+							<div class="flex flex-col sm:flex-row sm:items-center gap-3 self-start sm:self-auto mt-2 sm:mt-0">
+								<label class="flex items-center cursor-pointer gap-2">
+									<span class="text-[10px] sm:text-xs font-semibold text-navy-600 dark:text-navy-300">Show in Today's Rupees</span>
+									<div class="relative">
+										<input type="checkbox" id="inflationDeflatorToggle" class="sr-only peer">
+										<div class="w-8 h-4 sm:w-9 sm:h-5 bg-navy-200 hover:bg-navy-300 dark:bg-navy-700 dark:hover:bg-navy-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 sm:after:h-4 sm:after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+									</div>
+								</label>
+								<span id="scheduleStepUpBadge" class="text-xs text-navy-600 dark:text-navy-400 bg-navy-100 dark:bg-navy-900 border border-navy-200 dark:border-white/10 px-2.5 py-1 rounded-md font-medium">
+									+6% Inflation & +5% Step-Up
+								</span>
+							</div>
 						</div>
 
 						<div class="w-full max-h-[600px] overflow-x-auto overflow-y-auto border-b border-navy-200 dark:border-white/10 scrollbar-thin scrollbar-thumb-navy-300 dark:scrollbar-thumb-navy-700">
@@ -401,6 +463,37 @@ import ButtonGold from '../components/ButtonGold.astro';
 					<span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-600 dark:bg-rose-400"></span> The Unlucky Start (Market Crash)</span>
 				</div>
 				<span class="text-xs text-navy-400 dark:text-navy-500">10,000 Simulated Lifetimes</span>
+			</div>
+            
+			<!-- Diagnostics -->
+			<div class="mt-4 border-t border-navy-200 dark:border-white/10 pt-4">
+				<button type="button" id="toggleDiagnosticsBtn" class="text-xs flex items-center gap-1.5 text-navy-500 hover:text-navy-800 dark:text-navy-400 dark:hover:text-navy-200 transition-colors">
+					<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+					Simulation Diagnostics
+				</button>
+				<div id="diagnosticsPanel" class="hidden mt-3 p-3 bg-navy-50 dark:bg-navy-900/40 border border-navy-200 dark:border-navy-800 rounded-md text-xs font-mono text-navy-700 dark:text-navy-300">
+					<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+						<div>
+							<div class="text-navy-400 dark:text-navy-500 mb-1">Mean Final Bal</div>
+							<div id="diagMean" class="font-semibold">₹0</div>
+						</div>
+						<div>
+							<div class="text-navy-400 dark:text-navy-500 mb-1">Median Final Bal</div>
+							<div id="diagMedian" class="font-semibold">₹0</div>
+						</div>
+						<div>
+							<div class="text-navy-400 dark:text-navy-500 mb-1">Std Deviation</div>
+							<div id="diagStdDev" class="font-semibold">₹0</div>
+						</div>
+						<div>
+							<div class="text-navy-400 dark:text-navy-500 mb-1">Skewness</div>
+							<div id="diagSkew" class="font-semibold">0.00</div>
+						</div>
+					</div>
+					<div class="mt-3 text-[10px] text-navy-400 dark:text-navy-500 leading-tight font-sans">
+						*If skewness is positive, the mean is pulled upwards by extreme bull markets. If mean &lt; median, something is mathematically wrong.
+					</div>
+				</div>
 			</div>
 		</CardPremium>
 
@@ -484,11 +577,14 @@ import ButtonGold from '../components/ButtonGold.astro';
 		createLineChart, 
 		createMicroCashflowChart 
 	} from '../utils/chart-helpers';
+	
+	import { debounce } from '../utils/debounce';
 
 	// Client-side JavaScript
 	let worker: Worker | null = null;
-	let chartInstance: any = null;
-	let microChartInstance: any = null;
+	let currentChart: any = null;
+	let currentMicroChart: any = null;
+	let lastWorkerData: any = null;
 	let lastWorkerResponse: any = null;
 	let activeViewMode: 'percentiles' | 'samples' = 'percentiles';
 
@@ -531,9 +627,9 @@ import ButtonGold from '../components/ButtonGold.astro';
 	function initThemeMachine() {
 		window.addEventListener('theme-changed', async () => {
 			if (lastWorkerResponse) {
-				chartInstance = await createLineChart('swpChart', lastWorkerResponse, activeViewMode, chartInstance);
+				currentChart = await createLineChart('swpChart', lastWorkerResponse, activeViewMode, currentChart);
 				const inputs = getInputs();
-				microChartInstance = await createMicroCashflowChart('cashflowMicroChart', lastWorkerResponse, inputs, microChartInstance);
+				currentMicroChart = await createMicroCashflowChart('cashflowMicroChart', lastWorkerResponse, inputs, currentMicroChart);
 			}
 		});
 	}
@@ -554,7 +650,7 @@ import ButtonGold from '../components/ButtonGold.astro';
 			worker = new Worker(new URL('../workers/swpWorker.ts', import.meta.url), { type: 'module' });
 			worker.onmessage = function (e: MessageEvent) {
 				lastWorkerResponse = e.data;
-				handleWorkerResponse(lastWorkerResponse);
+				renderDashboard(lastWorkerResponse);
 			};
 		}
 	}
@@ -581,7 +677,7 @@ import ButtonGold from '../components/ButtonGold.astro';
 	function syncUrlParams(inputs: any) {
 		const params = new URLSearchParams(window.location.search);
 		Object.keys(inputs).forEach(key => {
-			if (key !== 'numSimulations' && key !== 'initialMonthly' && key !== 'expectedReturn' && key !== 'annualVolatility' && key !== 'expectedInflation') {
+			if (key !== 'numSimulations' && key !== 'initialMonthly') {
 				params.set(key, inputs[key]);
 			}
 		});
@@ -591,7 +687,7 @@ import ButtonGold from '../components/ButtonGold.astro';
 	function parseUrlParams() {
 		const params = new URLSearchParams(window.location.search);
 		
-		const numFields = ['initialCorpus', 'monthlyWithdrawal', 'annualStepUp', 'ltcgTax', 'horizonYears', 'hedgingDragCost', 'hedgingFloorLimit'];
+		const numFields = ['initialCorpus', 'monthlyWithdrawal', 'annualStepUp', 'expectedReturn', 'annualVolatility', 'expectedInflation', 'ltcgTax', 'horizonYears', 'hedgingDragCost', 'hedgingFloorLimit'];
 		const mapping: any = {
 			'annualStepUp': 'stepUp'
 		};
@@ -619,6 +715,34 @@ import ButtonGold from '../components/ButtonGold.astro';
 		});
 	}
 
+	function checkSanity(inputs: any) {
+		const warningEl = document.getElementById('inputSanityWarning');
+		const messageEl = document.getElementById('inputSanityMessage');
+		if (!warningEl || !messageEl) return;
+		
+		let initialWithdrawalRate = inputs.initialCorpus > 0 ? (inputs.initialMonthly * 12) / inputs.initialCorpus * 100 : 0;
+		
+		if (inputs.expectedReturn <= inputs.expectedInflation) {
+			messageEl.innerHTML = `<strong>Warning:</strong> Your expected return (${inputs.expectedReturn}%) is below expected inflation (${inputs.expectedInflation}%). Your purchasing power will erode rapidly every year.`;
+			warningEl.classList.remove('hidden');
+			return;
+		}
+		
+		if (initialWithdrawalRate > 6) {
+			messageEl.innerHTML = `<strong>Warning:</strong> Your first-year withdrawal rate is <strong>${initialWithdrawalRate.toFixed(1)}%</strong>. This exceeds the commonly cited 4-6% safe withdrawal range and makes your portfolio highly sensitive to early market crashes.`;
+			warningEl.classList.remove('hidden');
+			return;
+		}
+		
+		if (inputs.horizonYears > 40 && inputs.expectedReturn < 10) {
+			messageEl.innerHTML = `<strong>Warning:</strong> A ${inputs.horizonYears}-year horizon with sub-10% returns has historically been unsustainable unless your withdrawal rate is extremely low.`;
+			warningEl.classList.remove('hidden');
+			return;
+		}
+		
+		warningEl.classList.add('hidden');
+	}
+
 	function triggerSimulation() {
 		if (!worker) initWorker();
 
@@ -631,6 +755,7 @@ import ButtonGold from '../components/ButtonGold.astro';
 		}
 
 		const inputs = getInputs();
+		checkSanity(inputs);
 		syncUrlParams(inputs);
 		worker?.postMessage(inputs);
 	}
@@ -654,9 +779,13 @@ import ButtonGold from '../components/ButtonGold.astro';
 		let currentMonthly = initialMonthly;
 		const escalationFactor = (1 + expectedInflation / 100) * (1 + annualStepUp / 100);
 
+		let hasDippedIntoPrincipal = false;
+		let totalNetAnnual = 0;
+		let totalTaxes = 0;
+
 		for (let yr = 1; yr <= yearsCount; yr++) {
 			const i = yr - 1;
-			const rowBgClass = i % 2 === 1 ? 'bg-navy-50 dark:bg-navy-900/50' : 'bg-transparent';
+			let rowBgClass = i % 2 === 1 ? 'bg-navy-50 dark:bg-navy-900/50' : 'bg-transparent';
 
 			if (yr > 1) currentMonthly = currentMonthly * escalationFactor;
 
@@ -664,36 +793,116 @@ import ButtonGold from '../components/ButtonGold.astro';
 			const prevBal = (yr === 1) ? initialCorpus : ((p50Array && p50Array[yr - 1] !== undefined) ? p50Array[yr - 1] : 0);
 
 			if (prevBal <= 0 && currentBal <= 0) {
-				html += `<tr class="${rowBgClass} hover:bg-navy-100 dark:hover:bg-navy-900 transition-colors border-b border-navy-100 dark:border-white/10"><td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-medium text-navy-400 dark:text-navy-600">Year ${yr}</td><td colspan="5" class="py-3 px-3 sm:px-4 text-center whitespace-nowrap text-sm font-medium text-navy-300 dark:text-navy-600">Depleted</td></tr>`;
+				rowBgClass = 'bg-rose-50 dark:bg-rose-950/30';
+				html += `<tr class="${rowBgClass} hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors border-b border-rose-200 dark:border-rose-900/50"><td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-medium text-rose-500 dark:text-rose-400">Year ${yr} ⚠️</td><td colspan="5" class="py-3 px-3 sm:px-4 text-center whitespace-nowrap text-sm font-medium text-rose-500 dark:text-rose-400">Portfolio Depleted</td></tr>`;
 			} else if (prevBal > 0 && currentBal <= 0) {
+				rowBgClass = 'bg-rose-50 dark:bg-rose-950/30';
 				const grossExtracted = (medianWithdrawalsArray && medianWithdrawalsArray[yr] !== undefined) ? medianWithdrawalsArray[yr] : prevBal;
 				const annualTax = (medianTaxesArray && medianTaxesArray[yr] !== undefined) ? medianTaxesArray[yr] : 0;
 				const netExtracted = Math.max(0, grossExtracted - annualTax);
-				html += `<tr class="${rowBgClass} hover:bg-navy-100 dark:hover:bg-navy-900 transition-colors border-b border-navy-100 dark:border-white/10"><td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-semibold text-navy-800 dark:text-navy-200">Year ${yr}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-500 dark:text-gold-400">${tableFormatter.format(Math.round(currentMonthly))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-amber-600 dark:text-amber-400">${tableFormatter.format(Math.round(netExtracted))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-600 dark:text-rose-400">${tableFormatter.format(Math.round(annualTax))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-400 dark:text-navy-500">-</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-600 dark:text-rose-400">₹0</td></tr>`;
+				totalNetAnnual += netExtracted;
+				totalTaxes += annualTax;
+				html += `<tr class="${rowBgClass} hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors border-b border-rose-200 dark:border-rose-900/50"><td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-semibold text-rose-700 dark:text-rose-300">Year ${yr} ⚠️</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-500 dark:text-gold-400">${tableFormatter.format(Math.round(currentMonthly))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-amber-600 dark:amber-400">${tableFormatter.format(Math.round(netExtracted))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-600 dark:text-rose-400">${tableFormatter.format(Math.round(annualTax))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-400 dark:text-navy-500">-</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-600 dark:text-rose-400">₹0</td></tr>`;
 			} else {
 				let grossAnnual = currentMonthly * 12;
 				if (medianWithdrawalsArray && medianWithdrawalsArray[yr] !== undefined) grossAnnual = medianWithdrawalsArray[yr];
 				const annualTax = (medianTaxesArray && medianTaxesArray[yr] !== undefined) ? medianTaxesArray[yr] : 0;
 				const netAnnual = Math.max(0, grossAnnual - annualTax);
 				const netMonthly = grossAnnual > 0 ? netAnnual / 12 : 0;
+				totalNetAnnual += netAnnual;
+				totalTaxes += annualTax;
 				const growth = currentBal - prevBal;
-				const growthColorClass = growth >= 0 ? 'text-gold-500 dark:text-gold-400' : 'text-rose-600 dark:text-rose-400';
+				
+				let extraClasses = '';
+				let yearLabel = `Year ${yr}`;
+				if (currentBal < prevBal && !hasDippedIntoPrincipal) {
+					hasDippedIntoPrincipal = true;
+					extraClasses = 'border-l-4 border-l-amber-500 bg-amber-50/50 dark:bg-amber-900/20';
+					yearLabel = `Year ${yr} <span class="ml-1 px-1.5 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border border-amber-200 dark:border-amber-800">Growth &lt; Withdrawals</span>`;
+				}
+				
+				const growthColorClass = growth >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
 				const formattedGrowth = growth >= 0 ? `+${tableFormatter.format(Math.round(growth))}` : `-${tableFormatter.format(Math.round(Math.abs(growth)))}`;
-				html += `<tr class="${rowBgClass} hover:bg-navy-100 dark:hover:bg-navy-900 transition-colors border-b border-navy-100 dark:border-white/10"><td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-semibold text-navy-800 dark:text-navy-200">Year ${yr}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-500 dark:text-gold-400">${tableFormatter.format(Math.round(netMonthly))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-500 dark:text-gold-400">${tableFormatter.format(Math.round(netAnnual))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-600 dark:text-rose-400">${tableFormatter.format(Math.round(annualTax))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium ${growthColorClass}">${formattedGrowth}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-900 dark:text-navy-100">${tableFormatter.format(Math.round(currentBal))}</td></tr>`;
+				
+				const progressPct = Math.min(100, Math.max(0, (currentBal / initialCorpus) * 100));
+				const progressHtml = `<div class="w-full max-w-[120px] ml-auto bg-navy-100 dark:bg-navy-800 h-1 mt-1.5 rounded-full overflow-hidden flex justify-end"><div class="h-full bg-emerald-500 rounded-full" style="width: ${progressPct}%"></div></div>`;
+				
+				html += `<tr class="${rowBgClass} ${extraClasses} hover:bg-navy-100 dark:hover:bg-navy-900 transition-colors border-b border-navy-100 dark:border-white/10">
+					<td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-semibold text-navy-800 dark:text-navy-200">${yearLabel}</td>
+					<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-500 dark:text-gold-400">${tableFormatter.format(Math.round(netMonthly))}</td>
+					<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-500 dark:text-gold-400">${tableFormatter.format(Math.round(netAnnual))}</td>
+					<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-600 dark:text-rose-400">${tableFormatter.format(Math.round(annualTax))}</td>
+					<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium ${growthColorClass}">${formattedGrowth}</td>
+					<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-900 dark:text-navy-100">
+						${tableFormatter.format(Math.round(currentBal))}
+						${progressHtml}
+					</td>
+				</tr>`;
 			}
 		}
+		
+		html += `<tr class="sticky bottom-0 z-10 bg-navy-100 dark:bg-navy-900 border-t-2 border-navy-300 dark:border-navy-700">
+			<td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-bold text-navy-800 dark:text-navy-200">Lifetime Totals</td>
+			<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-bold text-navy-500 dark:text-navy-400">-</td>
+			<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-bold text-gold-600 dark:text-gold-400">${tableFormatter.format(Math.round(totalNetAnnual))}</td>
+			<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-bold text-rose-600 dark:text-rose-400">${tableFormatter.format(Math.round(totalTaxes))}</td>
+			<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-bold text-navy-500 dark:text-navy-400">-</td>
+			<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-bold text-navy-500 dark:text-navy-400">-</td>
+		</tr>`;
+
 		tableBody.innerHTML = html;
 	}
 
-	async function handleWorkerResponse(data: any) {
-		if (runBtn) {
-			runBtn.disabled = false;
-			runBtn.innerHTML = `<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span class="text-sm font-semibold">Run 10,000 Market Simulations</span>`;
-		}
-		if (!data) return;
-
+	async function renderDashboard(originalData: any, skipChartUpdate = false) {
+		lastWorkerData = originalData;
 		const inputs = getInputs();
-		const { initialCorpus, initialMonthly, expectedInflation, annualStepUp, horizonYears, ltcgTax } = inputs;
+		const { initialMonthly, expectedInflation, annualStepUp, horizonYears, initialCorpus, ltcgTax } = inputs;
+		const isDeflated = (document.getElementById('inflationDeflatorToggle') as HTMLInputElement)?.checked || false;
+
+		const data = {
+			...originalData,
+			p10: [...(originalData.p10 || [])],
+			p50: [...(originalData.p50 || [])],
+			p90: [...(originalData.p90 || [])],
+			medianTaxes: [...(originalData.medianTaxes || [])],
+			medianWithdrawals: [...(originalData.medianWithdrawals || [])],
+			actualPaycheckTimeline: originalData.actualPaycheckTimeline ? [...originalData.actualPaycheckTimeline] : undefined,
+			idealPaycheckTimeline: originalData.idealPaycheckTimeline ? [...originalData.idealPaycheckTimeline] : undefined,
+			samplePaths: originalData.samplePaths ? originalData.samplePaths.map((arr: number[]) => [...arr]) : [],
+			diagnostics: originalData.diagnostics ? { ...originalData.diagnostics } : undefined
+		};
+
+		if (isDeflated) {
+			const infRate = expectedInflation / 100;
+			for (let yr = 1; yr <= horizonYears; yr++) {
+				const deflator = Math.pow(1 + infRate, yr - 1);
+				if (data.p10[yr] !== undefined) data.p10[yr] /= deflator;
+				if (data.p50[yr] !== undefined) data.p50[yr] /= deflator;
+				if (data.p90[yr] !== undefined) data.p90[yr] /= deflator;
+				if (data.medianTaxes[yr] !== undefined) data.medianTaxes[yr] /= deflator;
+				if (data.medianWithdrawals[yr] !== undefined) data.medianWithdrawals[yr] /= deflator;
+				if (data.actualPaycheckTimeline && data.actualPaycheckTimeline[yr] !== undefined) data.actualPaycheckTimeline[yr] /= deflator;
+				if (data.idealPaycheckTimeline && data.idealPaycheckTimeline[yr] !== undefined) data.idealPaycheckTimeline[yr] /= deflator;
+				data.samplePaths.forEach((path: number[]) => {
+					if (path[yr] !== undefined) path[yr] /= deflator;
+				});
+			}
+
+			const finalDeflator = Math.pow(1 + infRate, horizonYears);
+			if (data.diagnostics) {
+				data.diagnostics.meanFinalBalance /= finalDeflator;
+				data.diagnostics.stdDevFinalBalance /= finalDeflator;
+			}
+			data.medianFinalBalance /= finalDeflator;
+			const midDeflator = Math.pow(1 + infRate, horizonYears / 2);
+			data.lowestMonthlyPaycheck /= midDeflator;
+			data.lifestyleSacrificeAmount /= midDeflator;
+		}
+
+		if (runBtn) {
+			runBtn.innerHTML = '<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span class="text-sm font-semibold">Re-run Simulation</span>';
+			runBtn.disabled = false;
+		}
 		const annualWithdrawal = initialMonthly * 12;
 
 		let deathYear = (data.p50 || []).findIndex((balance: number, idx: number) => idx > 0 && balance <= 0);
@@ -857,12 +1066,24 @@ import ButtonGold from '../components/ButtonGold.astro';
 		let requiredCAGR = (netRequired / (1 - (ltcgTax / 100))) + volatilityDrag;
 		const reqCagrEl = document.getElementById('statRequiredCAGR');
 		if (reqCagrEl) reqCagrEl.innerText = requiredCAGR.toFixed(2) + '%';
+		
+		const diagnostics = data.diagnostics;
+		if (diagnostics) {
+			const diagMeanEl = document.getElementById('diagMean');
+			const diagMedianEl = document.getElementById('diagMedian');
+			const diagStdDevEl = document.getElementById('diagStdDev');
+			const diagSkewEl = document.getElementById('diagSkew');
+			
+			if (diagMeanEl) diagMeanEl.innerText = formatShortRupee(diagnostics.meanFinalBalance);
+			if (diagMedianEl) diagMedianEl.innerText = formatShortRupee(data.medianFinalBalance);
+			if (diagStdDevEl) diagStdDevEl.innerText = formatShortRupee(diagnostics.stdDevFinalBalance);
+			if (diagSkewEl) diagSkewEl.innerText = diagnostics.skewnessFinalBalance.toFixed(2);
+		}
 
 		renderScheduleTable(initialMonthly, expectedInflation, annualStepUp, horizonYears, initialCorpus, data.p50, data.medianTaxes, data.medianWithdrawals);
 		renderHedgingDashboard(data, inputs);
-		
-		chartInstance = await createLineChart('swpChart', data, activeViewMode, chartInstance);
-		microChartInstance = await createMicroCashflowChart('cashflowMicroChart', data, inputs, microChartInstance);
+		currentChart = await createLineChart('swpChart', data, activeViewMode, currentChart);
+		currentMicroChart = await createMicroCashflowChart('cashflowMicroChart', data, inputs, currentMicroChart);
 	}
 
 	function renderHedgingDashboard(data: any, inputs: any) {
@@ -953,6 +1174,38 @@ import ButtonGold from '../components/ButtonGold.astro';
 	setupFormattingField(corpusInput, updateDisplayBadges);
 	setupFormattingField(withdrawalInput, updateDisplayBadges);
 	runBtn?.addEventListener('click', triggerSimulation);
+	
+	const debouncedSimulate = debounce(() => {
+		triggerSimulation();
+	}, 600);
+
+	const swpForm = document.getElementById('swpForm');
+	swpForm?.addEventListener('input', () => {
+		debouncedSimulate();
+	});
+	
+	const toggleDiagnosticsBtn = document.getElementById('toggleDiagnosticsBtn');
+	toggleDiagnosticsBtn?.addEventListener('click', () => {
+		const panel = document.getElementById('diagnosticsPanel');
+		if (panel) {
+			panel.classList.toggle('hidden');
+		}
+	});
+
+	const inflationDeflatorToggle = document.getElementById('inflationDeflatorToggle');
+	inflationDeflatorToggle?.addEventListener('change', () => {
+		if (lastWorkerData) {
+			renderDashboard(lastWorkerData, false);
+		}
+	});
+
+	const toggleTaxFormulaBtn = document.getElementById('toggleTaxFormulaBtn');
+	toggleTaxFormulaBtn?.addEventListener('click', () => {
+		const panel = document.getElementById('taxFormulaPanel');
+		if (panel) {
+			panel.classList.toggle('hidden');
+		}
+	});
 
 	function startApp() {
 		parseUrlParams();

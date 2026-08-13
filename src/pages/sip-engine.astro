@@ -334,6 +334,7 @@ import ButtonGold from '../components/ButtonGold.astro';
 		formatIndianRupeeLabel 
 	} from '../utils/formatters';
 
+	import { calculateXIRR } from '../utils/xirr';
 	import html2pdf from 'html2pdf.js';
 
 	// Quantitative Stochastic Engine Controller
@@ -503,11 +504,14 @@ import ButtonGold from '../components/ButtonGold.astro';
 		runSimulation();
 	}
 
-	function calculateNetRealWealth(pv: number, totalInvested: number): number {
-		if (!isPostTax) return pv;
-		const taxableGain = Math.max(0, pv - totalInvested - 125000);
+	function calculateNetRealWealth(nominalVal: number, totalNominalInvested: number, inflationRate: number, horizonYears: number): number {
+		if (!isPostTax) {
+			return nominalVal / Math.pow(1 + inflationRate, horizonYears);
+		}
+		const taxableGain = Math.max(0, nominalVal - totalNominalInvested - 125000);
 		const ltcgTax = taxableGain * 0.125;
-		return Math.max(0, Math.round(pv - ltcgTax));
+		const postTaxNominal = nominalVal - ltcgTax;
+		return Math.max(0, Math.round(postTaxNominal / Math.pow(1 + inflationRate, horizonYears)));
 	}
 
 	function initTaxToggle() {
@@ -668,7 +672,7 @@ import ButtonGold from '../components/ButtonGold.astro';
 		if (btnText) btnText.innerText = originalText;
 		if (!simResult) return;
 
-		const { p90Real, p50Real, p10Real, realOutflowPV, expectedNominalMedian } = simResult;
+		const { p90Nominal, p50Nominal, p10Nominal, p90Real, p50Real, p10Real, realOutflowPV, expectedNominalMedian, nominalTotalInvested } = simResult;
 
 		const sacrificePVEl = document.getElementById('valSacrificePV');
 		const totalInvestedEl = document.getElementById('statTotalInvested');
@@ -679,13 +683,9 @@ import ButtonGold from '../components/ButtonGold.astro';
 		const expectedTagEl = document.getElementById('expectedMultiplierTag');
 		const bestTagEl = document.getElementById('bestMultiplierTag');
 
-		const rawExpectedRealFinal = p50Real[horizonYears];
-		const rawBearRealFinal = p10Real[horizonYears];
-		const rawBullRealFinal = p90Real[horizonYears];
-
-		const expectedRealFinal = calculateNetRealWealth(rawExpectedRealFinal, realOutflowPV);
-		const bearRealFinal = calculateNetRealWealth(rawBearRealFinal, realOutflowPV);
-		const bullRealFinal = calculateNetRealWealth(rawBullRealFinal, realOutflowPV);
+		const expectedRealFinal = calculateNetRealWealth(p50Nominal[horizonYears], nominalTotalInvested, inflationRate, horizonYears);
+		const bearRealFinal = calculateNetRealWealth(p10Nominal[horizonYears], nominalTotalInvested, inflationRate, horizonYears);
+		const bullRealFinal = calculateNetRealWealth(p90Nominal[horizonYears], nominalTotalInvested, inflationRate, horizonYears);
 
 		const pctSacrificed = expectedRealFinal > 0 ? Math.min(100, (realOutflowPV / expectedRealFinal) * 100) : 100;
 		const pctCreated = Math.max(0, 100 - pctSacrificed);
@@ -739,7 +739,22 @@ import ButtonGold from '../components/ButtonGold.astro';
 		if (dragEl) dragEl.innerText = bsEnabled ? `${(annualHedgingDragCost * 100).toFixed(2)}% / Year` : "0.00% / Year";
 		if (floorEl) floorEl.innerText = tableFormatter.format(bsEnabled ? Math.max(realOutflowPV, bearRealFinal * 1.15) : bearRealFinal);
 
-		const netRealXIRR = Math.max(0, ((Math.pow(expectedRealFinal / Math.max(1, realOutflowPV / 2), 1 / horizonYears) - 1) * 100));
+		// Calculate exact XIRR using CashFlows
+		const cfs: {amount: number, date: Date}[] = [];
+		const d = new Date();
+		let curSip = monthlySip;
+		if (seedCapital > 0) cfs.push({ amount: -seedCapital, date: new Date(d) });
+		
+		for(let yr = 1; yr <= horizonYears; yr++) {
+			if (yr > 1) curSip *= (1 + stepUpRate);
+			for(let m = 1; m <= 12; m++) {
+				d.setMonth(d.getMonth() + 1);
+				cfs.push({ amount: -curSip, date: new Date(d) });
+			}
+		}
+		cfs.push({ amount: expectedRealFinal, date: new Date(d) });
+		
+		const netRealXIRR = calculateXIRR(cfs, 0.1) || 0;
 		if (yieldEl) yieldEl.innerText = `${netRealXIRR.toFixed(2)}% Real XIRR`;
 
 		renderHedgingLedger(horizonYears, monthlySip, inflationRate, p50Real, bsEnabled, annualHedgingDragCost);

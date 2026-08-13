@@ -31,10 +31,24 @@ This file acts as our institutional memory. If a problem is listed there, you mu
 To prevent regressions, "stripped down" drafts, or orphaned components during the 100 Topics generation, EVERY article must pass the following strict checklist before it is considered complete:
 
 1. **Research Depth Parity:** The final `.mdx` article MUST contain every mechanical step, edge-case, and psychological hook detailed in the initial research. Never summarize or strip down the core argument.
-2. **Visual Standards Integration:**
+2. **Visual Standards Integration (The "Magazine" Aesthetic):**
    - Always use the `<CardPremium>` component for the TL;DR.
    - All interactive calculators/components MUST include Tailwind `dark:` mode classes (e.g., `dark:bg-navy-900`, `dark:text-white`) to align with the brand theme.
+   - **No Juvenile Animations:** When building SVG or CSS-based infographics and components, strictly avoid "game UI" keyframe animations (like bouncing elements, flashing sirens, or rapid pulsing). Use elegant, static magazine-style editorial design to convey motion and narrative (e.g., static speed lines, dashed paths, refined borders, structural alignment). Keep the tone mature, tasteful, and sophisticated.
 3. **Data & Navigation Architecture:**
    - **Reel Scripts** must NEVER be embedded inline in the `.mdx`. They MUST be appended as JSON objects to `src/data/reel-scripts.json`.
    - New pages or ledgers MUST be wired into the global navigation (`src/layouts/Layout.astro`) so they are actually accessible to users.
-4. **No Haste Rule:** Do not cut corners to save tokens or bypass API limits. It is better to pause and ask the user to wait or proceed in batches than to deliver a compromised, stripped-down artifact.
+4. **THE NO HASTE DOCTRINE (CRITICAL):**
+   - Do not rush to clear the backlog. Depth is infinitely more valuable than speed.
+   - Never cut corners to save tokens, bypass API limits, or please the user with a fast turnaround.
+   - Pause, reflect, and deliver uncompromising quality. 
+   - Stop asking "shall we proceed to the next step?" immediately after delivering a phase. Give the user (and the process) room to breathe. No Haste.
+
+## Image Generation (CRITICAL GUARDRAIL)
+
+BEFORE generating any illustration using the `generate_image` tool, you MUST:
+1. Stop execution.
+2. Present the exact prompt you intend to use to the user.
+3. Wait for the user's explicit authorization.
+
+**Do NOT proactively execute `generate_image` under any circumstances without prior approval.**

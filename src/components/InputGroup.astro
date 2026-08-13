@@ -4,6 +4,7 @@ export interface Props {
 	label: string;
 	required?: boolean;
 	helpText?: string;
+	tooltip?: string;
 	formattedId?: string;
 	formattedClass?: string;
 	formattedDefault?: string;
@@ -22,6 +23,7 @@ const {
 	label, 
 	required = false, 
 	helpText, 
+	tooltip,
 	formattedId, 
 	formattedClass = "text-[11px] text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded font-medium border border-emerald-200 dark:border-emerald-800/50",
 	formattedDefault,
@@ -75,9 +77,9 @@ else inputPadding += " pr-4";
 		{suffix && <span class="absolute right-3.5 text-sm font-medium text-slate-400 dark:text-slate-500 select-none transition-colors group-focus-within:text-slate-600 dark:group-focus-within:text-slate-300">{suffix}</span>}
 	</div>
 
-    {helpText && (
+    {(helpText || tooltip) && (
         <p class="text-xs leading-snug text-slate-500 dark:text-slate-400 max-w-[90%]">
-            {helpText}
+            {helpText || tooltip}
         </p>
     )}
 </div>

@@ -1,0 +1,77 @@
+---
+---
+
+<div class="my-8 rounded-xl border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-950 overflow-hidden shadow-sm">
+  <div class="bg-navy-50 dark:bg-navy-900/50 px-4 py-3 border-b border-navy-200 dark:border-navy-800 flex items-center gap-2">
+    <svg class="w-5 h-5 text-navy-500 dark:text-navy-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+    <h4 class="text-sm font-bold text-navy-900 dark:text-navy-100 m-0">System Split: Resident vs NRI Seller</h4>
+  </div>
+  
+  <div class="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+    
+    <!-- Resident Path -->
+    <div class="relative rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-900/20 p-5">
+      <div class="absolute -top-3 left-4 bg-emerald-100 dark:bg-emerald-900 px-2 py-1 rounded text-xs font-bold text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700">
+        Resident Seller
+      </div>
+      <div class="mt-2">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm font-medium text-emerald-800 dark:text-emerald-200">Applicable Section</span>
+          <span class="px-2 py-1 bg-white dark:bg-navy-900 rounded border border-emerald-200 dark:border-emerald-700 text-xs font-bold text-emerald-600 dark:text-emerald-400">194-IA</span>
+        </div>
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm font-medium text-emerald-800 dark:text-emerald-200">TDS Rate</span>
+          <span class="text-lg font-bold text-emerald-700 dark:text-emerald-300">Flat 1%</span>
+        </div>
+        <div class="flex items-center justify-between mb-4 pb-4 border-b border-emerald-200/50 dark:border-emerald-800/50">
+          <span class="text-sm font-medium text-emerald-800 dark:text-emerald-200">Escape Threshold</span>
+          <span class="text-sm font-semibold text-emerald-700 dark:text-emerald-300">Under ₹50 Lakhs</span>
+        </div>
+        
+        <div class="space-y-2">
+          <div class="flex items-start gap-2">
+            <svg class="w-4 h-4 mt-0.5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span class="text-xs text-emerald-800 dark:text-emerald-200">Buyer uses simple Form 26QB</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <svg class="w-4 h-4 mt-0.5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span class="text-xs text-emerald-800 dark:text-emerald-200">No TAN required for buyer</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NRI Path -->
+    <div class="relative rounded-lg border border-red-200 dark:border-red-800/50 bg-red-50/50 dark:bg-red-900/10 p-5 shadow-[inset_0_0_20px_rgba(239,68,68,0.05)]">
+      <div class="absolute -top-3 left-4 bg-red-100 dark:bg-red-900/80 px-2 py-1 rounded text-xs font-bold text-red-700 dark:text-red-300 border border-red-200 dark:border-red-700">
+        NRI Seller
+      </div>
+      <div class="mt-2">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm font-medium text-red-800 dark:text-red-200">Applicable Section</span>
+          <span class="px-2 py-1 bg-white dark:bg-navy-900 rounded border border-red-200 dark:border-red-700 text-xs font-bold text-red-600 dark:text-red-400">195</span>
+        </div>
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm font-medium text-red-800 dark:text-red-200">TDS Rate</span>
+          <span class="text-lg font-bold text-red-700 dark:text-red-300">12.5% to 30%+</span>
+        </div>
+        <div class="flex items-center justify-between mb-4 pb-4 border-b border-red-200/50 dark:border-red-800/50">
+          <span class="text-sm font-medium text-red-800 dark:text-red-200">Escape Threshold</span>
+          <span class="text-sm font-bold text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/50 px-2 py-0.5 rounded">None (From ₹1)</span>
+        </div>
+        
+        <div class="space-y-2">
+          <div class="flex items-start gap-2">
+            <svg class="w-4 h-4 mt-0.5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            <span class="text-xs font-medium text-red-800 dark:text-red-200">Defaults to Gross Consideration</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <svg class="w-4 h-4 mt-0.5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            <span class="text-xs font-medium text-red-800 dark:text-red-200">TAN & Form 27Q historically required</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

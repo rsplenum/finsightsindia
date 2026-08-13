@@ -1,9 +1,32 @@
 // sipWorker.ts
+function mulberry32(a: number) {
+    return function() {
+      var t = a += 0x6D2B79F5;
+      t = Math.imul(t ^ t >>> 15, t | 1);
+      t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    }
+}
+
+let rand = mulberry32(1234567);
+
+// Box-Muller transform optimized to use both generated normals
+let hasSpare = false;
+let spare = 0;
 function getRandomNormal() {
+	if (hasSpare) {
+		hasSpare = false;
+		return spare;
+	}
 	let u1 = 0, u2 = 0;
-	while (u1 === 0) u1 = Math.random();
-	while (u2 === 0) u2 = Math.random();
-	return Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+	while (u1 === 0) u1 = rand();
+	while (u2 === 0) u2 = rand();
+	const mag = Math.sqrt(-2.0 * Math.log(u1));
+	const z0 = mag * Math.cos(2.0 * Math.PI * u2);
+	const z1 = mag * Math.sin(2.0 * Math.PI * u2);
+	spare = z1;
+	hasSpare = true;
+	return z0;
 }
 
 self.onmessage = (e) => {
@@ -24,12 +47,20 @@ function runGoalSeek(params: any) {
 		eqPct, debtPct, goldPct, bsEnabled, annualHedgingDragCost, isPostTax
 	} = params;
 
+	// Reset RNG seed for deterministic runs
+	rand = mulberry32(1234567);
+	hasSpare = false;
+
 	const monthlyFloor = -0.08 / 12;
 	const sqrt12 = Math.sqrt(12);
 
 	const eqDrift = (0.12 - 0.5 * 0.15 * 0.15) / 12;
 	const debtDrift = (0.071 - 0.5 * 0.02 * 0.02) / 12;
 	const goldDrift = (0.085 - 0.5 * 0.10 * 0.10) / 12;
+
+    const eqVolMult = 0.15 / sqrt12;
+    const debtVolMult = 0.02 / sqrt12;
+    const goldVolMult = 0.10 / sqrt12;
 
 	let lowSip = 0;
 	let highSip = 10000000;
@@ -39,15 +70,11 @@ function runGoalSeek(params: any) {
 		let midSip = (lowSip + highSip) / 2;
 		const finalRealValues = new Float64Array(numMiniSims);
 
-		let totalInvested = seedCapital;
+		let totalNominalInvested = seedCapital;
 		let projectedSip = midSip;
-		let globalMonth = 0;
 		for (let yr = 1; yr <= horizonYears; yr++) {
 			if (yr > 1) { projectedSip = projectedSip * (1 + stepUpRate); }
-			for (let m = 1; m <= 12; m++) {
-				globalMonth++;
-				totalInvested += projectedSip / Math.pow(1 + inflationRate, globalMonth / 12);
-			}
+			totalNominalInvested += projectedSip * 12;
 		}
 
 		for (let s = 0; s < numMiniSims; s++) {
@@ -58,20 +85,24 @@ function runGoalSeek(params: any) {
 				for (let m = 1; m <= 12; m++) {
 					portBal += currentSip;
 
-					let rEqM = Math.exp(eqDrift + (0.15 / sqrt12) * getRandomNormal()) - 1;
+					let rEqM = Math.exp(eqDrift + eqVolMult * getRandomNormal()) - 1;
 					if (bsEnabled) { rEqM = Math.max(monthlyFloor, rEqM) - (annualHedgingDragCost / 12); }
 					
-					const rDebtM = Math.exp(debtDrift + (0.02 / sqrt12) * getRandomNormal()) - 1;
-					const rGoldM = Math.exp(goldDrift + (0.10 / sqrt12) * getRandomNormal()) - 1;
+					const rDebtM = Math.exp(debtDrift + debtVolMult * getRandomNormal()) - 1;
+					const rGoldM = Math.exp(goldDrift + goldVolMult * getRandomNormal()) - 1;
 					
 					const portReturn = (eqPct * rEqM) + (debtPct * rDebtM) + (goldPct * rGoldM);
 					portBal = portBal * (1 + portReturn);
 				}
 			}
-			let realWealth = portBal / Math.pow(1 + inflationRate, horizonYears);
+			
+            let postTaxNominal = portBal;
 			if (isPostTax) {
-				realWealth = realWealth - Math.max(0, (realWealth - totalInvested - 125000) * 0.125);
+                const taxableGain = Math.max(0, portBal - totalNominalInvested - 125000);
+				postTaxNominal = portBal - (taxableGain * 0.125);
 			}
+            
+            let realWealth = postTaxNominal / Math.pow(1 + inflationRate, horizonYears);
 			finalRealValues[s] = Math.max(0, realWealth);
 		}
 
@@ -94,17 +125,34 @@ function runSimulation(params: any) {
 		eqPct, debtPct, goldPct, bsEnabled, annualHedgingDragCost
 	} = params;
 
-	const numSims = 2000;
+	// Reset RNG seed for deterministic runs
+	rand = mulberry32(1234567);
+	hasSpare = false;
+
+	const numSims = 10000;
 	const sqrt12 = Math.sqrt(12);
 
+    const eqDrift = (0.12 - 0.5 * 0.15 * 0.15) / 12;
+    const debtDrift = (0.071 - 0.5 * 0.02 * 0.02) / 12;
+    const goldDrift = (0.085 - 0.5 * 0.10 * 0.10) / 12;
+
+    const eqVolMult = 0.15 / sqrt12;
+    const debtVolMult = 0.02 / sqrt12;
+    const goldVolMult = 0.10 / sqrt12;
+    const monthlyFloor = -0.08 / 12;
+    const dragMonthly = annualHedgingDragCost / 12;
+
 	let realOutflowPV = seedCapital;
+    let nominalTotalInvested = seedCapital;
 	let projectedSip = monthlySip;
 	let globalMonthCounter = 0;
+    
 	for (let yr = 1; yr <= horizonYears; yr++) {
 		if (yr > 1) { projectedSip = projectedSip * (1 + stepUpRate); }
 		for (let m = 1; m <= 12; m++) {
 			globalMonthCounter++;
 			realOutflowPV += projectedSip / Math.pow(1 + inflationRate, globalMonthCounter / 12);
+            nominalTotalInvested += projectedSip;
 		}
 	}
 
@@ -120,22 +168,13 @@ function runSimulation(params: any) {
 			for (let m = 1; m <= 12; m++) {
 				portBal += currentSip;
 
-				const eqDrift = (0.12 - 0.5 * 0.15 * 0.15) / 12;
-				const eqVol = (0.15 / sqrt12) * getRandomNormal();
-				let rEqM = Math.exp(eqDrift + eqVol) - 1;
-
+				let rEqM = Math.exp(eqDrift + eqVolMult * getRandomNormal()) - 1;
 				if (bsEnabled) {
-					const monthlyFloor = -0.08 / 12;
-					rEqM = Math.max(monthlyFloor, rEqM) - (annualHedgingDragCost / 12);
+					rEqM = Math.max(monthlyFloor, rEqM) - dragMonthly;
 				}
 
-				const debtDrift = (0.071 - 0.5 * 0.02 * 0.02) / 12;
-				const debtVol = (0.02 / sqrt12) * getRandomNormal();
-				const rDebtM = Math.exp(debtDrift + debtVol) - 1;
-
-				const goldDrift = (0.085 - 0.5 * 0.10 * 0.10) / 12;
-				const goldVol = (0.10 / sqrt12) * getRandomNormal();
-				const rGoldM = Math.exp(goldDrift + goldVol) - 1;
+				const rDebtM = Math.exp(debtDrift + debtVolMult * getRandomNormal()) - 1;
+				const rGoldM = Math.exp(goldDrift + goldVolMult * getRandomNormal()) - 1;
 
 				const portMonthlyReturn = (eqPct * rEqM) + (debtPct * rDebtM) + (goldPct * rGoldM);
 				portBal = portBal * (1 + portMonthlyReturn);
@@ -145,9 +184,14 @@ function runSimulation(params: any) {
 		}
 	}
 
+    const p90Nominal = [];
+    const p50Nominal = [];
+    const p10Nominal = [];
+
 	const p90Real = [];
 	const p50Real = [];
 	const p10Real = [];
+
 	let expectedNominalMedian = 0;
 
 	for (let yr = 0; yr <= horizonYears; yr++) {
@@ -160,18 +204,25 @@ function runSimulation(params: any) {
 			expectedNominalMedian = nom50;
 		}
 
-		const discount = Math.pow(1 + inflationRate, yr);
+        p10Nominal.push(Math.round(nom10));
+        p50Nominal.push(Math.round(nom50));
+        p90Nominal.push(Math.round(nom90));
 
+		const discount = Math.pow(1 + inflationRate, yr);
 		p10Real.push(Math.round(nom10 / discount));
 		p50Real.push(Math.round(nom50 / discount));
 		p90Real.push(Math.round(nom90 / discount));
 	}
 
 	return {
+        nominalTotalInvested,
+		realOutflowPV,
+		expectedNominalMedian,
+        p90Nominal,
+        p50Nominal,
+        p10Nominal,
 		p90Real,
 		p50Real,
-		p10Real,
-		realOutflowPV,
-		expectedNominalMedian
+		p10Real
 	};
 }

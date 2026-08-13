@@ -1256,5 +1256,515 @@
         "audio": "You have to force the Assessing Officer to shift the burden of recovery onto the defaulting employer. Want the exact step-by-step grievance process to freeze this demand? Read the full breakdown on FinSight INDIA."
       }
     ]
+  },
+  {
+    "id": "reel-036",
+    "title": "The 1% TDS Notice for Property Buyers",
+    "articleSlug": "194-ia-buyer-tds-notice",
+    "duration": "100s",
+    "hook": "You just paid the full price for your new flat. Why is the government now demanding Rs. 60,000 from you, plus penal interest?",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Speaker standing in front of a newly registered apartment. Suddenly, a glowing red TRACES demand pops up on their phone.",
+        "audio": "You stretched your finances, got the loan, and paid the builder 60 Lakhs in full for your new flat. You think tax is the seller\u2019s problem. But 14 months later, the Income Tax Department sends YOU a demand for 60,000 rupees plus severe interest."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "Split screen: 99% of the money going to a Seller bucket, and 1% going to a Government Tax bucket labeled Form 26QB.",
+        "audio": "Welcome to the 194-IA trap. When you buy a property worth 50 Lakhs or more, you are legally required to act as a mini tax-collector. You must deduct 1% of the total value BEFORE you pay the seller, and deposit it to the government using Form 26QB."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A calendar bleeding red interest days stacking up, showing 201(1A) penalty.",
+        "audio": "If you mistakenly pay the seller 100%, you become an assessee in default. You now owe that 1% from your own pocket. And the worst part? You owe an inescapable 1% monthly penal interest under Section 201(1A) for every month you missed it."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A document titled Form 26A appears like a shield, blocking the principal amount but letting the interest bleed through.",
+        "audio": "Can you escape it? If the seller already paid their capital gains tax, a CA can file Form 26A for you. This stops the government from recovering the principal 1% tax twice. But it will NOT erase the months of accumulated penal interest."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing to screen with FinSight INDIA logo.",
+        "audio": "And if your seller is an NRI? The rules change completely and the rate skyrockets. Don\u2019t pay a rupee until you read our full property TDS defense guide on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-022",
+    "title": "The Joint Registry EMI Trap",
+    "articleSlug": "section-26-joint-registry-emi-trap",
+    "duration": "100s",
+    "hook": "You paid 100% of your home loan EMI. But the Income Tax AI just slashed your tax deduction in half and slapped you with a 200% penalty.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "A massive algorithmic machine splitting a heavy gold coin stream precisely in half.",
+        "audio": "You bought a house. You registered it 50-50 with your spouse for security. You paid 100% of the EMI from your salary account. But the Income Tax AI just slashed your tax deduction in half and slapped you with a 200% penalty."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A digital scale weighing a legal property deed against a bank statement. The deed crushes the statement.",
+        "audio": "Welcome to the Section 26 EMI Trap. The government\"s algorithm does not care about your bank statements. It only respects the ink on the Sub-Registrar\"s property deed."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A 50% ownership deed glowing. A red 143(1) Intimation overlay flashes.",
+        "audio": "If the registry says you own 50% of the house, the system strictly caps your permissible interest deduction at 50%. It doesn\"t matter if you funded every single rupee of the loan."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "Red \"MISREPORTING 200%\" stamp slams down.",
+        "audio": "When you try to claim 100% of the deduction, the AIS detects the mismatch instantly. It triggers a Section 143(1) intimation, rejects your claim, and categorizes it as \"Misreporting of Income\", which carries a brutal 200% penalty."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing aggressively to the camera. \"Pre-Registry Fix\" shield appears.",
+        "audio": "The only fix? Draft your purchase deed to reflect your actual financial contribution before you sign it. A 90-10 registry saves you from the algorithm. Read the full Masterclass defense on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-023",
+    "title": "The Phantom Rent Trap",
+    "articleSlug": "section-23-phantom-rent-trap",
+    "duration": "100s",
+    "hook": "You own three houses, but one is locked and empty. Did you know the government is about to tax you on the rent you never received?",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Speaker holding three golden keys. One key starts bleeding red digital ink.",
+        "audio": "You own three houses, but one is locked and empty. Did you know the government is about to tax you on the rent you never received? It\"s called the Phantom Rent Trap."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "An algorithmic sorting machine targeting a third house.",
+        "audio": "The law only allows two houses to sit at a \"nil\" annual value. If your name is on three deeds, the algorithm automatically assumes the third house is rented out, even if it\"s completely vacant."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A trap snapping shut over a cheap house.",
+        "audio": "Most people blindly tell the algorithm that their cheapest house is the one that\"s empty, hoping to pay less tax. That is a massive mathematical mistake."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A sleek matrix showing uncapped interest wiping out tax.",
+        "audio": "If you choose your deemed let-out property correctly, you unlock Section 24(b) uncapped interest. You can use the massive loan interest from your most expensive house to completely wipe out the phantom rent."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing down. Old vs New Regime doors appear.",
+        "audio": "But the New Tax Regime completely changes the rules on how you can use that loss. Stop guessing. Learn how to run the 3-house permutation matrix on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-041",
+    "title": "The Cash Token Advance Penalty",
+    "articleSlug": "section-269ss-cash-token-property-advance-penalty",
+    "duration": "100s",
+    "hook": "You gave a \u20b950,000 cash token to lock a property deal. It felt harmless. But the Income Tax department is about to hit you with a 100% flat penalty.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "A handshake over a \u20b950,000 cash stack. A red stamp crashes down labeled 'SECTION 271D'.",
+        "audio": "You gave a \u20b950,000 cash token to lock a property deal. It felt completely harmless and off the books. But the Income Tax department is about to hit you with a 100% flat penalty."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A calendar flipping to June 2015. The words 'Specified Sum' appear over a house.",
+        "audio": "Back in 2015, the government changed the law. Any cash advance of \u20b920,000 or more related to a property transfer became illegal under Section 269SS. It doesn't matter if you call it a token, bayana, or booking amount."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A \u20b950,000 cash stack instantly duplicated into a \u20b950,000 red penalty bill.",
+        "audio": "And the penalty? It isn't a percentage of tax. It is exactly 100% of the cash accepted. Take 50,000 in cash? You owe 50,000 in penalty. And the deal doesn't even need to be registered for them to catch you."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "The deal cancels, the cash is handed back, and a SECOND red stamp labeled '271E' crashes down.",
+        "audio": "But here is the real trap. What if the deal falls through and you return the cash? Refunding that cash token triggers Section 269T. That brings a SECOND 100% penalty. You just lost double the money on a cancelled deal."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing to screen. FinSight INDIA logo.",
+        "audio": "Stop using cash for property tokens. Use NEFT, use UPI, or use Cheques. Want the full survival playbook for property advances? Link in bio to read on FinSight INDIA."
+      }
+    ]
+  },
+  {
+    "id": "reel-042",
+    "title": "The Section 43B(h) MSME Trap",
+    "articleSlug": "section-43bh-msme-45-day-payment-tax-disallowance",
+    "duration": "100s",
+    "hook": "You just bought goods from a small business and planned to pay them in May. But because you crossed March 31st, the government just added that entire expense back to your taxable profit.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "A CFO looking at a draft tax computation. The profit spikes artificially.",
+        "audio": "You bought goods from a small business and planned to pay them in May. But because you crossed March 31st, the government just added that entire expense back to your taxable profit. Welcome to the MSME 45-day trap."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A calendar showing the 45-day clock ticking down and stopping at March 31.",
+        "audio": "Under Section 43B(h), if you delay payment to a Micro or Small manufacturer beyond 45 days, you lose the tax deduction for that year. It gets treated as pure profit. And unlike PF or bonuses, paying it before your ITR filing deadline will NOT save you."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A funnel sorting 'Udyam', 'Traders', 'Micro'.",
+        "audio": "But here is the secret. It doesn't apply to Medium enterprises, and it generally excludes Traders. You only have to worry about Micro and Small manufacturers or service providers with an Udyam certificate."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A contract with '45 Days' stamped on it.",
+        "audio": "The only way to survive? Mandate Udyam declarations from all vendors, keep your written credit terms to exactly 45 days, and ruthlessly clear your February and March payables before the financial year ends."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "FinSight INDIA logo and a link.",
+        "audio": "Don't let working capital delays destroy your tax planning. Learn how to navigate the 43B(h) divergence on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-022",
+    "title": "The E-Way Bill 200% Penalty Trap",
+    "articleSlug": "section-129-cgst-expired-e-way-bill-penalty",
+    "duration": "100s",
+    "hook": "A 2-hour traffic jam just cost you 18 Lakh rupees in tax penalties, and the GST officer is legally right. Here is how the E-Way bill expiry trap destroys working capital.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "A truck stuck in traffic. A digital clock above it hits 00:00. A massive red \"SECTION 129\" stamp hits the screen.",
+        "audio": "A 2-hour traffic jam just cost you 18 Lakh rupees in tax penalties, and the GST officer is legally right. Welcome to the Section 129 E-Way Bill Trap."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "Split screen: Normal invoice vs a ticking E-Way bill distance pass.",
+        "audio": "An e-way bill isn\u2019t an open-ended delivery challan. It\u2019s a distance-limited transit pass. When that clock expires, the government algorithmically assumes you completed the journey and are now running a second, illegal trip off the books."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "Officer stopping truck. \"200% PENALTY\" flies out of the officer's hand.",
+        "audio": "If the mobile squad catches your truck even 1 hour after expiry, they don't treat it as a minor delay. Under Section 129, they instantly detain your goods and demand a 200% penalty on the tax payable to release them."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A glowing 16-hour timeline window appears around the expiry mark.",
+        "audio": "Your only operational defense is the 8-Hour Window. The GST portal allows you to extend the bill\u2019s validity, but only within 8 hours before or 8 hours after it expires. Miss that window, and you are locked out permanently."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing to screen, FinSight INDIA logo.",
+        "audio": "Don't let a broken truck bankrupt you. Learn how High Courts are fighting back using FASTag and GPS evidence on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-nri-tds-195",
+    "title": "The NRI Property Sale TDS Trap",
+    "articleSlug": "nri-property-sale-tds-section-195-trap",
+    "duration": "100s",
+    "hook": "Selling your property in India? The buyer is legally forced to withhold over 13% of the total sale value, even if you are selling at a loss. Here is how to stop them.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Speaker holding a mock property deed for \u20b92 Crore. A red stamp hits it reading '\u20b926 LAKHS WITHHELD'.",
+        "audio": "Selling your property in India? The buyer is legally forced to withhold over 13% of the total sale value, even if you are selling at a loss. Here is how to stop them."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "Split screen: Resident Seller (1% TDS) vs NRI Seller (Section 195).",
+        "audio": "Everyone talks about the 1% TDS rule. But that's only for residents. If you are an NRI, Section 195 applies. The government assumes your entire sale price is pure profit, and forces the buyer to withhold capital gains tax on the gross amount."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A Rupee scale. Sale price \u20b92 Crore vs Profit \u20b950 Lakhs. The 13% tax bites into the massive \u20b92 Crore block.",
+        "audio": "If you sell a property for 2 Crores with only a 50 Lakh profit, the buyer will withhold 26 Lakhs in tax. Your actual tax liability is only 6.5 Lakhs! You just lost 19.5 Lakhs in liquidity that is now stuck with the government for a year."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A golden document drops down reading 'Form 13 - Section 197'.",
+        "audio": "Don't get angry at the buyer. They are just trying to avoid being penalized. To save your money, you must apply for a Lower Deduction Certificate using Form 13. It's the only legally binding document that allows the buyer to safely deduct less."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing to link. FinSight INDIA logo.",
+        "audio": "It takes 45 days to process. Do not sign a sale deed without building this buffer into your MoU. Learn the exact Form 13 liquidity rescue process on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-120-day-nri-trap",
+    "title": "The 120-Day Accidental Residency Trap",
+    "articleSlug": "120-day-accidental-residency-trap",
+    "duration": "100s",
+    "hook": "Are you an NRI returning to India? If you stay past 120 days, you officially become a Resident. But does that mean your zero-tax Dubai salary is suddenly exposed to the Indian government?",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Speaker looking concerned, pointing to a calendar marked 'Day 121'. A red stamp hits saying 'RESIDENT'.",
+        "audio": "Are you an NRI returning to India? If you earn more than 15 Lakhs in India and stay past 120 days, you officially become a Resident. But does that mean your zero-tax Dubai salary is suddenly exposed to the Indian government?"
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A massive metal shield drops down over a bag of foreign currency. The shield reads 'RNOR'.",
+        "audio": "No. The system anticipated this exact panic. When you cross 120 days, the law automatically grants you a powerful statutory shield called 'Resident but Not Ordinarily Resident', or RNOR. Your global income remains 100% tax-free."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "Calendar flips to Day 182. The automatic shield evaporates, but a second, older shield ('Gate B') rises up behind it.",
+        "audio": "But what happens if you cross 182 days? CAs will tell you the shield evaporates and you instantly fall off a cliff. This is false. When you cross 182 days, the automatic shield drops, but you just fall back to a second, older shield."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A 10-year timeline appears, checking off years spent abroad.",
+        "audio": "If you have lived abroad for 9 of the last 10 years, or spent less than 729 days in India over the last 7 years, you STILL qualify for RNOR. You could stay the entire year and your global income would still be protected."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing to link. FinSight INDIA logo.",
+        "audio": "Stop panicking about your calendar this year, and start calculating your travel footprint from the last decade. Learn the exact mechanics of the Dual-Gate RNOR defense on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-schedule-fa-bma-penalty",
+    "title": "The Schedule FA Black Money Act Penalty",
+    "articleSlug": "schedule-fa-black-money-act-penalty",
+    "duration": "100s",
+    "hook": "If you are a returning NRI or hold foreign RSUs, check your AIS right now. The government just opened a massive amnesty window for Schedule FA penalties, and it closes December 31st.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "A massive steel vault and a tiny $50 bill are caught in the same red laser grid.",
+        "audio": "Did you forget to declare a dormant $50 overseas bank account or your vested RSUs in your ITR? The algorithm does not care. It treats you exactly like an offshore criminal."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A Notice drops down reading 'Black Money Act - Penalty 10 Lakhs'.",
+        "audio": "Under the Black Money Act, failing to fill out Schedule FA triggers a flat, non-negotiable penalty of 10 Lakh Rupees. It doesn't matter if you already paid tax on the RSUs, or if the account generates zero income."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "Calendar showing the RNOR years turning into ROR.",
+        "audio": "Returning expats usually fall into this trap in their fourth year back. They get so used to their RNOR exemption that they forget to file Schedule FA when they finally become ordinary residents."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "Screen recording of the AIS portal showing 'Foreign Assets Information'. A ticking clock appears showing Dec 31, 2026.",
+        "audio": "But there is a new escape hatch. The Income Tax Department is now pushing FATCA data directly into your AIS. Check it immediately. If you have an undisclosed asset, you can use the FAST-DS 2026 amnesty window before December 31st to get guaranteed immunity from the penalty."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing to link. FinSight INDIA logo.",
+        "audio": "Do not let a clerical error cost you 10 Lakhs. Learn exactly how the FAST-DS amnesty and the AIS False-Comfort trap work on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-022",
+    "title": "The LTA Fake Bills Scrutiny",
+    "articleSlug": "lta-fake-bills-scrutiny",
+    "duration": "100s",
+    "hook": "Did you submit a fake flight ticket for your LTA claim this year to save tax? The INTRAC data-mining system just flagged your PAN for a 200% penalty.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "A calendar showing a weekend trip with no official leave applied. A red scanner sweeps over it.",
+        "audio": "Did you submit a fake flight ticket for your LTA claim this year? Or maybe you travelled on a weekend without officially taking leave? The INTRAC data-mining system just flagged your PAN for a 200% penalty."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A split screen showing Form 12BB LTA submission vs HR Attendance Logs.",
+        "audio": "Welcome to Project Insight. The tax department no longer does manual audits. Their data-mining infrastructure cross-references the LTA claim you gave your employer with your official HR attendance logs. If you claimed Leave Travel Allowance without actually being on leave, the exemption is legally void."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "An automated discrepancy system scanning a fake PDF ticket, matching it against airline PNR APIs and returning 'NOT FOUND'.",
+        "audio": "And if you submitted a fake PDF ticket? The system validates your PNR against airline APIs and checks your Annual Information Statement for matching credit card payments. If the money trail doesn't exist, you are caught."
+      },
+      {
+        "time": "0:55 - 1:15",
+        "visual": "A \u20b930,000 tax saving instantly turns into a \u20b993,600 penalty bill.",
+        "audio": "Trying to save 30,000 rupees in tax will now cost you nearly 94,000 rupees. Under Section 270A, submitting a fake bill is classified as deliberate misreporting. The penalty is a brutal 200% of the tax evaded, plus interest."
+      },
+      {
+        "time": "1:15 - 1:40",
+        "visual": "A shield icon with 'ITR-U' written on it.",
+        "audio": "Always keep your physical boarding passes. And if you already submitted a fake claim, your only legal rescue is filing an Updated Return to pay the tax before they send the notice. Read the full defense blueprint on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-80ttb",
+    "title": "The Senior Citizen FD Interest Mismatch",
+    "articleSlug": "senior-citizen-80ttb-dropdown-error",
+    "duration": "100s",
+    "hook": "Did you know a simple dropdown error on your parents' tax return could wipe out \u20b940,000 in deductions?",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "A person looking confused at a tax portal. A giant red '\u20b940,000 LOST' stamp slams onto the screen.",
+        "audio": "Did you know a simple dropdown error on your parents' tax return could wipe out \u20b940,000 in deductions? It's not a miscalculation. It's a classification failure."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A dropdown menu showing '80TTA (Max \u20b910,000)' being selected. A buzzer sounds.",
+        "audio": "When declaring Fixed Deposit interest, most people default to Section 80TTA, which caps the deduction at just \u20b910,000. But if the taxpayer is over 60, they belong in a completely different legal category."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A golden shield labeled '80TTB' appears, expanding to show 'Max \u20b950,000'.",
+        "audio": "Section 80TTB. This section specifically grants resident senior citizens a massive \u20b950,000 deduction on all deposit interest. But the algorithm won't automatically select it for you. You have to actively choose it."
+      },
+      {
+        "time": "0:55 - 1:15",
+        "visual": "A perfectly calculated tax return sliding into a government vault, while a shadow hand steals money.",
+        "audio": "If you miss it, the tax system won't throw an error. It accepts the return, perfectly processing the wrong legal identity, and quietly taking more tax than it should. And under the New Tax Regime? You lose this entirely unless you opt out."
+      },
+      {
+        "time": "1:15 - 1:40",
+        "visual": "Speaker pointing aggressively to the camera. 'FinSight INDIA' logo appears.",
+        "audio": "Stop letting the algorithm decide your taxes. Discover the 5-step classification defense to secure the 80TTB deduction. Read the full Masterclass on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-065",
+    "title": "The REIT Dividend Tax Trap",
+    "articleSlug": "fractional-real-estate-reit-dividend-tax",
+    "duration": "100s",
+    "hook": "You bought REITs for tax-free passive income. But the government is quietly adjusting your cost basis, and you are walking into a massive capital gains trap.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "A 'Tax-Free REIT Dividend' check turning into a ticking time bomb.",
+        "audio": "You bought REITs for tax-free passive income. But the government is quietly adjusting your cost basis, and you are walking into a massive capital gains trap."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "Split screen: Four cash flows. Interest (Red), Dividend (Yellow), Repayment of Debt (Green/Warning), Rental (Red).",
+        "audio": "REIT payouts aren't just dividends. They are bundles of 4 distinct cash flows: Interest, Dividends, Repayment of Debt, and Rentals. Each has its own brutal tax logic. You cannot just count the cash and call it a day."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A ledger showing 'Repayment of Debt' subtracting from the 'Unit Purchase Price'.",
+        "audio": "The Trap is the 'Repayment of Debt' component. It's technically tax-free right now. But the government forces you to subtract every rupee of it from your original unit purchase price. This is called Basis Reduction."
+      },
+      {
+        "time": "0:55 - 1:15",
+        "visual": "Selling the REIT at a profit. The smaller cost basis causes a massive Capital Gains explosion.",
+        "audio": "When you finally sell your REIT units, your purchase price looks artificially low on paper. Result? A massive, unexpected Capital Gains tax explosion. That tax-free cash you received? It was merely tax-deferred."
+      },
+      {
+        "time": "1:15 - 1:40",
+        "visual": "Speaker pointing to 'Form 77 Breakdown'.",
+        "audio": "Stop confusing yield with after-tax reality. Demand the Form 77 breakdown and map the DNA of your cash flows. Learn exactly how to defend your portfolio on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-022",
+    "title": "The REIT Basis Reduction Trap",
+    "articleSlug": "the-blueprint-of-indian-reits",
+    "duration": "100s",
+    "hook": "Getting an 8% yield on your REIT investment? You might be falling into the Basis Reduction Trap.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "A shiny '8% Yield' sign suddenly shatters.",
+        "audio": "Getting an 8% yield on your REIT investment and thinking it's tax-free? You might be falling into a massive trap."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A glass pipe with different colored liquids pouring through it.",
+        "audio": "REITs are pass-through trusts. The cash you get isn't a simple dividend. It is broken into four distinct parts, and each carries its own tax DNA."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A pie chart breaks into Interest, Dividend, Rent, and Repayment of Debt. The Debt piece is highlighted.",
+        "audio": "The most dangerous one? Repayment of Debt. It feels like tax-free cash today, but it is actually secretly reducing your purchase price."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "An investor's purchase price drops from \u20b9100 to \u20b995, triggering a massive tax bomb when they sell.",
+        "audio": "If you bought at \u20b9100 and receive \u20b95 as debt repayment, your new tax basis is \u20b995. You don't pay tax now, but when you sell, your capital gains tax will explode."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing to screen. FinSight INDIA logo.",
+        "audio": "Stop looking at the yield illusion. Track your basis. Learn the exact defense tactics on FinSight INDIA. Link in bio."
+      }
+    ]
+  },
+  {
+    "id": "reel-051",
+    "title": "The Cash Token Advance Penalty",
+    "articleSlug": "section-269ss-cash-token-property-advance-penalty",
+    "duration": "100s",
+    "hook": "You gave a \u20b950,000 cash token to lock a property deal. It felt harmless. But the Income Tax department is about to hit you with a 100% flat penalty.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "A handshake over a \u20b950,000 cash stack. A red stamp crashes down labeled 'SECTION 271D'.",
+        "audio": "You gave a \u20b950,000 cash token to lock a property deal. It felt completely harmless and off the books. But the Income Tax department is about to hit you with a 100% flat penalty."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A calendar flipping to June 2015. The words 'Specified Sum' appear over a house.",
+        "audio": "Back in 2015, the government changed the law. Any cash advance of \u20b920,000 or more related to a property transfer became illegal under Section 269SS. It doesn't matter if you call it a token, bayana, or booking amount."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A \u20b950,000 cash stack instantly duplicated into a \u20b950,000 red penalty bill.",
+        "audio": "And the penalty? It isn't a percentage of tax. It is exactly 100% of the cash accepted. Take 50,000 in cash? You owe 50,000 in penalty. And the deal doesn't even need to be registered for them to catch you."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "The deal cancels, the cash is handed back, and a SECOND red stamp labeled '271E' crashes down.",
+        "audio": "But here is the real trap. What if the deal falls through and you return the cash? Refunding that cash token triggers Section 269T. That brings a SECOND 100% penalty. You just lost double the money on a cancelled deal."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing to screen. FinSight INDIA logo.",
+        "audio": "Stop using cash for property tokens. Use NEFT, use UPI, or use Cheques. Want the full survival playbook for property advances? Link in bio to read on FinSight INDIA."
+      }
+    ]
+  },
+  {
+    "id": "reel-065",
+    "title": "The REIT Dividend Illusion",
+    "articleSlug": "the-blueprint-of-indian-reits",
+    "duration": "100s",
+    "hook": "You bought a REIT because of that massive 10% dividend yield. But you are about to fall into a brutal tax trap.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "A person looking at a '10% Yield' banner. The banner turns into a red tax bill.",
+        "audio": "You bought a REIT because of that massive 10% dividend yield. But if you think that 10% is tax-free profit, you are about to fall into a brutal tax trap."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "A glass pipe. Different colored liquids (Interest, Rent, Repayment) flow through it unmixed.",
+        "audio": "REITs operate on a 'Pass-Through' mechanism. The trust pays zero tax, but passes the raw income directly to you. This is the DNA Inheritance Metaphor. The income keeps its original character."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A pie chart of the distribution. The 'Interest' and 'Rent' slices are instantly slashed by 30%.",
+        "audio": "If the trust earned rent or interest, it hits your bank account as fully taxable income at your 30% slab rate. Suddenly, that 10% headline yield compresses heavily."
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "A block labeled 'Repayment of Debt'. It hammers down the 'Cost of Acquisition' from 100 to 95.",
+        "audio": "And what about the 'Repayment of Debt' component? It's not tax-free either. It forcefully reduces your Cost of Acquisition. You don't pay tax today, but it guarantees a massive capital gains hit when you finally sell."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing to the screen with FinSight INDIA logo.",
+        "audio": "Tax-free is almost always just tax-deferred. Audit the underlying SPVs and model your true after-tax yield using our full breakdown on FinSight INDIA. Link in bio."
+      }
+    ]
   }
 ]

@@ -255,6 +255,25 @@ self.onmessage = function (e) {
 
   const plainSamplePaths = samplePaths.map((arr) => Array.from(arr).map((v) => Math.round(v)));
 
+  // Statistical Diagnostics on Final Balances
+  const finalBalances = Array.from(yearlyBalancesMatrix[horizonYears]);
+  let sum = 0;
+  for (let i = 0; i < numSimulations; i++) {
+      sum += finalBalances[i];
+  }
+  const meanFinalBalance = sum / numSimulations;
+
+  let sumSqDiff = 0;
+  let sumCubeDiff = 0;
+  for (let i = 0; i < numSimulations; i++) {
+      const diff = finalBalances[i] - meanFinalBalance;
+      sumSqDiff += diff * diff;
+      sumCubeDiff += diff * diff * diff;
+  }
+  const variance = sumSqDiff / numSimulations;
+  const stdDevFinalBalance = Math.sqrt(variance);
+  const skewnessFinalBalance = stdDevFinalBalance > 0 ? (sumCubeDiff / numSimulations) / Math.pow(stdDevFinalBalance, 3) : 0;
+
   self.postMessage({
     years,
     p10,
@@ -281,5 +300,10 @@ self.onmessage = function (e) {
     floorLimit,
     samplePaths: plainSamplePaths,
     numSimulations,
+    diagnostics: {
+      meanFinalBalance,
+      stdDevFinalBalance,
+      skewnessFinalBalance
+    }
   });
 };

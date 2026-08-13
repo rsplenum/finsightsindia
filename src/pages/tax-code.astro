@@ -7,7 +7,25 @@ import path from 'node:path';
 
 // Fetch all MDX articles from the Content Collection
 const allArticles = await getCollection('direct-tax');
-const articlesList = allArticles;
+
+// Compute timestamps and sort latest first
+const articlesWithTime = allArticles.map(art => {
+	let timestamp = 0;
+	try {
+		const fullPath = path.join(process.cwd(), 'src/content/direct-tax', art.id + (art.id.endsWith('.mdx') ? '' : '.mdx'));
+		const stats = fs.statSync(fullPath);
+		timestamp = stats.mtimeMs || stats.birthtimeMs || 0;
+	} catch(e) {
+		timestamp = 0;
+	}
+	return { ...art, timestamp };
+});
+
+// Sort Latest first
+articlesWithTime.sort((a, b) => b.timestamp - a.timestamp);
+
+const articlesList = articlesWithTime;
+const totalArticles = articlesList.length;
 
 // Get unique categories
 const uniqueCategories = [...new Set(articlesList.map(art => art.data.categoryName))].filter(Boolean);
@@ -85,38 +103,27 @@ const extractCoverFromMDX = (body) => {
 					<div class="relative group z-50 shrink-0">
 						<button class="flex items-center gap-2 px-6 py-2.5 bg-white/80 dark:bg-navy-800/80 backdrop-blur-md border border-slate-200 dark:border-navy-700 rounded-full text-sm font-bold uppercase tracking-widest text-slate-700 dark:text-navy-300 shadow-sm hover:shadow-lg hover:border-gold-500/50 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-gold-500/30">
 							<svg class="w-4 h-4 text-gold-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
-							<span id="activeSortLabel">Recommended</span>
+							<span id="activeSortLabel">Latest Release</span>
 							<svg class="w-4 h-4 ml-1 opacity-50 group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
 						</button>
 						
 						<!-- Dropdown Menu -->
-						<div class="absolute right-0 top-full mt-3 w-56 bg-white/95 dark:bg-navy-800/95 backdrop-blur-xl border border-slate-200/50 dark:border-navy-700/50 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-400 ease-out transform origin-top scale-95 group-hover:scale-100 flex flex-col overflow-hidden z-50 py-2">
-							<button class="sort-btn flex items-center justify-between px-5 py-3 text-sm font-bold text-slate-700 dark:text-navy-200 hover:bg-slate-50 dark:hover:bg-navy-700/50 transition-colors w-full text-left" data-sort="default" data-label="Recommended">
-								Recommended
-								<span class="sort-indicator hidden text-gold-500">●</span>
-							</button>
-							<button class="sort-btn flex items-center justify-between px-5 py-3 text-sm font-bold text-slate-700 dark:text-navy-200 hover:bg-slate-50 dark:hover:bg-navy-700/50 transition-colors w-full text-left" data-sort="latest" data-label="Latest Release">
-								Latest Release
-								<span class="sort-indicator hidden text-gold-500">●</span>
-							</button>
-							<button class="sort-btn flex items-center justify-between px-5 py-3 text-sm font-bold text-slate-700 dark:text-navy-200 hover:bg-slate-50 dark:hover:bg-navy-700/50 transition-colors w-full text-left" data-sort="oldest" data-label="Oldest">
-								Oldest First
-								<span class="sort-indicator hidden text-gold-500">●</span>
-							</button>
-							<div class="h-px bg-slate-100 dark:bg-navy-700/50 my-1 mx-4"></div>
-							<button class="sort-btn flex items-center justify-between px-5 py-3 text-sm font-bold text-slate-700 dark:text-navy-200 hover:bg-slate-50 dark:hover:bg-navy-700/50 transition-colors w-full text-left" data-sort="quick" data-label="Quickest Read">
-								Quickest Read
-								<span class="sort-indicator hidden text-gold-500">●</span>
-							</button>
-							<button class="sort-btn flex items-center justify-between px-5 py-3 text-sm font-bold text-slate-700 dark:text-navy-200 hover:bg-slate-50 dark:hover:bg-navy-700/50 transition-colors w-full text-left" data-sort="deep" data-label="Deep Dives">
-								Deep Dives
-								<span class="sort-indicator hidden text-gold-500">●</span>
-							</button>
-							<div class="h-px bg-slate-100 dark:bg-navy-700/50 my-1 mx-4"></div>
-							<button class="sort-btn flex items-center justify-between px-5 py-3 text-sm font-bold text-slate-700 dark:text-navy-200 hover:bg-slate-50 dark:hover:bg-navy-700/50 transition-colors w-full text-left" data-sort="az" data-label="A to Z">
-								Alphabetical (A-Z)
-								<span class="sort-indicator hidden text-gold-500">●</span>
-							</button>
+                        <div class="absolute right-0 top-full pt-3 w-56 z-50">
+                            <div class="bg-white/95 dark:bg-navy-800/95 backdrop-blur-xl border border-slate-200/50 dark:border-navy-700/50 rounded-2xl shadow-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto transition-all duration-300 ease-out transform origin-top scale-95 group-hover:scale-100 flex flex-col overflow-hidden py-2">
+                                <button class="sort-btn flex items-center justify-between px-5 py-3 text-sm font-bold text-slate-700 dark:text-navy-200 hover:bg-slate-50 dark:hover:bg-navy-700/50 transition-colors w-full text-left" data-sort="latest" data-label="Latest Release">
+                                    Latest Release
+                                    <span class="sort-indicator hidden text-gold-500">●</span>
+                                </button>
+                                <button class="sort-btn flex items-center justify-between px-5 py-3 text-sm font-bold text-slate-700 dark:text-navy-200 hover:bg-slate-50 dark:hover:bg-navy-700/50 transition-colors w-full text-left" data-sort="oldest" data-label="Oldest First">
+                                    Oldest First
+                                    <span class="sort-indicator hidden text-gold-500">●</span>
+                                </button>
+                                <div class="h-px bg-slate-100 dark:bg-navy-700/50 my-1 mx-4"></div>
+                                <button class="sort-btn flex items-center justify-between px-5 py-3 text-sm font-bold text-slate-700 dark:text-navy-200 hover:bg-slate-50 dark:hover:bg-navy-700/50 transition-colors w-full text-left" data-sort="az" data-label="A to Z">
+                                    Alphabetical (A-Z)
+                                    <span class="sort-indicator hidden text-gold-500">●</span>
+                                </button>
+                            </div>
 						</div>
 					</div>
 				</div>
@@ -146,18 +153,9 @@ const extractCoverFromMDX = (body) => {
 					}
 
 					const readTimeNum = parseInt(art.data.readTime) || 0;
-					
-					// Get exact file creation timestamp for accurate Latest/Oldest sorting
-					let timestamp = 0;
-					try {
-						// Note: art.id contains the slug, sometimes with extension if using older Astro versions. 
-						// Using art.id + '.mdx' works for Content Collections.
-						const fullPath = path.join(process.cwd(), 'src/content/direct-tax', art.id + (art.id.endsWith('.mdx') ? '' : '.mdx'));
-						const stats = fs.statSync(fullPath);
-						timestamp = stats.mtimeMs || stats.birthtimeMs || 0; // fallback to mtime if birthtime fails on linux
-					} catch(e) {
-						timestamp = 0;
-					}
+					const timestamp = art.timestamp;
+                    const articleNum = totalArticles - idx;
+                    const formattedNumber = articleNum.toString().padStart(2, '0');
 
 					return (
 					<div 
@@ -176,7 +174,7 @@ const extractCoverFromMDX = (body) => {
                                 <Image 
                                     src={imgSrc} 
                                     alt={art.data.title} 
-                                    class="w-full h-full object-contain mix-blend-multiply dark:invert dark:mix-blend-screen group-hover:scale-105 transition-transform duration-700 ease-out"
+                                    class="w-full h-full object-contain mix-blend-multiply dark:invert dark:hue-rotate-180 dark:mix-blend-screen group-hover:scale-105 transition-transform duration-700 ease-out rounded-t-md"
                                 />
                             ) : (
                                 <div class="text-6xl opacity-20 group-hover:scale-110 transition-transform duration-700">📄</div>
@@ -184,7 +182,7 @@ const extractCoverFromMDX = (body) => {
                             
                             <div class="absolute top-5 right-5">
                                 <span class="bg-white/90 dark:bg-navy-900/90 backdrop-blur-sm text-slate-900 dark:text-white text-[10px] font-bold px-3 py-1.5 rounded-full border border-slate-200 dark:border-navy-700 shadow-sm uppercase tracking-widest z-10">
-                                    Q0{idx + 1}
+                                    Q{formattedNumber}
                                 </span>
                             </div>
                         </div>
@@ -207,13 +205,22 @@ const extractCoverFromMDX = (body) => {
 								{art.data.summary}
 							</p>
 
-                            <div class="mt-auto pt-5 border-t border-slate-100 dark:border-navy-700/50 flex items-center justify-between text-[11px] font-bold uppercase tracking-widest">
-                                <span class="text-slate-500 dark:text-navy-400 truncate max-w-[70%]">
-                                    {art.data.statutoryAct}
-                                </span>
-                                <span class="text-gold-600 dark:text-gold-400 group-hover:translate-x-1.5 transition-transform flex items-center gap-1">
-                                    Read <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                                </span>
+                            <div class="mt-auto pt-5 border-t border-slate-100 dark:border-navy-700/50 flex flex-col gap-2 text-[11px] font-bold uppercase tracking-widest">
+                                <div class="flex items-center justify-between w-full">
+                                    <span class="text-slate-500 dark:text-navy-400 truncate max-w-[70%]">
+                                        {art.data.statutoryAct}
+                                    </span>
+                                    <span class="text-gold-600 dark:text-gold-400 group-hover:translate-x-1.5 transition-transform flex items-center gap-1 shrink-0">
+                                        Read <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                                    </span>
+                                </div>
+                                {art.data.statutoryAct2025 && art.data.statutoryAct2025.trim() !== "" && (
+                                    <div class="flex items-center w-full">
+                                        <span class="text-purple-600 dark:text-purple-400 truncate max-w-[100%]">
+                                            Act 2025: {art.data.statutoryAct2025}
+                                        </span>
+                                    </div>
+                                )}
                             </div>
 						</div>
 					</div>
@@ -236,7 +243,7 @@ const extractCoverFromMDX = (body) => {
 		
 		let currentCategory = 'all';
 		let currentSearch = '';
-		let currentSort = 'default';
+		let currentSort = 'latest'; // Default sort
 
 		function filterArticles() {
 			let visibleCount = 0;
@@ -298,10 +305,6 @@ const extractCoverFromMDX = (body) => {
 					return parseFloat(b.getAttribute('data-timestamp') || '0') - parseFloat(a.getAttribute('data-timestamp') || '0');
 				} else if (currentSort === 'oldest') {
 					return parseFloat(a.getAttribute('data-timestamp') || '0') - parseFloat(b.getAttribute('data-timestamp') || '0');
-				} else if (currentSort === 'quick') {
-					return parseInt(a.getAttribute('data-readtime') || '0') - parseInt(b.getAttribute('data-readtime') || '0');
-				} else if (currentSort === 'deep') {
-					return parseInt(b.getAttribute('data-readtime') || '0') - parseInt(a.getAttribute('data-readtime') || '0');
 				} else if (currentSort === 'az') {
 					return (a.getAttribute('data-title') || '').localeCompare(b.getAttribute('data-title') || '');
 				} else {
@@ -328,11 +331,11 @@ const extractCoverFromMDX = (body) => {
 		sortBtns.forEach(btn => {
 			btn.addEventListener('click', (e) => {
 				const target = e.currentTarget as HTMLButtonElement;
-				currentSort = target.getAttribute('data-sort') || 'default';
+				currentSort = target.getAttribute('data-sort') || 'latest';
 				
 				// Update UI Label
 				if (activeSortLabel) {
-					activeSortLabel.textContent = target.getAttribute('data-label') || 'Recommended';
+					activeSortLabel.textContent = target.getAttribute('data-label') || 'Latest Release';
 				}
 
 				// Update active indicator
@@ -348,7 +351,7 @@ const extractCoverFromMDX = (body) => {
 		});
 
 		// Initialize default sort indicator
-		const defaultSortBtn = document.querySelector('.sort-btn[data-sort="default"]');
+		const defaultSortBtn = document.querySelector('.sort-btn[data-sort="latest"]');
 		if (defaultSortBtn) {
 			const indicator = defaultSortBtn.querySelector('.sort-indicator');
 			if (indicator) indicator.classList.remove('hidden');
