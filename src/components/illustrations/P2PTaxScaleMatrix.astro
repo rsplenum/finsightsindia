@@ -1,0 +1,81 @@
+---
+---
+<div class="w-full bg-slate-50 dark:bg-slate-900 rounded-3xl p-6 sm:p-10 my-8 border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden relative">
+  <!-- Subtle background glow -->
+  <div class="absolute right-0 top-0 w-64 h-64 bg-rose-500 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 opacity-5"></div>
+  
+  <h4 class="text-center text-slate-800 dark:text-slate-200 font-black tracking-widest uppercase mb-8 text-sm">Tax Offset Treatment: Bank vs Retail</h4>
+  
+  <div class="w-full overflow-x-auto">
+    <svg viewBox="0 0 800 360" class="w-full min-w-[600px] h-auto font-sans" preserveAspectRatio="xMidYMid meet">
+      <!-- Divider -->
+      <line x1="400" y1="20" x2="400" y2="340" class="stroke-slate-200 dark:stroke-slate-700" stroke-width="2" stroke-dasharray="4 4" />
+      <text x="390" y="30" class="fill-slate-400 dark:fill-slate-500 text-xs font-bold uppercase tracking-widest" text-anchor="end">Institution</text>
+      <text x="410" y="30" class="fill-slate-400 dark:fill-slate-500 text-xs font-bold uppercase tracking-widest" text-anchor="start">Retail Individual</text>
+
+      <!-- BANK SIDE -->
+      <!-- Node: Gross Interest -->
+      <rect x="120" y="60" width="160" height="40" rx="6" class="fill-white dark:fill-slate-800 stroke-emerald-500" stroke-width="2" />
+      <text x="200" y="85" class="fill-slate-800 dark:fill-slate-200 text-sm font-bold" text-anchor="middle">Gross Interest (+₹1L)</text>
+      
+      <!-- Arrow down -->
+      <path d="M 200 100 L 200 130" class="stroke-slate-300 dark:stroke-slate-600" stroke-width="2" marker-end="url(#arrow)" />
+      
+      <!-- Node: Bad Debts -->
+      <rect x="120" y="130" width="160" height="40" rx="6" class="fill-slate-100 dark:fill-slate-700 stroke-slate-400 dark:stroke-slate-500" stroke-width="2" stroke-dasharray="2 2" />
+      <text x="200" y="155" class="fill-slate-700 dark:fill-slate-300 text-sm font-medium" text-anchor="middle">Bad Debts (-₹1L)</text>
+
+      <!-- Connection line -->
+      <path d="M 200 170 L 200 200" class="stroke-slate-300 dark:stroke-slate-600" stroke-width="2" marker-end="url(#arrow)" />
+      
+      <!-- Node: Net Taxable Profit -->
+      <rect x="120" y="200" width="160" height="40" rx="6" class="fill-white dark:fill-slate-800 stroke-blue-500" stroke-width="2" />
+      <text x="200" y="225" class="fill-blue-700 dark:fill-blue-400 text-sm font-black" text-anchor="middle">Taxable Profit: ₹0</text>
+      
+      <path d="M 200 240 L 200 270" class="stroke-slate-300 dark:stroke-slate-600" stroke-width="2" marker-end="url(#arrow)" />
+
+      <!-- Node: Final Tax -->
+      <rect x="120" y="270" width="160" height="40" rx="6" class="fill-emerald-50 dark:fill-emerald-900/30 stroke-emerald-500" stroke-width="1.5" />
+      <text x="200" y="295" class="fill-emerald-700 dark:fill-emerald-400 text-sm font-bold" text-anchor="middle">Tax Paid: ₹0</text>
+
+
+      <!-- RETAIL SIDE -->
+      <!-- Node: Gross Interest -->
+      <rect x="440" y="60" width="160" height="40" rx="6" class="fill-white dark:fill-slate-800 stroke-emerald-500" stroke-width="2" />
+      <text x="520" y="85" class="fill-slate-800 dark:fill-slate-200 text-sm font-bold" text-anchor="middle">Gross Interest (+₹1L)</text>
+      
+      <path d="M 520 100 L 520 200" class="stroke-slate-300 dark:stroke-slate-600" stroke-width="2" marker-end="url(#arrow)" />
+
+      <!-- Node: Bad Debts (Disconnected) -->
+      <rect x="630" y="60" width="150" height="40" rx="6" class="fill-rose-50 dark:fill-rose-900/20 stroke-rose-400" stroke-width="2" stroke-dasharray="2 2" />
+      <text x="705" y="85" class="fill-rose-600 dark:fill-rose-400 text-xs font-bold" text-anchor="middle">Defaulted Principal (-₹1L)</text>
+
+      <path d="M 705 100 L 705 270" class="stroke-rose-300 dark:stroke-rose-800/50" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arrow_red)" />
+      
+      <!-- Node: Net Taxable Profit -->
+      <rect x="440" y="200" width="160" height="40" rx="6" class="fill-white dark:fill-slate-800 stroke-blue-500" stroke-width="2" />
+      <text x="520" y="225" class="fill-blue-700 dark:fill-blue-400 text-sm font-black" text-anchor="middle">Taxable Income: ₹1L</text>
+      
+      <path d="M 520 240 L 520 270" class="stroke-slate-300 dark:stroke-slate-600" stroke-width="2" marker-end="url(#arrow)" />
+
+      <!-- Node: Final Tax -->
+      <rect x="440" y="270" width="160" height="40" rx="6" class="fill-rose-50 dark:fill-rose-900/30 stroke-rose-500" stroke-width="2" />
+      <text x="520" y="295" class="fill-rose-700 dark:fill-rose-400 text-sm font-bold" text-anchor="middle">Tax Paid: ₹30,000</text>
+      
+      <!-- Node: Capital Loss Void -->
+      <rect x="630" y="270" width="150" height="40" rx="6" class="fill-slate-100 dark:fill-slate-800 stroke-slate-300 dark:stroke-slate-600" stroke-width="1.5" stroke-dasharray="4 4" />
+      <text x="705" y="288" class="fill-slate-500 dark:fill-slate-400 text-[10px] font-bold uppercase tracking-wider" text-anchor="middle">Dead Capital Loss</text>
+      <text x="705" y="302" class="fill-slate-400 dark:fill-slate-500 text-[10px]" text-anchor="middle">(No Offset Allowed)</text>
+
+      <!-- Markers -->
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" class="fill-slate-300 dark:fill-slate-600" />
+        </marker>
+        <marker id="arrow_red" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" class="fill-rose-300 dark:fill-rose-800" />
+        </marker>
+      </defs>
+    </svg>
+  </div>
+</div>

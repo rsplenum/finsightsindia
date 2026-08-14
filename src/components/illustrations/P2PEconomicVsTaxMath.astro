@@ -1,0 +1,83 @@
+---
+// P2PEconomicVsTaxMath.astro
+---
+<div class="my-10 bg-slate-900 rounded-2xl overflow-hidden shadow-2xl font-mono text-sm text-slate-300 border border-slate-700">
+  <div class="bg-slate-950 px-6 py-4 border-b border-slate-800 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <div class="flex gap-1.5">
+        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+      </div>
+      <span class="text-slate-400 font-sans font-medium text-xs">tax_asymmetry_calc.sh</span>
+    </div>
+  </div>
+  
+  <div class="p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+      
+      <!-- Economic Reality -->
+      <div>
+        <h4 class="text-white font-sans font-bold mb-4 uppercase tracking-wider text-xs border-b border-slate-700 pb-2">1. Economic Reality</h4>
+        <div class="space-y-3">
+          <div class="flex justify-between">
+            <span class="text-slate-400">Principal Lent:</span>
+            <span class="text-slate-200">₹1,00,000</span>
+          </div>
+          <div class="flex justify-between text-green-400">
+            <span>(+) Gross Interest:</span>
+            <span>+ ₹12,000</span>
+          </div>
+          <div class="flex justify-between text-red-400">
+            <span>(-) Principal Lost:</span>
+            <span>- ₹30,000</span>
+          </div>
+          <div class="h-px bg-slate-700 my-2"></div>
+          <div class="flex justify-between font-bold text-white">
+            <span>Actual Wealth Change:</span>
+            <span class="text-red-400">- ₹18,000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tax Reality -->
+      <div>
+        <h4 class="text-white font-sans font-bold mb-4 uppercase tracking-wider text-xs border-b border-slate-700 pb-2">2. Tax System Reality</h4>
+        <div class="space-y-3">
+          <div class="flex justify-between text-green-400">
+            <span>(+) Taxable Income:</span>
+            <span>+ ₹12,000</span>
+          </div>
+          <div class="flex justify-between text-slate-500 line-through">
+            <span>(-) Principal Lost:</span>
+            <span>- ₹30,000</span>
+          </div>
+          <div class="flex justify-between text-orange-400 mt-0 pt-0">
+            <span class="text-xs">↳ Denied: Not an allowable deduction</span>
+            <span>₹0</span>
+          </div>
+          <div class="h-px bg-slate-700 my-2"></div>
+          <div class="flex justify-between font-bold text-white">
+            <span>Taxable Amount:</span>
+            <span class="text-green-400">₹12,000</span>
+          </div>
+          <div class="flex justify-between items-center pt-2">
+            <span class="text-slate-400">Tax Payable @ 30%:</span>
+            <span class="bg-red-900/50 text-red-400 px-2 py-1 rounded text-xs border border-red-800/50">₹3,600</span>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    
+    <div class="mt-8 bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+      <div class="flex items-start gap-4">
+        <div class="text-3xl">⚠️</div>
+        <div>
+          <p class="text-white font-sans font-bold mb-1">The Final Trap</p>
+          <p class="text-slate-400 font-sans text-sm leading-relaxed">You suffered an economic loss of ₹18,000, yet the tax system demands you pay ₹3,600 in taxes on your "income." The state shares the upside, but forces you to absorb 100% of the downside.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

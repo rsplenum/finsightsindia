@@ -1,0 +1,73 @@
+---
+---
+<div class="w-full bg-slate-50 dark:bg-slate-900 rounded-3xl p-6 sm:p-10 my-8 border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden relative">
+  <!-- Subtle background glow -->
+  <div class="absolute left-0 top-0 w-64 h-64 bg-emerald-500 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2 opacity-5"></div>
+  
+  <h4 class="text-center text-slate-800 dark:text-slate-200 font-black tracking-widest uppercase mb-8 text-sm">P2P Lending Risk Flow</h4>
+  
+  <div class="w-full overflow-x-auto">
+    <svg viewBox="0 0 800 300" class="w-full min-w-[600px] h-auto font-sans" preserveAspectRatio="xMidYMid meet">
+      
+      <!-- Node: Investor Capital -->
+      <rect x="40" y="130" width="140" height="40" rx="6" class="fill-white dark:fill-slate-800 stroke-slate-400 dark:stroke-slate-500" stroke-width="2" />
+      <text x="110" y="155" class="fill-slate-800 dark:fill-slate-200 text-sm font-bold" text-anchor="middle">Capital: ₹10 Lakhs</text>
+      
+      <path d="M 180 150 L 250 150" class="stroke-slate-300 dark:stroke-slate-600" stroke-width="2" marker-end="url(#arrow_timeline)" />
+
+      <!-- Node: P2P Platform -->
+      <rect x="260" y="130" width="120" height="40" rx="6" class="fill-slate-100 dark:fill-slate-800 stroke-slate-300 dark:stroke-slate-600" stroke-width="2" stroke-dasharray="4 4" />
+      <text x="320" y="155" class="fill-slate-600 dark:fill-slate-400 text-sm font-bold" text-anchor="middle">P2P Platform</text>
+      
+      <!-- Splitting paths -->
+      <!-- Upper path (Interest) -->
+      <path d="M 380 140 C 430 140, 430 70, 480 70" class="stroke-emerald-400 dark:stroke-emerald-500" stroke-width="3" fill="none" marker-end="url(#arrow_timeline_green)" />
+      
+      <!-- Lower path (Principal Default) -->
+      <path d="M 380 160 C 430 160, 430 230, 480 230" class="stroke-rose-400 dark:stroke-rose-500" stroke-width="3" fill="none" stroke-dasharray="6 4" marker-end="url(#arrow_timeline_red)" />
+      
+      <!-- Node: Gross Interest -->
+      <rect x="490" y="50" width="140" height="40" rx="6" class="fill-emerald-50 dark:fill-emerald-900/30 stroke-emerald-500" stroke-width="2" />
+      <text x="560" y="75" class="fill-emerald-700 dark:fill-emerald-400 text-sm font-bold" text-anchor="middle">Interest (+₹1 Lakh)</text>
+
+      <path d="M 630 70 L 680 70" class="stroke-emerald-400 dark:stroke-emerald-500" stroke-width="2" marker-end="url(#arrow_timeline_green)" />
+
+      <!-- Node: Taxman -->
+      <rect x="690" y="50" width="80" height="40" rx="6" class="fill-white dark:fill-slate-800 stroke-blue-500" stroke-width="2" />
+      <text x="730" y="75" class="fill-blue-700 dark:fill-blue-400 text-sm font-bold" text-anchor="middle">Taxman</text>
+      
+      <!-- Tax Deduction Tag -->
+      <rect x="690" y="100" width="80" height="24" rx="4" class="fill-rose-100 dark:fill-rose-900/50 stroke-none" />
+      <text x="730" y="117" class="fill-rose-700 dark:fill-rose-400 text-[10px] font-bold" text-anchor="middle">(-₹30,000)</text>
+
+      <!-- Node: Defaulted Principal -->
+      <rect x="490" y="210" width="150" height="40" rx="6" class="fill-rose-50 dark:fill-rose-900/20 stroke-rose-400" stroke-width="2" stroke-dasharray="2 2" />
+      <text x="565" y="235" class="fill-rose-600 dark:fill-rose-400 text-xs font-bold" text-anchor="middle">Defaulted Principal (-₹1L)</text>
+      
+      <path d="M 640 230 L 690 230" class="stroke-rose-400 dark:stroke-rose-500" stroke-width="2" />
+
+      <!-- The Brick Wall -->
+      <rect x="690" y="190" width="10" height="80" class="fill-rose-500 dark:fill-rose-600" />
+      
+      <!-- Padlock Icon -->
+      <svg x="715" y="200" width="32" height="32" viewBox="0 0 24 24" fill="none" class="stroke-slate-400 dark:stroke-slate-500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+      <text x="731" y="245" class="fill-slate-500 dark:fill-slate-400 text-[10px] font-bold uppercase tracking-wider" text-anchor="middle">No Offset</text>
+
+      <!-- Markers -->
+      <defs>
+        <marker id="arrow_timeline" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" class="fill-slate-300 dark:fill-slate-600" />
+        </marker>
+        <marker id="arrow_timeline_green" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" class="fill-emerald-400 dark:fill-emerald-500" />
+        </marker>
+        <marker id="arrow_timeline_red" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" class="fill-rose-400 dark:fill-rose-500" />
+        </marker>
+      </defs>
+    </svg>
+  </div>
+</div>

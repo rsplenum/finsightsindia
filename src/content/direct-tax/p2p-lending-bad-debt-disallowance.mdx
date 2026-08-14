@@ -1,0 +1,159 @@
+---
+title: "The P2P Lending Bad-Debt Trap in India"
+summary: "Why a ₹1 lakh loan can create a ₹1 lakh economic loss but zero corresponding tax deduction. A first-principles exploration of how P2P democratized credit risk without democratizing the institutional tax shield."
+category: "tds"
+categoryName: "Direct Tax"
+readTime: "12 MIN READ"
+statutoryAct: "Sec 56, Sec 57 (ITA 1961) / Sec 92-94 (ITA 2025)"
+updatedDate: "August 2026"
+coverImage: "hero_p2p_bad_debt_disallowance.jpg"
+---
+
+import CardPremium from '../../components/CardPremium.astro';
+import { Image } from 'astro:assets';
+import imgCover from '../../assets/images/hero_p2p_bad_debt_disallowance.jpg';
+import P2PRiskTransferFlow from '../../components/illustrations/P2PRiskTransferFlow.astro';
+import P2PEconomicVsTaxMath from '../../components/illustrations/P2PEconomicVsTaxMath.astro';
+import P2PRingFencingModel from '../../components/illustrations/P2PRingFencingModel.astro';
+
+<Image src={imgCover} alt="P2P bad debt disallowance visual" class="w-full rounded-xl my-8 mix-blend-multiply dark:invert dark:hue-rotate-180 dark:mix-blend-screen shadow-lg" />
+<span className="mt-6 mb-12 block text-center text-sm tracking-wide text-stone-500 italic">"The state takes its cut from the gross; the investor absorbs the default in the net."</span>
+
+The deepest way to understand the P2P bad-debt problem is not to start with Section 36, Section 57, or an ITR schedule. Start with a much more basic question:
+
+When a human being lends ₹100 to another human being, and only ₹90 comes back, what exactly has happened economically—and what exactly does a tax system think has happened?
+
+That gap between those two answers is the entire P2P bad-debt trap.
+
+<CardPremium title="TL;DR: The Problem in One Sentence">
+Suppose you lend **₹1,00,000** through a regulated P2P platform. Over time you receive **₹12,000** in interest and **₹70,000** of your principal back. The remaining **₹30,000** principal becomes ultimately irrecoverable.
+
+Economically, you made ₹12,000 gross interest but lost ₹30,000 of capital. Your actual wealth change is **−₹18,000**.
+
+Yet the tax system effectively says: *"The ₹12,000 is taxable income. The ₹30,000 principal loss is not an allowable deduction merely because you suffered it."*
+
+You can have a positive taxable income while simultaneously having a negative economic return.
+</CardPremium>
+
+## First Principles: Why Does Lending Exist at All?
+
+Go back before banks. There is a fundamental human problem: One person has purchasing power today; another person has an opportunity today but lacks purchasing power.
+
+Suppose Person A has ₹1 lakh today. Person B has a business opportunity requiring ₹1 lakh, expecting to generate ₹1.15 lakh later. Person A doesn't want merely to give B the money, and B doesn't want to wait until he has it. So they create a contract: A transfers purchasing power today in exchange for a larger purchasing power claim tomorrow. 
+
+That additional amount is **interest**. Interest is fundamentally the price of time, liquidity sacrifice, default risk, and opportunity cost.
+
+But there is an unavoidable problem: the lender doesn't know with certainty whether ₹100 today becomes ₹110 tomorrow, or ₹0 tomorrow. The difference is **credit risk**.
+
+### Why Did Banks Dominate?
+
+Historically, banks dominated because they intermediated between savers and borrowers. Millions of individuals deposited money. The bank aggregated it, and the bank lent it to borrowers. The individual saver didn't need to know who the borrower was, whether they had collateral, or how to litigate a default. The bank did that.
+
+The bank also diversified: 1,000 borrowers taking ₹1 lakh is much safer for the intermediary than 1 borrower taking ₹10 crore, because individual defaults can be absorbed within the portfolio. 
+
+But bank lending is expensive. The bank has to maintain branches, employees, compliance, capital, and regulatory reserves. If deposit cost is 6% and loan yield is 11%, the 5% gross spread has to cover operating expenses, defaults, capital costs, regulatory costs, and profit.
+
+## The Technological Insight Behind P2P
+
+What if we could remove some of the traditional intermediary functions? Instead of *Person A → Bank → Person B*, create *Person A → Digital platform → Person B*. 
+
+The platform uses digital KYC, credit bureau data, algorithmic matching, and automated collections. The cost of matching lender and borrower falls dramatically. 
+
+But here is the first major insight: **P2P does not eliminate credit risk. It eliminates—or reduces—intermediation. Those are completely different things. The risk doesn't disappear. It moves.**
+
+<P2PRiskTransferFlow />
+
+RBI's framework is extremely explicit about this. An NBFC-P2P cannot assume credit risk, directly or indirectly. The entire loss of principal or interest is borne by lenders. P2P is not "banking without banks." It is **risk transfer from an institution to the individual.**
+
+Why would anyone accept that? Because the investor wants the 9–12% advertised yield, effectively saying: *"I will accept additional credit risk in exchange for additional yield."*
+
+That sounds rational. But it is incomplete, because the correct comparison isn't the 12% P2P yield vs the 7% FD. It is the **after-tax, after-default** P2P return versus the **after-tax** FD return. And this is where taxation becomes critical.
+
+## The Tax System Sees Something Different
+
+The investor thinks in terms of **Total Return**. The tax system thinks in terms of **Taxable Income**. Those are not the same thing.
+
+Income tax is not a wealth-change tax. If you own ₹10 lakh of gold and it falls to ₹7 lakh, you don't get a ₹3 lakh income-tax deduction simply because your wealth declined. Tax law does not generally say *Tax = change in your net worth*. Instead, it defines taxable income through statutory categories, distinguishing Income from Capital, Expenditure, and Loss.
+
+A loan contains two economically different things:
+1. **Principal:** This is your own money. You have exchanged one asset (cash) for another asset (loan receivable). No income has necessarily been generated merely because you lent the money.
+2. **Interest:** This is compensation for allowing somebody else to use your capital.
+
+Therefore, Interest = Income, while Principal = Capital. 
+
+When a borrower defaults, the tax system doesn't necessarily see *"Investor lost ₹30,000."* It sees *"The investor's loan receivable of ₹30,000 became unrecoverable."* Whether that creates a deductible loss depends on whether the tax code has created a mechanism for recognising that loss.
+
+## The Statutory Barrier (1961 Act vs 2026 Act)
+
+In tax law, "Bad debt" is a specifically defined category of deductible loss subject to statutory conditions. A person can have an economically genuine bad debt and still have no tax deduction.
+
+For tax years governed by the **Income-tax Act, 1961**, retail interest fell under Section 56 (Income from other sources). The bad-debt deduction was housed in Section 36(1)(vii), but Section 36(2) imposed a crucial condition: the debt must either have been taken into account in computing income or represent money lent *in the ordinary course of a banking or money-lending business*. 
+
+A passive retail P2P investor is not a money-lending business. The principal was capital, not previously earned income. Therefore, the ordinary bad-debt machinery didn't fit.
+
+### The 2026 Income-tax Act Makes It Clearer
+The Income-tax Act, 2025 (which came into force on 1 April 2026) reorganises these provisions. Under the new architecture, Section 92 covers Income from other sources, and Section 93 permits "any other expenditure" incurred wholly and exclusively for earning that income. But a loss of principal isn't an *expenditure* incurred to earn interest.
+
+Under the new Act, the dedicated bad-debt provision is Section 31. But Section 94(2), which applies specified business-deduction provisions to "income from other sources," explicitly does not extend Section 31 to ordinary income from other sources. 
+
+The new architecture does not solve the retail P2P bad-debt problem. If anything, it makes the structural separation easier to see.
+
+<P2PEconomicVsTaxMath />
+
+## The "Write-Off" Misconception
+
+This distinction is absolutely critical. 
+- **Accounting write-off:** You say "I don't expect to recover this" and reduce the asset in your spreadsheet.
+- **Platform classification:** The platform says "This loan is defaulted/charged off."
+- **Legal recovery status:** The borrower may still legally owe you the money.
+- **Tax recognition:** The Income-tax Act asks, "Does the statutory deduction provision recognise this loss?"
+
+A platform saying "written off" doesn't create a tax deduction. RBI regulation answers *"Is this intermediary operating inside a regulatory framework?"* It certainly doesn't answer *"Will the Income-tax Department allow me to deduct my loss?"*
+
+## Why India Chose This Architecture
+
+The tax code is built around an idea: Not every economic loss is a tax loss. Because otherwise, the government would effectively become a partner in every failed investment. 
+
+If the tax system allowed unrestricted investment losses against ordinary salary income, it would effectively say: *"You get the upside privately, but I will absorb part of your downside."* That creates moral hazard. The higher yield of P2P is compensation for accepting a greater probability of loss. The government is effectively saying: *"You chose the risk."*
+
+But this creates a genuine policy inconsistency. The economic reality is −₹18,000, while the tax calculation may show +₹12,000 taxable income. 
+
+## The UK Approach: Ring-Fenced Symmetry
+
+Is India's model the only way? No. The British model is particularly revealing. 
+
+The UK introduced specific relief for irrecoverable P2P loans, allowing a lender to obtain relief against *interest from other P2P loans*. This is a brilliant policy design from a systems perspective. It recognises that P2P interest and P2P principal loss belong economically to the same risk pool, but it does not allow the investor to deduct the loss freely against salary or rent. 
+
+<P2PRingFencingModel />
+
+If India deliberately permits P2P lending as an alternative financial-intermediation model, the strongest argument for reform is exactly this: ring-fenced P2P bad-debt relief. It provides symmetry without subsidizing unrelated income.
+
+## The Investor's Real Decision Tree
+
+Because India does *not* have this ring-fenced relief, P2P investors must radically shift their mental models. A P2P loan is not a high-interest FD. It is a retail credit asset.
+
+**The alpha insight: Default is not merely a credit variable. For P2P, Default × tax treatment = effective default cost.**
+
+Suppose a platform offers 12% yield and experiences 2% defaults.
+- 12% − 2% = 10% is pre-tax arithmetic.
+- But if interest is taxed at 30%: 12% × 70% = 8.4%
+- Then subtract the non-deductible credit loss: 8.4% − 2% = **6.4%**
+- Subtract 0.5% platform fees: **5.9%**
+
+A 12% P2P headline yield may economically resemble a 5–7% after-tax credit return. 
+
+Before putting money into P2P, you must ask: Am I being adequately compensated for the distribution of possible losses? The real enemy is not the default itself; the real enemy is the mispricing of default risk.
+
+## The Ultimate First-Principles Conclusion
+
+The P2P bad-debt trap is not really about a missing tax deduction. It is about a much deeper mismatch: P2P has democratized the ownership of credit risk faster than it has democratized the understanding of credit risk. 
+
+The platform makes lending look simple. The app makes diversification look automatic. The yield makes risk look attractive. But the economic reality remains: you are lending your own money to another human being who may not repay you. And when they default, the tax system asks a very narrow question: *"What statutory category does that loss fall into?"*
+
+**The one-line mental model to remember:** 
+P2P Expected After-Tax Return = After-Tax Interest − Expected Credit Loss − Fees − Liquidity/Recovery Cost. 
+
+Because retail P2P principal losses are not automatically given the same tax treatment as taxable interest, the tax system itself becomes part of the credit-risk calculation.
+
+> [!CAUTION]
+> **2026 Caveat:** Because India transitioned from the Income-tax Act, 1961 to the Income-tax Act, 2025 on 1 April 2026, section numbers depend on the tax year being examined. A tax opinion on a P2P default cannot simply quote old Section 36/57. The tax year, method of accounting, and the taxpayer's status as an investor versus a money-lending business completely alter the legal reality. Always model the principal-default risk as a real economic loss that may not receive a corresponding ordinary-income tax deduction.

@@ -11,6 +11,306 @@
           "linked": "2026-08-10T19:26:11.110723Z"
         }
       ]
+    },
+    "lta_fake_bills_scrutiny": {
+      "slug": "lta-fake-bills-scrutiny",
+      "title": "The LTA Fake Bills & No Leave Scrutiny",
+      "registered": "2026-08-13T18:51:06.502962Z",
+      "spokes": []
+    },
+    "the_section_148_escaped_assessment_nightmare": {
+      "slug": "the-section-148-escaped-assessment-nightmare",
+      "title": "The Section 148 Escaped Assessment Nightmare: How Far Back Can the AI Audit You?",
+      "registered": "2026-08-13T18:51:06.506276Z",
+      "spokes": []
+    },
+    "startup_esops_double_taxation_guide": {
+      "slug": "startup-esops-double-taxation-guide",
+      "title": "The ESOP Death Spiral: How a 'Paper Millionaire' Went Bankrupt Paying Tax",
+      "registered": "2026-08-13T18:51:06.506726Z",
+      "spokes": []
+    },
+    "the_section_271a_bookkeeping_trap": {
+      "slug": "the-section-271a-bookkeeping-trap",
+      "title": "The Section 271A Bookkeeping Trap",
+      "registered": "2026-08-13T18:51:06.507146Z",
+      "spokes": []
+    },
+    "mid_year_job_switch_tax_trap": {
+      "slug": "mid-year-job-switch-tax-trap",
+      "title": "The Mid-Year Job Switch Tax Bomb",
+      "registered": "2026-08-13T18:51:06.507532Z",
+      "spokes": []
+    },
+    "inherited_house_sale_tax_guide": {
+      "slug": "inherited-house-sale-tax-guide",
+      "title": "I just sold my late parents' house for ₹2 Crores. How much of it will the Taxman take?",
+      "registered": "2026-08-13T18:51:06.507830Z",
+      "spokes": []
+    },
+    "44ad_vs_44ada_freelance_trap": {
+      "slug": "44ad-vs-44ada-freelance-trap",
+      "title": "The Presumptive Trap: Why Freelancers Go Bankrupt Filing 44AD",
+      "registered": "2026-08-13T18:51:06.508048Z",
+      "spokes": []
+    },
+    "194_ia_buyer_tds_notice": {
+      "slug": "194-ia-buyer-tds-notice",
+      "title": "You Paid the Builder in Full. Now the Income Tax Department Wants 1%.",
+      "registered": "2026-08-13T18:51:06.508389Z",
+      "spokes": []
+    },
+    "crypto_tax_forensic_audit_guide": {
+      "slug": "crypto-tax-forensic-audit-guide",
+      "title": "The Crypto Audit Trail: Why You Owe 30% Tax Even If Your Portfolio is Bleeding",
+      "registered": "2026-08-13T18:51:06.508572Z",
+      "spokes": []
+    },
+    "120_day_accidental_residency_trap": {
+      "slug": "120-day-accidental-residency-trap",
+      "title": "The 120-Day Accidental Residency Trap: Why the Middle East NRI Panic is a Myth",
+      "registered": "2026-08-13T18:51:06.508921Z",
+      "spokes": []
+    },
+    "p2p_crypto_bank_freeze_trap": {
+      "slug": "p2p-crypto-bank-freeze-trap",
+      "title": "The P2P Crypto Bank Freeze Nightmare",
+      "registered": "2026-08-13T18:51:06.509175Z",
+      "spokes": []
+    },
+    "home_loan_interest_limit_survival": {
+      "slug": "home-loan-interest-limit-survival",
+      "title": "The Illusion of the Home Loan Tax Shield (Section 24b Survival)",
+      "registered": "2026-08-13T18:51:06.509340Z",
+      "spokes": []
+    },
+    "founder_salary_vs_dividend_strategy": {
+      "slug": "founder-salary-vs-dividend-strategy",
+      "title": "The Founder's Gambit: Salary vs. Dividend for Tax Optimization",
+      "registered": "2026-08-13T18:51:06.509510Z",
+      "spokes": []
+    },
+    "reddit_44ada_eligibility_trap": {
+      "slug": "reddit-44ada-eligibility-trap",
+      "title": "The Reddit Freelance Loophole: Why Your 44ADA Claim Got a Defective Notice",
+      "registered": "2026-08-13T18:51:06.510362Z",
+      "spokes": []
+    },
+    "the_high_value_sft_trap_section_142_1": {
+      "slug": "the-high-value-sft-trap-section-142-1",
+      "title": "The High-Value SFT Trap: How a Credit Card Bill Triggers a Section 142(1) Tax Inquiry",
+      "registered": "2026-08-13T18:51:06.510615Z",
+      "spokes": []
+    },
+    "gst_rcm_foreign_saas_import_of_services": {
+      "slug": "gst-rcm-foreign-saas-import-of-services",
+      "title": "Foreign Software on Your Company Card: The GST You Still Have to Self-Pay",
+      "registered": "2026-08-13T18:51:06.510981Z",
+      "spokes": []
+    },
+    "huf_partition_trap": {
+      "slug": "huf-partition-trap",
+      "title": "The HUF Partition Trap: Why a Family Agreement Isn't Enough for the Tax Department",
+      "registered": "2026-08-13T18:51:06.511317Z",
+      "spokes": []
+    },
+    "foreign_remittance_lrs_tcs_guide": {
+      "slug": "foreign-remittance-lrs-tcs-guide",
+      "title": "The LRS Matrix: How to Navigate the 20% TCS Trap on Foreign Remittances.",
+      "registered": "2026-08-13T18:51:06.511486Z",
+      "spokes": []
+    },
+    "senior_citizen_80ttb_dropdown_error": {
+      "slug": "senior-citizen-80ttb-dropdown-error",
+      "title": "The ₹40,000 Dropdown Error: Why Senior Citizens Are Losing Their FD Deductions",
+      "registered": "2026-08-13T18:51:06.511759Z",
+      "spokes": []
+    },
+    "section_269ss_cash_token_property_advance_penalty": {
+      "slug": "section-269ss-cash-token-property-advance-penalty",
+      "title": "Why a ₹50,000 Cash Bayana Can Trigger a Matching Income-Tax Penalty",
+      "registered": "2026-08-13T18:51:06.512060Z",
+      "spokes": []
+    },
+    "section_129_cgst_expired_e_way_bill_penalty": {
+      "slug": "section-129-cgst-expired-e-way-bill-penalty",
+      "title": "Expired E-Way Bill in Transit: Section 129 Detention and the 8-Hour Extension Window",
+      "registered": "2026-08-13T18:51:06.512330Z",
+      "spokes": []
+    },
+    "new_vs_old_regime_guide": {
+      "slug": "new-vs-old-regime-guide",
+      "title": "I earn ₹15 Lakhs. Should I switch to the New Tax Regime or cling to my 80C and HRA?",
+      "registered": "2026-08-13T18:51:06.512496Z",
+      "spokes": []
+    },
+    "gst_itc_mismatch_supplier_default_trap": {
+      "slug": "gst-itc-mismatch-supplier-default-trap",
+      "title": "The GST ITC Mismatch Trap: Paying For Your Supplier's Fraud",
+      "registered": "2026-08-13T18:51:06.512813Z",
+      "spokes": []
+    },
+    "the_section_143_1_tds_arrears_demand": {
+      "slug": "the-section-143-1-tds-arrears-demand",
+      "title": "The Section 143(1) TDS Arrears Demand",
+      "registered": "2026-08-13T18:51:06.513065Z",
+      "spokes": []
+    },
+    "missed_itr_deadline_penalty_guide": {
+      "slug": "missed-itr-deadline-penalty-guide",
+      "title": "The Cascade of Doom: What Happens When You Miss the July 31st ITR Deadline?",
+      "registered": "2026-08-13T18:51:06.513219Z",
+      "spokes": []
+    },
+    "pre_5_year_epf_withdrawal_tax_bomb": {
+      "slug": "pre-5-year-epf-withdrawal-tax-bomb",
+      "title": "The Pre-5-Year EPF Withdrawal Tax Bomb: Surviving the UAN Illusion",
+      "registered": "2026-08-13T18:51:06.513528Z",
+      "spokes": []
+    },
+    "nri_property_sale_tds_section_195_trap": {
+      "slug": "nri-property-sale-tds-section-195-trap",
+      "title": "The NRI Property Sale TDS Trap: Why Buyers Withhold 14% of Your Total Sale Value (And How to Stop It)",
+      "registered": "2026-08-13T18:51:06.513975Z",
+      "spokes": []
+    },
+    "the_section_270a_200_penalty_trap": {
+      "slug": "the-section-270a-200-penalty-trap",
+      "title": "Section 270A's 200% Penalty Trap: How the Tax Algorithm Upgrades a 50% Disallowance into Financial Ruin",
+      "registered": "2026-08-13T18:51:06.514258Z",
+      "spokes": []
+    },
+    "sft_high_value_transaction_notice": {
+      "slug": "sft-high-value-transaction-notice",
+      "title": "The Surveillance State: High-Value Transactions That Trigger an Audit",
+      "registered": "2026-08-13T18:51:06.514546Z",
+      "spokes": []
+    },
+    "80g_fake_donation_scam_notice": {
+      "slug": "80g-fake-donation-scam-notice",
+      "title": "The 80G Kickback Trap: How Fake Donation Receipts Trigger 148A Notices",
+      "registered": "2026-08-13T18:51:06.514904Z",
+      "spokes": []
+    },
+    "fo_trading_loss_setoff_guide": {
+      "slug": "fo-trading-loss-setoff-guide",
+      "title": "I lost ₹5 Lakhs trading F&O. Can I offset this loss against my IT sector salary?",
+      "registered": "2026-08-13T18:51:06.515054Z",
+      "spokes": []
+    },
+    "section_54f_crypto_property_hack": {
+      "slug": "section-54f-crypto-property-hack",
+      "title": "The Alchemist's Exemption: Erase Capital Gains Using Section 54F",
+      "registered": "2026-08-13T18:51:06.515213Z",
+      "spokes": []
+    },
+    "section_26_joint_registry_emi_trap": {
+      "slug": "section-26-joint-registry-emi-trap",
+      "title": "You Paid 100% of the EMI. Why Did the Tax Department Just Disallow Half Your Claim?",
+      "registered": "2026-08-13T18:51:06.515510Z",
+      "spokes": []
+    },
+    "nri_rnor_status_tax_shield": {
+      "slug": "nri-rnor-status-tax-shield",
+      "title": "The NRI Homecoming: Shielding Your Global Wealth Using RNOR Status",
+      "registered": "2026-08-13T18:51:06.515655Z",
+      "spokes": []
+    },
+    "the_15_day_defective_return_clock_section_139_9": {
+      "slug": "the-15-day-defective-return-clock-section-139-9",
+      "title": "The 15-Day Defective Return Clock: Why Section 139(9) Can Erase Your Tax Filing",
+      "registered": "2026-08-13T18:51:06.515906Z",
+      "spokes": []
+    },
+    "freelance_export_gst_usd_guide": {
+      "slug": "freelance-export-gst-usd-guide",
+      "title": "I earn USD from US clients as a freelancer. Do I really need to register for GST in India?",
+      "registered": "2026-08-13T18:51:06.516057Z",
+      "spokes": []
+    },
+    "section_23_phantom_rent_trap": {
+      "slug": "section-23-phantom-rent-trap",
+      "title": "Your Third House Can Be Taxed Even If It’s Empty — Section 23 Explained",
+      "registered": "2026-08-13T18:51:06.516292Z",
+      "spokes": []
+    },
+    "section_43bh_msme_45_day_payment_tax_disallowance": {
+      "slug": "section-43bh-msme-45-day-payment-tax-disallowance",
+      "title": "Section 43B(h): Why Late Payment to a Micro or Small Supplier Can Delay Your Tax Deduction",
+      "registered": "2026-08-13T18:51:06.516605Z",
+      "spokes": []
+    },
+    "rent_to_parents_hra_exemption_guide": {
+      "slug": "rent-to-parents-hra-exemption-guide",
+      "title": "Can I pay rent to my parents to claim HRA without getting an Income Tax notice?",
+      "registered": "2026-08-13T18:51:06.516735Z",
+      "spokes": []
+    },
+    "schedule_fa_black_money_act_penalty": {
+      "slug": "schedule-fa-black-money-act-penalty",
+      "title": "The $50 Black Money Notice: Surviving the Schedule FA Dragnet Before December 31",
+      "registered": "2026-08-13T18:51:06.516991Z",
+      "spokes": []
+    },
+    "agency_arbitrage_loophole": {
+      "slug": "agency-arbitrage-loophole",
+      "title": "The Agency Arbitrage Loophole: Scaling Beyond the ₹75L Freelance Limit",
+      "registered": "2026-08-13T18:51:06.517251Z",
+      "spokes": []
+    },
+    "section_87a_rebate_denial_trap": {
+      "slug": "section-87a-rebate-denial-trap",
+      "title": "The Section 87A Mirage: Why You Owe Tax Even if You Earn Under ₹12 Lakhs",
+      "registered": "2026-08-13T18:51:06.517548Z",
+      "spokes": []
+    },
+    "moonlighting_dual_employment_tax_guide": {
+      "slug": "moonlighting-dual-employment-tax-guide",
+      "title": "The Moonlighting Survival Guide: How to Report Your Second Income Without Panic.",
+      "registered": "2026-08-13T18:51:06.517612Z",
+      "spokes": []
+    },
+    "fractional_real_estate_reit_dividend_tax": {
+      "slug": "fractional-real-estate-reit-dividend-tax",
+      "title": "The Rent Collector's Illusion: Deconstructing the REIT Tax Code",
+      "registered": "2026-08-13T18:51:06.517846Z",
+      "spokes": []
+    },
+    "capital_markets_ltcg_budget_guide": {
+      "slug": "capital-markets-ltcg-budget-guide",
+      "title": "Stop Complaining About the 12.5% LTCG. Here is the Exact Math to Neutralize the Hit.",
+      "registered": "2026-08-13T18:51:06.517997Z",
+      "spokes": []
+    },
+    "influencer_barter_trap_194r": {
+      "slug": "influencer-barter-trap-194r",
+      "title": "The Influencer Barter Trap: Why the Income Tax Department Views 'Free' Laptops as Hard Cash",
+      "registered": "2026-08-13T18:51:06.518148Z",
+      "spokes": []
+    },
+    "fo_trading_turnover_audit": {
+      "slug": "fo-trading-turnover-audit",
+      "title": "The F&O Turnover Trap: Why the IT Department Treats You Like a Corporation but Audits You Like a Hobbyist",
+      "registered": "2026-08-13T18:51:06.518294Z",
+      "spokes": []
+    },
+    "ecommerce_gst_mythbuster_guide": {
+      "slug": "ecommerce-gst-mythbuster-guide",
+      "title": "The ₹40 Lakh GST Exemption is a Myth if You Sell on Amazon or Flipkart.",
+      "registered": "2026-08-13T18:51:06.518454Z",
+      "spokes": []
+    },
+    "debt_mutual_fund_massacre": {
+      "slug": "debt-mutual-fund-massacre",
+      "title": "The Debt Fund Massacre: Indexation is Dead",
+      "registered": "2026-08-13T18:51:06.518603Z",
+      "spokes": []
+    },
+    "saas_credit_card_trap": {
+      "slug": "saas-credit-card-trap",
+      "title": "The SaaS Credit Card Trap: How Section 195 Disallows Your AWS & Facebook Ad Spends",
+      "registered": "2026-08-13T18:51:06.518922Z",
+      "spokes": []
     }
   }
 }

@@ -31,5 +31,16 @@
     "mechanics": "1. The Ignorant Initiation: Salaried employee trades options on mobile. 2. The Volume Explosion: Zero brokerage enables thousands of micro-trades. 3. AIS/TIS Pipeline: Broker reports volume as 'Business Receipts'. 4. Algorithmic Trigger: Attempting to file ITR-2 triggers Defective Return Sec 139(9). 5. Audit Mandate: Forced into ITR-3, Absolute Sum pushes turnover past 10Cr, requiring audit. 6. The Desperate Offset: Trader claims rent/laptop to offset audit costs. 7. Disallowance: AO disallows indirect expenses, slaps Sec 271A penalty for no cash book.",
     "delta": "Safe Trader: Knows F&O is business, tracks Absolute Turnover, stops before 10Cr limit, claims ONLY direct expenses (brokerage, STT). Trapped Trader: Trades recklessly on margin, breaches 10Cr, claims 50% rent and iPhone to offset salary. Result: 100% disallowance and penalties.",
     "moldingDecisions": "1. Added a specific section detailing the mechanics of carrying forward F&O losses (8-year limit, non-speculative offset). 2. Noted the legal divergence between Intraday Equity (Speculative) and F&O (Non-Speculative) explicitly, promising a future linked article for Intraday traps."
+  },
+  {
+    "slug": "p2p-lending-bad-debt-disallowance",
+    "title": "The P2P Tax Trap: Why You Pay Tax on Interest Even After Losing Your Principal",
+    "category": "Income from Other Sources",
+    "research": "Retail P2P investors are taxed on the gross interest they earn under Section 56 (Income from Other Sources). However, because they are not licensed money-lending businesses, their defaults (bad debts) are treated as unrecoverable personal capital losses. Section 57 strictly permits only expenses incurred wholly for earning income, barring capital losses from being set off against revenue. This asymmetrical tax treatment means a 10% default on a 10% yield pushes the investor into a net financial loss after taxes.",
+    "searchIntent": "Investors searching for 'P2P lending tax India', 'Can I claim bad debt on P2P defaults in ITR', 'Liquiloans default tax treatment'. The intent shifts from yield-seeking to damage control when they realize they have to pay 30% tax on the gross interest of a portfolio that actually lost money.",
+    "oughtToKnow": "A. The FD Illusion: P2P is not a high-yield FD; there is zero DICGC principal insurance. B. Section 57 Hail Mary: Trying to claim defaults as expenses under Section 57(iii) will trigger scrutiny. C. Capital Gains Mirage: It cannot be classified as a capital loss because there is no 'transfer' of asset under Section 2(47).",
+    "mechanics": "1. \u20b910L allocated to P2P platform. 2. 10% gross interest (\u20b91L) earned. 3. 10% defaults (\u20b91L) occur. 4. Pre-tax outcome is mathematically neutral (\u20b90). 5. Taxman demands 30% on the \u20b91L gross interest (\u20b930k). 6. Final post-tax reality: A net loss of \u20b930k.",
+    "delta": "Safe Investor: Calculates True Net Yield (Gross Yield - Full Tax Liability - Estimated Principal Defaults) before investing. Trapped Investor: Assumes they can write off defaults like a bank or carry them forward like a stock market loss.",
+    "moldingDecisions": "Enforced the inclusion of [SVG_PROPOSAL] tags for the pre-investment yield calculation tree and the Bank vs Retail tax treatment matrix."
   }
 ]

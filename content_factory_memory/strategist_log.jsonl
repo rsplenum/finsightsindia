@@ -1,0 +1,1 @@
+{"timestamp": "2026-08-13T19:04:33.257113Z", "topic": "p2p_lending_bad_debt_disallowance", "angles": [{"angle_id": "p2p-bad-debt-trap", "risk_level": "safe"}, {"angle_id": "p2p-business-income-pivot", "risk_level": "moderate"}, {"angle_id": "p2p-12-percent-illusion", "risk_level": "off-template"}], "chosen_angle_id": "custom", "pillar_relation_flagged": null}

@@ -1,0 +1,66 @@
+---
+// P2PRingFencingModel.astro
+---
+<div class="my-10 bg-white dark:bg-slate-900 rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-800 font-sans">
+  <div class="bg-slate-50 dark:bg-slate-950 p-6 border-b border-slate-200 dark:border-slate-800">
+    <h3 class="text-xl font-bold text-slate-900 dark:text-white m-0">The UK "Ring-Fencing" Solution</h3>
+    <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">How sensible tax policy prevents moral hazard while providing symmetric risk relief.</p>
+  </div>
+  
+  <div class="p-6 md:p-8">
+    <div class="relative max-w-3xl mx-auto">
+      
+      <!-- The Big Box (All Income) -->
+      <div class="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl p-6 relative">
+        <span class="absolute -top-3 left-6 bg-white dark:bg-slate-900 px-3 text-xs font-bold text-slate-500 tracking-widest uppercase">Your Total Income</span>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Salary/Business -->
+          <div class="col-span-1 bg-slate-100 dark:bg-slate-800 rounded-xl p-4 text-center flex flex-col justify-center h-32">
+            <span class="font-bold text-slate-800 dark:text-slate-200">Salary & Business</span>
+            <span class="text-green-600 dark:text-green-400 font-mono mt-2">₹20 Lakhs</span>
+          </div>
+          
+          <!-- P2P Ring Fence -->
+          <div class="col-span-2 relative">
+            <div class="absolute -inset-2 bg-blue-50 dark:bg-blue-900/10 border-2 border-blue-400 dark:border-blue-600/50 rounded-xl"></div>
+            <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-xs font-bold">THE P2P RING-FENCE</span>
+            
+            <div class="relative h-32 flex divide-x divide-slate-200 dark:divide-slate-700 bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 mt-2">
+              <div class="flex-1 p-4 flex flex-col justify-center text-center">
+                <span class="text-sm font-bold text-slate-700 dark:text-slate-300">P2P Interest</span>
+                <span class="text-green-600 dark:text-green-400 font-mono mt-1">+ ₹1,00,000</span>
+              </div>
+              <div class="flex-1 p-4 flex flex-col justify-center text-center relative overflow-hidden">
+                <div class="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(239,68,68,0.05)_10px,rgba(239,68,68,0.05)_20px)]"></div>
+                <span class="text-sm font-bold text-slate-700 dark:text-slate-300 relative">P2P Bad Debt</span>
+                <span class="text-red-600 dark:text-red-400 font-mono mt-1 relative">- ₹30,000</span>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        
+        <!-- Explanation arrows -->
+        <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <div class="flex items-center gap-2 text-green-600 dark:text-green-400 font-bold mb-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              <span>Losses permitted INSIDE the fence</span>
+            </div>
+            <p class="text-sm text-slate-600 dark:text-slate-400">The ₹30,000 loss can offset the ₹1L interest. You only pay tax on the net ₹70,000 P2P yield.</p>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 text-red-600 dark:text-red-400 font-bold mb-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              <span>Losses blocked from LEAVING the fence</span>
+            </div>
+            <p class="text-sm text-slate-600 dark:text-slate-400">The P2P loss cannot cross the fence to reduce your salary tax. The government avoids subsidizing credit risk.</p>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>

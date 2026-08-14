@@ -4,7 +4,11 @@ import { getCollection } from 'astro:content';
 
 const allArticles = await getCollection('direct-tax');
 const articleCount = allArticles.length;
-const articleEntries = allArticles.slice(0, 6).map(art => [art.id, art.data]);
+// Sort by ID descending so newer files (or at least different files) show up, or randomly.
+// Wait, to show the newest, we can just grab it if we know it.
+// Actually, let's sort so 'p' comes first or just reverse it for now so they see it.
+const sortedArticles = allArticles.sort((a, b) => b.id.localeCompare(a.id));
+const articleEntries = sortedArticles.slice(0, 6).map(art => [art.id, art.data]);
 ---
 
 <Layout title="FinSight India — Financial Decision Intelligence Platform" description="Transforming financial calculations into guided, explainable decision intelligence. Tax optimization, retirement longevity, insurance deconstruction, and wealth accumulation.">

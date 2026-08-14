@@ -1766,5 +1766,73 @@
         "audio": "Tax-free is almost always just tax-deferred. Audit the underlying SPVs and model your true after-tax yield using our full breakdown on FinSight INDIA. Link in bio."
       }
     ]
+  },
+  {
+    "id": "reel-066",
+    "title": "The P2P Bad Debt Disallowance Trap",
+    "articleSlug": "p2p-lending-bad-debt-disallowance",
+    "duration": "100s",
+    "hook": "Earned 10% interest on P2P lending, but lost 10% to defaulted loans? You might think you broke even. But the Income Tax Department is about to send you a tax bill that pushes you straight into a financial loss!",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Speaker looking directly into the camera holding a phone showing a 10% P2P yield dashboard. Sudden transition to a red tax bill hitting the screen with a 'NET LOSS' stamp.",
+        "audio": "Earned 10% interest on P2P lending, but lost 10% to defaulted loans? You might think you broke even. But the Income Tax Department is about to send you a tax bill that pushes you straight into a financial loss!"
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "Split screen. Left: 'Bank (Licensed Lender)' with bad debts offsetting interest. Right: 'Retail Investor (Micro-Banker)' with Section 56 taxing gross interest and Section 57 blocking default deductions.",
+        "audio": "Welcome to the P2P Bad Debt Trap. When a bank loses money to loan defaults, the law lets them write it off as a business expense. But as a retail investor, you are taxed under 'Income from Other Sources.' Section 56 taxes every single rupee of your gross interest, while Section 57 strictly forbids you from writing off a single rupee of defaulted principal!"
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "Fast-paced infographic animation: \u20b910 Lakhs invested -> \u20b91 Lakh gross interest earned -> 30% tax slab takes \u20b930,000. Simultaneously, \u20b91 Lakh principal defaults (NPA). Pre-tax return: \u20b90. Post-tax return: MINUS \u20b930,000!",
+        "audio": "Run the math. You invest 10 Lakhs and earn 1 Lakh in interest. But 10% of your borrowers default, wiping out 1 Lakh of your principal. Economically, your profit is zero. But the taxman ignores the default! You owe 30,000 rupees in tax on the gross interest. You didn't break even\u2014you lost 30,000 rupees!"
+      },
+      {
+        "time": "0:55 - 1:20",
+        "visual": "Red 'X' stamps over 3 text blocks: 1. Section 57 Expense Claim (Triggers Scrutiny Notice), 2. Capital Loss Set-off (No Transfer under Sec 2(47)), 3. Debt Mutual Fund Comparison (NAV vs Uncollateralized P2P).",
+        "audio": "Think you can claim that default as a capital loss or an expense in your ITR? Think again! Judicial precedent is crystal clear: loan defaults aren't business expenses under Section 57, and without a formal transfer, they aren't capital losses either. Debt funds adjust NAV for defaults\u2014P2P leaves you with 100% of the downside."
+      },
+      {
+        "time": "1:20 - 1:40",
+        "visual": "Speaker pointing to an interactive formula on screen: True Net Yield = (Gross Interest - Tax Liability - Expected Default Rate). FinSight INDIA logo glows with 'Read Full Breakdown in Bio'.",
+        "audio": "Before allocating a single rupee to P2P platforms, model your true post-tax, post-default returns. Deduct legal platform fees under Section 57, but never assume defaulted principal is tax-deductible. Calculate your real net yield on FinSight INDIA. Link in bio!"
+      }
+    ]
+  },
+  {
+    "id": "reel-054",
+    "title": "The P2P Lending Infinite Tax Trap",
+    "articleSlug": "p2p-lending-bad-debt-disallowance",
+    "duration": "100s",
+    "hook": "Did you know that investing in P2P lending at a 12% return can mathematically result in an infinite tax rate? Here is how the government taxes your losses.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Speaker holding a phone showing a P2P dashboard with '12% Return!'. A red 'TAXED' stamp hits it.",
+        "audio": "Did you know that investing in P2P lending at a 12% return can mathematically result in an infinite tax rate? Here is how the government taxes your losses."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "Split screen: 'Bank NPAs' (deductible) vs 'Retail P2P Bad Debt' (non-deductible).",
+        "audio": "When a bank loses money on a bad loan, they deduct it from their profits before paying tax. But when you lose money on a P2P platform, the Income Tax Act treats it as a non-deductible capital loss."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "A 12% yield graphic is sliced by a 30% tax slab, then crushed by a 5% default rate.",
+        "audio": "You pay full slab-rate tax on the interest earned. But you cannot deduct the principal you lost. A 12% yield in the 30% bracket drops to 8.4%. Add a 5% default rate, and your true return is just 3.4%."
+      },
+      {
+        "time": "0:55 - 1:15",
+        "visual": "An investor pulling their hair out as the yield goes negative but the tax bill remains.",
+        "audio": "If defaults hit 8.4%, your cash flow breaks even. But you still owe taxes on the gross interest. You are literally paying the government a premium for the privilege of losing your own money."
+      },
+      {
+        "time": "1:15 - 1:40",
+        "visual": "Speaker pointing to screen with the 'FinSight INDIA' logo.",
+        "audio": "Retail P2P lending is mathematically broken. Learn the corporate entity structuring loopholes that HNI investors use to bypass this trap on FinSight INDIA. Link in bio."
+      }
+    ]
   }
 ]
