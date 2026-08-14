@@ -19,7 +19,7 @@ import ButtonGold from '../components/ButtonGold.astro';
 		<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 			
 			<!-- Left Column: Input Form Card -->
-			<CardPremium class="lg:col-span-5 lg:sticky lg:top-24 self-start">
+			<CardPremium glass={true} class="lg:col-span-5 lg:sticky lg:top-24 self-start">
 				<div class="pb-4 border-b border-navy-200 dark:border-navy-800 flex items-center justify-between">
 					<div>
 						<h3 class="text-lg font-bold tracking-tight text-navy-900 dark:text-navy-100">Your Plan Details</h3>
@@ -230,7 +230,7 @@ import ButtonGold from '../components/ButtonGold.astro';
 
 				<!-- View 1: Plan Summary Tab Content -->
 				<div id="viewPlanSummary" class="space-y-6">
-					<CardPremium>
+					<CardPremium glass={true}>
 						
 						<!-- Actionable Portfolio Health & Endurance Hero Section -->
 						<div class="pb-6 border-b border-navy-200 dark:border-white/10 space-y-3">
@@ -368,27 +368,34 @@ import ButtonGold from '../components/ButtonGold.astro';
 							</div>
 						</div>
 
-						<!-- PERPETUAL INCOME TARGETS -->
+						<!-- STOCHASTIC REALITY & SENSITIVITY CHECK -->
 						<div class="space-y-3">
-							<SectionTitle title="PERPETUAL INCOME TARGETS" />
+							<SectionTitle title="STOCHASTIC REALITY & SENSITIVITY CHECK" />
 							<div class="grid grid-cols-1 gap-3">
-								<div class="card-premium rounded-2xl p-4 sm:p-5 space-y-1">
-									<div class="flex items-center gap-2">
-										<span class="w-2.5 h-2.5 rounded-full bg-navy-900 dark:bg-white"></span>
-										<h5 class="text-xs font-semibold text-navy-800 dark:text-navy-200">Required Corpus at Risk-Free Rate</h5>
-									</div>
-									<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans pt-1">
-										To guarantee this exact purchasing power perpetually using safe government bonds (assuming a 7% yield), you would need an initial corpus of <strong id="statRequiredCorpus" class="text-navy-900 dark:text-navy-100 font-bold">--</strong>.
+								<div class="card-glass rounded-2xl p-4 sm:p-5 space-y-2">
+									<h5 class="text-xs font-semibold text-navy-800 dark:text-navy-200 uppercase tracking-widest">The Volatility Drag</h5>
+									<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans">
+										You entered <strong id="sensVolatilityInput" class="text-navy-900 dark:text-white">--%</strong> market volatility. In the real world, returns are not linear. Because of <a href="#" class="underline">Volatility Drag (Variance Drain)</a>, a portfolio losing 20% requires a 25% gain just to break even. Our Monte Carlo engine simulates 10,000 lifetimes using Brownian motion to accurately penalize your portfolio for this drag.
 									</p>
 								</div>
-								<div class="card-premium rounded-2xl p-4 sm:p-5 space-y-1">
-									<div class="flex items-center gap-2">
-										<span class="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400"></span>
-										<h5 class="text-xs font-semibold text-navy-800 dark:text-navy-200">Required Market Return (CAGR)</h5>
-									</div>
-									<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans pt-1">
-										Assuming perfectly smooth, linear growth, your investments must generate a gross return of <strong id="statRequiredCAGR" class="text-navy-900 dark:text-navy-100 font-bold">--</strong> every year to overcome taxes and inflation without depleting the principal.
+								<div class="card-glass rounded-2xl p-4 sm:p-5 space-y-2">
+									<h5 class="text-xs font-semibold text-navy-800 dark:text-navy-200 uppercase tracking-widest">Assumption Fragility (Required CAGR)</h5>
+									<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans mb-3">
+										Your plan demands a <strong class="text-rose-600 dark:text-rose-400">Net Withdrawal Rate of <span id="sensIWR">--%</span></strong> in year one. To survive perpetually without depleting principal, your required gross CAGR is highly sensitive to the market's turbulence:
 									</p>
+									<div class="overflow-x-auto rounded-lg border border-navy-200 dark:border-navy-800">
+										<table class="w-full text-xs text-left whitespace-nowrap">
+											<thead class="bg-navy-100 dark:bg-navy-900 text-navy-600 dark:text-navy-300 font-semibold uppercase tracking-wider text-[10px]">
+												<tr>
+													<th class="px-4 py-2.5">If Volatility is...</th>
+													<th class="px-4 py-2.5 text-right">Required Gross CAGR</th>
+												</tr>
+											</thead>
+											<tbody id="sensitivityTableBody" class="divide-y divide-navy-100 dark:divide-navy-800 bg-white/50 dark:bg-navy-950/50 font-mono">
+												<!-- populated by JS -->
+											</tbody>
+										</table>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -397,7 +404,7 @@ import ButtonGold from '../components/ButtonGold.astro';
 
 				<!-- View 2: Yearly Paycheck Schedule Tab Content -->
 				<div id="viewSchedule" class="hidden space-y-6">
-					<CardPremium>
+					<CardPremium glass={true}>
 						<div class="pb-4 border-b border-navy-200 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
 							<div>
 								<h3 class="text-lg font-bold text-navy-900 dark:text-navy-100">Yearly Inflation Escalation Schedule</h3>
@@ -440,7 +447,7 @@ import ButtonGold from '../components/ButtonGold.astro';
 		</div>
 
 		<!-- Full-Width Chart Container Card -->
-		<CardPremium class="w-full mt-12">
+		<CardPremium glass={true} class="w-full mt-12">
 			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-navy-200 dark:border-white/10">
 				<div>
 					<h3 class="text-lg font-bold text-navy-900 dark:text-navy-100">The Lifecycle of Your Savings</h3>
@@ -498,7 +505,7 @@ import ButtonGold from '../components/ButtonGold.astro';
 		</CardPremium>
 
 		<!-- SECTION 2: BLACK-SCHOLES HEDGING & YEAR-BY-YEAR LEDGER -->
-		<CardPremium class="w-full mt-12">
+		<CardPremium glass={true} class="w-full mt-12">
 			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-navy-200 dark:border-navy-800 pb-4 mb-4">
 				<div class="flex flex-col gap-1">
 					<h3 class="text-sm sm:text-base font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">
@@ -1054,18 +1061,32 @@ import ButtonGold from '../components/ButtonGold.astro';
 		const t2BalRemEl = document.getElementById('tier2BalanceRemaining');
 		if (t2BalRemEl) t2BalRemEl.innerText = formatShortRupee(balanceRemaining);
 
-		const realRate = Math.max(0.001, (7 - expectedInflation) / 100);
-		const requiredCorpus = annualWithdrawal / realRate;
-		const reqCorpusEl = document.getElementById('statRequiredCorpus');
-		if (reqCorpusEl) reqCorpusEl.innerText = formatShortRupee(requiredCorpus);
-
 		let iwr = (annualWithdrawal / initialCorpus) * 100;
 		let netRequired = iwr + expectedInflation;
 		let marketVolatility = inputs.annualVolatility;
-		let volatilityDrag = Math.pow(marketVolatility, 2) / 200;
-		let requiredCAGR = (netRequired / (1 - (ltcgTax / 100))) + volatilityDrag;
-		const reqCagrEl = document.getElementById('statRequiredCAGR');
-		if (reqCagrEl) reqCagrEl.innerText = requiredCAGR.toFixed(2) + '%';
+		
+		const volInputEl = document.getElementById('sensVolatilityInput');
+		if (volInputEl) volInputEl.innerText = marketVolatility + '%';
+		const iwrEl = document.getElementById('sensIWR');
+		if (iwrEl) iwrEl.innerText = iwr.toFixed(1) + '%';
+
+		const sensTbody = document.getElementById('sensitivityTableBody');
+		if (sensTbody) {
+			let tbodyHtml = '';
+			[5, 10, 15, 20].forEach(vol => {
+				let volDrag = Math.pow(vol, 2) / 200;
+				let reqCAGR = (netRequired / (1 - (ltcgTax / 100))) + volDrag;
+				let isCurrent = vol === marketVolatility;
+				let highlight = isCurrent ? 'bg-gold-50 dark:bg-gold-900/20 font-bold' : '';
+				let label = vol <= 5 ? 'Bonds/Index' : vol === 10 ? 'Balanced' : vol === 15 ? 'NIFTY 50' : 'Small Cap';
+				
+				tbodyHtml += `<tr class="${highlight}">
+					<td class="px-4 py-2.5 ${isCurrent ? 'text-gold-600 dark:text-gold-400' : 'text-navy-700 dark:text-navy-300'}">${vol}% <span class="font-sans text-[10px] text-navy-400 ml-1">(${label})</span></td>
+					<td class="px-4 py-2.5 text-right ${isCurrent ? 'text-gold-600 dark:text-gold-400' : 'text-navy-900 dark:text-navy-100'}">${reqCAGR.toFixed(2)}%</td>
+				</tr>`;
+			});
+			sensTbody.innerHTML = tbodyHtml;
+		}
 		
 		const diagnostics = data.diagnostics;
 		if (diagnostics) {

@@ -4,5 +4,11 @@
     "title": "Curator Mode for Creator Logs",
     "description": "An interactive UI to select and batch-delete logs from the Creator Log page. Requires migrating Astro to hybrid SSR mode with the Node.js adapter to allow API routes to dynamically splice the underlying JSON file.",
     "dateShelved": "2026-08-08"
+  },
+  {
+    "id": 2,
+    "title": "Interactive D3.js Heatmaps for Option Greeks",
+    "description": "Instead of a static HTML table, use fully interactive D3.js or WebGL 3D surfaces to visualize option sensitivity (Vega vs Theta) and stochastic reality for the SWP engine.",
+    "dateShelved": "2026-08-14"
   }
 ]

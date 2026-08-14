@@ -1,11 +1,13 @@
 ---
 export interface Props {
 	class?: string;
+	glass?: boolean;
 }
 
-const { class: className = '' } = Astro.props;
+const { class: className = '', glass = false } = Astro.props;
+const baseClass = glass ? 'card-glass' : 'card-premium';
 ---
 
-<section class={`card-premium rounded-2xl reveal p-6 sm:p-8 space-y-6 transition-colors duration-200 ${className}`}>
+<section class={`${baseClass} rounded-2xl reveal p-6 sm:p-8 space-y-6 transition-colors duration-200 ${className}`}>
 	<slot />
 </section>
