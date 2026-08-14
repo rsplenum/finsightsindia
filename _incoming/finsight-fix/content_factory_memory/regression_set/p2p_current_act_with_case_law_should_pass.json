@@ -1,0 +1,7 @@
+{
+  "case_id": "p2p_current_act_with_case_law_should_pass",
+  "gate": "gate1_research",
+  "input": "Under the Income-tax Act, 1961, retail P2P bad-debt relief turned on Section 36(1)(vii) and Section 36(2). Since the Income-tax Act, 2025 came into force on 1 April 2026, the dedicated bad-debt provision is Section 31, but Section 94(2) does not extend Section 31 to income-from-other-sources computation - so the structural gap persists under the new Act. In CIT v. Byramjee Jeejeebhoy, the Bombay High Court's reasoning turned on whether previously-taxed, subsequently-irrecoverable interest had been assessed as business income, illustrating how the passive-investor distinction has held up in practice.",
+  "expected_result": "PASS",
+  "note": "Should pass the tightened R2 (names both the 1961 section and its 2025 Act equivalent, explains the structural consequence) and the new R7 (grounds a claim in real case law, not just a bare section number)."
+}

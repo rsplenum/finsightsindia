@@ -1,0 +1,7 @@
+{
+  "case_id": "p2p_stale_act_no_primary_source_should_fail",
+  "gate": "gate1_research",
+  "input": "Retail P2P interest is taxable under Section 56 (Income from Other Sources) of the Income-tax Act, 1961. Deductions are governed by Section 57. The bad-debt mechanism under Section 36(1)(vii) requires the debt to have been taken into account in computing income, per the conditions in Section 36(2).",
+  "expected_result": "FAIL",
+  "note": "Should fail the tightened R2 (cites only 1961 Act sections for a live topic post-1 April 2026, no 2025 Act equivalent named) AND the new R7 (zero primary sources - no case, circular, or regulatory document, only bare section numbers). This is the actual failure pattern from tonight's P2P piece and the backfilled Schedule FA piece, not a hypothetical."
+}
