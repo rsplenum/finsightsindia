@@ -9,6 +9,7 @@ import RetirementAnswer from '../components/Calculators/RetirementAnswer.astro';
 import RungTwoRates from '../components/Calculators/RungTwoRates.astro';
 import RungMoneyFlow from '../components/Calculators/RungMoneyFlow.astro';
 import RungGrowth from '../components/Calculators/RungGrowth.astro';
+import RungSequence from '../components/Calculators/RungSequence.astro';
 ---
 
 <Layout title="Retirement Withdrawal Planner — SWP Intelligence Engine">
@@ -29,6 +30,7 @@ import RungGrowth from '../components/Calculators/RungGrowth.astro';
 	<RungTwoRates />
 	<RungMoneyFlow />
 	<RungGrowth />
+	<RungSequence />
 
 	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-16 sm:pt-6 sm:pb-24">
 
@@ -68,10 +70,10 @@ import RungGrowth from '../components/Calculators/RungGrowth.astro';
 							required={true}
 							tooltip="The total lump sum you are starting with today."
 							formattedId="corpusFormatted"
-							formattedDefault="₹ 1,25,00,000 (1.25 Cr)"
+							formattedDefault="₹ 1,50,00,000 (1.5 Cr)"
 							prefix="₹"
 							suffix="INR"
-							value="1,25,00,000"
+							value="1,50,00,000"
 						/>
 
 						<InputGroup 

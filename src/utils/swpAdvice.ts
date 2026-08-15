@@ -1,4 +1,5 @@
 import { runSWPMonteCarlo } from '../workers/swpWorker';
+import { runDeterministicSWP } from './swpDeterministic';
 
 /**
  * Turning a verdict into a decision.
@@ -221,6 +222,86 @@ function solveShortenHorizon(inputs: AdviceInputs, target: number): Remedy {
     delta: inputs.horizonYears - best,
     survival: survivalAt({ ...inputs, horizonYears: best }),
     outOfReach: false,
+  };
+}
+
+export interface SequencePoint {
+  crashYear: number;
+  finalBalance: number;
+  survived: boolean;
+  /** Year the pot ran dry, or null if it lasted. */
+  depletionYear: number | null;
+}
+
+export interface SequenceRisk {
+  points: SequencePoint[];
+  /** Crashing in this year or later leaves the plan intact. Null if none does. */
+  safeFromYear: number | null;
+  /** Identical for every scenario, by construction - this is the whole point. */
+  averageReturn: number;
+  crashPct: number;
+  best: SequencePoint;
+  worst: SequencePoint;
+}
+
+/**
+ * The same bad year, moved.
+ *
+ * Sequence-of-returns risk is the least intuitive thing about drawing down a
+ * portfolio and the most consequential: two retirements with the SAME average
+ * return can end decades apart depending only on when the bad years fall.
+ * While you are withdrawing, a crash early sells units cheap that can never be
+ * bought back, and every later gain compounds on a smaller base.
+ *
+ * The demonstration holds the multiset of yearly returns fixed - one crash
+ * year and the rest at the expected rate - and only permutes WHICH year is the
+ * bad one. The arithmetic mean is therefore identical across every scenario by
+ * construction, not by approximation, which is what makes the comparison
+ * honest rather than merely striking.
+ *
+ * Deterministic on purpose. A Monte Carlo here would blur the very effect
+ * being isolated.
+ */
+export function sequenceRisk(
+  inputs: AdviceInputs,
+  crashPct = -30
+): SequenceRisk {
+  const years = inputs.horizonYears;
+  const points: SequencePoint[] = [];
+
+  for (let crashYear = 1; crashYear <= years; crashYear++) {
+    const returns = Array.from({ length: years }, (_, i) =>
+      i + 1 === crashYear ? crashPct : inputs.expectedReturn
+    );
+    const run = runDeterministicSWP({ ...inputs, returnsByYear: returns });
+    const finalBalance = run.balances[years] ?? 0;
+    let depletionYear: number | null = null;
+    for (let y = 1; y < run.balances.length; y++) {
+      if (run.balances[y] <= 0) { depletionYear = y; break; }
+    }
+    points.push({
+      crashYear,
+      finalBalance,
+      survived: finalBalance > 0,
+      depletionYear,
+    });
+  }
+
+  const survivors = points.filter((p) => p.survived);
+  // Survival improves the later the crash lands, so the first surviving year
+  // is the boundary the reader needs.
+  const safeFromYear = survivors.length ? survivors[0].crashYear : null;
+
+  const averageReturn =
+    ((years - 1) * inputs.expectedReturn + crashPct) / years;
+
+  return {
+    points,
+    safeFromYear,
+    averageReturn,
+    crashPct,
+    best: points.reduce((a, b) => (b.finalBalance > a.finalBalance ? b : a)),
+    worst: points.reduce((a, b) => (b.finalBalance < a.finalBalance ? b : a)),
   };
 }
 

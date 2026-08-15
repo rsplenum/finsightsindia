@@ -10,6 +10,14 @@ export interface SWPInputs {
     hedgingDragCost?: number;
     hedgingFloorLimit?: number;
     bsEnabled?: boolean;
+    /**
+     * Optional per-year returns, as percentages, indexed from year 1.
+     * When supplied these override expectedReturn for that year, which lets a
+     * caller hold a set of returns fixed and only change their ORDER - the
+     * only way to show that sequence matters while proving the average did
+     * not move. Omitted years fall back to expectedReturn.
+     */
+    returnsByYear?: number[];
 }
 
 export interface SWPDeterministicOutput {
@@ -33,7 +41,8 @@ export function runDeterministicSWP(inputs: SWPInputs): SWPDeterministicOutput {
         useGuardrails = false,
         hedgingDragCost = 1.85,
         hedgingFloorLimit = -10,
-        bsEnabled = false
+        bsEnabled = false,
+        returnsByYear
     } = inputs;
 
     const mu = expectedReturn / 100;
@@ -77,7 +86,12 @@ export function runDeterministicSWP(inputs: SWPInputs): SWPDeterministicOutput {
             actualAnnualPaycheck = idealAnnualPaycheck;
         }
 
-        let currentReturn = mu;
+        // A supplied per-year return wins over the flat assumption, so a
+        // caller can permute a fixed set of returns and change nothing else.
+        const override = returnsByYear?.[year - 1];
+        let currentReturn = (override === undefined || !Number.isFinite(override))
+            ? mu
+            : override / 100;
         if (bsEnabled) {
             currentReturn = currentReturn - dragCost;
         }

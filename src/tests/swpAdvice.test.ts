@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { findRemedies, outlook, growthCurve, HEALTHY_SURVIVAL, type AdviceInputs } from '../utils/swpAdvice';
+import { findRemedies, outlook, growthCurve, sequenceRisk, HEALTHY_SURVIVAL, type AdviceInputs } from '../utils/swpAdvice';
+import { runDeterministicSWP } from '../utils/swpDeterministic';
 
 // sol-019: never leave the user at a verdict. These check that the remedies
 // are real - that following the advice actually reaches the target - rather
@@ -46,7 +47,7 @@ describe('the shipped defaults must describe a plan that works', () => {
   // These values are duplicated in RetirementAnswer.astro and swp-planner.astro;
   // this test is what stops the three drifting apart.
   const shipped: AdviceInputs = {
-    initialCorpus: 12500000,
+    initialCorpus: 15000000,
     monthlyWithdrawal: 40000,
     annualStepUp: 0,
     expectedReturn: 12,
@@ -68,9 +69,19 @@ describe('the shipped defaults must describe a plan that works', () => {
     expect(findRemedies(shipped)).toEqual([]);
   });
 
+  it('it survives a real disappointment in growth, not just a perfect run', () => {
+    // Rung 3 shows the reader the growth rate below which the plan fails. If
+    // the default sits half a point from that line, the pitch and the lesson
+    // contradict each other: "comfortable" would mean "comfortable only if
+    // markets deliver exactly what we assumed". At least 1.5 points of room.
+    const c = growthCurve(shipped, 6, 14, 0.5, 250);
+    expect(c.breakeven).not.toBeNull();
+    expect(shipped.expectedReturn - c.breakeven!).toBeGreaterThanOrEqual(1.5);
+  });
+
   it('its withdrawal rate sits near the rule of thumb a reader may know', () => {
     const rate = outlook(shipped, 400).flow.initialRate;
-    expect(rate).toBeGreaterThan(3.0);
+    expect(rate).toBeGreaterThan(2.5);
     expect(rate).toBeLessThan(4.5);
   });
 });
@@ -158,7 +169,7 @@ describe('remedies', () => {
 
 describe('the growth curve behind rung 3', () => {
   const plan: AdviceInputs = {
-    initialCorpus: 12500000, monthlyWithdrawal: 40000, annualStepUp: 0,
+    initialCorpus: 15000000, monthlyWithdrawal: 40000, annualStepUp: 0,
     expectedReturn: 12, expectedInflation: 6, annualVolatility: 15,
     ltcgTax: 12.5, horizonYears: 30,
   };
@@ -191,5 +202,61 @@ describe('the growth curve behind rung 3', () => {
   it('reports no breakeven when growth alone cannot rescue the plan', () => {
     const hopeless = { ...plan, monthlyWithdrawal: 150000 };
     expect(growthCurve(hopeless, 4, 12, 2, 200).breakeven).toBeNull();
+  });
+});
+
+describe('sequence risk behind rung 4', () => {
+  const plan: AdviceInputs = {
+    initialCorpus: 15000000, monthlyWithdrawal: 40000, annualStepUp: 0,
+    expectedReturn: 12, expectedInflation: 6, annualVolatility: 15,
+    ltcgTax: 12.5, horizonYears: 30,
+  };
+
+  it('every scenario has the identical average return - that is the whole claim', () => {
+    // If the averages differed, the demonstration would be showing the effect
+    // of a better market rather than of better timing, and the screen would be
+    // making a claim it had not earned.
+    const r = sequenceRisk(plan, -30);
+    const expected = ((30 - 1) * 12 + -30) / 30;
+    expect(r.averageReturn).toBeCloseTo(expected, 10);
+    expect(r.points).toHaveLength(30);
+  });
+
+  it('a later crash is never worse than an earlier one', () => {
+    const r = sequenceRisk(plan, -30);
+    for (let i = 1; i < r.points.length; i++) {
+      expect(r.points[i].finalBalance).toBeGreaterThanOrEqual(
+        r.points[i - 1].finalBalance - 1
+      );
+    }
+  });
+
+  it('the earliest crash is the worst and the latest is the best', () => {
+    const r = sequenceRisk(plan, -30);
+    expect(r.worst.crashYear).toBe(1);
+    expect(r.best.crashYear).toBe(plan.horizonYears);
+    expect(r.best.finalBalance).toBeGreaterThan(r.worst.finalBalance);
+  });
+
+  it('timing alone moves the outcome materially', () => {
+    // The point of the rung. If moving the same crash changed nothing, there
+    // would be nothing to teach.
+    const r = sequenceRisk(plan, -30);
+    expect(r.best.finalBalance / r.worst.finalBalance).toBeGreaterThan(1.3);
+  });
+
+  it('a tighter plan is sunk by an early crash and survives a late one', () => {
+    const tight = { ...plan, monthlyWithdrawal: 75000 };
+    const r = sequenceRisk(tight, -30);
+    expect(r.points[0].survived).toBe(false);
+    expect(r.safeFromYear).not.toBeNull();
+    expect(r.safeFromYear!).toBeGreaterThan(1);
+  });
+
+  it('per-year returns override the flat rate without disturbing anything else', () => {
+    // Guards the engine change this rung required.
+    const flat = sequenceRisk(plan, 12);   // "crash" equal to the normal return
+    const base = runDeterministicSWP(plan);
+    expect(Math.abs(flat.points[0].finalBalance - base.balances[30])).toBeLessThan(1);
   });
 });

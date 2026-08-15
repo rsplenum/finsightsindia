@@ -1,0 +1,183 @@
+---
+// Rung 4 of the ladder: "What if the bad years come first?"
+//
+// Sequence-of-returns risk is the least intuitive thing about drawing down a
+// portfolio and the most consequential, and on the old page it was buried
+// under the heading "STOCHASTIC REALITY" beside the words Brownian motion and
+// variance drain. It is not a hard idea. It is a hard idea to say badly.
+//
+// Built to dd-008: the prose states a principle true at every position, the
+// figures live in fixed slots, and the one dynamic sentence names the boundary
+// rather than the state. The control moves the crash, not the maths.
+//
+// The demonstration holds the SET of yearly returns fixed - one bad year, the
+// rest at the expected rate - and only changes which year is the bad one, so
+// the average return is identical across every position by construction. That
+// is what makes it a proof rather than an anecdote.
+---
+
+<section id="rungSeq" class="max-w-3xl mx-auto px-4 sm:px-6 py-4" aria-labelledby="rungSeqQ">
+  <div class="card-premium rounded-2xl p-6 sm:p-8 space-y-6">
+
+    <div>
+      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-400 dark:text-navy-500">
+        Next question
+      </p>
+      <h2 id="rungSeqQ" class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 mt-1">
+        What if the bad years come first?
+      </h2>
+      <p class="text-sm text-navy-500 dark:text-navy-400 mt-2">
+        One bad year, moved. Same crash, same average return — only the timing changes.
+      </p>
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex items-baseline justify-between gap-4">
+        <label for="seqSlider" class="text-sm text-navy-700 dark:text-navy-300">
+          The bad year lands in
+        </label>
+        <output id="seqYearOut" for="seqSlider"
+                class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">year 1</output>
+      </div>
+
+      <div class="relative pt-1 pb-6">
+        <input id="seqSlider" type="range" min="1" max="30" step="1" value="1"
+               aria-describedby="seqBoundary"
+               class="w-full accent-gold-500 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50 rounded" />
+        <div id="seqMark" class="hidden absolute top-0 -translate-x-1/2 pointer-events-none">
+          <div class="h-6 w-0.5 bg-rose-500/80 dark:bg-rose-400/80 mx-auto"></div>
+          <div id="seqMarkLabel"
+               class="mt-0.5 whitespace-nowrap text-[10px] font-semibold text-rose-600 dark:text-rose-400 -translate-x-1/2 relative left-1/2"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-navy-200 dark:border-navy-700 divide-y divide-navy-200 dark:divide-navy-700 overflow-hidden">
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">
+          Average return across the 30 years
+          <span class="block text-xs text-navy-500 dark:text-navy-400">identical wherever you put the bad year</span>
+        </span>
+        <span id="seqAvg" class="text-base font-semibold tabular-nums text-navy-900 dark:text-navy-100">—</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3.5 bg-navy-50/60 dark:bg-navy-900/40">
+        <span class="text-sm font-semibold text-navy-900 dark:text-navy-100">
+          What you finish with
+          <span class="block text-xs font-normal text-navy-500 dark:text-navy-400">in today's prices</span>
+        </span>
+        <span id="seqFinal" class="text-lg font-bold tabular-nums">—</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">Cost of the timing alone</span>
+        <span id="seqCost" class="text-base font-semibold tabular-nums text-rose-600 dark:text-rose-400">—</span>
+      </div>
+    </div>
+
+    <p id="seqBoundary"
+       class="rounded-lg bg-gold-500/10 border border-gold-500/30 px-4 py-3 text-sm leading-relaxed text-navy-800 dark:text-navy-200">
+      Working out when the timing stops mattering…
+    </p>
+
+    <p class="text-base leading-relaxed text-navy-800 dark:text-navy-200">
+      While you are saving, order does not matter — a bad year is a discount, and
+      the recovery finds you still holding everything you bought. While you are
+      drawing, order is nearly everything. A fall early forces you to sell cheap
+      to pay yourself, and those units are gone: every later recovery compounds
+      on a smaller pot. This is why two people with the same average return, the
+      same savings and the same spending can end their retirements decades apart.
+      You cannot control when it happens. You can control how much you are
+      forced to sell into it.
+    </p>
+
+    <div class="pt-4 border-t border-navy-200 dark:border-navy-800">
+      <p class="text-sm text-navy-600 dark:text-navy-400">
+        Which leads to the last question:
+        <span class="font-medium text-navy-800 dark:text-navy-200">can you pay someone to take that risk away, and what does it cost?</span>
+      </p>
+      <p class="text-xs text-navy-400 dark:text-navy-500 mt-1">That is the next step — coming shortly.</p>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  const $ = (id: string) => document.getElementById(id);
+
+  function money(n: number): string {
+    const v = Math.round(Math.abs(n));
+    const sign = n < 0 ? '−' : '';
+    if (v >= 10000000) return `${sign}₹${(v / 10000000).toFixed(2)} crore`;
+    if (v >= 100000) return `${sign}₹${(v / 100000).toFixed(1)} lakh`;
+    return `${sign}₹${v.toLocaleString('en-IN')}`;
+  }
+
+  let seq: any = null;
+  let inputs: any = null;
+
+  // Everything is shown in today's prices, matching the rungs above (dd-004).
+  const real = (n: number) =>
+    n / Math.pow(1 + inputs.expectedInflation / 100, inputs.horizonYears);
+
+  function paintBoundary() {
+    if (!seq || !inputs) return;
+    const el = $('seqBoundary')!;
+    const mark = $('seqMark')!;
+    const spread = real(seq.best.finalBalance) - real(seq.worst.finalBalance);
+
+    const anyFails = seq.points.some((p: any) => !p.survived);
+    if (anyFails && seq.safeFromYear) {
+      el.textContent =
+        `A bad year before year ${seq.safeFromYear} sinks this plan. From year ` +
+        `${seq.safeFromYear} onward the same crash is survivable — the pot has ` +
+        `grown enough to absorb it without selling away its future.`;
+      const frac = (seq.safeFromYear - 1) / Math.max(1, inputs.horizonYears - 1);
+      mark.style.left = `${Math.min(100, Math.max(0, frac * 100))}%`;
+      $('seqMarkLabel')!.textContent = `year ${seq.safeFromYear}`;
+      mark.classList.remove('hidden');
+    } else {
+      el.textContent =
+        `This plan survives the crash wherever it lands — but timing still costs ` +
+        `you up to ${money(spread)} of what you finish with, from the same crash ` +
+        `and the same average return. Earlier is always worse; there is no year ` +
+        `at which it stops mattering.`;
+      mark.classList.add('hidden');
+    }
+  }
+
+  function paintRow(year: number) {
+    if (!seq || !inputs) return;
+    const p = seq.points.find((x: any) => x.crashYear === year);
+    if (!p) return;
+
+    const best = real(seq.best.finalBalance);
+    const shown = real(p.finalBalance);
+
+    $('seqYearOut')!.textContent = `year ${year}`;
+    $('seqAvg')!.textContent = `${seq.averageReturn.toFixed(2)}% a year`;
+    $('seqFinal')!.textContent = p.survived ? money(shown) : 'nothing';
+    $('seqCost')!.textContent =
+      p.survived ? `${money(best - shown)} less than the best case` : `ran out in year ${p.depletionYear}`;
+
+    const fin = $('seqFinal') as HTMLElement;
+    fin.className = 'text-lg font-bold tabular-nums ' +
+      (!p.survived ? 'text-rose-600 dark:text-rose-400'
+       : shown >= best * 0.85 ? 'text-emerald-700 dark:text-emerald-400'
+       : 'text-amber-600 dark:text-amber-400');
+  }
+
+  const slider = $('seqSlider') as HTMLInputElement | null;
+  slider?.addEventListener('input', () => paintRow(Number(slider.value)));
+
+  window.addEventListener('swp:sequence', (e) => {
+    const d = (e as CustomEvent).detail;
+    seq = d.sequence;
+    inputs = d.inputs;
+    if (slider) {
+      slider.min = '1';
+      slider.max = String(inputs.horizonYears);
+      slider.value = '1';
+    }
+    paintBoundary();
+    paintRow(1);
+  });
+</script>
