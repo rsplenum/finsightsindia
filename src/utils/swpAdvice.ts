@@ -224,6 +224,65 @@ function solveShortenHorizon(inputs: AdviceInputs, target: number): Remedy {
   };
 }
 
+export interface GrowthPoint {
+  growth: number;      // nominal expected return, %
+  real: number;        // after inflation, %
+  headroom: number;    // real growth less the withdrawal rate, %
+  survival: number;    // 0..1
+}
+
+export interface GrowthCurve {
+  points: GrowthPoint[];
+  /** Lowest growth rate on the curve that still reaches the healthy bar. */
+  breakeven: number | null;
+  min: number;
+  max: number;
+  step: number;
+}
+
+/**
+ * Survival across a range of growth assumptions, computed once.
+ *
+ * Deliberately precomputed rather than evaluated per drag. Running the
+ * simulation while a slider is moving means either a stutter under the user's
+ * hand or a debounce that makes the number lag behind the control - and a
+ * number that arrives late reads as the tool being unsure. One batch up front
+ * makes dragging an array lookup.
+ *
+ * It also yields the breakeven for free, which is the only sentence rung 3
+ * needs: naming where the plan stops working covers the whole range of the
+ * control at once, so no prose has to change as the reader drags (dd-008).
+ */
+export function growthCurve(
+  inputs: AdviceInputs,
+  min = 4,
+  max = 18,
+  step = 0.5,
+  sims = 300
+): GrowthCurve {
+  const points: GrowthPoint[] = [];
+  const drawRate = inputs.initialCorpus > 0
+    ? (inputs.monthlyWithdrawal * 12) / inputs.initialCorpus * 100
+    : 0;
+
+  for (let g = min; g <= max + 1e-9; g += step) {
+    const growth = Math.round(g * 10) / 10;
+    // Real growth is the ratio, not the difference: 12% against 6% leaves
+    // 5.66%, and over thirty years treating it as 6% compounds badly.
+    const real = ((1 + growth / 100) / (1 + inputs.expectedInflation / 100) - 1) * 100;
+    points.push({
+      growth,
+      real,
+      headroom: real - drawRate,
+      survival: survivalAt({ ...inputs, expectedReturn: growth }, sims),
+    });
+  }
+
+  // Survival rises with growth, so the first crossing is the boundary.
+  const crossing = points.find((p) => p.survival >= HEALTHY_SURVIVAL);
+  return { points, breakeven: crossing ? crossing.growth : null, min, max, step };
+}
+
 /**
  * All three levers, cheapest-looking first is NOT imposed - the caller decides
  * presentation order. Returns an empty list when the plan is already healthy,

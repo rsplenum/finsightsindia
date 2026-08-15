@@ -1,0 +1,187 @@
+---
+// Rung 3 of the ladder: "What if growth is slower than 12%?"
+//
+// The first rung with a control, built to dd-008:
+//
+//   - the prose states a PRINCIPLE, true at every slider position, so dragging
+//     can never invalidate it and it never needs rewriting
+//   - the values that move live in FIXED SLOTS, so a change is seen as a digit
+//     ticking in one place rather than read as a sentence rewritten
+//   - the one dynamic sentence states the BOUNDARY, not the state — where the
+//     plan stops working covers the entire range of the control at once, and
+//     only changes when some OTHER input does
+//   - the boundary is marked on the track itself, so the reader crosses a
+//     visible line while dragging and learns the threshold without reading
+//
+// Nothing that moves has to be re-read; nothing that must be read ever moves.
+---
+
+<section id="rungGrowth" class="max-w-3xl mx-auto px-4 sm:px-6 py-4" aria-labelledby="rungGrowthQ">
+  <div class="card-premium rounded-2xl p-6 sm:p-8 space-y-6">
+
+    <div>
+      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-400 dark:text-navy-500">
+        Next question
+      </p>
+      <h2 id="rungGrowthQ" class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 mt-1">
+        What if growth is slower than you hope?
+      </h2>
+      <p class="text-sm text-navy-500 dark:text-navy-400 mt-2">
+        Drag it and watch the last row. Everything else on this screen stays put.
+      </p>
+    </div>
+
+    <!-- The control, with the boundary marked on the track -->
+    <div class="space-y-2">
+      <div class="flex items-baseline justify-between gap-4">
+        <label for="growthSlider" class="text-sm text-navy-700 dark:text-navy-300">
+          Yearly growth on your savings
+        </label>
+        <output id="growthValue" for="growthSlider"
+                class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">12.0%</output>
+      </div>
+
+      <div class="relative pt-1 pb-6">
+        <input id="growthSlider" type="range" min="4" max="18" step="0.5" value="12"
+               aria-describedby="growthBoundary"
+               class="w-full accent-gold-500 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50 rounded" />
+        <!-- the notch: a line the reader physically crosses -->
+        <div id="breakevenMark" class="hidden absolute top-0 -translate-x-1/2 pointer-events-none">
+          <div class="h-6 w-0.5 bg-rose-500/80 dark:bg-rose-400/80 mx-auto"></div>
+          <div id="breakevenLabel"
+               class="mt-0.5 whitespace-nowrap text-[10px] font-semibold text-rose-600 dark:text-rose-400 -translate-x-1/2 relative left-1/2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fixed slots. The eye returns to the same rows and sees digits change. -->
+    <div class="rounded-xl border border-navy-200 dark:border-navy-700 divide-y divide-navy-200 dark:divide-navy-700 overflow-hidden">
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">Prices rise by</span>
+        <span id="gInflation" class="text-base font-semibold tabular-nums text-rose-600 dark:text-rose-400">—</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">So you are genuinely better off by</span>
+        <span id="gReal" class="text-base font-semibold tabular-nums text-navy-900 dark:text-navy-100">—</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">And you are taking out</span>
+        <span id="gDraw" class="text-base font-semibold tabular-nums text-gold-600 dark:text-gold-400">—</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3.5 bg-navy-50/60 dark:bg-navy-900/40">
+        <span class="text-sm font-semibold text-navy-900 dark:text-navy-100">Which leaves you</span>
+        <span id="gHeadroom" class="text-lg font-bold tabular-nums">—</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">Futures where the money lasts</span>
+        <span id="gSurvival" class="text-base font-semibold tabular-nums text-navy-900 dark:text-navy-100">—</span>
+      </div>
+    </div>
+
+    <!-- The boundary. One sentence covering the whole range of the control. -->
+    <p id="growthBoundary"
+       class="rounded-lg bg-gold-500/10 border border-gold-500/30 px-4 py-3 text-sm leading-relaxed text-navy-800 dark:text-navy-200">
+      Working out where this plan stops working…
+    </p>
+
+    <!-- The principle. True at every position, so dragging never rewrites it. -->
+    <p class="text-base leading-relaxed text-navy-800 dark:text-navy-200">
+      Growth is the one number here you do not control. You choose how much you
+      draw and how long it must last; what the market returns is not yours to
+      set. So a plan that only works at the top of the range is not a plan — it
+      is a hope. The room you leave yourself matters more than the forecast you
+      pick.
+    </p>
+
+    <div class="pt-4 border-t border-navy-200 dark:border-navy-800">
+      <p class="text-sm text-navy-600 dark:text-navy-400">
+        And there is a harder version of this:
+        <span class="font-medium text-navy-800 dark:text-navy-200">what if the average is fine, but the bad years come first?</span>
+      </p>
+      <p class="text-xs text-navy-400 dark:text-navy-500 mt-1">That is the next step — coming shortly.</p>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  const $ = (id: string) => document.getElementById(id);
+  const pct = (n: number, dp = 1) => `${n < 0 ? '−' : ''}${Math.abs(n).toFixed(dp)}%`;
+
+  let curve: any = null;
+  let inputs: any = null;
+
+  function pointAt(growth: number) {
+    if (!curve?.points?.length) return null;
+    let best = curve.points[0];
+    for (const p of curve.points) {
+      if (Math.abs(p.growth - growth) < Math.abs(best.growth - growth)) best = p;
+    }
+    return best;
+  }
+
+  function paintBoundary() {
+    const el = $('growthBoundary')!;
+    const mark = $('breakevenMark')!;
+
+    if (!curve) return;
+    if (curve.breakeven === null) {
+      el.textContent =
+        `Even at ${pct(curve.max, 0)} growth this plan does not reach a comfortable ` +
+        `margin. Growth alone will not fix it — the draw or the horizon has to move.`;
+      mark.classList.add('hidden');
+      return;
+    }
+
+    el.textContent =
+      `This plan needs growth above ${pct(curve.breakeven)} a year to keep working. ` +
+      `Below that, you are drawing faster than the money can replace itself.`;
+
+    // Place the notch at its true position on the track.
+    const frac = (curve.breakeven - curve.min) / (curve.max - curve.min);
+    mark.style.left = `${Math.min(100, Math.max(0, frac * 100))}%`;
+    $('breakevenLabel')!.textContent = pct(curve.breakeven);
+    mark.classList.remove('hidden');
+  }
+
+  function paintRow(growth: number) {
+    const p = pointAt(growth);
+    if (!p || !inputs) return;
+
+    $('growthValue')!.textContent = pct(growth);
+    $('gInflation')!.textContent = `− ${pct(inputs.expectedInflation)} a year`;
+    $('gReal')!.textContent = `${pct(p.real)} a year`;
+    $('gDraw')!.textContent = `− ${pct((inputs.monthlyWithdrawal * 12) / inputs.initialCorpus * 100)} a year`;
+    $('gHeadroom')!.textContent = `${pct(p.headroom)} a year`;
+    $('gSurvival')!.textContent = `${Math.round(p.survival * 100)} in 100`;
+
+    const head = $('gHeadroom') as HTMLElement;
+    head.className = 'text-lg font-bold tabular-nums ' +
+      (p.headroom >= 1.5 ? 'text-emerald-700 dark:text-emerald-400'
+       : p.headroom >= 0 ? 'text-amber-600 dark:text-amber-400'
+       : 'text-rose-600 dark:text-rose-400');
+
+    const surv = $('gSurvival') as HTMLElement;
+    surv.className = 'text-base font-semibold tabular-nums ' +
+      (p.survival >= 0.85 ? 'text-emerald-700 dark:text-emerald-400'
+       : p.survival >= 0.6 ? 'text-amber-600 dark:text-amber-400'
+       : 'text-rose-600 dark:text-rose-400');
+  }
+
+  const slider = $('growthSlider') as HTMLInputElement | null;
+  slider?.addEventListener('input', () => paintRow(Number(slider.value)));
+
+  window.addEventListener('swp:curve', (e) => {
+    const d = (e as CustomEvent).detail;
+    curve = d.curve;
+    inputs = d.inputs;
+    if (slider) {
+      slider.min = String(curve.min);
+      slider.max = String(curve.max);
+      slider.step = String(curve.step);
+      slider.value = String(inputs.expectedReturn);
+    }
+    paintBoundary();
+    paintRow(inputs.expectedReturn);
+  });
+</script>

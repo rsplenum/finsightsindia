@@ -1,4 +1,4 @@
-import { outlook, findRemedies, type AdviceInputs } from '../utils/swpAdvice';
+import { outlook, findRemedies, growthCurve, type AdviceInputs } from '../utils/swpAdvice';
 
 /**
  * Runs the outlook and the remedy search off the main thread.
@@ -16,10 +16,18 @@ if (typeof self !== 'undefined' && typeof self.postMessage === 'function') {
   self.onmessage = (e) => {
     const inputs = e.data as AdviceInputs;
     try {
+      // The answer and the levers first, so the top of the page can render
+      // while the curve is still being built.
       self.postMessage({
         ok: true,
+        stage: 'primary',
         outlook: outlook(inputs),
         remedies: findRemedies(inputs),
+      });
+      self.postMessage({
+        ok: true,
+        stage: 'curve',
+        curve: growthCurve(inputs),
       });
     } catch (err) {
       self.postMessage({ ok: false, error: (err as Error).message });

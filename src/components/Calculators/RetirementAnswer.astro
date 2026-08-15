@@ -247,6 +247,16 @@
         return;
       }
       const inputs = readInputs();
+
+      // The growth curve arrives after the answer, so rungs that need it get
+      // their own event rather than holding up the headline.
+      if (e.data.stage === 'curve') {
+        window.dispatchEvent(new CustomEvent('swp:curve', {
+          detail: { inputs, curve: e.data.curve },
+        }));
+        return;
+      }
+
       renderAnswer(inputs, e.data.outlook, e.data.remedies);
       // The rungs below subscribe to this rather than each re-running the
       // simulation. One computation, many views - and they cannot disagree.

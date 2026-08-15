@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { findRemedies, outlook, HEALTHY_SURVIVAL, type AdviceInputs } from '../utils/swpAdvice';
+import { findRemedies, outlook, growthCurve, HEALTHY_SURVIVAL, type AdviceInputs } from '../utils/swpAdvice';
 
 // sol-019: never leave the user at a verdict. These check that the remedies
 // are real - that following the advice actually reaches the target - rather
@@ -153,5 +153,43 @@ describe('remedies', () => {
     const cut = (i: AdviceInputs) =>
       findRemedies(i).find((r) => r.kind === 'spend_less')!.delta;
     expect(cut(worse)).toBeGreaterThan(cut(failing));
+  });
+});
+
+describe('the growth curve behind rung 3', () => {
+  const plan: AdviceInputs = {
+    initialCorpus: 12500000, monthlyWithdrawal: 40000, annualStepUp: 0,
+    expectedReturn: 12, expectedInflation: 6, annualVolatility: 15,
+    ltcgTax: 12.5, horizonYears: 30,
+  };
+
+  it('survival rises with growth, so the boundary is a single crossing', () => {
+    const c = growthCurve(plan, 6, 16, 2, 250);
+    for (let i = 1; i < c.points.length; i++) {
+      // Monte Carlo noise permits small dips; a real inversion would break the
+      // premise that one breakeven exists.
+      expect(c.points[i].survival).toBeGreaterThan(c.points[i - 1].survival - 0.08);
+    }
+    expect(c.points[c.points.length - 1].survival).toBeGreaterThan(c.points[0].survival);
+  });
+
+  it('real growth is the ratio, not the difference', () => {
+    const c = growthCurve(plan, 12, 12, 1, 100);
+    // 12% against 6% leaves 5.66%, not 6%.
+    expect(c.points[0].real).toBeCloseTo(5.66, 1);
+  });
+
+  it('the breakeven is the lowest growth that still clears the bar', () => {
+    const c = growthCurve(plan, 8, 16, 1, 300);
+    expect(c.breakeven).not.toBeNull();
+    const at = c.points.find((p) => p.growth === c.breakeven)!;
+    expect(at.survival).toBeGreaterThanOrEqual(HEALTHY_SURVIVAL);
+    const below = c.points.filter((p) => p.growth < c.breakeven!);
+    for (const p of below) expect(p.survival).toBeLessThan(HEALTHY_SURVIVAL);
+  });
+
+  it('reports no breakeven when growth alone cannot rescue the plan', () => {
+    const hopeless = { ...plan, monthlyWithdrawal: 150000 };
+    expect(growthCurve(hopeless, 4, 12, 2, 200).breakeven).toBeNull();
   });
 });
