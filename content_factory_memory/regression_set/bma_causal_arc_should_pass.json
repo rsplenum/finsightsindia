@@ -3,5 +3,11 @@
   "gate": "gate2_draft",
   "input": "In 2015, the government needed a way to find undeclared Swiss accounts and shell-company wealth, and ordinary Income Tax Act penalties were too easy to litigate around. So Section 43 was written blunt on purpose: a flat penalty for non-disclosure, no need to prove evasion. That bluntness is also why the same rule now catches a forgotten $50 account exactly as hard as a real offshore fortune - the law was built to be a wide net, and a wide net does not sort by size.",
   "expected_result": "PASS",
-  "note": "Should pass S7 (origin story exists) and the proposed S8 (causal arc: cause -> law -> effect, not just historical trivia)."
+  "note": "Should pass S7 (origin story exists) and the proposed S8 (causal arc: cause -> law -> effect, not just historical trivia).",
+  "rules_under_test": [
+    "S2",
+    "S5"
+  ],
+  "rule_id_provenance": "note cites S7 (origin story) and the proposed S8 (causal arc). S7 -> S2 (renumbered_and_narrowed); S8 was never merged.",
+  "input_is_excerpt": true
 }

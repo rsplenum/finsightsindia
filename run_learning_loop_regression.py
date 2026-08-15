@@ -33,6 +33,15 @@ from learning_loop import run_regression_set  # noqa: E402
 
 LIVE_SKILL = Path(".agents/skills/finsight-drafting-workflow/SKILL.md")
 
+# The gate must test the model that actually judges drafts in production -
+# Antigravity runs mostly Gemini 3.1 Pro, so testing anything else would tell
+# us how a different model reads the rubric, not ours.
+#
+# Overridable because the previous hardcoded value (gemini-2.5-pro) was retired
+# by Google and the gate simply stopped running. A model id is a moving target;
+# pin it here, pass --model to try another, and update this when production moves.
+DEFAULT_MODEL = "gemini-3.1-pro-preview"
+
 
 def extract_evaluator_prompt(skill_path: Path) -> str:
     """Pull the content_evaluator system prompt out of a SKILL.md."""
@@ -53,7 +62,7 @@ def extract_evaluator_prompt(skill_path: Path) -> str:
     return prompt.replace("- **System Prompt:**", "").strip(' \n"')
 
 
-def make_evaluate_fn(skill_path: Path):
+def make_evaluate_fn(skill_path: Path, model: str = DEFAULT_MODEL):
     """Build an evaluate_fn bound to one specific rubric version."""
     from google import genai
     from google.genai import types
@@ -63,7 +72,7 @@ def make_evaluate_fn(skill_path: Path):
 
     def evaluate_fn(input_text: str) -> str:
         response = client.models.generate_content(
-            model="gemini-2.5-pro",
+            model=model,
             contents=[f"Audit the following input:\n{input_text}"],
             config=types.GenerateContentConfig(
                 system_instruction=system_instruction,
@@ -96,6 +105,8 @@ def main() -> int:
                          "test a proposal without touching the live file.")
     ap.add_argument("--baseline", action="store_true",
                     help="Also run the live rubric and diff the two reports.")
+    ap.add_argument("--model", default=DEFAULT_MODEL,
+                    help=f"Evaluator model to test against (default {DEFAULT_MODEL}).")
     ap.add_argument("--dry-run", action="store_true",
                     help="Show what would run, make no API calls.")
     args = ap.parse_args()
@@ -106,7 +117,7 @@ def main() -> int:
 
     cases = sorted(Path("content_factory_memory/regression_set").glob("*.json"))
     if args.dry_run:
-        print(f"Would evaluate {len(cases)} case(s) against {args.skill}"
+        print(f"Would evaluate {len(cases)} case(s) against {args.skill} using {args.model}"
               + (" and against the live rubric" if args.baseline else ""))
         for c in cases:
             case = json.loads(c.read_text())
@@ -115,13 +126,13 @@ def main() -> int:
               f"{len(cases) * (2 if args.baseline else 1)}")
         return 0
 
-    report = run_regression_set(make_evaluate_fn(args.skill))
-    out = {"skill": str(args.skill), "report": report}
+    report = run_regression_set(make_evaluate_fn(args.skill, args.model))
+    out = {"skill": str(args.skill), "model": args.model, "report": report}
 
     if args.baseline and args.skill != LIVE_SKILL:
         out["baseline"] = {
             "skill": str(LIVE_SKILL),
-            "report": run_regression_set(make_evaluate_fn(LIVE_SKILL)),
+            "report": run_regression_set(make_evaluate_fn(LIVE_SKILL, args.model)),
         }
 
     print(json.dumps(out, indent=2))

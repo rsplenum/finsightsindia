@@ -459,6 +459,32 @@ def mark_audit_run(notes: Optional[str] = None) -> dict:
 # H3 - Regression gate
 # ---------------------------------------------------------------------------
 
+def _scoping_note(case: dict) -> str:
+    """
+    Tell the evaluator which rules a case is actually exercising.
+
+    Every frozen case is a short excerpt written to probe one or two rules.
+    Without this, the evaluator applies the entire rubric and fails a prose
+    fragment on M1 (no MDX structure) and M5 (no SVG proposals) - criteria it
+    could never satisfy and was never written to. That made PASS cases fail
+    for irrelevant reasons, and, worse, made FAIL cases pass for them: a
+    fragment fails something, so `should_fail` succeeded whether or not the
+    rule under test ever fired. The gate was giving false confidence in both
+    directions, and it degraded silently as rules were added.
+    """
+    rules = case.get("rules_under_test") or []
+    if not rules:
+        return ""
+    return (
+        "\n\n---\nREGRESSION MODE. The input below is a deliberate excerpt, not a "
+        f"complete article. Judge it ONLY against: {', '.join(rules)}. Ignore every "
+        "other rule. In particular do not fail it for missing MDX structure, "
+        "headers, frontmatter or [SVG_PROPOSAL] tags — an excerpt cannot have "
+        "those and their absence says nothing about the rules under test. "
+        "Answer with PASS or FAIL on the first line."
+    )
+
+
 def run_regression_set(evaluate_fn: Callable[[str], str]) -> dict:
     """
     Re-run every frozen case in content_factory_memory/regression_set/
@@ -483,7 +509,7 @@ def run_regression_set(evaluate_fn: Callable[[str], str]) -> dict:
     for case_file in sorted(REGRESSION_SET_DIR.glob("*.json")):
         case = json.loads(case_file.read_text(encoding="utf-8"))
         report["total"] += 1
-        actual = evaluate_fn(case["input"])
+        actual = evaluate_fn(case["input"] + _scoping_note(case))
         if actual not in ("PASS", "FAIL"):
             # An unparseable verdict is not a pass. Treating UNKNOWN as
             # anything other than a hard stop would let a broken evaluator
