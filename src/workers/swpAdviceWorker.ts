@@ -33,7 +33,13 @@ if (typeof self !== 'undefined' && typeof self.postMessage === 'function') {
       self.postMessage({
         ok: true,
         stage: 'sequence',
-        sequence: sequenceRisk(inputs),
+        // One, two and three-year downturns. A single bad year is not the
+        // frightening case; 2000-2002 and 2008-2009 are.
+        sequences: {
+          1: sequenceRisk(inputs, -30, 1),
+          2: sequenceRisk(inputs, -30, 2),
+          3: sequenceRisk(inputs, -30, 3),
+        },
       });
     } catch (err) {
       self.postMessage({ ok: false, error: (err as Error).message });

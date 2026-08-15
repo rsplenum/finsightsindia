@@ -258,7 +258,7 @@
       }
       if (e.data.stage === 'sequence') {
         window.dispatchEvent(new CustomEvent('swp:sequence', {
-          detail: { inputs, sequence: e.data.sequence },
+          detail: { inputs, sequences: e.data.sequences },
         }));
         return;
       }

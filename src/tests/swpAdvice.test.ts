@@ -216,7 +216,7 @@ describe('sequence risk behind rung 4', () => {
     // If the averages differed, the demonstration would be showing the effect
     // of a better market rather than of better timing, and the screen would be
     // making a claim it had not earned.
-    const r = sequenceRisk(plan, -30);
+    const r = sequenceRisk(plan, -30, 1);
     const expected = ((30 - 1) * 12 + -30) / 30;
     expect(r.averageReturn).toBeCloseTo(expected, 10);
     expect(r.points).toHaveLength(30);
@@ -233,8 +233,8 @@ describe('sequence risk behind rung 4', () => {
 
   it('the earliest crash is the worst and the latest is the best', () => {
     const r = sequenceRisk(plan, -30);
-    expect(r.worst.crashYear).toBe(1);
-    expect(r.best.crashYear).toBe(plan.horizonYears);
+    expect(r.worst.startYear).toBe(1);
+    expect(r.best.startYear).toBe(plan.horizonYears);
     expect(r.best.finalBalance).toBeGreaterThan(r.worst.finalBalance);
   });
 
@@ -247,7 +247,7 @@ describe('sequence risk behind rung 4', () => {
 
   it('a tighter plan is sunk by an early crash and survives a late one', () => {
     const tight = { ...plan, monthlyWithdrawal: 75000 };
-    const r = sequenceRisk(tight, -30);
+    const r = sequenceRisk(tight, -30, 1);
     expect(r.points[0].survived).toBe(false);
     expect(r.safeFromYear).not.toBeNull();
     expect(r.safeFromYear!).toBeGreaterThan(1);
@@ -255,8 +255,61 @@ describe('sequence risk behind rung 4', () => {
 
   it('per-year returns override the flat rate without disturbing anything else', () => {
     // Guards the engine change this rung required.
-    const flat = sequenceRisk(plan, 12);   // "crash" equal to the normal return
+    const flat = sequenceRisk(plan, 12, 1);   // "crash" equal to the normal return
     const base = runDeterministicSWP(plan);
     expect(Math.abs(flat.points[0].finalBalance - base.balances[30])).toBeLessThan(1);
+  });
+});
+
+describe('multi-year downturns and the lived metric', () => {
+  const plan: AdviceInputs = {
+    initialCorpus: 15000000, monthlyWithdrawal: 40000, annualStepUp: 0,
+    expectedReturn: 12, expectedInflation: 6, annualVolatility: 15,
+    ltcgTax: 12.5, horizonYears: 30,
+  };
+
+  it('a longer downturn is strictly harder to survive', () => {
+    // The reason the single-year version was not enough: it never broke the
+    // plan, so it could not show the reader what actually breaks one.
+    const one = sequenceRisk(plan, -30, 1).points[0];
+    const two = sequenceRisk(plan, -30, 2).points[0];
+    const three = sequenceRisk(plan, -30, 3).points[0];
+    expect(one.finalBalance).toBeGreaterThan(two.finalBalance);
+    expect(two.finalBalance).toBeGreaterThanOrEqual(three.finalBalance);
+    expect(one.survived).toBe(true);
+    expect(three.survived).toBe(false);
+  });
+
+  it('the stated average matches the returns actually used', () => {
+    // dd-009: an unexplained number is a question handed to the reader. The
+    // screen explains this figure, so it had better be the true one.
+    for (const dur of [1, 2, 3]) {
+      const r = sequenceRisk(plan, -30, dur);
+      expect(r.averageReturn).toBeCloseTo(((30 - dur) * 12 + dur * -30) / 30, 10);
+      expect(r.normalReturn).toBe(12);
+      expect(r.durationYears).toBe(dur);
+    }
+  });
+
+  it('the cushion is measured in years of that year\'s own spending', () => {
+    const p = sequenceRisk(plan, -30, 1).points.find((x) => x.startYear === 30)!;
+    expect(p.minCushionYears).toBeGreaterThan(0);
+    expect(p.minCushionYear).toBeGreaterThanOrEqual(1);
+    expect(p.minCushionYear).toBeLessThanOrEqual(30);
+  });
+
+  it('an early downturn leaves a thinner cushion than a late one', () => {
+    // dd-010: this is the quantity a person actually lives through.
+    const r = sequenceRisk(plan, -30, 2);
+    const early = r.points.find((p) => p.startYear === 5)!;
+    const late = r.points.find((p) => p.startYear === 25)!;
+    expect(early.minCushionYears).toBeLessThan(late.minCushionYears);
+  });
+
+  it('a plan that fails reports zero cushion, not a misleading number', () => {
+    const r = sequenceRisk(plan, -30, 3);
+    const doomed = r.points.find((p) => !p.survived)!;
+    expect(doomed.minCushionYears).toBe(0);
+    expect(doomed.depletionYear).toBeGreaterThan(0);
   });
 });

@@ -1,19 +1,16 @@
 ---
 // Rung 4 of the ladder: "What if the bad years come first?"
 //
-// Sequence-of-returns risk is the least intuitive thing about drawing down a
-// portfolio and the most consequential, and on the old page it was buried
-// under the heading "STOCHASTIC REALITY" beside the words Brownian motion and
-// variance drain. It is not a hard idea. It is a hard idea to say badly.
+// Rebuilt after review. The first version was shorter and harder to follow -
+// it showed a -30% year without defining one, and printed a 10.60% average
+// against a stated 12% assumption without explaining the gap (dd-009). It
+// also headlined the terminal balance, which is the accountant's number and
+// not one anybody lives through (dd-010).
 //
-// Built to dd-008: the prose states a principle true at every position, the
-// figures live in fixed slots, and the one dynamic sentence names the boundary
-// rather than the state. The control moves the crash, not the maths.
-//
-// The demonstration holds the SET of yearly returns fixed - one bad year, the
-// rest at the expected rate - and only changes which year is the bad one, so
-// the average return is identical across every position by construction. That
-// is what makes it a proof rather than an anecdote.
+// Now: the bad year is defined and anchored, the average explains itself in
+// the same breath, the headline is the year the money looked thinnest, and a
+// downturn can last one, two or three years - because a single bad year is
+// not the frightening case.
 ---
 
 <section id="rungSeq" class="max-w-3xl mx-auto px-4 sm:px-6 py-4" aria-labelledby="rungSeqQ">
@@ -26,50 +23,86 @@
       <h2 id="rungSeqQ" class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 mt-1">
         What if the bad years come first?
       </h2>
-      <p class="text-sm text-navy-500 dark:text-navy-400 mt-2">
-        One bad year, moved. Same crash, same average return — only the timing changes.
-      </p>
     </div>
 
-    <div class="space-y-2">
-      <div class="flex items-baseline justify-between gap-4">
-        <label for="seqSlider" class="text-sm text-navy-700 dark:text-navy-300">
-          The bad year lands in
-        </label>
-        <output id="seqYearOut" for="seqSlider"
-                class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">year 1</output>
+    <!-- Define the thing before using it (dd-009). -->
+    <p class="text-sm leading-relaxed text-navy-600 dark:text-navy-400 border-l-2 border-navy-200 dark:border-navy-700 pl-3">
+      <b class="text-navy-800 dark:text-navy-200">A bad year here means the market falls 30%.</b>
+      Serious, but not rare — the Nifty fell further than that in 2008, and most
+      thirty-year retirements meet one or two. Every other year below grows at
+      the 12% you assumed.
+    </p>
+
+    <!-- Two controls, both part of the same question. -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <div class="space-y-2">
+        <div class="flex items-baseline justify-between gap-3">
+          <label for="seqSlider" class="text-sm text-navy-700 dark:text-navy-300">Starting in</label>
+          <output id="seqYearOut" for="seqSlider"
+                  class="text-base font-bold tabular-nums text-navy-900 dark:text-navy-100">year 1</output>
+        </div>
+        <div class="relative pt-1 pb-6">
+          <input id="seqSlider" type="range" min="1" max="30" step="1" value="1"
+                 aria-describedby="seqBoundary"
+                 class="w-full accent-gold-500 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50 rounded" />
+          <div id="seqMark" class="hidden absolute top-0 -translate-x-1/2 pointer-events-none">
+            <div class="h-6 w-0.5 bg-rose-500/80 dark:bg-rose-400/80 mx-auto"></div>
+            <div id="seqMarkLabel"
+                 class="mt-0.5 whitespace-nowrap text-[10px] font-semibold text-rose-600 dark:text-rose-400 -translate-x-1/2 relative left-1/2"></div>
+          </div>
+        </div>
       </div>
 
-      <div class="relative pt-1 pb-6">
-        <input id="seqSlider" type="range" min="1" max="30" step="1" value="1"
-               aria-describedby="seqBoundary"
-               class="w-full accent-gold-500 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50 rounded" />
-        <div id="seqMark" class="hidden absolute top-0 -translate-x-1/2 pointer-events-none">
-          <div class="h-6 w-0.5 bg-rose-500/80 dark:bg-rose-400/80 mx-auto"></div>
-          <div id="seqMarkLabel"
-               class="mt-0.5 whitespace-nowrap text-[10px] font-semibold text-rose-600 dark:text-rose-400 -translate-x-1/2 relative left-1/2"></div>
+      <div class="space-y-2">
+        <span class="block text-sm text-navy-700 dark:text-navy-300">And lasting</span>
+        <div role="radiogroup" aria-label="How long the downturn lasts"
+             class="inline-flex rounded-lg border border-navy-200 dark:border-navy-700 p-0.5 bg-navy-50 dark:bg-navy-900/60">
+          <button id="dur1" type="button" role="radio" aria-checked="true" data-dur="1"
+                  class="rounded-md px-3 py-1.5 text-xs font-medium">1 year</button>
+          <button id="dur2" type="button" role="radio" aria-checked="false" data-dur="2"
+                  class="rounded-md px-3 py-1.5 text-xs font-medium">2 years</button>
+          <button id="dur3" type="button" role="radio" aria-checked="false" data-dur="3"
+                  class="rounded-md px-3 py-1.5 text-xs font-medium">3 years</button>
         </div>
+        <p class="text-xs text-navy-500 dark:text-navy-400">
+          2000–2002 and 2008–2009 both ran longer than a year.
+        </p>
       </div>
     </div>
 
     <div class="rounded-xl border border-navy-200 dark:border-navy-700 divide-y divide-navy-200 dark:divide-navy-700 overflow-hidden">
+      <!-- The average, explained where it appears (dd-009). -->
       <div class="flex items-baseline justify-between gap-4 px-4 py-3">
         <span class="text-sm text-navy-700 dark:text-navy-300">
-          Average return across the 30 years
-          <span class="block text-xs text-navy-500 dark:text-navy-400">identical wherever you put the bad year</span>
+          Average return over the 30 years
+          <span id="seqAvgWhy" class="block text-xs text-navy-500 dark:text-navy-400"></span>
         </span>
         <span id="seqAvg" class="text-base font-semibold tabular-nums text-navy-900 dark:text-navy-100">—</span>
       </div>
+
+      <!-- The lived metric (dd-010): the year it felt thinnest. -->
       <div class="flex items-baseline justify-between gap-4 px-4 py-3.5 bg-navy-50/60 dark:bg-navy-900/40">
         <span class="text-sm font-semibold text-navy-900 dark:text-navy-100">
-          What you finish with
-          <span class="block text-xs font-normal text-navy-500 dark:text-navy-400">in today's prices</span>
+          At its thinnest, your savings covered
+          <span id="seqCushionWhen" class="block text-xs font-normal text-navy-500 dark:text-navy-400"></span>
         </span>
-        <span id="seqFinal" class="text-lg font-bold tabular-nums">—</span>
+        <span id="seqCushion" class="text-lg font-bold tabular-nums">—</span>
       </div>
+
       <div class="flex items-baseline justify-between gap-4 px-4 py-3">
-        <span class="text-sm text-navy-700 dark:text-navy-300">Cost of the timing alone</span>
-        <span id="seqCost" class="text-base font-semibold tabular-nums text-rose-600 dark:text-rose-400">—</span>
+        <span class="text-sm text-navy-700 dark:text-navy-300">
+          Your monthly income throughout
+          <span class="block text-xs text-navy-500 dark:text-navy-400">you never cut back; you drew what you planned</span>
+        </span>
+        <span id="seqIncome" class="text-base font-semibold tabular-nums text-emerald-700 dark:text-emerald-400">—</span>
+      </div>
+
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">
+          Left at the end
+          <span class="block text-xs text-navy-500 dark:text-navy-400">in today's prices — the hindsight view</span>
+        </span>
+        <span id="seqFinal" class="text-base font-semibold tabular-nums">—</span>
       </div>
     </div>
 
@@ -79,14 +112,13 @@
     </p>
 
     <p class="text-base leading-relaxed text-navy-800 dark:text-navy-200">
-      While you are saving, order does not matter — a bad year is a discount, and
-      the recovery finds you still holding everything you bought. While you are
+      While you are saving, order does not matter — a fall is a discount, and the
+      recovery finds you still holding everything you bought. While you are
       drawing, order is nearly everything. A fall early forces you to sell cheap
       to pay yourself, and those units are gone: every later recovery compounds
-      on a smaller pot. This is why two people with the same average return, the
-      same savings and the same spending can end their retirements decades apart.
-      You cannot control when it happens. You can control how much you are
-      forced to sell into it.
+      on a smaller pot. The end balance may still look fine in hindsight. What
+      you would actually live through is the year your savings looked thin
+      enough to keep you awake.
     </p>
 
     <div class="pt-4 border-t border-navy-200 dark:border-navy-800">
@@ -111,72 +143,125 @@
     return `${sign}₹${v.toLocaleString('en-IN')}`;
   }
 
-  let seq: any = null;
-  let inputs: any = null;
+  const ON = 'bg-white dark:bg-navy-800 text-navy-900 dark:text-navy-100 shadow-sm';
+  const OFF = 'text-navy-500 dark:text-navy-400 hover:text-navy-800 dark:hover:text-navy-200';
+  const BASE = 'rounded-md px-3 py-1.5 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50 ';
 
-  // Everything is shown in today's prices, matching the rungs above (dd-004).
+  let sequences: any = null;
+  let inputs: any = null;
+  let duration = 1;
+
   const real = (n: number) =>
     n / Math.pow(1 + inputs.expectedInflation / 100, inputs.horizonYears);
 
+  function current() { return sequences?.[duration]; }
+
+  function paintDuration() {
+    for (const d of [1, 2, 3]) {
+      const b = $('dur' + d)!;
+      b.className = BASE + (d === duration ? ON : OFF);
+      b.setAttribute('aria-checked', String(d === duration));
+    }
+  }
+
   function paintBoundary() {
+    const seq = current();
     if (!seq || !inputs) return;
     const el = $('seqBoundary')!;
     const mark = $('seqMark')!;
-    const spread = real(seq.best.finalBalance) - real(seq.worst.finalBalance);
+    const word = duration === 1 ? 'A bad year' : `A ${duration}-year downturn`;
 
-    const anyFails = seq.points.some((p: any) => !p.survived);
-    if (anyFails && seq.safeFromYear) {
+    if (seq.safeFromYear && seq.safeFromYear > 1) {
       el.textContent =
-        `A bad year before year ${seq.safeFromYear} sinks this plan. From year ` +
-        `${seq.safeFromYear} onward the same crash is survivable — the pot has ` +
-        `grown enough to absorb it without selling away its future.`;
+        `${word} beginning before year ${seq.safeFromYear} empties this pot before ` +
+        `the 30 years are up. From year ${seq.safeFromYear} onward the same fall is ` +
+        `survivable — by then the savings have grown enough to absorb it without ` +
+        `selling away their own future.`;
       const frac = (seq.safeFromYear - 1) / Math.max(1, inputs.horizonYears - 1);
       mark.style.left = `${Math.min(100, Math.max(0, frac * 100))}%`;
       $('seqMarkLabel')!.textContent = `year ${seq.safeFromYear}`;
       mark.classList.remove('hidden');
     } else {
+      const spread = real(seq.best.finalBalance) - real(seq.worst.finalBalance);
       el.textContent =
-        `This plan survives the crash wherever it lands — but timing still costs ` +
-        `you up to ${money(spread)} of what you finish with, from the same crash ` +
-        `and the same average return. Earlier is always worse; there is no year ` +
-        `at which it stops mattering.`;
+        `${word} never empties this pot, wherever it lands — but arriving early ` +
+        `still costs up to ${money(spread)} of what you finish with, from the same ` +
+        `fall and the same average return. Earlier is always worse.`;
       mark.classList.add('hidden');
     }
   }
 
-  function paintRow(year: number) {
+  function paintRow(startYear: number) {
+    const seq = current();
     if (!seq || !inputs) return;
-    const p = seq.points.find((x: any) => x.crashYear === year);
-    if (!p) return;
+    const p = seq.points.find((x: any) => x.startYear === startYear)
+      ?? seq.points[seq.points.length - 1];
 
-    const best = real(seq.best.finalBalance);
-    const shown = real(p.finalBalance);
-
-    $('seqYearOut')!.textContent = `year ${year}`;
+    const badYears = duration === 1 ? 'one bad year' : `${duration} bad years`;
+    $('seqYearOut')!.textContent = `year ${p.startYear}`;
     $('seqAvg')!.textContent = `${seq.averageReturn.toFixed(2)}% a year`;
-    $('seqFinal')!.textContent = p.survived ? money(shown) : 'nothing';
-    $('seqCost')!.textContent =
-      p.survived ? `${money(best - shown)} less than the best case` : `ran out in year ${p.depletionYear}`;
+    $('seqAvgWhy')!.textContent =
+      `${seq.normalReturn}% in the good years and −30% in ${badYears} — the same ` +
+      `wherever you place them`;
 
-    const fin = $('seqFinal') as HTMLElement;
-    fin.className = 'text-lg font-bold tabular-nums ' +
-      (!p.survived ? 'text-rose-600 dark:text-rose-400'
-       : shown >= best * 0.85 ? 'text-emerald-700 dark:text-emerald-400'
-       : 'text-amber-600 dark:text-amber-400');
+    const cushion = $('seqCushion') as HTMLElement;
+    if (!p.survived) {
+      cushion.textContent = 'nothing';
+      $('seqCushionWhen')!.textContent = `the money ran out in year ${p.depletionYear}`;
+      cushion.className = 'text-lg font-bold tabular-nums text-rose-600 dark:text-rose-400';
+      $('seqIncome')!.textContent = `stopped in year ${p.depletionYear}`;
+      ($('seqIncome') as HTMLElement).className =
+        'text-base font-semibold tabular-nums text-rose-600 dark:text-rose-400';
+      $('seqFinal')!.textContent = 'nothing';
+      ($('seqFinal') as HTMLElement).className =
+        'text-base font-semibold tabular-nums text-rose-600 dark:text-rose-400';
+      return;
+    }
+
+    const yrs = p.minCushionYears;
+    cushion.textContent = `${yrs.toFixed(1)} years of spending`;
+    $('seqCushionWhen')!.textContent =
+      `in year ${p.minCushionYear} — the point you would have felt it`;
+    cushion.className = 'text-lg font-bold tabular-nums ' +
+      (yrs >= 12 ? 'text-emerald-700 dark:text-emerald-400'
+       : yrs >= 6 ? 'text-amber-600 dark:text-amber-400'
+       : 'text-rose-600 dark:text-rose-400');
+
+    $('seqIncome')!.textContent = 'never fell';
+    ($('seqIncome') as HTMLElement).className =
+      'text-base font-semibold tabular-nums text-emerald-700 dark:text-emerald-400';
+    $('seqFinal')!.textContent = money(real(p.finalBalance));
+    ($('seqFinal') as HTMLElement).className =
+      'text-base font-semibold tabular-nums text-navy-900 dark:text-navy-100';
   }
 
   const slider = $('seqSlider') as HTMLInputElement | null;
   slider?.addEventListener('input', () => paintRow(Number(slider.value)));
 
+  for (const d of [1, 2, 3]) {
+    $('dur' + d)?.addEventListener('click', () => {
+      duration = d;
+      const seq = current();
+      if (slider && seq) {
+        slider.max = String(seq.points[seq.points.length - 1].startYear);
+        if (Number(slider.value) > Number(slider.max)) slider.value = slider.max;
+      }
+      paintDuration();
+      paintBoundary();
+      paintRow(Number(slider?.value ?? 1));
+    });
+  }
+
   window.addEventListener('swp:sequence', (e) => {
     const d = (e as CustomEvent).detail;
-    seq = d.sequence;
+    sequences = d.sequences;
     inputs = d.inputs;
     if (slider) {
       slider.min = '1';
-      slider.max = String(inputs.horizonYears);
+      slider.max = String(current().points[current().points.length - 1].startYear);
       slider.value = '1';
     }
+    paintDuration();
     paintBoundary();
     paintRow(1);
   });

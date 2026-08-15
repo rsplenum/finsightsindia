@@ -226,80 +226,113 @@ function solveShortenHorizon(inputs: AdviceInputs, target: number): Remedy {
 }
 
 export interface SequencePoint {
-  crashYear: number;
+  startYear: number;
   finalBalance: number;
   survived: boolean;
   /** Year the pot ran dry, or null if it lasted. */
   depletionYear: number | null;
+  /**
+   * The lived metric (dd-010). At its lowest point, how many years of that
+   * year's spending was the pot still worth? Nobody experiences a terminal
+   * balance; they experience the year the money looked thinnest. Two is
+   * frightening, ten is comfortable.
+   */
+  minCushionYears: number;
+  /** The year that low point happened - the one they would remember. */
+  minCushionYear: number;
 }
 
 export interface SequenceRisk {
   points: SequencePoint[];
-  /** Crashing in this year or later leaves the plan intact. Null if none does. */
+  /** Starting the downturn in this year or later leaves the plan intact. */
   safeFromYear: number | null;
   /** Identical for every scenario, by construction - this is the whole point. */
   averageReturn: number;
+  /** Stated so the screen can explain why the average is not the assumption. */
+  normalReturn: number;
   crashPct: number;
+  durationYears: number;
   best: SequencePoint;
   worst: SequencePoint;
 }
 
 /**
- * The same bad year, moved.
+ * The same bad years, moved.
  *
  * Sequence-of-returns risk is the least intuitive thing about drawing down a
  * portfolio and the most consequential: two retirements with the SAME average
  * return can end decades apart depending only on when the bad years fall.
- * While you are withdrawing, a crash early sells units cheap that can never be
- * bought back, and every later gain compounds on a smaller base.
+ * While you are withdrawing, a fall early forces you to sell units cheap that
+ * can never be bought back, and every later recovery compounds on a smaller
+ * pot.
  *
- * The demonstration holds the multiset of yearly returns fixed - one crash
- * year and the rest at the expected rate - and only permutes WHICH year is the
- * bad one. The arithmetic mean is therefore identical across every scenario by
- * construction, not by approximation, which is what makes the comparison
- * honest rather than merely striking.
+ * The demonstration holds the multiset of yearly returns fixed - `duration`
+ * crash years and the rest at the expected rate - and only permutes WHERE the
+ * bad run starts. The arithmetic mean is therefore identical across every
+ * scenario by construction, not by approximation, which is what makes the
+ * comparison a proof rather than an anecdote.
+ *
+ * `duration` exists because a single bad year is not the frightening case. The
+ * frightening case is 2000-2002 or 2008-2009: a downturn that outlasts your
+ * patience while you are still drawing an income from it.
  *
  * Deterministic on purpose. A Monte Carlo here would blur the very effect
  * being isolated.
  */
 export function sequenceRisk(
   inputs: AdviceInputs,
-  crashPct = -30
+  crashPct = -30,
+  durationYears = 1
 ): SequenceRisk {
   const years = inputs.horizonYears;
+  const duration = Math.max(1, Math.min(durationYears, years));
   const points: SequencePoint[] = [];
 
-  for (let crashYear = 1; crashYear <= years; crashYear++) {
-    const returns = Array.from({ length: years }, (_, i) =>
-      i + 1 === crashYear ? crashPct : inputs.expectedReturn
-    );
+  for (let startYear = 1; startYear <= years - duration + 1; startYear++) {
+    const returns = Array.from({ length: years }, (_, i) => {
+      const y = i + 1;
+      return y >= startYear && y < startYear + duration ? crashPct : inputs.expectedReturn;
+    });
     const run = runDeterministicSWP({ ...inputs, returnsByYear: returns });
-    const finalBalance = run.balances[years] ?? 0;
+
     let depletionYear: number | null = null;
     for (let y = 1; y < run.balances.length; y++) {
       if (run.balances[y] <= 0) { depletionYear = y; break; }
     }
+
+    // Cushion: the balance measured in years of that year's own spending, so
+    // it stays meaningful as the cost of living rises.
+    let minCushionYears = Infinity;
+    let minCushionYear = 1;
+    for (let y = 1; y <= years; y++) {
+      const spend = run.withdrawals[y] ?? 0;
+      if (spend <= 0) continue;
+      const cushion = (run.balances[y] ?? 0) / spend;
+      if (cushion < minCushionYears) { minCushionYears = cushion; minCushionYear = y; }
+    }
+    if (!Number.isFinite(minCushionYears)) minCushionYears = 0;
+
     points.push({
-      crashYear,
-      finalBalance,
-      survived: finalBalance > 0,
+      startYear,
+      finalBalance: run.balances[years] ?? 0,
+      survived: (run.balances[years] ?? 0) > 0,
       depletionYear,
+      minCushionYears,
+      minCushionYear,
     });
   }
 
   const survivors = points.filter((p) => p.survived);
-  // Survival improves the later the crash lands, so the first surviving year
-  // is the boundary the reader needs.
-  const safeFromYear = survivors.length ? survivors[0].crashYear : null;
-
-  const averageReturn =
-    ((years - 1) * inputs.expectedReturn + crashPct) / years;
+  const safeFromYear = survivors.length ? survivors[0].startYear : null;
 
   return {
     points,
     safeFromYear,
-    averageReturn,
+    averageReturn:
+      ((years - duration) * inputs.expectedReturn + duration * crashPct) / years,
+    normalReturn: inputs.expectedReturn,
     crashPct,
+    durationYears: duration,
     best: points.reduce((a, b) => (b.finalBalance > a.finalBalance ? b : a)),
     worst: points.reduce((a, b) => (b.finalBalance < a.finalBalance ? b : a)),
   };

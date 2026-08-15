@@ -146,5 +146,39 @@
       "any slider, stepper or dial"
     ],
     "test": "Drag the control from one end to the other. Does any sentence change? If yes, that sentence was describing a state rather than a principle or a boundary, and it belongs in a fixed slot as a value instead."
+  },
+  {
+    "id": "dd-009",
+    "date": "2026-08-15",
+    "title": "Simplicity is removing WORK, not removing INFORMATION",
+    "trigger": "Rung 4 showed a -30% year without ever saying what a bad year is, and displayed a 10.60% average against a stated 12% assumption without explaining the difference.",
+    "verbatim": "it reduces the cognitive load by reducing information available to absorb but introduces cognitive load again by skipping important information required to fully comprehend what is being communicated... we didn't define 'what is a bad year'... When we assumed 12% returns then why are we displaying 10.6% average returns without informing the user about this decision... creates a disconnect and user's brain has to process more than they should, tool should process, user should only digest or absorb and have his doubts cleared not have more doubts along the way.",
+    "spirit": "Cutting an explanation makes the screen shorter and the reader's job harder. Every unexplained number is a question handed to the reader, and questions are the expensive thing - not words. A shorter screen that provokes 'wait, why 10.6?' has not reduced load, it has moved load off the page and into the reader's head where we cannot see it. This is dd-001 at the scale of a single screen: the complexity must be absorbed, not deleted.",
+    "rules": [
+      "Every number on screen must be traceable from what is already on screen. If a figure differs from an assumption stated elsewhere, say why, there, in the same breath.",
+      "Name the thing before using it. A '-30% year' means nothing until the reader is told what that is and how often it happens.",
+      "The tool does the processing; the reader does the absorbing. Any arithmetic the reader has to perform to follow the argument is arithmetic we failed to do."
+    ],
+    "applies_to": [
+      "calculators",
+      "articles",
+      "illustrations",
+      "every screen"
+    ],
+    "test": "Read the screen as someone who knows nothing. Count the questions it raises that it does not answer. That count is the real cognitive load, and it is not reduced by having fewer words."
+  },
+  {
+    "id": "dd-010",
+    "date": "2026-08-15",
+    "title": "Measure the lived experience, not the accountant's summary",
+    "trigger": "Rung 4 reported the final balance after 30 years as its headline outcome.",
+    "verbatim": "if it means what the user ends up with after 30 years of withdrawing what he wanted, it needs to be made more explicit that one bad year doesn't jeopardize their ability to maintain their standard of living... but that is in hindsight, but it affects their stress level along the way of those 30 years, that is a more intimate lived reality.",
+    "spirit": "Nobody experiences a terminal balance. A retiree experiences thirty years of wondering whether the money will hold - and the year the pot dipped closest to the edge is felt far more sharply than the number left over at the end. A final figure is the correct answer to an accountant's question and the wrong answer to a person's. Choose the quantity a human actually lives through, then let the summary figure sit beside it as context.",
+    "note": "Distinct from dd-003. That entry asks what idea the reader leaves with; this asks which QUANTITY to put on screen. A number can be perfectly accurate, perfectly explained, and still be about the wrong thing.",
+    "applies_to": [
+      "calculators",
+      "articles"
+    ],
+    "test": "Ask what the person would actually feel, month to month, living inside this projection. If the headline figure is not something they would ever experience, it is the wrong headline."
   }
 ]
