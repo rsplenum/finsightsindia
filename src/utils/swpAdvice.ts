@@ -397,6 +397,132 @@ export function growthCurve(
   return { points, breakeven: crossing ? crossing.growth : null, min, max, step };
 }
 
+export interface ProtectionPoint {
+  /** Market roughness - the annual spread of returns, %. */
+  roughness: number;
+  /** Share of years ending below the floor, 0..1. Closed form, not simulated. */
+  bindFrequency: number;
+  /** One year in this many ends below the floor. Rounded for display. */
+  oneYearIn: number;
+  /** Average annual payout from the floor, as % of the pot. Closed form. */
+  payout: number;
+  /** The premium, %. Constant across the curve, and that is the lesson. */
+  premium: number;
+  /** payout - premium, %. Negative means protection loses money on average. */
+  net: number;
+  survivalUnprotected: number; // 0..1
+  survivalProtected: number;   // 0..1
+}
+
+export interface ProtectionCurve {
+  points: ProtectionPoint[];
+  /**
+   * Lowest roughness at which the average payout covers the premium. Null when
+   * protection never pays for itself anywhere on the track.
+   */
+  breakeven: number | null;
+  /** Depth of the floor, %, e.g. -10. */
+  floor: number;
+  premium: number;
+  min: number;
+  max: number;
+  step: number;
+}
+
+/** Standard normal CDF, via the Abramowitz-Stegun error function. */
+function normalCdf(z: number): number {
+  const t = 1 / (1 + 0.2316419 * Math.abs(z));
+  const d = 0.3989422804014327 * Math.exp(-z * z / 2);
+  const p = d * t * (0.31938153 + t * (-0.356563782 + t * (1.781477937 +
+    t * (-1.821255978 + t * 1.330274429))));
+  return z >= 0 ? 1 - p : p;
+}
+
+function normalPdf(z: number): number {
+  return 0.3989422804014327 * Math.exp(-z * z / 2);
+}
+
+/**
+ * What protection costs, and what it is worth, across the range of markets it
+ * might have to face.
+ *
+ * The premium is FIXED - Rahul settled it at 1.85% and it is not a knob. So the
+ * only thing left varying is how rough the market turns out to be, which is
+ * also the one thing neither we nor the reader chooses. That asymmetry is the
+ * whole subject reduced to one comparison (dd-005): a certain price against an
+ * uncertain payout.
+ *
+ * Frequency and payout are CLOSED FORM, not simulated. swpWorker draws annual
+ * returns as `mu + sigma * N(0,1)`, so for a floor K the share of years that
+ * breach it is Phi((K - mu)/sigma) exactly, and the average payout is
+ * sigma * (z * Phi(z) + phi(z)) - the expected shortfall of a normal. Two
+ * reasons this matters and neither is elegance: the figures are then traceable
+ * arithmetic rather than a sample, and they do not jitter between drags. A
+ * number that wobbles when nothing changed is re-read every time, which is
+ * exactly what dd-008 exists to prevent.
+ *
+ * Survival IS simulated, and the two columns run on the same seed and the same
+ * paths, so the gap between them is the hedge and nothing else.
+ */
+export function protectionCurve(
+  inputs: AdviceInputs,
+  min = 8,
+  max = 32,
+  // Step 1 so that whatever roughness the reader has actually assumed lands
+  // exactly on a computed point. At step 2 a shipped assumption of 15% snapped
+  // the slider thumb to 16 while the readout showed the nearest point, 14 -
+  // the control and the number disagreeing on screen.
+  step = 1,
+  sims = 600
+): ProtectionCurve {
+  const premium = inputs.hedgingDragCost ?? 1.85;
+  const floor = inputs.hedgingFloorLimit ?? -10;
+  const mu = inputs.expectedReturn / 100;
+  const k = floor / 100;
+
+  const points: ProtectionPoint[] = [];
+
+  for (let r = min; r <= max + 1e-9; r += step) {
+    const roughness = Math.round(r * 10) / 10;
+    const sigma = roughness / 100;
+
+    const z = (k - mu) / sigma;
+    const bindFrequency = normalCdf(z);
+    // Expected shortfall below the floor: E[max(0, K - R)] for R ~ N(mu, sigma).
+    const payout = sigma * (z * normalCdf(z) + normalPdf(z)) * 100;
+
+    const at = { ...inputs, annualVolatility: roughness };
+    points.push({
+      roughness,
+      bindFrequency,
+      oneYearIn: bindFrequency > 0 ? Math.round(1 / bindFrequency) : Infinity,
+      payout,
+      premium,
+      net: payout - premium,
+      survivalUnprotected: survivalAt({ ...at, bsEnabled: false }, sims),
+      survivalProtected: survivalAt({
+        ...at,
+        bsEnabled: true,
+        hedgingDragCost: premium,
+        hedgingFloorLimit: floor,
+      }, sims),
+    });
+  }
+
+  // The payout rises monotonically with roughness while the premium does not
+  // move, so the first crossing is the boundary for the whole track.
+  const crossing = points.find((p) => p.net >= 0);
+  return {
+    points,
+    breakeven: crossing ? crossing.roughness : null,
+    floor,
+    premium,
+    min,
+    max,
+    step,
+  };
+}
+
 /**
  * All three levers, cheapest-looking first is NOT imposed - the caller decides
  * presentation order. Returns an empty list when the plan is already healthy,

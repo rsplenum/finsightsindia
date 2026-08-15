@@ -241,3 +241,53 @@ describe('SIP goal seek', () => {
       .toBeGreaterThan(seek({ bsEnabled: false, annualHedgingDragCost: 0 }));
   });
 });
+
+// sol-023. The hedging ledger used to compute its columns beside the engine
+// rather than from it, which is why fixing sol-018 moved none of them. These
+// pin the engine's own ledger output, so the screen has something real to read.
+describe('SIP simulation - the hedging ledger', () => {
+  const PREMIUM = 0.0185 * base.eqPct;
+  const hedged = (over = {}) =>
+    sim({ bsEnabled: true, annualHedgingDragCost: PREMIUM, ...over });
+
+  it('there is no ledger when there is no hedge', () => {
+    // Not a ledger of zeroes - an absent one. A table of zeroes reads as a
+    // measurement; null makes the screen say why there is nothing to show.
+    expect(sim().hedging).toBeNull();
+  });
+
+  it('the unhedged column is the same paths without the hedge, exactly', () => {
+    // The whole point of computing the twin inside the engine: the comparison
+    // the ledger prints is run on identical market draws, so it cannot drift
+    // from the hedged figures beside it.
+    const h = hedged();
+    const u = sim();
+    for (const yr of [1, 5, 10, 20]) {
+      expect(h.hedging.unhedgedReal[yr]).toBe(u.p50Real[yr]);
+    }
+  });
+
+  it('the premium only ever accumulates, and it starts at zero', () => {
+    const l = hedged().hedging;
+    expect(l.premiumPaidReal[0]).toBe(0);
+    for (let yr = 1; yr <= base.horizonYears; yr++) {
+      expect(l.premiumPaidReal[yr]).toBeGreaterThanOrEqual(l.premiumPaidReal[yr - 1]);
+      expect(l.floorPayoutReal[yr]).toBeGreaterThanOrEqual(l.floorPayoutReal[yr - 1]);
+    }
+    expect(l.premiumPaidReal[base.horizonYears]).toBeGreaterThan(0);
+  });
+
+  it('the premium is paid in far more years than the floor pays out', () => {
+    // The ledger's honest shape, and the one the old fabricated columns
+    // inverted: a -8% annual floor binds in about 10% of years, so a typical
+    // 20-year path sees it pay two or three times while paying premium 20.
+    const l = hedged().hedging;
+    expect(l.yearsFloorPaid).toBeGreaterThan(0);
+    expect(l.yearsFloorPaid).toBeLessThan(base.horizonYears / 3);
+  });
+
+  it('a costlier premium shows up in the ledger, not just in the outcome', () => {
+    expect(hedged({ annualHedgingDragCost: 0.05 }).hedging.premiumPaidReal[20])
+      .toBeGreaterThan(hedged().hedging.premiumPaidReal[20]);
+  });
+});

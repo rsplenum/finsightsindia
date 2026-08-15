@@ -1,0 +1,278 @@
+---
+// Rung 5 of the ladder: "What does it cost to protect against that?"
+//
+// The rung that was blocked on sol-018. Until that was fixed the engine
+// reported that buying protection more than doubled your money, and a screen
+// built on it would have taught the reader something false and taught it well.
+//
+// Built to dd-008, like rung 3: the prose states principles true at every
+// slider position, the values live in fixed slots, and one dynamic sentence
+// names the BOUNDARY rather than the state. Built to dd-006 as well, which is
+// the sharper constraint here - the difference between protected and
+// unprotected IS the lesson, so it can never be a mode. The two columns sit
+// side by side and the comparison is free.
+//
+// The control is market roughness, not the premium. Rahul settled the price at
+// 1.85%, and a slider on a settled number would let the reader shop for a
+// verdict they liked. Roughness is the honest variable: nobody chooses it, and
+// the entire question turns on it.
+---
+
+<section id="rungProtect" class="max-w-3xl mx-auto px-4 sm:px-6 py-4" aria-labelledby="rungProtectQ">
+  <div class="card-premium rounded-2xl p-6 sm:p-8 space-y-6">
+
+    <div>
+      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-400 dark:text-navy-500">
+        Last question
+      </p>
+      <h2 id="rungProtectQ" class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 mt-1">
+        What does it cost to protect against that?
+      </h2>
+      <p class="text-sm text-navy-500 dark:text-navy-400 mt-2">
+        Drag it and watch the last two columns. Everything else on this screen stays put.
+      </p>
+    </div>
+
+    <!-- Name the thing before using it (dd-009). -->
+    <p class="text-sm leading-relaxed text-navy-600 dark:text-navy-400 border-l-2 border-navy-200 dark:border-navy-700 pl-3">
+      <b class="text-navy-800 dark:text-navy-200">You can buy a floor.</b>&#32;
+      You pay a fee every year, and in exchange no single year can cost you more
+      than <span id="pFloorWord">10%</span>. It settles on the <i>year</i>, not
+      the month — a market that falls 25% in March and ends the year down 4%
+      pays you nothing. The fee is charged in calm years and brutal ones alike.
+    </p>
+
+    <!-- The control, with the boundary marked on the track -->
+    <div class="space-y-2">
+      <div class="flex items-baseline justify-between gap-4">
+        <label for="protSlider" class="text-sm text-navy-700 dark:text-navy-300">
+          How rough the market turns out to be
+        </label>
+        <output id="protValue" for="protSlider"
+                class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">—</output>
+      </div>
+
+      <div class="relative pt-1 pb-6">
+        <input id="protSlider" type="range" min="8" max="32" step="1" value="15"
+               aria-describedby="protBoundary"
+               class="w-full accent-gold-500 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50 rounded" />
+        <div id="protMark" class="hidden absolute top-0 -translate-x-1/2 pointer-events-none">
+          <div class="h-6 w-0.5 bg-rose-500/80 dark:bg-rose-400/80 mx-auto"></div>
+          <div id="protMarkLabel"
+               class="mt-0.5 whitespace-nowrap text-[10px] font-semibold text-rose-600 dark:text-rose-400 -translate-x-1/2 relative left-1/2"></div>
+        </div>
+      </div>
+      <p class="text-xs text-navy-500 dark:text-navy-400">
+        You do not choose this one. It is the market's temperament, not your setting.
+      </p>
+    </div>
+
+    <!-- Fixed slots. The eye returns to the same rows and sees digits change. -->
+    <div class="rounded-xl border border-navy-200 dark:border-navy-700 divide-y divide-navy-200 dark:divide-navy-700 overflow-hidden">
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">
+          A year bad enough to trigger the floor
+          <span class="block text-xs text-navy-500 dark:text-navy-400">how often that happens at this roughness</span>
+        </span>
+        <span id="pFreq" class="text-base font-semibold tabular-nums text-navy-900 dark:text-navy-100">—</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">So the floor pays back, on average</span>
+        <span id="pPayout" class="text-base font-semibold tabular-nums text-emerald-700 dark:text-emerald-400">—</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">
+          And you pay, every year
+          <span class="block text-xs text-navy-500 dark:text-navy-400">this one never moves — that is the point</span>
+        </span>
+        <span id="pPremium" class="text-base font-semibold tabular-nums text-rose-600 dark:text-rose-400">—</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3.5 bg-navy-50/60 dark:bg-navy-900/40">
+        <span class="text-sm font-semibold text-navy-900 dark:text-navy-100">Which leaves protection worth</span>
+        <span id="pNet" class="text-lg font-bold tabular-nums">—</span>
+      </div>
+    </div>
+
+    <!-- dd-006: the difference IS the lesson, so both states are adjacent and
+         neither is hidden behind a control. dd-010: the row is survival, the
+         thing a retiree actually lives with, not a terminal balance. -->
+    <div>
+      <p class="text-sm font-semibold text-navy-900 dark:text-navy-100 mb-2">
+        Futures in 100 where the money lasts all <span id="pYears">30</span> years
+      </p>
+      <div class="rounded-xl border border-navy-200 dark:border-navy-700 overflow-hidden">
+        <div class="grid grid-cols-2">
+          <div class="px-4 py-4 border-r border-navy-200 dark:border-navy-700">
+            <p class="text-xs font-medium uppercase tracking-wider text-navy-500 dark:text-navy-400">Unprotected</p>
+            <p id="pSurvU" class="mt-1 text-2xl font-bold tabular-nums text-navy-900 dark:text-navy-100">—</p>
+          </div>
+          <div class="px-4 py-4">
+            <p class="text-xs font-medium uppercase tracking-wider text-navy-500 dark:text-navy-400">Protected</p>
+            <p id="pSurvP" class="mt-1 text-2xl font-bold tabular-nums text-navy-900 dark:text-navy-100">—</p>
+          </div>
+        </div>
+        <!-- The difference, as a VALUE in a fixed slot. It was a sentence
+             first, and dragging rewrote it - dd-008's exact failure. The label
+             never moves; only the number does. -->
+        <div class="flex items-baseline justify-between gap-4 px-4 py-3 border-t border-navy-200 dark:border-navy-700 bg-navy-50/60 dark:bg-navy-900/40">
+          <span class="text-sm font-semibold text-navy-900 dark:text-navy-100">So protection is worth, here</span>
+          <span id="pSurvDiff" class="text-lg font-bold tabular-nums">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- The boundary. One sentence covering the whole range of the control. -->
+    <p id="protBoundary"
+       class="rounded-lg bg-gold-500/10 border border-gold-500/30 px-4 py-3 text-sm leading-relaxed text-navy-800 dark:text-navy-200">
+      Working out where protection starts paying for itself…
+    </p>
+
+    <!-- The principle. True at every position, so dragging never rewrites it. -->
+    <div class="space-y-4 text-base leading-relaxed text-navy-800 dark:text-navy-200">
+      <p>
+        Insurance has a fixed price and a variable payout. You pay the same fee
+        whether the decade is calm or savage; you are paid only in the savage
+        one. So buying it is a bet that the world will turn out rougher than the
+        price assumes — and the price was set by people who do this for a
+        living, which is why the bet is not a free one.
+      </p>
+      <p>
+        Watch what protection actually does as you drag. It does not lift the
+        good outcomes; it flattens the whole range. Unprotected, your chances
+        fall away as the market gets rougher. Protected, they barely move. You
+        are not buying more money. You are buying a result that stops depending
+        on which market you happen to retire into.
+      </p>
+      <p>
+        Which is why protection can be worth having before it breaks even on
+        price. The fee is certain and the payout is an average, but you do not
+        live an average — you live one run of years, the same lesson rung four
+        made. A cost you can budget for is a different kind of thing from a
+        risk that ends your plan, even when the arithmetic says the cost is the
+        bigger number.
+      </p>
+      <p id="pLifetime" class="text-sm text-navy-600 dark:text-navy-400"></p>
+    </div>
+
+    <div class="pt-4 border-t border-navy-200 dark:border-navy-800">
+      <p class="text-sm text-navy-600 dark:text-navy-400">
+        That is the ladder. Everything above was one question at a time; if you
+        want all of it at once — every assumption, every year, every figure —&#32;
+        <span class="font-medium text-navy-800 dark:text-navy-200">the full workings are below.</span>
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  const $ = (id: string) => document.getElementById(id);
+  const pct = (n: number, dp = 2) => `${n < 0 ? '−' : ''}${Math.abs(n).toFixed(dp)}%`;
+
+  let curve: any = null;
+  let inputs: any = null;
+
+  function pointAt(roughness: number) {
+    if (!curve?.points?.length) return null;
+    let best = curve.points[0];
+    for (const p of curve.points) {
+      if (Math.abs(p.roughness - roughness) < Math.abs(best.roughness - roughness)) best = p;
+    }
+    return best;
+  }
+
+  function paintBoundary() {
+    if (!curve || !inputs) return;
+    const el = $('protBoundary')!;
+    const mark = $('protMark')!;
+
+    if (curve.breakeven === null) {
+      el.textContent =
+        `Nowhere on this track does the floor pay back what it costs. At ` +
+        `${pct(curve.premium)} a year against a floor at ${pct(Math.abs(curve.floor), 0)}, ` +
+        `this protection is priced above anything the market here would make it worth.`;
+      mark.classList.add('hidden');
+      return;
+    }
+
+    el.textContent =
+      `Below about ${pct(curve.breakeven, 0)} roughness, the floor pays back less ` +
+      `than the ${pct(curve.premium)} it charges. Above it the floor pays for ` +
+      `itself, and the rougher the market gets the more it is worth.`;
+
+    const frac = (curve.breakeven - curve.min) / (curve.max - curve.min);
+    mark.style.left = `${Math.min(100, Math.max(0, frac * 100))}%`;
+    $('protMarkLabel')!.textContent = pct(curve.breakeven, 0);
+    mark.classList.remove('hidden');
+  }
+
+  function paintStatic() {
+    if (!curve || !inputs) return;
+    $('pFloorWord')!.textContent = pct(Math.abs(curve.floor), 0);
+    $('pYears')!.textContent = String(inputs.horizonYears);
+    $('pPremium')!.textContent = `− ${pct(curve.premium)} a year`;
+
+    // Traceable arithmetic from the row above: the same fee, compounded for
+    // the whole horizon. No simulation involved, so the reader can check it.
+    const bite = (1 - Math.pow(1 - curve.premium / 100, inputs.horizonYears)) * 100;
+    $('pLifetime')!.textContent =
+      `Paid every year for ${inputs.horizonYears} years, the fee alone takes about ` +
+      `${pct(bite, 0)} of what you started with — before the floor has paid out a rupee.`;
+  }
+
+  function paintRow(roughness: number) {
+    const p = pointAt(roughness);
+    if (!p || !curve) return;
+
+    $('protValue')!.textContent = pct(p.roughness, 0);
+    $('pFreq')!.textContent =
+      p.oneYearIn > 100 ? 'almost never' : `1 year in ${p.oneYearIn}`;
+    $('pPayout')!.textContent = `+ ${pct(p.payout)} a year`;
+
+    const net = $('pNet') as HTMLElement;
+    net.textContent = `${p.net >= 0 ? '+' : '− '}${pct(Math.abs(p.net))} a year`;
+    net.className = 'text-lg font-bold tabular-nums ' +
+      (p.net >= 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400');
+
+    const u = Math.round(p.survivalUnprotected * 100);
+    const s = Math.round(p.survivalProtected * 100);
+    $('pSurvU')!.textContent = `${u} in 100`;
+    $('pSurvP')!.textContent = `${s} in 100`;
+
+    // Colour asserts better-or-worse and nothing else (dd-007).
+    const tone = (better: boolean) =>
+      'mt-1 text-2xl font-bold tabular-nums ' +
+      (better ? 'text-emerald-700 dark:text-emerald-400' : 'text-navy-900 dark:text-navy-100');
+    ($('pSurvU') as HTMLElement).className = tone(u > s);
+    ($('pSurvP') as HTMLElement).className = tone(s > u);
+
+    const gap = s - u;
+    const diff = $('pSurvDiff') as HTMLElement;
+    diff.textContent = `${gap > 0 ? '+' : gap < 0 ? '− ' : ''}${Math.abs(gap)} in 100`;
+    diff.className = 'text-lg font-bold tabular-nums ' +
+      (gap > 0 ? 'text-emerald-700 dark:text-emerald-400'
+       : gap < 0 ? 'text-rose-600 dark:text-rose-400'
+       : 'text-navy-900 dark:text-navy-100');
+  }
+
+  const slider = $('protSlider') as HTMLInputElement | null;
+  slider?.addEventListener('input', () => paintRow(Number(slider.value)));
+
+  window.addEventListener('swp:protection', (e) => {
+    const d = (e as CustomEvent).detail;
+    curve = d.curve;
+    inputs = d.inputs;
+    if (slider) {
+      slider.min = String(curve.min);
+      slider.max = String(curve.max);
+      slider.step = String(curve.step);
+      slider.value = String(inputs.annualVolatility);
+    }
+    paintStatic();
+    paintBoundary();
+    // Read back from the slider rather than from the input. The browser snaps
+    // the value to the step, and painting the unsnapped number put a readout
+    // on screen that disagreed with where the thumb actually sat.
+    paintRow(Number(slider?.value ?? inputs.annualVolatility));
+  });
+</script>

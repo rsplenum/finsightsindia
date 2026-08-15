@@ -1,4 +1,4 @@
-import { outlook, findRemedies, growthCurve, sequenceRisk, type AdviceInputs } from '../utils/swpAdvice';
+import { outlook, findRemedies, growthCurve, sequenceRisk, protectionCurve, type AdviceInputs } from '../utils/swpAdvice';
 
 /**
  * Runs the outlook and the remedy search off the main thread.
@@ -40,6 +40,14 @@ if (typeof self !== 'undefined' && typeof self.postMessage === 'function') {
           2: sequenceRisk(inputs, -30, 2),
           3: sequenceRisk(inputs, -30, 3),
         },
+      });
+      // Rung 5. Two survival sweeps across the roughness range, so it is the
+      // most expensive stage and deliberately the last: by the time it lands
+      // the reader is still four rungs above it.
+      self.postMessage({
+        ok: true,
+        stage: 'protection',
+        curve: protectionCurve(inputs),
       });
     } catch (err) {
       self.postMessage({ ok: false, error: (err as Error).message });

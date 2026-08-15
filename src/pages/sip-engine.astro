@@ -294,7 +294,7 @@ import ButtonGold from '../components/ButtonGold.astro';
 					<div id="valHedgingDrag" class="stat-value text-xl text-navy-900 dark:text-navy-100">0.00% / Year</div>
 				</div>
 				<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-4 space-y-1">
-					<span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Protected Floor (PV)</span>
+					<span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Floor Paid Out (PV)</span>
 					<div id="valProtectedFloor" class="stat-value text-xl text-emerald-600 dark:text-emerald-400">₹ 0</div>
 				</div>
 				<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-4 space-y-1">
@@ -304,20 +304,37 @@ import ButtonGold from '../components/ButtonGold.astro';
 			</div>
 
 			<SectionTitle title="YEAR-BY-YEAR OPTION COST & PROTECTION LEDGER" />
+			<p id="ledgerCaption" class="mt-2 text-xs text-navy-500 dark:text-navy-400">
+				Every figure below is in today's money and comes from the simulation itself —
+				the same market paths run twice, once with the floor and once without.
+			</p>
+			<!-- sol-023: these columns used to be invented at render time beside the
+			     engine. They are now read from its output, so a change to the hedging
+			     model moves them. Widths are fixed by colgroup and every numeric cell
+			     is nowrap: six currency columns were wrapping mid-figure, which made
+			     "₹ 1,03,85,340" read as two numbers. -->
 			<div class="w-full mt-2 max-h-[360px] overflow-x-auto overflow-y-auto border border-navy-200 dark:border-navy-800 rounded-md bg-white dark:bg-navy-950 scrollbar-thin scrollbar-thumb-navy-300 dark:scrollbar-thumb-navy-700">
-				<table class="table-premium w-full min-w-[600px]">
+				<table class="table-premium w-full min-w-[760px] tabular-nums">
+					<colgroup>
+						<col class="w-[9%]" />
+						<col class="w-[18%]" />
+						<col class="w-[19%]" />
+						<col class="w-[19%]" />
+						<col class="w-[17%]" />
+						<col class="w-[18%]" />
+					</colgroup>
 					<thead class="sticky top-0 z-20 bg-navy-100 dark:bg-navy-900 border-b border-navy-200 dark:border-navy-800 shadow-xs">
 						<tr>
-							<th class="py-2.5 px-3 text-left font-bold text-navy-700 dark:text-navy-300">Year</th>
-							<th class="py-2.5 px-3 text-right font-bold text-navy-700 dark:text-navy-300">Real Sacrificed (PV)</th>
-							<th class="py-2.5 px-3 text-right font-bold text-navy-700 dark:text-navy-300">Unhedged Real Wealth</th>
-							<th class="py-2.5 px-3 text-right font-bold text-navy-700 dark:text-navy-300">Option Drag</th>
-							<th class="py-2.5 px-3 text-right font-bold text-navy-700 dark:text-navy-300">Floor Benefit</th>
-							<th class="py-2.5 px-3 text-right font-bold text-emerald-600 dark:text-emerald-400">Net Hedged Real</th>
+							<th class="py-2.5 px-3 text-left font-bold text-navy-700 dark:text-navy-300 whitespace-nowrap">Year</th>
+							<th class="py-2.5 px-3 text-right font-bold text-navy-700 dark:text-navy-300 whitespace-nowrap">Invested So Far</th>
+							<th class="py-2.5 px-3 text-right font-bold text-navy-700 dark:text-navy-300 whitespace-nowrap">Unprotected</th>
+							<th class="py-2.5 px-3 text-right font-bold text-emerald-600 dark:text-emerald-400 whitespace-nowrap">Protected</th>
+							<th class="py-2.5 px-3 text-right font-bold text-navy-700 dark:text-navy-300 whitespace-nowrap">Premium Paid</th>
+							<th class="py-2.5 px-3 text-right font-bold text-navy-700 dark:text-navy-300 whitespace-nowrap">Floor Paid Out</th>
 						</tr>
 					</thead>
 					<tbody id="hedgingLedgerBody" class="divide-y divide-navy-100 dark:divide-white/5 bg-white dark:bg-navy-950">
-						<!-- Dynamically populated via JS -->
+						<!-- Populated from the engine's `hedging` output. -->
 					</tbody>
 				</table>
 			</div>
@@ -737,7 +754,13 @@ import ButtonGold from '../components/ButtonGold.astro';
 		}
 
 		if (dragEl) dragEl.innerText = bsEnabled ? `${(annualHedgingDragCost * 100).toFixed(2)}% / Year` : "0.00% / Year";
-		if (floorEl) floorEl.innerText = tableFormatter.format(bsEnabled ? Math.max(realOutflowPV, bearRealFinal * 1.15) : bearRealFinal);
+		// sol-023: was Math.max(realOutflowPV, bearRealFinal * 1.15) - a number the
+		// engine never produced. This is what the floor actually paid the median path.
+		if (floorEl) {
+			floorEl.innerText = simResult.hedging
+				? tableFormatter.format(simResult.hedging.floorPayoutReal[horizonYears] ?? 0)
+				: 'Not hedged';
+		}
 
 		// Calculate exact XIRR using CashFlows
 		const cfs: {amount: number, date: Date}[] = [];
@@ -757,7 +780,7 @@ import ButtonGold from '../components/ButtonGold.astro';
 		const netRealXIRR = calculateXIRR(cfs, 0.1) || 0;
 		if (yieldEl) yieldEl.innerText = `${netRealXIRR.toFixed(2)}% Real XIRR`;
 
-		renderHedgingLedger(horizonYears, monthlySip, inflationRate, p50Real, bsEnabled, annualHedgingDragCost);
+		renderHedgingLedger(horizonYears, monthlySip, stepUpRate, inflationRate, p50Real, simResult.hedging);
 
 		const targets = [5000000, 10000000, 25000000, 50000000, 100000000];
 		const timelineContainer = document.getElementById('milestoneTimeline');
@@ -778,35 +801,83 @@ import ButtonGold from '../components/ButtonGold.astro';
 		renderChart(horizonYears, p90Real, p50Real, p10Real);
 	}
 
-	function renderHedgingLedger(years: number, monthlySip: number, inflationRate: number, p50Real: number[], bsEnabled: boolean, dragCostPercent: number) {
+	/**
+	 * The ledger, rendered from the engine's own output.
+	 *
+	 * sol-023: four of these columns used to be computed here, beside the
+	 * simulation rather than from it - a "Floor Benefit" of contributions minus
+	 * 92% of the median balance, and a net figure floored at total contributions.
+	 * None of them moved when the hedging model was corrected, and none would
+	 * have moved if it never had been. A view must never re-derive what the
+	 * engine already knows.
+	 *
+	 * `ledger` is null whenever hedging is off, in which case there is nothing
+	 * to account for and the table says so rather than printing zeroes.
+	 */
+	function renderHedgingLedger(
+		years: number,
+		monthlySip: number,
+		stepUpRate: number,
+		inflationRate: number,
+		protectedReal: number[],
+		ledger: any
+	) {
 		const tbody = document.getElementById('hedgingLedgerBody');
+		const caption = document.getElementById('ledgerCaption');
 		if (!tbody) return;
+
+		if (!ledger) {
+			tbody.innerHTML =
+				'<tr><td colspan="6" class="py-8 px-3 text-center text-sm text-navy-500 dark:text-navy-400">' +
+				'Put option hedging is off, so there is no premium to pay and no floor to pay out. ' +
+				'Switch it on above to see what protection would cost.' +
+				'</td></tr>';
+			if (caption) {
+				caption.textContent =
+					"Every figure below is in today's money and comes from the simulation itself.";
+			}
+			return;
+		}
+
+		if (caption) {
+			caption.textContent =
+				"Every figure below is in today's money and comes from the simulation itself — " +
+				"the same market paths run twice, once with the floor and once without. " +
+				`The floor paid out in ${ledger.yearsFloorPaid} of the ${years} years for a typical path; ` +
+				"the premium was paid in every one of them.";
+		}
+
 		let html = '';
 		let cumPV = 0;
+		let sip = monthlySip;
 		for (let yr = 1; yr <= years; yr++) {
-			let yrPV = 0;
+			if (yr > 1) sip = sip * (1 + stepUpRate);
 			for (let m = (yr - 1) * 12 + 1; m <= yr * 12; m++) {
-				yrPV += monthlySip / Math.pow(1 + inflationRate, m / 12);
+				cumPV += sip / Math.pow(1 + inflationRate, m / 12);
 			}
-			cumPV += yrPV;
-			const unhedgedReal = p50Real[yr] || 0;
-			const optionDragRupees = bsEnabled ? (unhedgedReal * dragCostPercent) : 0;
-			const floorBenefit = bsEnabled ? Math.max(0, cumPV - unhedgedReal * 0.92) : 0;
-			const netHedgedReal = bsEnabled ? Math.max(unhedgedReal - optionDragRupees, cumPV) : unhedgedReal;
+
+			const unprotected = ledger.unhedgedReal[yr] ?? 0;
+			const withFloor = protectedReal[yr] ?? 0;
+			const premium = ledger.premiumPaidReal[yr] ?? 0;
+			const payout = ledger.floorPayoutReal[yr] ?? 0;
+			// Cumulative, deliberately. A per-year "the floor paid this year"
+			// flag looks obvious and is not available: these are medians ACROSS
+			// paths, so the median cumulative rises in years when no one path
+			// necessarily collected. Deriving a per-year event from it would be
+			// the same class of invention sol-023 was opened for. The typical
+			// number of paying years is in the caption, counted per path.
+
 			const zebraClass = yr % 2 === 0 ? 'bg-navy-50/70 dark:bg-navy-900/90' : 'bg-white dark:bg-navy-950';
+			const num = 'py-2.5 px-3 text-right whitespace-nowrap';
 
 			html += `
 				<tr class="${zebraClass} hover:bg-navy-100 dark:hover:bg-navy-800 transition-colors border-b border-navy-200/60 dark:border-white/10">
-					<td class="py-2.5 px-3 text-left font-bold text-navy-800 dark:text-navy-200">Yr ${yr}</td>
-					<td class="py-2.5 px-3 text-right text-navy-600 dark:text-navy-400">${tableFormatter.format(cumPV)}</td>
-					<td class="py-2.5 px-3 text-right font-medium text-navy-800 dark:text-navy-200">${tableFormatter.format(unhedgedReal)}</td>
-					<td class="py-2.5 px-3 text-right ${bsEnabled ? 'text-rose-600 dark:text-rose-400 font-semibold' : 'text-navy-400 dark:text-navy-600'}">
-						${bsEnabled ? `-${tableFormatter.format(optionDragRupees)} (${(dragCostPercent * 100).toFixed(2)}%)` : '₹ 0 (0.00%)'}
-					</td>
-					<td class="py-2.5 px-3 text-right ${floorBenefit > 0 ? 'text-emerald-600 dark:text-emerald-400 font-bold' : 'text-navy-400 dark:text-navy-500'}">
-						${floorBenefit > 0 ? `+${tableFormatter.format(floorBenefit)}` : 'Floor Intact'}
-					</td>
-					<td class="py-2.5 px-3 text-right font-bold text-emerald-600 dark:text-emerald-400">${tableFormatter.format(netHedgedReal)}</td>
+					<td class="py-2.5 px-3 text-left font-bold whitespace-nowrap text-navy-800 dark:text-navy-200">Yr ${yr}</td>
+					<td class="${num} text-navy-600 dark:text-navy-400">${tableFormatter.format(cumPV)}</td>
+					<td class="${num} font-medium text-navy-800 dark:text-navy-200">${tableFormatter.format(unprotected)}</td>
+					<td class="${num} font-bold ${withFloor >= unprotected ? 'text-emerald-600 dark:text-emerald-400' : 'text-navy-800 dark:text-navy-200'}">${tableFormatter.format(withFloor)}</td>
+					<td class="${num} text-rose-600 dark:text-rose-400">−${tableFormatter.format(premium)}</td>
+					<td class="${num} ${payout > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-navy-400 dark:text-navy-600'}">${payout > 0 ? '+' + tableFormatter.format(payout) : '—'}</td>
 				</tr>
 			`;
 		}

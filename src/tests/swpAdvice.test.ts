@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { findRemedies, outlook, growthCurve, sequenceRisk, HEALTHY_SURVIVAL, type AdviceInputs } from '../utils/swpAdvice';
+import { findRemedies, outlook, growthCurve, sequenceRisk, protectionCurve, HEALTHY_SURVIVAL, type AdviceInputs } from '../utils/swpAdvice';
 import { runDeterministicSWP } from '../utils/swpDeterministic';
 
 // sol-019: never leave the user at a verdict. These check that the remedies
@@ -311,5 +311,86 @@ describe('multi-year downturns and the lived metric', () => {
     const doomed = r.points.find((p) => !p.survived)!;
     expect(doomed.minCushionYears).toBe(0);
     expect(doomed.depletionYear).toBeGreaterThan(0);
+  });
+});
+
+// Rung 5, sol-018 downstream. The engine behind this rung was wrong for the
+// whole of its previous life, so it gets a detector rather than a promise.
+describe('protection curve - what a floor costs and what it is worth', () => {
+  const plan: AdviceInputs = {
+    initialCorpus: 15000000,
+    monthlyWithdrawal: 40000,
+    annualStepUp: 0,
+    expectedReturn: 12,
+    expectedInflation: 6,
+    annualVolatility: 15,
+    ltcgTax: 12.5,
+    horizonYears: 30,
+  };
+  // Coarse and cheap: these assert shape and arithmetic, not precision.
+  const curve = protectionCurve(plan, 8, 32, 4, 200);
+
+  it('the premium never moves across the whole range', () => {
+    // The fixed price against the variable payout is the entire lesson
+    // (dd-005). If the premium ever varied with roughness the rung would be
+    // making a different, softer point.
+    for (const p of curve.points) expect(p.premium).toBe(curve.premium);
+  });
+
+  it('the payout rises with roughness, always', () => {
+    for (let i = 1; i < curve.points.length; i++) {
+      expect(curve.points[i].payout).toBeGreaterThan(curve.points[i - 1].payout);
+    }
+  });
+
+  it('frequency and payout are the closed forms, not a sample', () => {
+    // At 15% spread against a -10% floor and a 12% mean, z = -1.4667, so
+    // Phi(z) = 7.12% of years bind and the expected shortfall is 0.475%.
+    // Checked to 3 decimals because these must be exact arithmetic - a
+    // simulated figure would jitter between drags and be re-read every time.
+    const c = protectionCurve(plan, 15, 15, 1, 50);
+    const p = c.points[0];
+    expect(p.bindFrequency).toBeCloseTo(0.0712, 3);
+    expect(p.payout).toBeCloseTo(0.475, 2);
+    expect(p.oneYearIn).toBe(14);
+  });
+
+  it('net is payout less premium, so the screen reconciles', () => {
+    // dd-009: the reader must be able to derive the last row from the two
+    // above it. If this ever drifts, they cannot.
+    for (const p of curve.points) {
+      expect(p.net).toBeCloseTo(p.payout - p.premium, 10);
+    }
+  });
+
+  it('the breakeven is the first roughness where the floor pays its way', () => {
+    expect(curve.breakeven).not.toBeNull();
+    const at = curve.points.find((p) => p.roughness === curve.breakeven)!;
+    expect(at.net).toBeGreaterThanOrEqual(0);
+    for (const p of curve.points) {
+      if (p.roughness < curve.breakeven!) expect(p.net).toBeLessThan(0);
+    }
+  });
+
+  it('protection costs survival in calm markets and buys it in rough ones', () => {
+    // The finding rung 5 is built on, and the one sol-018 had backwards. At
+    // the shipped 15% assumption this protection is a net loss; it only earns
+    // its price when the market is far rougher than anyone is assuming.
+    const calm = curve.points[0];
+    const rough = curve.points[curve.points.length - 1];
+    expect(calm.survivalProtected).toBeLessThanOrEqual(calm.survivalUnprotected);
+    expect(rough.survivalProtected).toBeGreaterThan(rough.survivalUnprotected);
+  });
+
+  it('protection flattens the range - that is what is being bought', () => {
+    // The rung's central claim, in one assertion: unprotected survival falls
+    // away as the market roughens, protected survival barely moves. If this
+    // stops holding, the prose on the screen has become false.
+    const first = curve.points[0];
+    const last = curve.points[curve.points.length - 1];
+    const unprotectedFall = first.survivalUnprotected - last.survivalUnprotected;
+    const protectedFall = first.survivalProtected - last.survivalProtected;
+    expect(unprotectedFall).toBeGreaterThan(0.2);
+    expect(protectedFall).toBeLessThan(unprotectedFall / 2);
   });
 });

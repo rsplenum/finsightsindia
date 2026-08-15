@@ -1,6 +1,6 @@
 # FinSight — Launch Gate
 
-**Not live. No domain.** 132 tests green · 26 commits on `fix/learning-loop-integrity-and-calculator-correctness`
+**Not live. No domain.** 144 tests green · 27 commits on `fix/learning-loop-integrity-and-calculator-correctness`
 
 This is a list, not a document. Explanations live in commit messages, `design-doctrine.json` and `engineering-solutions.json`. This says what is done and what is next.
 
@@ -10,18 +10,19 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 
 ## Doing now
 
-- [x] **Fix sol-018** — hedging floor now annual, on the index. Median ×0.92, goal seek 19,646 → 20,561. 132 tests
-- [ ] **T2 rung 5** — what protection costs. Unblocked, but its headline depends on the premium question below.
+- [x] **Fix sol-018** — hedging floor now annual, on the index. Median ×0.92, goal seek 19,646 → 20,561
+- [x] **T2 rung 5 built** — protection is a bet on roughness; the floor pays its way above ~23%
+- [x] **sol-023 ledger fixed** — fed from the engine, twin unhedged run, column widths
+- [ ] **T2 last item** — retire the "show the workings" door; expert panel becomes the final rung
 
 ## Waiting on Rahul
 
-- [ ] **Is 1.85%/yr the right premium?** At our own assumptions the hedge only improves p10 below ~1.00%; BS fair value is ~1.18%. sol-018 `open_question_for_rahul`
-- [ ] **The floor depth is three different numbers** — SIP engine −8%, swp-planner input −10%, copy says −10% or −15%
-- [ ] **May rung 5 say protection is not worth its price?** It is the strongest honest finding, and a claim about a product people are sold
+- [x] **Is 1.85%/yr the right premium?** → **Rahul, 15 Aug: "1.85% is right, keep it."** Settled; the premium is not a variable to tune
+- [x] **May rung 5 say protection is not worth its price?** → yes, implied by keeping 1.85% and asking for rung 5. Rung 5 states what the engine finds
+- [ ] **The floor depth is three different numbers** — SIP engine −8%, swp-planner input −10%, copy says −10% or −15%. Still open; rung 5 uses the planner's −10%
 
 ## Blocked / deferred — with the reason
 
-- [ ] **sol-023: the sip-engine hedging ledger invents its numbers** → T3. Four columns are computed beside the engine, not from it, so fixing sol-018 moved none of them. Do not cite the ledger.
 - [ ] **Insurance `runReplicationAnalysis()` is untestable** → T5 starts with extracting it from the 35KB page.
 - [ ] **Rule retirements in the content factory** → needs logging coverage above 30% (now 5.9%). The operator self-blocks until then.
 - [ ] **Three silent reversals: M2, M4, M9** → needs Rahul's judgement. `ceiling.py relax` lists them.
@@ -42,7 +43,7 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 - [ ] Demote the five hubs to a second screen
 - [ ] Cut page weight so the first real choice is above the fold
 
-## T2 — SWP planner (the pilot) · 7/10
+## T2 — SWP planner (the pilot) · 9/10
 
 - [x] LTCG double-charge fixed in both engines `0dd3950`
 - [x] Zero-valued inputs fixed — survival was reported 22% instead of 78% `3c4bab0`
@@ -51,13 +52,14 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 - [x] Rungs 1–2: the two rates, then where the money goes `1c26a7b`
 - [x] Rung 3: growth slider, boundary on the track, no sentence churn `d5da508`
 - [x] Rung 4: bad years first — rebuilt after review `c193203`
-- [ ] Rung 5: what protection costs *(engine fixed; headline waits on the premium question)*
+- [x] Rung 5: what protection costs — the premium is fixed, the payout is not
 - [ ] Proposed rung: what if life happens?
 - [ ] Retire the single "show the workings" door — expert panel becomes the last rung
 
-## T3 — SIP engine · 1/5
+## T3 — SIP engine · 2/5
 
 - [x] Engine testable and seeded; 16 characterization tests `8c61dbf`
+- [x] Hedging ledger fed from the engine, not recomputed beside it — sol-023
 - [ ] Reverse goal-seek becomes the default mode
 - [ ] Three-input entry, ladder for the rest
 - [ ] Surface total cost drag — fund fees, exit load, tax

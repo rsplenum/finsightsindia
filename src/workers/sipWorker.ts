@@ -92,8 +92,12 @@ const HEDGE_TERM_MONTHS = 12;
  * defect existed twice, in two hand-copied loops, and a fix applied to one of
  * them would have left the other quietly wrong.
  *
- * `recordYear` is called with the nominal balance at each year end; goal seek
- * passes null and reads the return value.
+ * `recordYear` is called with the nominal balance at each year end, plus the
+ * premium paid and floor payout received during that year. sol-023: the
+ * hedging ledger used to recompute those two figures beside the engine and so
+ * could not disagree with it visibly - the numbers now cross from here to the
+ * view rather than being re-derived on arrival. Goal seek passes null and
+ * reads the return value.
  */
 function simulatePath(
 	seedCapital: number,
@@ -105,7 +109,9 @@ function simulatePath(
 	goldPct: number,
 	bsEnabled: boolean,
 	annualHedgingDragCost: number,
-	recordYear: ((yr: number, balance: number) => void) | null
+	recordYear:
+		((yr: number, balance: number, premiumPaid: number, floorPayout: number) => void)
+		| null
 ): number {
 	let portBal = seedCapital;
 	let currentSip = monthlySip;
@@ -115,6 +121,10 @@ function simulatePath(
 	let hedgeIndex = 1;
 	let coveredNotional = 0;
 	let monthOfTerm = 0;
+
+	// Per-year ledger figures, reset each year end.
+	let premiumThisYear = 0;
+	let payoutThisYear = 0;
 
 	for (let yr = 1; yr <= horizonYears; yr++) {
 		if (yr > 1) { currentSip = currentSip * (1 + stepUpRate); }
@@ -127,7 +137,9 @@ function simulatePath(
 					// Strike a new put: fix the notional, pay the premium, and
 					// start the index it is written on again from par.
 					coveredNotional = eqPct * portBal;
-					portBal -= portBal * annualHedgingDragCost;
+					const premium = portBal * annualHedgingDragCost;
+					portBal -= premium;
+					premiumThisYear += premium;
 					hedgeIndex = 1;
 				}
 				monthOfTerm++;
@@ -147,13 +159,19 @@ function simulatePath(
 			if (hedged && monthOfTerm === HEDGE_TERM_MONTHS) {
 				const indexReturn = hedgeIndex - 1;
 				if (indexReturn < HEDGE_FLOOR_ANNUAL) {
-					portBal += coveredNotional * (HEDGE_FLOOR_ANNUAL - indexReturn);
+					const payout = coveredNotional * (HEDGE_FLOOR_ANNUAL - indexReturn);
+					portBal += payout;
+					payoutThisYear += payout;
 				}
 				monthOfTerm = 0;
 			}
 		}
 
-		if (recordYear) { recordYear(yr, Math.max(0, portBal)); }
+		if (recordYear) {
+			recordYear(yr, Math.max(0, portBal), premiumThisYear, payoutThisYear);
+		}
+		premiumThisYear = 0;
+		payoutThisYear = 0;
 	}
 
 	return portBal;
@@ -257,12 +275,54 @@ export function runSimulation(params: any) {
 
 	const yearlyPathsNominal = Array.from({ length: horizonYears + 1 }, () => new Float64Array(numSims));
 
+	// Cumulative premium paid and floor payout received, per path per year.
+	// Collected only when hedging is on, because they are all zero otherwise.
+	const wantLedger = !!bsEnabled;
+	const cumPremium = wantLedger
+		? Array.from({ length: horizonYears + 1 }, () => new Float64Array(numSims)) : null;
+	const cumPayout = wantLedger
+		? Array.from({ length: horizonYears + 1 }, () => new Float64Array(numSims)) : null;
+	const bindingYears = new Float64Array(wantLedger ? numSims : 0);
+
 	for (let s = 0; s < numSims; s++) {
+		let runningPremium = 0;
+		let runningPayout = 0;
 		simulatePath(
 			seedCapital, monthlySip, stepUpRate, horizonYears,
 			eqPct, debtPct, goldPct, bsEnabled, annualHedgingDragCost,
-			(yr, balance) => { yearlyPathsNominal[yr][s] = balance; }
+			(yr, balance, premiumPaid, floorPayout) => {
+				yearlyPathsNominal[yr][s] = balance;
+				if (cumPremium && cumPayout) {
+					runningPremium += premiumPaid;
+					runningPayout += floorPayout;
+					cumPremium[yr][s] = runningPremium;
+					cumPayout[yr][s] = runningPayout;
+					if (floorPayout > 0) bindingYears[s]++;
+				}
+			}
 		);
+	}
+
+	// The unhedged twin, on the SAME paths. Running it here rather than asking
+	// the page for a second call is the point of sol-023: the comparison the
+	// ledger shows is then the engine's own, computed against identical market
+	// draws, and cannot drift from the hedged figures beside it.
+	const unhedgedP50Nominal: number[] | null = wantLedger ? [] : null;
+	if (unhedgedP50Nominal) {
+		rand = mulberry32(Number(params.seed) > 0 ? Number(params.seed) : 1234567);
+		hasSpare = false;
+		const twin = Array.from({ length: horizonYears + 1 }, () => new Float64Array(numSims));
+		for (let s = 0; s < numSims; s++) {
+			simulatePath(
+				seedCapital, monthlySip, stepUpRate, horizonYears,
+				eqPct, debtPct, goldPct, false, 0,
+				(yr, balance) => { twin[yr][s] = balance; }
+			);
+		}
+		for (let yr = 0; yr <= horizonYears; yr++) {
+			const sorted = Array.from(twin[yr]).sort((a, b) => a - b);
+			unhedgedP50Nominal.push(Math.round(sorted[Math.floor(numSims * 0.50)] || 0));
+		}
 	}
 
     const p90Nominal = [];
@@ -295,7 +355,44 @@ export function runSimulation(params: any) {
 		p90Real.push(Math.round(nom90 / discount));
 	}
 
+	// The ledger, in today's money, straight from the simulation above.
+	let hedging = null;
+	if (cumPremium && cumPayout && unhedgedP50Nominal) {
+		const median = (arr: Float64Array) => {
+			const sorted = Array.from(arr).sort((a, b) => a - b);
+			return sorted[Math.floor(numSims * 0.50)] || 0;
+		};
+		const premiumPaidReal = [];
+		const floorPayoutReal = [];
+		const unhedgedReal = [];
+		for (let yr = 0; yr <= horizonYears; yr++) {
+			const discount = Math.pow(1 + inflationRate, yr);
+			premiumPaidReal.push(Math.round(median(cumPremium[yr]) / discount));
+			floorPayoutReal.push(Math.round(median(cumPayout[yr]) / discount));
+			unhedgedReal.push(Math.round(unhedgedP50Nominal[yr] / discount));
+		}
+		hedging = {
+			/** Cumulative premium paid by the median path, in today's money. */
+			premiumPaidReal,
+			/** Cumulative floor payout received by the median path, today's money. */
+			floorPayoutReal,
+			/** The same paths without the hedge, median, in today's money. */
+			unhedgedReal,
+			/**
+			 * Median number of years, out of the horizon, in which the floor
+			 * paid anything. Counted per path and then taken as a median -
+			 * NOT read off the median cumulative payout, which rises for
+			 * reasons that have nothing to do with any one path's experience.
+			 */
+			yearsFloorPaid: (() => {
+				const sorted = Array.from(bindingYears).sort((a, b) => a - b);
+				return sorted[Math.floor(numSims * 0.50)] || 0;
+			})(),
+		};
+	}
+
 	return {
+		hedging,
         nominalTotalInvested,
 		realOutflowPV,
 		expectedNominalMedian,
