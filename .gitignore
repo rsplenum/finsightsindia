@@ -23,3 +23,10 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 .env
+
+# python bytecode
+__pycache__/
+*.py[cod]
+
+# claude code local session settings (launch.json is shared, this is not)
+.claude/settings.local.json
