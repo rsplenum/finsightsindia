@@ -12,7 +12,9 @@
     "astro": "astro",
     "integrity:snapshot": "node scripts/verify-integrity.js snapshot",
     "integrity:verify": "node scripts/verify-integrity.js verify",
-    "test": "vitest run"
+    "test": "vitest run",
+    "smoke": "astro build && vitest run src/tests/buildOutput.test.ts",
+    "verify": "vitest run && astro build && vitest run src/tests/buildOutput.test.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.5",
