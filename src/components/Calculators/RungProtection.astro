@@ -56,7 +56,43 @@
         <span id="pFeeRupees" class="text-3xl sm:text-4xl font-bold tabular-nums text-rose-700 dark:text-rose-400">—</span>
         <span class="text-base text-navy-600 dark:text-navy-400">a year, every year</span>
       </div>
-      <p id="pFeeDetail" class="text-sm leading-relaxed text-navy-700 dark:text-navy-300"></p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+        <div>
+          <p class="text-xs text-navy-600 dark:text-navy-400">as a share of savings</p>
+          <p id="pFeePct" class="text-base font-semibold tabular-nums text-navy-900 dark:text-navy-100">—</p>
+        </div>
+        <div>
+          <p id="pBiteLabel" class="text-xs text-navy-600 dark:text-navy-400">over 30 years the fee alone takes</p>
+          <p id="pFeeBite" class="text-base font-semibold tabular-nums text-navy-900 dark:text-navy-100">—</p>
+        </div>
+        <div>
+          <p class="text-xs text-navy-600 dark:text-navy-400">what that cover is actually worth</p>
+          <p id="pFairValue" class="text-base font-semibold tabular-nums text-navy-900 dark:text-navy-100">—</p>
+        </div>
+      </div>
+      <p class="text-sm leading-relaxed text-navy-600 dark:text-navy-400">
+        The fee is charged whether the year is calm or brutal. You pay
+        <span id="pMarkup" class="font-semibold text-navy-800 dark:text-navy-200">—</span>
+        what the cover is worth, because the seller prices for a rougher market
+        than anyone expects. That gap is their profit, and it is the reason
+        insurance loses money on average.
+      </p>
+    </div>
+
+    <!-- Floor depth is a PURCHASE, chosen between four alternatives - the case
+         dd-006 explicitly allows a mode for. It was a slider first, and
+         dragging it rewrote three paragraphs, which is the spot-the-difference
+         puzzle that entry exists to forbid. -->
+    <div class="space-y-2">
+      <span class="block text-sm text-navy-700 dark:text-navy-300">
+        How much of a fall you are willing to take yourself
+      </span>
+      <div id="floorGroup" role="radiogroup" aria-label="How deep a floor to buy"
+           class="inline-flex flex-wrap rounded-lg border border-navy-200 dark:border-navy-700 p-0.5 bg-navy-50 dark:bg-navy-900/60"></div>
+      <p class="text-xs text-navy-500 dark:text-navy-400">
+        A shallower floor hands back less of the fall, so it costs more. You do
+        not set the price — it follows from the cover you ask for.
+      </p>
     </div>
 
     <!-- The control. -->
@@ -158,6 +194,7 @@
     return `₹${v.toLocaleString('en-IN')}`;
   }
 
+  let surface: any = null;
   let curve: any = null;
   let inputs: any = null;
 
@@ -172,15 +209,18 @@
 
   function paintBill() {
     if (!curve || !inputs) return;
-    const yearly = inputs.initialCorpus * (curve.premium / 100);
-    $('pFeeRupees')!.textContent = money(yearly);
+    // Values in fixed slots, so switching cover ticks digits in known places
+    // rather than rewriting paragraphs (dd-008).
+    $('pFeeRupees')!.textContent = money(inputs.initialCorpus * (curve.premium / 100));
+    $('pFeePct')!.textContent = `${pct(curve.premium)} a year`;
 
-    // Every figure traceable from the one above it (dd-009).
+    // Traceable from the row beside it: the same fee, compounded.
     const bite = (1 - Math.pow(1 - curve.premium / 100, inputs.horizonYears)) * 100;
-    $('pFeeDetail')!.textContent =
-      `That is ${pct(curve.premium)} of your savings, charged whether the year is ` +
-      `calm or brutal. Over ${inputs.horizonYears} years the fee alone consumes about ` +
-      `${pct(bite, 0)} of everything you started with, before the floor has paid out a rupee.`;
+    $('pBiteLabel')!.textContent = `over ${inputs.horizonYears} years the fee alone takes`;
+    $('pFeeBite')!.textContent = pct(bite, 0);
+
+    $('pFairValue')!.textContent = `${pct(curve.fairValueAtReaderRoughness)} a year`;
+    $('pMarkup')!.textContent = `${curve.markupAtReaderRoughness.toFixed(1)} times`;
   }
 
   function paintLimit() {
@@ -268,23 +308,61 @@
   const slider = $('protSlider') as HTMLInputElement | null;
   slider?.addEventListener('input', () => paintRow(Number(slider.value)));
 
-  window.addEventListener('swp:protection', (e) => {
-    const d = (e as CustomEvent).detail;
-    curve = d.curve;
-    inputs = d.inputs;
-    $('pFloorWord')!.textContent = pct(Math.abs(curve.floor), 0);
-    if (slider) {
-      slider.min = String(curve.min);
-      slider.max = String(curve.max);
-      slider.step = String(curve.step);
-      slider.value = String(inputs.annualVolatility);
+  const ON = 'bg-white dark:bg-navy-800 text-navy-900 dark:text-navy-100 shadow-sm';
+  const OFF = 'text-navy-500 dark:text-navy-400 hover:text-navy-800 dark:hover:text-navy-200';
+  const BTN = 'rounded-md px-3 py-1.5 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50 ';
+
+  let floorIndex = 0;
+
+  function buildFloorButtons() {
+    const group = $('floorGroup');
+    if (!group || !surface) return;
+    group.innerHTML = '';
+    surface.curves.forEach((c: any, i: number) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('role', 'radio');
+      b.dataset.index = String(i);
+      b.textContent = pct(Math.abs(c.floor), 0);
+      b.addEventListener('click', () => selectFloor(i));
+      group.appendChild(b);
+    });
+  }
+
+  function selectFloor(index: number) {
+    if (!surface) return;
+    floorIndex = Math.max(0, Math.min(surface.curves.length - 1, index));
+    curve = surface.curves[floorIndex];
+    for (const b of Array.from($('floorGroup')?.children ?? []) as HTMLElement[]) {
+      const on = Number(b.dataset.index) === floorIndex;
+      b.className = BTN + (on ? ON : OFF);
+      b.setAttribute('aria-checked', String(on));
     }
+    $('pFloorWord')!.textContent = pct(Math.abs(curve.floor), 0);
     paintBill();
     paintLimit();
     paintBoundary();
-    // Read back from the slider, which snaps to the step - painting the
-    // unsnapped value once put a readout on screen that disagreed with where
-    // the thumb actually sat.
     paintRow(Number(slider?.value ?? inputs.annualVolatility));
+  }
+
+  window.addEventListener('swp:protection', (e) => {
+    const d = (e as CustomEvent).detail;
+    surface = d.surface;
+    inputs = d.inputs;
+    if (!surface?.curves?.length) return;
+
+    if (slider) {
+      const c0 = surface.curves[0];
+      slider.min = String(c0.min);
+      slider.max = String(c0.max);
+      slider.step = String(c0.step);
+      // Read back from the slider, which snaps to the step - painting the
+      // unsnapped value once put a readout on screen that disagreed with where
+      // the thumb actually sat.
+      slider.value = String(inputs.annualVolatility);
+    }
+    buildFloorButtons();
+    const at = surface.curves.findIndex((c: any) => c.floor === surface.readerFloor);
+    selectFloor(at >= 0 ? at : 0);
   });
 </script>

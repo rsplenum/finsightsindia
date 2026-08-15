@@ -110,6 +110,10 @@ export function runSWPMonteCarlo(data: any = {}) {
   // When supplied, every trial follows this exact sequence of annual returns
   // and no randomness is used at all. Values are decimals, e.g. -0.30 for a
   // 30% fall, indexed from year 1.
+  // How many times a year the floor is re-struck: 1 (annual), 2, 4 (quarterly).
+  // Default 1, which keeps every existing caller bit-identical.
+  const hedgePeriods = Math.max(1, Math.round(num(data.hedgePeriodsPerYear, 1)));
+
   const returnsByYear: number[] | null = Array.isArray(data.returnsByYear)
     ? data.returnsByYear.map((r: number) => Number(r))
     : null;
@@ -174,11 +178,35 @@ export function runSWPMonteCarlo(data: any = {}) {
       // maths - which is what src/utils/swpDeterministic.ts used to be, and why
       // the LTCG double-charge once had to be fixed twice. One engine, driven
       // two ways (dd-013).
-      let randomReturn = returnsByYear
-        ? (returnsByYear[year - 1] ?? mu)
-        : mu + sigma * getRandomNormal();
-      if (bsEnabled) {
-          randomReturn = Math.max(floorLimit, randomReturn) - dragCost;
+      let randomReturn: number;
+      if (returnsByYear) {
+        randomReturn = returnsByYear[year - 1] ?? mu;
+        if (bsEnabled) randomReturn = Math.max(floorLimit, randomReturn) - dragCost;
+      } else if (hedgePeriods === 1) {
+        randomReturn = mu + sigma * getRandomNormal();
+        if (bsEnabled) randomReturn = Math.max(floorLimit, randomReturn) - dragCost;
+      } else {
+        // Sub-annual rolls. A floor bought every three months is re-struck four
+        // times a year, so it caps each QUARTER at the floor rather than the
+        // year - four bad quarters at -10% lose about 34%, not 10%. That is the
+        // trade the term selector exists to show, and it only exists if the
+        // returns are generated at the same granularity as the contract.
+        //
+        // Both arms of a comparison must use the same granularity, so this
+        // branch is chosen by the roll term and NOT by bsEnabled - otherwise
+        // the hedged and unhedged runs would differ by how the returns were
+        // generated as well as by the hedge, and the difference would not be
+        // the hedge.
+        const muP = mu / hedgePeriods;
+        const sigmaP = sigma / Math.sqrt(hedgePeriods);
+        const dragP = dragCost / hedgePeriods;
+        let factor = 1;
+        for (let k = 0; k < hedgePeriods; k++) {
+          let rp = muP + sigmaP * getRandomNormal();
+          if (bsEnabled) rp = Math.max(floorLimit, rp) - dragP;
+          factor *= 1 + rp;
+        }
+        randomReturn = factor - 1;
       }
       const grownBalance = currentBalance * (1 + randomReturn);
 

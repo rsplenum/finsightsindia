@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { findRemedies, outlook, growthCurve, sequenceRisk, protectionCurve, HEALTHY_SURVIVAL, type AdviceInputs } from '../utils/swpAdvice';
 import { runDeterministicSWP } from '../utils/swpDeterministic';
+import { pricePut, VOL_RISK_PREMIUM_POINTS } from '../utils/putPricing';
 
 // sol-019: never leave the user at a verdict. These check that the remedies
 // are real - that following the advice actually reaches the target - rather
@@ -414,5 +415,49 @@ describe('protection curve - what a floor costs and what it is worth', () => {
     const protectedFall = first.survivalProtected - last.survivalProtected;
     expect(unprotectedFall).toBeGreaterThan(0.2);
     expect(protectedFall).toBeLessThan(unprotectedFall / 2);
+  });
+});
+
+// P2. The premium is priced, never set - so the price itself needs a guard.
+describe('put pricing - the premium follows from the cover asked for', () => {
+  it("Rahul's 1.85% is the price of ONE combination, and lands exactly", () => {
+    // -10% floor, 15% roughness, rolled every 12 months. The implied-vol spread
+    // in putPricing.ts is calibrated to this and nothing else, so if the anchor
+    // ever moves, that constant is what moved.
+    const q = pricePut(-10, 15, 12);
+    expect(q.annual).toBeCloseTo(1.85, 2);
+  });
+
+  it('the calibrated spread is a real market number, not a fudge', () => {
+    // Index puts trade 3 to 5 volatility points above realised. A spread
+    // outside that range would mean the anchor had been forced.
+    expect(VOL_RISK_PREMIUM_POINTS).toBeGreaterThan(3);
+    expect(VOL_RISK_PREMIUM_POINTS).toBeLessThan(5);
+  });
+
+  it('a shallower floor always costs more', () => {
+    const depths = [-5, -10, -15, -20].map((f) => pricePut(f, 15, 12).annual);
+    for (let i = 1; i < depths.length; i++) {
+      expect(depths[i]).toBeLessThan(depths[i - 1]);
+    }
+  });
+
+  it('a rougher market always costs more', () => {
+    const rough = [10, 15, 20, 25, 30].map((v) => pricePut(-10, v, 12).annual);
+    for (let i = 1; i < rough.length; i++) {
+      expect(rough[i]).toBeGreaterThan(rough[i - 1]);
+    }
+  });
+
+  it('the reader is always charged above fair value - that is the seller\'s margin', () => {
+    // If this ever inverts, the model is offering free money and the screen's
+    // central claim - that insurance loses on average - would be false.
+    for (const f of [-5, -10, -15, -20]) {
+      for (const v of [10, 15, 22, 30]) {
+        const q = pricePut(f, v, 12);
+        expect(q.annual, `floor ${f} rough ${v}`).toBeGreaterThan(q.fairValue);
+        expect(q.markup).toBeGreaterThan(1);
+      }
+    }
   });
 });

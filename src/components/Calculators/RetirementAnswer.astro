@@ -260,7 +260,7 @@
       }
       if (e.data.stage === 'protection') {
         window.dispatchEvent(new CustomEvent('swp:protection', {
-          detail: { inputs, curve: e.data.curve },
+          detail: { inputs, surface: e.data.surface },
         }));
         return;
       }

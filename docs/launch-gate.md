@@ -1,6 +1,6 @@
 # FinSight — Launch Gate
 
-**Not live. No domain.** 155 tests green · 31 commits on `fix/learning-loop-integrity-and-calculator-correctness`
+**Not live. No domain.** 160 tests green · 32 commits on `fix/learning-loop-integrity-and-calculator-correctness`
 
 This is a list, not a document. Explanations live in commit messages, `design-doctrine.json` and `engineering-solutions.json`. This says what is done and what is next.
 
@@ -28,12 +28,13 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 - [x] The limit stated, not discovered: three bad years cost ~27% and the fee is paid in all three
 - [x] Bill at full weight — ₹2.77 lakh a year at 36px, the largest thing on the screen (was the smallest)
 
-**P2 · make it explorable — Rahul's asks**
+**P2 · make it explorable — mostly done**
 
-- [ ] Sliders for floor depth, term and roughness. **Rahul, 15 Aug: price the premium, don't slide it** — Black-Scholes from floor/term/roughness, markup calibrated so −10%/15%/12mo lands on 1.85%. Shown in ₹ and %. A free premium slider would let the user build a −5% floor at 0.5%, which nobody would sell
-- [ ] **Order, Rahul 15 Aug: P0 before rung 5.** Rebuilding the rung on two disagreeing engines would bury the fault
-- [ ] Define roughness with the actual last-30-years return sequence
-- [ ] Term of 3 / 6 / 9 / 12 months, and a volatility-driven floor
+- [x] **Premium priced, not slid.** Black-Scholes at implied vol; the spread that lands on Rahul's 1.85% is **4.37 points**, inside the 3–5pt index-put risk premium — his number is a real market price
+- [x] Floor depth −5/−10/−15/−20 as buttons, price follows: ₹4.61 L → ₹75,630 a year. Markup rises as cover cheapens: 1.7× fair at −5%, 3.7× at −20%
+- [x] Cost in ₹ and %, plus what the cover is actually worth and the multiple paid
+- [ ] **Deferred — the 3/6/9/12-month term selector.** The engine can roll sub-annually, but sub-period returns compound differently, so the *unhedged* baseline drifts 39→42 ruined when only the term changes. That is an artefact, not a finding, and shipping it would be an unexplained number (dd-009). Needs term-invariant return generation (monthly steps, floor applied per term) first
+- [ ] **Blocked on data — roughness explained by the last 30 years.** No sourced return series in the repo; I will not fabricate one for a financial claim. Needs Rahul's source or approval to fetch one
 
 ## Waiting on Rahul
 

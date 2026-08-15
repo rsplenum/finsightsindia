@@ -1,4 +1,4 @@
-import { outlookFrom, findRemedies, growthCurve, sequenceRisk, protectionCurve, type AdviceInputs } from '../utils/swpAdvice';
+import { outlookFrom, findRemedies, growthCurve, sequenceRisk, protectionSurface, type AdviceInputs } from '../utils/swpAdvice';
 import { runSWPMonteCarlo } from './swpWorker';
 
 /**
@@ -60,7 +60,9 @@ if (typeof self !== 'undefined' && typeof self.postMessage === 'function') {
       self.postMessage({
         ok: true,
         stage: 'protection',
-        curve: protectionCurve(inputs),
+        // Several floor depths at once, so the depth control drags without a
+        // round trip. Deliberately the last and most expensive stage.
+        surface: protectionSurface(inputs),
       });
     } catch (err) {
       self.postMessage({ ok: false, error: (err as Error).message });

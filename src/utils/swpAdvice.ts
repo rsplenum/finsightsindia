@@ -1,4 +1,5 @@
 import { runSWPMonteCarlo } from '../workers/swpWorker';
+import { pricePut } from './putPricing';
 
 /**
  * Turning a verdict into a decision.
@@ -457,8 +458,48 @@ export interface ProtectionPoint {
   ruinedProtected: number;
 }
 
+/**
+ * Several floor depths, precomputed in one pass so the depth control is an
+ * array lookup rather than a worker round trip - the same reason growthCurve
+ * is precomputed. A number that arrives late reads as the tool being unsure.
+ */
+export interface ProtectionSurface {
+  /** One curve per floor depth, deepest (most protective) first. */
+  curves: ProtectionCurve[];
+  floors: number[];
+  /** The floor the reader currently has set, so the UI opens on it. */
+  readerFloor: number;
+}
+
+export function protectionSurface(
+  inputs: AdviceInputs,
+  floors = [-5, -10, -15, -20],
+  min = 8,
+  max = 32,
+  step = 1,
+  sims = 400,
+  termMonths = 12
+): ProtectionSurface {
+  const readerFloor = inputs.hedgingFloorLimit ?? -10;
+  const all = floors.includes(readerFloor) ? floors : [...floors, readerFloor];
+  const ordered = [...all].sort((a, b) => b - a);
+  return {
+    curves: ordered.map((f) =>
+      protectionCurve({ ...inputs, hedgingFloorLimit: f }, min, max, step, sims, termMonths)
+    ),
+    floors: ordered,
+    readerFloor,
+  };
+}
+
 export interface ProtectionCurve {
   points: ProtectionPoint[];
+  /** Months between rolls: 3, 6, 9 or 12. */
+  termMonths: number;
+  /** Black-Scholes value at the volatility actually realised, annualised %. */
+  fairValueAtReaderRoughness: number;
+  /** How many times fair value the reader is charged, at their own roughness. */
+  markupAtReaderRoughness: number;
   /**
    * Lowest roughness at which the average payout covers the premium. Null when
    * protection never pays for itself anywhere on the track.
@@ -516,32 +557,62 @@ export function protectionCurve(
   // the slider thumb to 16 while the readout showed the nearest point, 14 -
   // the control and the number disagreeing on screen.
   step = 1,
-  sims = 600
+  sims = 600,
+  // Last on purpose: inserting it mid-signature silently reinterpreted every
+  // existing positional call, turning min into a term and max into a min.
+  termMonths = 12
 ): ProtectionCurve {
-  const premium = inputs.hedgingDragCost ?? 1.85;
   const floor = inputs.hedgingFloorLimit ?? -10;
+  // The premium is PRICED, never set. See putPricing.ts: a free premium input
+  // would let the reader build a contract nobody would write.
+  const term = Math.max(1, Math.min(12, Math.round(termMonths)));
+  const rollsPerYear = 12 / term;
   const mu = inputs.expectedReturn / 100;
   const k = floor / 100;
 
   const points: ProtectionPoint[] = [];
+  // PRICED ONCE, at the reader's own assumption, and then held fixed across
+  // the whole track. This is both the finance and the lesson.
+  //
+  // The finance: you buy the contract today, at today's implied volatility.
+  // What the market subsequently does cannot retroactively change what you
+  // paid for it.
+  //
+  // The lesson (dd-005): a fixed price against a variable payout is the entire
+  // subject. Re-pricing the premium at every slider position was tried first
+  // and destroyed it - the cost rose in step with the benefit, the two moved
+  // together, and the screen stopped saying anything at all. Four tests caught
+  // it, including the one asserting the premium never moves.
+  //
+  // The floor and term controls DO change the price, because those are things
+  // the reader chooses before buying. Roughness is not.
+  const quote = pricePut(floor, inputs.annualVolatility, term);
+  const premium = quote.annual;
+
   for (let r = min; r <= max + 1e-9; r += step) {
     const roughness = Math.round(r * 10) / 10;
-    const sigma = roughness / 100;
 
-    const z = (k - mu) / sigma;
+    // The floor binds on the TERM's return, not the year's, so the frequency
+    // and payout are computed on a period of that length and then annualised.
+    const sigma = (roughness / 100) / Math.sqrt(rollsPerYear);
+    const muTerm = mu / rollsPerYear;
+
+    const z = (k - muTerm) / sigma;
     const bindFrequency = normalCdf(z);
     // Expected shortfall below the floor: E[max(0, K - R)] for R ~ N(mu, sigma).
-    const payout = sigma * (z * normalCdf(z) + normalPdf(z)) * 100;
+    const payout = sigma * (z * normalCdf(z) + normalPdf(z)) * 100 * rollsPerYear;
 
     const at = { ...inputs, annualVolatility: roughness };
     // Both runs on the same seed and the same paths, so every difference
     // between the columns is the hedge and nothing else.
     const u = runSWPMonteCarlo({
       ...at, bsEnabled: false, numSimulations: sims, seed: SEARCH_SEED,
+      hedgePeriodsPerYear: rollsPerYear,
     });
     const h = runSWPMonteCarlo({
       ...at, bsEnabled: true, hedgingDragCost: premium, hedgingFloorLimit: floor,
       numSimulations: sims, seed: SEARCH_SEED,
+      hedgePeriodsPerYear: rollsPerYear,
     });
     points.push({
       roughness,
@@ -565,6 +636,9 @@ export function protectionCurve(
     breakeven: crossing ? crossing.roughness : null,
     floor,
     premium,
+    termMonths: term,
+    fairValueAtReaderRoughness: quote.fairValue,
+    markupAtReaderRoughness: quote.markup,
     min,
     max,
     step,
