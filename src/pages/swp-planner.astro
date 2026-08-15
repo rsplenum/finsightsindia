@@ -5,6 +5,7 @@ import CardPremium from '../components/CardPremium.astro';
 import InputGroup from '../components/InputGroup.astro';
 import SectionTitle from '../components/SectionTitle.astro';
 import ButtonGold from '../components/ButtonGold.astro';
+import { REGIME_PRESETS, DEFAULT_REGIME } from '../utils/regimePresets';
 import RetirementAnswer from '../components/Calculators/RetirementAnswer.astro';
 import RungTwoRates from '../components/Calculators/RungTwoRates.astro';
 import RungMoneyFlow from '../components/Calculators/RungMoneyFlow.astro';
@@ -122,22 +123,49 @@ import RungProtection from '../components/Calculators/RungProtection.astro';
 							<InputGroup 
 								id="expectedReturn"
 								label="Expected CAGR %"
-								tooltip="The long-term average annual return rate of your portfolio."
+								tooltip="Long-term average annual return, including dividends. Pick a period below rather than a number, so the growth and the roughness come from the same world."
 								suffix="% cagr"
 								type="number"
-								value="12.0"
+								value={DEFAULT_REGIME.growth.toFixed(1)}
 								min="0" max="30" step="0.5" required={true}
 							/>
 
 							<InputGroup 
 								id="annualVolatility"
 								label="Market Volatility %"
-								tooltip="How wildly the market swings each year. NIFTY 50 is ~15%. Aggressive small-cap portfolios can be 20%+"
+								tooltip="The spread of the Nifty 50's ANNUAL returns. Not the day-to-day figure people quote: over the last 10 years this was 8.9%, but over the last 30 it was 28.4%, and every 30-year stretch on record sits near 29%."
 								suffix="% vol"
 								type="number"
-								value="15.0"
+								value={DEFAULT_REGIME.roughness.toFixed(1)}
 								min="5" max="50" step="0.5" required={true}
 							/>
+
+							<!-- sol-028. These two numbers used to be typed in, defaulting to
+							     12% and 15% with a tooltip asserting "NIFTY 50 is ~15%" as a
+							     plain fact. On the actual record 15% describes the calmest
+							     decade in thirty-five years. Rahul's call: named periods, so
+							     the assumption is chosen rather than inherited. Each sets BOTH
+							     numbers, because a regime is a pair. -->
+							<div class="sm:col-span-2 space-y-2">
+								<div class="flex items-baseline justify-between gap-3">
+									<span class="text-[11px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">
+										Or take both from a real period
+									</span>
+									<span class="text-[10px] text-navy-400 dark:text-navy-500">Nifty 50, to {REGIME_PRESETS[0].span.split('\u2013')[1]}</span>
+								</div>
+								<div id="regimePresets" role="radiogroup" aria-label="Take growth and roughness from a real period"
+									 class="grid grid-cols-3 gap-1.5">
+									{REGIME_PRESETS.map((p) => (
+										<button type="button" role="radio" data-regime={p.id}
+												data-growth={String(p.growth)} data-roughness={String(p.roughness)}
+												class="regime-btn border border-navy-200 dark:border-navy-800 rounded p-1.5 text-left transition-colors hover:bg-navy-100 dark:hover:bg-navy-800">
+											<span class="block text-[9px] font-bold uppercase text-navy-700 dark:text-navy-300">{p.label.replace('The last ', '')}</span>
+											<span class="block text-[10px] tabular-nums text-navy-500 dark:text-navy-400">{p.growth}% · {p.roughness}% swings</span>
+										</button>
+									))}
+								</div>
+								<p id="regimeNote" class="text-[10px] leading-relaxed text-navy-500 dark:text-navy-400"></p>
+							</div>
 						</div>
 					</div>
 
@@ -1236,6 +1264,44 @@ import RungProtection from '../components/Calculators/RungProtection.astro';
 			chartInstance = await createLineChart('swpChart', lastWorkerResponse, activeViewMode, chartInstance);
 		}
 	});
+
+	// sol-028: choosing a period writes BOTH numbers into the canonical inputs
+	// and asks for one recompute, so every surface moves together (dd-013).
+	const regimeButtons = Array.from(document.querySelectorAll('.regime-btn')) as HTMLElement[];
+	function paintRegimeSelection() {
+		const g = (document.getElementById('expectedReturn') as HTMLInputElement)?.value;
+		const v = (document.getElementById('annualVolatility') as HTMLInputElement)?.value;
+		let matched: HTMLElement | null = null;
+		for (const b of regimeButtons) {
+			const on = Number(b.dataset.growth) === Number(g) && Number(b.dataset.roughness) === Number(v);
+			if (on) matched = b;
+			b.setAttribute('aria-checked', String(on));
+			b.classList.toggle('border-gold-500', on);
+			b.classList.toggle('bg-gold-500/10', on);
+		}
+		const note = document.getElementById('regimeNote');
+		if (note) {
+			note.textContent = matched
+				? `Assuming the market behaves as it did over ${matched.querySelector('span')?.textContent?.toLowerCase()}.`
+				: 'Your own numbers. The buttons above show what real periods actually looked like.';
+		}
+	}
+	for (const b of regimeButtons) {
+		b.addEventListener('click', () => {
+			const set = (id: string, val: string) => {
+				const el = document.getElementById(id) as HTMLInputElement | null;
+				if (el) el.value = val;
+			};
+			set('expectedReturn', String(b.dataset.growth));
+			set('annualVolatility', String(b.dataset.roughness));
+			paintRegimeSelection();
+			triggerSimulation();
+		});
+	}
+	for (const id of ['expectedReturn', 'annualVolatility']) {
+		document.getElementById(id)?.addEventListener('input', paintRegimeSelection);
+	}
+	paintRegimeSelection();
 
 	setupFormattingField(corpusInput, updateDisplayBadges);
 	setupFormattingField(withdrawalInput, updateDisplayBadges);

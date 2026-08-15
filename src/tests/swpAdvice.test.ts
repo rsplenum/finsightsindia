@@ -364,12 +364,29 @@ describe('protection curve - what a floor costs and what it is worth', () => {
     }
   });
 
-  it('the breakeven is the first roughness where the floor pays its way', () => {
-    expect(curve.breakeven).not.toBeNull();
-    const at = curve.points.find((p) => p.roughness === curve.breakeven)!;
-    expect(at.net).toBeGreaterThanOrEqual(0);
+  it('the breakeven is where the floor stops ruining more plans than it saves', () => {
+    // Defined on the quantity the SCREEN headlines - ruined retirements - and
+    // not on the analytic average payout. The two genuinely disagree: a floor
+    // can cut ruin, which is a tail statistic, while still losing on average.
+    // Publishing both definitions at once put a contradiction on the screen -
+    // the boundary saying "never worth it" above columns showing 15 rescued.
+    if (curve.breakeven === null) {
+      for (const p of curve.points) {
+        expect(p.ruinedProtected).toBeGreaterThan(p.ruinedUnprotected);
+      }
+      return;
+    }
+    // From the boundary onward, protection never falls behind again...
     for (const p of curve.points) {
-      if (p.roughness < curve.breakeven!) expect(p.net).toBeLessThan(0);
+      if (p.roughness >= curve.breakeven) {
+        expect(p.ruinedProtected, `at ${p.roughness}%`).toBeLessThanOrEqual(p.ruinedUnprotected);
+      }
+    }
+    // ...and just below it, it does.
+    const before = curve.points.filter((p) => p.roughness < curve.breakeven!);
+    if (before.length) {
+      const last = before[before.length - 1];
+      expect(last.ruinedProtected).toBeGreaterThan(last.ruinedUnprotected);
     }
   });
 

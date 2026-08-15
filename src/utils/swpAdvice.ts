@@ -630,7 +630,23 @@ export function protectionCurve(
 
   // The payout rises monotonically with roughness while the premium does not
   // move, so the first crossing is the boundary for the whole track.
-  const crossing = points.find((p) => p.net >= 0);
+  // The boundary is defined on the quantity the SCREEN headlines - the count of
+  // retirements ruined - and not on the analytic average payout.
+  //
+  // They genuinely disagree, and shipping both would have put a contradiction
+  // in front of the reader: at a 28.4% assumption the average payout never
+  // covers the premium at any roughness, so `net` says "never worth it", while
+  // the simulation shows the floor rescuing 15 per 100 once the realised world
+  // is rougher than the one the premium was priced for. Both are right. Ruin is
+  // a TAIL statistic and a floor can cut it while still losing on average -
+  // which is the whole reason insurance is bought by people who can do
+  // arithmetic (dd-012: judge it where it acts).
+  //
+  // Taken as the first point from which protection never falls behind again,
+  // so a single noisy sample near the crossing cannot move it.
+  const crossing = points.find((p, i) =>
+    points.slice(i).every((q) => q.ruinedProtected <= q.ruinedUnprotected)
+  );
   return {
     points,
     breakeven: crossing ? crossing.roughness : null,

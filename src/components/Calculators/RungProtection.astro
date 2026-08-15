@@ -19,6 +19,7 @@
 // Structure follows the reader's decision, not a sales order: the bill first,
 // then what it buys, then what it does not buy. A limit the reader finds out
 // about later is a limit we concealed.
+import { REGIME_PRESETS } from '../../utils/regimePresets';
 ---
 
 <section id="rungProtect" class="max-w-3xl mx-auto px-4 sm:px-6 py-4" aria-labelledby="rungProtectQ">
@@ -113,6 +114,16 @@
           <div id="protMarkLabel"
                class="mt-0.5 whitespace-nowrap text-[10px] font-semibold text-rose-600 dark:text-rose-400 -translate-x-1/2 relative left-1/2"></div>
         </div>
+        <!-- What the market actually did, marked on the track itself. -->
+        {REGIME_PRESETS.map((p) => (
+          <div class="regime-mark absolute top-0 -translate-x-1/2 pointer-events-none"
+               data-roughness={String(p.roughness)} style="display:none">
+            <div class="h-6 w-0.5 bg-navy-400/70 dark:bg-navy-500/70 mx-auto"></div>
+            <div class="mt-0.5 whitespace-nowrap text-[10px] font-medium text-navy-500 dark:text-navy-400 -translate-x-1/2 relative left-1/2">
+              {p.label.replace('The last ', 'last ')}
+            </div>
+          </div>
+        ))}
       </div>
       <p id="pRoughMeaning" class="text-xs text-navy-500 dark:text-navy-400"></p>
     </div>
@@ -241,18 +252,18 @@
 
     if (curve.breakeven === null) {
       el.textContent =
-        `Nowhere on this track does the floor pay back what it costs. At ` +
-        `${pct(curve.premium)} a year against a floor at ${pct(Math.abs(curve.floor), 0)}, ` +
-        `it is priced above anything the market here would make it worth.`;
+        `Nowhere on this track does the floor leave fewer retirements ruined. ` +
+        `At ${pct(curve.premium)} a year for a floor at ${pct(Math.abs(curve.floor), 0)}, ` +
+        `the fee costs more plans than the cover saves however rough it gets.`;
       mark.classList.add('hidden');
       return;
     }
 
     el.textContent =
-      `Below about ${pct(curve.breakeven, 0)} roughness the floor pays back less ` +
-      `than it charges, and buying it makes ruin more likely rather than less. ` +
-      `Above that line it starts paying for itself, and the rougher the market ` +
-      `gets the more it is worth.`;
+      `Below about ${pct(curve.breakeven, 0)} roughness this floor ruins more ` +
+      `plans than it saves — you are paying for a fire you never have. Above ` +
+      `that line it starts earning its price, because the market has turned out ` +
+      `rougher than the premium was set for.`;
 
     const frac = (curve.breakeven - curve.min) / (curve.max - curve.min);
     mark.style.left = `${Math.min(100, Math.max(0, frac * 100))}%`;
@@ -361,6 +372,17 @@
       // the thumb actually sat.
       slider.value = String(inputs.annualVolatility);
     }
+    // Position the historical markers on the track. Hidden if a period falls
+    // outside the range rather than clamped to the edge, because a marker at
+    // the end of the track would assert a value it does not have.
+    for (const m of Array.from(document.querySelectorAll('.regime-mark')) as HTMLElement[]) {
+      const r = Number(m.dataset.roughness);
+      const c0 = surface.curves[0];
+      if (r < c0.min || r > c0.max) { m.style.display = 'none'; continue; }
+      m.style.left = `${((r - c0.min) / (c0.max - c0.min)) * 100}%`;
+      m.style.display = '';
+    }
+
     buildFloorButtons();
     const at = surface.curves.findIndex((c: any) => c.floor === surface.readerFloor);
     selectFloor(at >= 0 ? at : 0);

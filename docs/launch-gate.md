@@ -1,6 +1,6 @@
 # FinSight — Launch Gate
 
-**Not live. No domain.** 160 tests green · 32 commits on `fix/learning-loop-integrity-and-calculator-correctness`
+**Not live. No domain.** 166 tests green · 34 commits on `fix/learning-loop-integrity-and-calculator-correctness`
 
 This is a list, not a document. Explanations live in commit messages, `design-doctrine.json` and `engineering-solutions.json`. This says what is done and what is next.
 
@@ -35,11 +35,11 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 - [x] Cost in ₹ and %, plus what the cover is actually worth and the multiple paid
 - [ ] **Deferred — the 3/6/9/12-month term selector.** The engine can roll sub-annually, but sub-period returns compound differently, so the *unhedged* baseline drifts 39→42 ruined when only the term changes. That is an artefact, not a finding, and shipping it would be an unexplained number (dd-009). Needs term-invariant return generation (monthly steps, floor applied per term) first
 - [x] **Real data in the repo** — Rahul's 434-row monthly file + derived annual/decade/rolling-30y series. Validated: 24 of 27 years match published figures to 0.05pp, and it caught two errors in *my* fetched source (1999 published +8.7% vs actual +67.4%)
-- [ ] **Build the roughness explainer** on it — waits on the default below, since the explainer's punchline is the gap between assumption and record
+- [x] **sol-028 fixed — Rahul chose named presets.** Computed from his data, never typed: last 10y 14.1%/8.9%, 20y 13.2%/26.7%, 30y 13.3%/28.4%. Each sets growth *and* roughness. Default is the 30y regime; survival on the shipped plan moved 9534 → 7025 and "highly secure" became "tight"
+- [x] **Roughness explainer** — real periods marked on rung 5's track, so the reader crosses them while dragging
 
 ## Waiting on Rahul
 
-- [ ] **sol-028 — the volatility default describes the calmest decade, and projects thirty years.** On Rahul's own monthly file (35 years): full period sd **29.0%**, but 2016–25 only **8.9%**. **Every rolling 30-year window is 28.4–31.2%.** At 15% a floor ruins 4 more per 100; at 29% it rescues ~10–33 — **rung 5's verdict inverts on this input**. Three options on sol-028. *(My first diagnosis — daily-vs-annual measurement — was wrong; his data corrected it. It is era, not measurement.)*
 
 - [x] **Is 1.85%/yr the right premium?** → **Rahul, 15 Aug: "1.85% is right, keep it."** Settled; the premium is not a variable to tune
 - [x] **May rung 5 say protection is not worth its price?** → yes, implied by keeping 1.85% and asking for rung 5. Rung 5 states what the engine finds

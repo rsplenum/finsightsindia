@@ -112,5 +112,12 @@
       "2011: -24.6%",
       "2015: -4.1%"
     ]
+  },
+  "dividendContribution": {
+    "_what": "How much dividends added, measured rather than assumed: the Nifty 50 TRI compound return minus the price compound return over the SAME years, 2005-2025.",
+    "_tri_source": "Bajaj AMC citing 'NSE Indices Limited, Nifty 50 Whitepaper 2026'. Held only for this one subtraction; the price series in this file is the figure of record.",
+    "triCagrPct": 14.23,
+    "priceCagrPct": 12.8,
+    "dividendPctPerYear": 1.43
   }
 }
