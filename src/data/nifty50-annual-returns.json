@@ -1,0 +1,116 @@
+{
+  "_what": "Nifty 50 calendar-year price returns, computed from December close to December close out of the monthly OHLC series Rahul supplied on 2026-08-15. The raw file sits beside this as nifty50-monthly-1990-2026.csv.",
+  "_basis": "PRICE RETURN. Dividends are not included, so the compound return here understates a real holder's by roughly the dividend yield, historically about 1.0-1.5% a year. Volatility is essentially unaffected.",
+  "_provenance": "Supplied by Rahul, 434 monthly rows, Jul 1990 to Aug 2026. Validated against an independently fetched published price-return series: 24 of 27 overlapping years agree to within 0.05 percentage points.",
+  "_supersedes": "Replaces the secondary series fetched earlier, which was WRONG in two years - it gave 1999 as +8.7% against an actual +67.4%, and 1997 as +10.6% against +20.1%. Both errors sat in a table that looked entirely authoritative. This is why the file was cross-checked and why the raw data is kept.",
+  "_caveat": "The Nifty 50 was launched in 1996; values before that are back-calculated by the index provider.",
+  "annualReturnsPct": {
+    "1991": 68.9,
+    "1992": 36.3,
+    "1993": 36.9,
+    "1994": 13.4,
+    "1995": -23.2,
+    "1996": -1,
+    "1997": 20.1,
+    "1998": -18.1,
+    "1999": 67.4,
+    "2000": -14.7,
+    "2001": -16.2,
+    "2002": 3.3,
+    "2003": 71.9,
+    "2004": 10.7,
+    "2005": 36.3,
+    "2006": 39.8,
+    "2007": 54.8,
+    "2008": -51.8,
+    "2009": 75.8,
+    "2010": 17.9,
+    "2011": -24.6,
+    "2012": 27.7,
+    "2013": 6.8,
+    "2014": 31.4,
+    "2015": -4.1,
+    "2016": 3,
+    "2017": 28.6,
+    "2018": 3.2,
+    "2019": 12,
+    "2020": 14.9,
+    "2021": 24.1,
+    "2022": 4.3,
+    "2023": 20,
+    "2024": 8.8,
+    "2025": 10.5
+  },
+  "derived": {
+    "_note": "Computed from the series above. sd is the standard deviation of ANNUAL calendar-year returns, which is the quantity the SWP engine's sigma multiplies.",
+    "full": {
+      "years": 35,
+      "cagr": 13.3,
+      "sd": 29
+    },
+    "byDecade": {
+      "1991-2000": {
+        "years": 10,
+        "cagr": 14.3,
+        "sd": 33.6
+      },
+      "2001-2010": {
+        "years": 10,
+        "cagr": 17.1,
+        "sd": 39.9
+      },
+      "2011-2020": {
+        "years": 10,
+        "cagr": 8.6,
+        "sd": 17.1
+      },
+      "2016-2025": {
+        "years": 10,
+        "cagr": 12.6,
+        "sd": 8.9
+      }
+    },
+    "everyRolling30YearWindow": {
+      "1991-2020": {
+        "years": 30,
+        "cagr": 13.3,
+        "sd": 31.2
+      },
+      "1992-2021": {
+        "years": 30,
+        "cagr": 12.1,
+        "sd": 29.7
+      },
+      "1993-2022": {
+        "years": 30,
+        "cagr": 11.1,
+        "sd": 29.5
+      },
+      "1994-2023": {
+        "years": 30,
+        "cagr": 10.6,
+        "sd": 29.2
+      },
+      "1995-2024": {
+        "years": 30,
+        "cagr": 10.5,
+        "sd": 29.2
+      },
+      "1996-2025": {
+        "years": 30,
+        "cagr": 11.8,
+        "sd": 28.4
+      }
+    },
+    "downYears": [
+      "1995: -23.2%",
+      "1996: -1%",
+      "1998: -18.1%",
+      "2000: -14.7%",
+      "2001: -16.2%",
+      "2008: -51.8%",
+      "2011: -24.6%",
+      "2015: -4.1%"
+    ]
+  }
+}
