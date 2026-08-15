@@ -125,5 +125,26 @@
       "every screen"
     ],
     "test": "For each difference in size, weight or colour on a screen, state what it asserts. If the answer is 'it looked better', remove it and make the elements equal."
+  },
+  {
+    "id": "dd-008",
+    "date": "2026-08-15",
+    "title": "A control changes what you SEE, never what you have to RE-READ",
+    "trigger": "Rungs 3-5 are all 'what if X changes', which implies a slider - but a slider that rewrites a paragraph is dd-006 in slow motion, and there are far too many positions to write prose for.",
+    "verbatim": "i want controls so the user can interact with it, but i understand the text can not change with every permutation and combination as they would be many many such combinations, we have to find an ingenious way out of this conundrum and we have to innovate our way out of this.",
+    "spirit": "The conundrum dissolves once prose and values are given different jobs. Prose carries principles, which are true at every position of every control and therefore never change. Values live in fixed positions - a table cell, a gauge, a marker on a track - where a change is SEEN as a digit ticking or a bar moving, not READ as a sentence rewritten. Nothing that moves has to be re-read, and nothing that must be read ever moves.",
+    "rules": [
+      "Prose states the principle, never the current value. 'The rate you draw matters more than the amount you start with' is true at every slider position, so dragging cannot invalidate it.",
+      "Live values sit in fixed slots. The eye returns to the same place and sees a number change there - which is free - instead of scanning a paragraph for what is different, which is not.",
+      "State the BOUNDARY, not the state. Do not describe where the reader currently is; name where it breaks - 'this plan needs growth above 9.8% to keep working'. One sentence covers the entire range of the control, and it only changes when some OTHER input changes.",
+      "Mark the boundary on the control itself. A notch on the track means the reader crosses a visible line as they drag, and learns the threshold without reading anything at all."
+    ],
+    "note": "This is the constructive form of dd-006. That entry said do not make the reader diff two states; this says how to build a control that never produces a diff in the first place.",
+    "applies_to": [
+      "calculators",
+      "interactive components",
+      "any slider, stepper or dial"
+    ],
+    "test": "Drag the control from one end to the other. Does any sentence change? If yes, that sentence was describing a state rather than a principle or a boundary, and it belongs in a fixed slot as a value instead."
   }
 ]

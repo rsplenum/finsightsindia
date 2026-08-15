@@ -34,6 +34,47 @@ describe('outlook', () => {
   });
 });
 
+describe('the shipped defaults must describe a plan that works', () => {
+  // sol-019: the default state is the pitch. A first-time visitor lands on
+  // these numbers before entering anything of their own, so they must not
+  // open on a warning.
+  //
+  // Rahul's decision (2026-08-15): defaults describe a plan that works, and
+  // 85% stays the bar for now - revisited after launch with real user
+  // feedback. Previously the page shipped 1 Cr / 40k, which reads 78.8%.
+  //
+  // These values are duplicated in RetirementAnswer.astro and swp-planner.astro;
+  // this test is what stops the three drifting apart.
+  const shipped: AdviceInputs = {
+    initialCorpus: 12500000,
+    monthlyWithdrawal: 40000,
+    annualStepUp: 0,
+    expectedReturn: 12,
+    expectedInflation: 6,
+    annualVolatility: 15,
+    ltcgTax: 12.5,
+    horizonYears: 30,
+  };
+
+  it('the landing scenario is healthy, with margin above the bar', () => {
+    const o = outlook(shipped, 2000);
+    expect(o.healthy).toBe(true);
+    // Not merely over the line: a plan sitting at 85.x% could flip between
+    // visits on simulation noise and show remedies inconsistently.
+    expect(o.survival).toBeGreaterThan(HEALTHY_SURVIVAL + 0.03);
+  });
+
+  it('the landing scenario offers no remedies', () => {
+    expect(findRemedies(shipped)).toEqual([]);
+  });
+
+  it('its withdrawal rate sits near the rule of thumb a reader may know', () => {
+    const rate = outlook(shipped, 400).flow.initialRate;
+    expect(rate).toBeGreaterThan(3.0);
+    expect(rate).toBeLessThan(4.5);
+  });
+});
+
 describe('the money-flow figures must reconcile on screen', () => {
   // Five numbers are shown side by side and a reader can add them up. If they
   // do not balance, the whole screen loses its authority - the same failure as
