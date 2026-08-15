@@ -38,6 +38,41 @@ Three rules govern it:
 
 The meta-principle both files serve: *it is so simple to be difficult, but it is so difficult to be simple.* Our audience is the layperson; our offering is the whole of the complexity, not a reduced or diluted version of it. The difficulty of packaging it is ours to absorb, never theirs. The user pays us in the currency of their time and attention.
 
+## Nothing Important Lives Only In Chat (CRITICAL PROTOCOL)
+
+Conversation is transient and the most important things happen in it. Rahul's
+feedback, a change of plan, a deferral, an open question — all of it arrives in
+chat and none of it survives there. A repeated mistake costs tokens, time,
+effort and trust, and the only defence is that the lesson was written down
+somewhere that outlives the session.
+
+**Every item below has a home. Use it the moment the thing happens, not later.**
+
+| What arrives | Where it goes | When |
+|---|---|---|
+| Feedback about spirit, feel, or how something should read | `src/data/design-doctrine.json` — verbatim words, the principle, and a test | **Before** acting on it |
+| A technical fault and its fix | `src/data/engineering-solutions.json` | When fixed, or when deliberately deferred |
+| A decision and its reasoning | The commit message, written long | At commit |
+| State of play, plan changes, deferrals, open decisions | The Launch Gate artifact | **At every checkpoint** |
+
+### The rules
+
+1. **Record Rahul's feedback before acting on it.** Capture the verbatim words — his phrasing carries nuance a paraphrase loses, and he has said he may not reproduce good feedback as well a second time. Acting first and recording later means it never gets recorded.
+2. **A change of plan updates the Launch Gate artifact in the same turn.** An out-of-date tracker is worse than none: it misinforms with authority. If the plan moved and the artifact did not, the plan is not real.
+3. **Deferrals are recorded with their reason.** "We will do this later" that exists only in chat is a decision that will be silently reversed or forgotten. Say what was deferred, why, and what it is waiting on.
+4. **Open decisions belong to Rahul and must be visible.** Anything awaiting his judgement is listed explicitly, not carried in an agent's head.
+5. **Never rely on an in-session task list.** It decays within hours and then quietly misleads. The durable stores above are the memory; a task list is at best a scratchpad for the current hour.
+
+### The test
+
+At any moment, someone with no access to this conversation should be able to
+read the four stores above and know: what is done, what is next, what was
+deliberately deferred and why, and what is waiting on Rahul. If any of that
+lives only in chat, this protocol has been broken.
+
+We are running towards a launch, not running on a treadmill. The difference is
+entirely whether what we learn is still there tomorrow.
+
 ## FinSight Article Publishing Pipeline (CRITICAL STANDARD)
 
 To prevent regressions, "stripped down" drafts, or orphaned components during the 100 Topics generation, EVERY article must pass the following strict checklist before it is considered complete:
