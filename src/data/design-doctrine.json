@@ -11,7 +11,8 @@
       "Preserve the verbatim words. Rahul's phrasing carries nuance that a paraphrase loses, and he may not reproduce it as well a second time.",
       "A principle that cannot be checked will be violated again. Every entry carries a test.",
       "The lesson may arrive attached to something small. Its scope is not the size of its trigger.",
-      "Run the tests BEFORE designing, not after building. Every entry's `test` is a question to be answered on paper while the thing is still cheap to change. Recording a lesson and then designing without consulting it is the same failure as never recording it, and it is how a doctrine becomes an archive."
+      "Run the tests BEFORE designing, not after building. Every entry's `test` is a question to be answered on paper while the thing is still cheap to change. Recording a lesson and then designing without consulting it is the same failure as never recording it, and it is how a doctrine becomes an archive.",
+      "Promises do not survive. Every rule here that has been broken twice must be given a mechanism that makes breaking it visible - a test, a required artefact, a gate - not a firmer intention. Two rules reached that threshold on 15 Aug: running the doctrine checks before designing, and updating the Launch Gate in the same turn as a change of plan."
     ],
     "test": "Before any design or UX decision this file is read, and each relevant entry's test is answered explicitly for the thing being designed. Any principle here violated twice is a process failure, not a mistake."
   },
@@ -152,7 +153,7 @@
     "date": "2026-08-15",
     "title": "Simplicity is removing WORK, not removing INFORMATION",
     "trigger": "Rung 4 showed a -30% year without ever saying what a bad year is, and displayed a 10.60% average against a stated 12% assumption without explaining the difference.",
-    "verbatim": "it reduces the cognitive load by reducing information available to absorb but introduces cognitive load again by skipping important information required to fully comprehend what is being communicated... we didn't define 'what is a bad year'... When we assumed 12% returns then why are we displaying 10.6% average returns without informing the user about this decision... creates a disconnect and user's brain has to process more than they should, tool should process, user should only digest or absorb and have his doubts cleared not have more doubts along the way.",
+    "verbatim": "it reduces the cognitive load by reducing information available to absorb but introduces cognitive load again by skipping important information required to fully comprehand what is being communicated... we didn't define \"what is a bad year\"... When we assumed 12% returns then why are we displaying 10.6% average returns without informing the user about this decision; creates a disconnect and user's brain has to process more than they should, tool should process, user should only digest or abosrb and have his doubts cleared not have more doubts along the way.",
     "spirit": "Cutting an explanation makes the screen shorter and the reader's job harder. Every unexplained number is a question handed to the reader, and questions are the expensive thing - not words. A shorter screen that provokes 'wait, why 10.6?' has not reduced load, it has moved load off the page and into the reader's head where we cannot see it. This is dd-001 at the scale of a single screen: the complexity must be absorbed, not deleted.",
     "rules": [
       "Every number on screen must be traceable from what is already on screen. If a figure differs from an assumption stated elsewhere, say why, there, in the same breath.",
@@ -165,7 +166,9 @@
       "illustrations",
       "every screen"
     ],
-    "test": "Read the screen as someone who knows nothing. Count the questions it raises that it does not answer. That count is the real cognitive load, and it is not reduced by having fewer words."
+    "test": "Read the screen as someone who knows nothing. Count the questions it raises that it does not answer. That count is the real cognitive load, and it is not reduced by having fewer words.",
+    "verbatim_note": "Recorded exactly as written, spelling included. An earlier version silently corrected 'comprehand' and 'abosrb'. Tidying a record is editing it, and the point of keeping the words is that they are his and not mine.",
+    "relationship": "Not a new principle. This is dd-001 - complexity is packaged, never reduced - applied at the scale of a single screen. dd-001 was read as being about features; explanations are complexity too. Recorded as a restatement rather than a discovery, because pretending it is new hides that an existing principle was available and went unapplied."
   },
   {
     "id": "dd-010",
