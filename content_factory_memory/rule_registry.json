@@ -1,0 +1,92 @@
+{
+  "_readme": "Rule identity that survives rubric refactors. Before this file existed, commit 59c3970 ('Floor/Mandate/Form') renumbered the evaluator rubric in place. Every M and S id changed meaning, and nothing errored, because a rule_id was just a bare string in a log line. Half the failure log silently stopped resolving and summarize_by_rule_id began counting semantically unrelated events together. This registry is the fix: rule ids are now scoped to a rubric era, and historical ids resolve forward through explicit, reviewed mappings. NEVER renumber a rubric without adding an era here.",
+
+  "eras": {
+    "pre_floor_mandate": {
+      "label": "M1-M14 / S1-S7 mechanics-and-spirit rubric",
+      "ended_at_commit": "59c3970",
+      "ended_at": "2026-08-14T17:00:19Z",
+      "note": "All 18 failure_log entries as of this registry's creation belong to this era. Verified by commit ancestry, not by timestamp: the two latest entries (c7f3e9a2, foundation_01) carry IST clock times mislabelled with a 'Z' suffix, so their raw timestamps appear to fall after the boundary when they do not. The commit that introduced them (f759621, 16:45:25Z) predates the refactor."
+    },
+    "floor_mandate_form": {
+      "label": "M1-M5 Floor / S1-S5 Mandate, Form free",
+      "began_at_commit": "59c3970",
+      "began_at": "2026-08-14T17:00:19Z",
+      "current": true
+    }
+  },
+
+  "_collision_warning": "The refactor was a total namespace inversion, not a partial rename. Every single M id and every single S id changed meaning across the boundary. There is no id that means the same thing in both eras except the R-series. Any analysis that reads a bare M or S id without an era is wrong.",
+
+  "mappings": {
+    "pre_floor_mandate": {
+      "R1": { "was": "Fact integrity", "resolves_to": "R1", "status": "stable" },
+      "R2": { "was": "Recency", "resolves_to": "R2", "status": "stable", "note": "Tightened in place (2025 Act check) but the id kept its meaning." },
+      "R3": { "was": "Focus", "resolves_to": "R3", "status": "stable" },
+      "R4": { "was": "INSIGHT exists", "resolves_to": "R4", "status": "stable" },
+      "R5": { "was": "Sufficiency", "resolves_to": "R5", "status": "stable" },
+      "R6": { "was": "Honesty/Limits", "resolves_to": "R6", "status": "stable" },
+      "R7": { "was": "Primary Source Floor", "resolves_to": "R7", "status": "stable" },
+
+      "M1": { "was": "Situational Hook", "resolves_to": null, "status": "retired", "reason": "Form is free under the new rubric. A mandatory hook is exactly the Template Gravity the refactor set out to escape.", "collides_with_current": "M1 now means 'MDX structure publishable' (old M12)." },
+      "M2": { "was": "TL;DR must be 3-4 punchy bullets", "resolves_to": null, "status": "reversed", "reason": "Part A2 now bans 'TL;DR' as a generic header. The TL;DR concept survives as a <CardPremium> block per CLAUDE.md, but the mandate that produced these log entries no longer exists.", "collides_with_current": "M2 now means 'NO banned filler/melodrama/scripts' (old M10). This is the most dangerous collision in the log: two unrelated failure classes share one id." },
+      "M3": { "was": "Origin Story exists", "resolves_to": null, "status": "retired", "reason": "Form is free.", "collides_with_current": "M3 now means 'NO generic headers - all bespoke' (old M11)." },
+      "M4": { "was": "First principles", "resolves_to": null, "status": "reversed", "reason": "'First Principles' was subsequently banned as a literal heading (see failure_log c7f3e9a2).", "collides_with_current": "M4 now means 'Statutory Currency Preserved' (old M13)." },
+      "M5": { "was": "Coverage filter", "resolves_to": null, "status": "retired", "reason": "Form is free.", "collides_with_current": "M5 now means 'Contains 2-3 [SVG_PROPOSAL] tags' (old M14)." },
+      "M6": { "was": "Rupee spine", "resolves_to": null, "status": "retired", "reason": "Form is free. Survives as an expectation on the researcher, not a draft gate." },
+      "M7": { "was": "Traps", "resolves_to": null, "status": "retired", "reason": "Form is free." },
+      "M8": { "was": "Recourse", "resolves_to": null, "status": "retired", "reason": "Form is free." },
+      "M9": { "was": "Key takeaways section required", "resolves_to": null, "status": "reversed", "reason": "DIRECT REVERSAL. Part A2 now bans 'Key Takeaways' as a generic header. The log contains the drafter being penalised for OMITTING exactly what is now prohibited. Any pattern audit that reads these entries naively will learn the opposite of current policy." },
+      "M10": { "was": "NO banned filler/melodrama/scripts", "resolves_to": "M2", "status": "renamed" },
+      "M11": { "was": "Specific headers", "resolves_to": "M3", "status": "renamed_and_strengthened", "note": "Old M11 asked for specific headers; current M3 requires bespoke headers that are editorial propositions. Same failure class, higher bar." },
+      "M12": { "was": "MDX structure publishable", "resolves_to": "M1", "status": "renamed" },
+      "M13": { "was": "Statutory Currency Preserved", "resolves_to": "M4", "status": "renamed" },
+      "M14": { "was": "Contains 2-3 [SVG_PROPOSAL] tags", "resolves_to": "M5", "status": "renamed" },
+      "M-Bespoke-Headers": { "was": "Ad-hoc id used during manual intervention", "resolves_to": "M3", "status": "renamed", "note": "Never a formal rule. Coined inline in the log. Its existence is itself evidence that the rubric lacked a bespoke-header rule at the time - which current M3 now provides." },
+
+      "S1": { "was": "Reader moves from uncertainty to certainty", "resolves_to": "S4", "status": "renumbered", "collides_with_current": "S1 now means 'Concept Coverage & Depth' (old S6)." },
+      "S2": { "was": "Plain language without dumbing down", "resolves_to": null, "status": "merged", "reason": "No clean current equivalent. Partially absorbed by S4 (Reader Comprehension). Flagged as a candidate gap - see relaxation/gap review.", "collides_with_current": "S2 now means 'Causal Completeness'." },
+      "S3": { "was": "Grounded metaphors", "resolves_to": null, "status": "merged", "reason": "Moved out of the rubric into the drafter system prompt ('Metaphors must be structural'). No longer independently scored.", "collides_with_current": "S3 now means 'Evidence Density' - an entirely different check." },
+      "S4": { "was": "No intellectual cosplay / lofty headers", "resolves_to": "S5", "status": "renumbered", "collides_with_current": "S4 now means 'Reader Comprehension' (old S1)." },
+      "S5": { "was": "Empathy without panic theatre", "resolves_to": "M2", "status": "moved_layer", "reason": "Melodrama moved from the Mandate (Layer B, scored) to the Floor (Layer A, binary) as part of the ban list. A quality dimension became a hard gate.", "collides_with_current": "S5 now means 'Originality / Bhumika' (old S4)." },
+      "S6": { "was": "Uncompressed Depth - does it feel rushed?", "resolves_to": "S1", "status": "renumbered" },
+      "S7": { "was": "Origin Story - core entity explained fully", "resolves_to": "S2", "status": "renumbered_and_narrowed", "note": "Current S2 (Causal Completeness) is the descendant, but narrower: it asks whether the piece untangles the mess, not whether an origin story exists. The proposed-but-never-merged S8 (causal arc) in engineering-solutions.json sol-* was aimed at this same gap." },
+
+      "FOUNDATIONAL_RUBRIC": { "was": "Meta-entry: Rahul's 12-point Critics Council manifesto", "resolves_to": null, "status": "meta", "reason": "Not a rule failure. This entry records the input that birthed the S-series. Must be excluded from frequency counts." }
+    }
+  },
+
+  "entry_overrides": {
+    "_readme": "Two historical entries carry a rule_id that does not match the failure they describe. Correcting the id in place would violate the append-only guarantee on failure_log.jsonl, so the correction lives here instead.",
+    "91fcd6a6": {
+      "logged_as": "M12",
+      "described": "Drafter instructed to add educational disclaimer.",
+      "problem": "Old M12 was 'MDX structure publishable'. A missing disclaimer is not that. No disclaimer rule existed in either era.",
+      "resolves_to": null,
+      "status": "unmapped_gap",
+      "action": "Candidate for a genuine new rule. There is currently no rubric rule requiring an educational/advice disclaimer, despite the site publishing tax guidance."
+    },
+    "a92b8d4f": {
+      "logged_as": "M1",
+      "described": "Shallow rewrite of a nuanced piece AND destructive overwrite of a human-approved untracked hero illustration.",
+      "problem": "Old M1 was 'Situational Hook'. Neither half of this failure is that. The entry also conflates two unrelated failures in one record.",
+      "resolves_to": ["S1"],
+      "status": "split",
+      "cross_domain": {
+        "target_store": "src/data/engineering-solutions.json",
+        "reason": "The asset-destruction half is an engineering failure (pipeline writing to hardcoded filenames without checking for untracked files), not a content-quality failure. It is currently invisible to the engineering memory that owns its siblings."
+      }
+    },
+    "c7f3e9a2": {
+      "logged_as": "M10",
+      "described": "Rigid template subheadings, banned phrases, missing TL;DR, and illustrations lacking light/dark mode.",
+      "problem": "Three distinct failure classes in one entry, one of which is not a content failure at all.",
+      "resolves_to": ["M2", "M3"],
+      "status": "split",
+      "cross_domain": {
+        "target_store": "src/data/engineering-solutions.json",
+        "reason": "The missing dark-mode Tailwind classes on custom Astro components is an engineering failure. CLAUDE.md already mandates it; the rubric has no rule for it."
+      }
+    }
+  }
+}
