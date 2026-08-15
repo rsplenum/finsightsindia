@@ -8,12 +8,27 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 
 ---
 
-## Doing now
+## Doing now — Rahul's review of 15 Aug, ordered by severity
 
-- [x] **Fix sol-018** — hedging floor now annual, on the index. Median ×0.92, goal seek 19,646 → 20,561
-- [x] **T2 rung 5 built** — protection is a bet on roughness; the floor pays its way above ~23%
-- [x] **sol-023 ledger fixed** — fed from the engine, twin unhedged run, column widths
-- [ ] **T2 last item** — retire the "show the workings" door; expert panel becomes the final rung
+**P0 · sol-026 — the page runs two engines and shows both.** Ladder 17.15 cr vs advanced 17.02 cr at the same inputs; the ladder hardcodes CAGR/inflation/vol/tax and never sees the hedging or guardrail toggles.
+
+- [ ] One input set — advanced form is the source; the Answer's three fields become a two-way projection
+- [ ] One computation, one seed, one sim count, distributed to every surface
+- [ ] The toggles reach the rungs — insurance ON must change the whole page, not just rung 5
+- [ ] Test that sweeps inputs and asserts no quantity differs between surfaces
+
+**P1 · rung 5 is framed wrong (dd-012).** Judged by an all-futures average, which is the one thing insurance is not for.
+
+- [ ] Kill "futures in 100" as headline and the "− 2 in 100" verdict line
+- [ ] Lead with the bad futures — worst decile and the sequence case, with and without cover
+- [ ] Say what the floor does NOT do: consecutive bad years, −10% each, compounding to −27%
+- [ ] Cost stated at full weight, in rupees and %, not small grey type (dd-007)
+
+**P2 · make it explorable — Rahul's asks**
+
+- [ ] Sliders for floor depth, premium (₹ and %), roughness — let him game the scenarios
+- [ ] Define roughness with the actual last-30-years return sequence
+- [ ] Term of 3 / 6 / 9 / 12 months, and a volatility-driven floor
 
 ## Waiting on Rahul
 

@@ -207,5 +207,45 @@
       "any record we intend to keep current"
     ],
     "test": "For each store we rely on: what breaks, visibly, if it is neglected for a week? If the answer is 'nothing', it is already drifting and we simply cannot see it yet."
+  },
+  {
+    "id": "dd-012",
+    "date": "2026-08-15",
+    "title": "Judge a thing by the situation it exists for, not by an average over all situations",
+    "trigger": "Rung 5 reported protection as a change in survival averaged over all 10,000 futures - \"95 in 100 unprotected, 93 in 100 protected\" - and a difference row reading \"− 2 in 100\".",
+    "verbatim": "I didn't understand what it means \"futures in 100 where the money last all 30 years\" unprotected and protected ? how is unprotected futures more probable than protected futures. I mean the insurance is not there to increase the probability of corpus lasting full 30 years, it is there to prevent it from not lasting 30 years in futures where the bad years appear. it is not very intuitive and frankly put a lot of cognitive load on the user and may want one to quit using our product all together.\n\nA scenario: where bad years are consecutive then for every year i loose maximum 10% or anywhere between 1 to 10 % eventhough the market may have lost more but i loose despite paying premium for protection, this makes the 10% floor a hard sell.\n\nThe \"So protection is worth -4 in 100\" makes no sense to a lay person. this is the worst example of not learning from our own failures and the best example of keeping the user scratching his head in confusion.",
+    "spirit": "Insurance does not exist to raise an average. It exists for the minority of futures where things go wrong, and it is paid for out of all the others. Reporting it as a movement in an all-futures average therefore judges it by the one measure it was never built to move, and the honest arithmetic then reads as an argument against the product - which is both confusing and beside the point.\n\nThe reader's question is not \"does this raise my odds\". It is \"when the bad years come, what happens to me with this and without it\". Show those futures. The average over everything is the accountant's summary again, one level up from the terminal balance dd-010 already rejected.\n\nAnd a difference of averages - \"− 2 in 100\" - is worse than the averages themselves. It is a number with no referent in anything the reader can picture. A quantity nobody could ever experience cannot be the verdict line of a screen.",
+    "repeat_violations": "This is not a new lesson, which is the part that matters. \"− 2 in 100\" is dd-009: a figure the screen does not let the reader trace. Leading with an all-futures average is dd-010: the summary rather than the lived thing. Both were recorded the same day, both were cited in the rung's own checks file, and both were violated anyway - so the checks were answered on paper without being applied. Per dd-000 that is a process failure, not a mistake.",
+    "rules": [
+      "Show the thing in the situation it exists for. For protection that means the bad futures - the worst decile, the sequence-risk case - not the mean over all of them.",
+      "Never headline a difference of two averages. If the reader cannot picture one instance of the quantity, it cannot carry the verdict.",
+      "State what a protection does NOT cover as plainly as what it does. An annual floor does nothing about consecutive bad years - three years at -10% is -27% - and the reader must learn that from us rather than discover it later.",
+      "A screen that leaves the reader scratching their head has failed even if every figure on it is correct. Confusion is a defect of the same class as a wrong number."
+    ],
+    "applies_to": [
+      "calculators",
+      "articles",
+      "any feature that exists for the tail"
+    ],
+    "test": "Name the situation the feature exists for. Is that situation on the screen? If the headline is an average taken over all situations, including the many the feature was never meant to affect, the wrong measure is being reported. And point at the verdict line: can the reader picture a single concrete instance of that quantity? If not, replace it."
+  },
+  {
+    "id": "dd-013",
+    "date": "2026-08-15",
+    "title": "One engine. Two surfaces may never show different numbers for the same input",
+    "trigger": "The ladder and the advanced panel on the same page, at the same inputs, disagreed: tax of Rs 36.9 L against Rs 38.51 L, an end balance of Rs 17.15 cr against Rs 17.02 cr, spending of Rs 3.38 cr against a gross of Rs 3.79 cr. The three entry inputs at the top of the page did not drive the advanced panel at all.",
+    "verbatim": "The input figures in the first rung are not used in the advanced mode, advanced mode used its own inputs ???\n\nThe advanced mode figures and rung 3 figures don't match. There can be no bigger failure than this. have you abandoned the advanced mode entirely ? it was understood that the same underlysing infra would be used, how come i see two different sort of numbers for the same input ?\n\nI am utterly dissappointed after working for the whole day, i have found so many calculation errors and despite stressing on user friendliness with low cognitive load, i find the same failures repeated.",
+    "spirit": "A calculator that shows a reader two different answers to one question has destroyed the only thing it was selling. Correct arithmetic is the floor, not the achievement (dd-003) - and two correct-looking answers that disagree are worse than one wrong one, because the reader cannot tell which to believe and now cannot trust either. Everything the ladder was built to teach is worthless the moment the panel below it contradicts it.\n\nThe cause is always the same shape: a new surface is built beside the old one instead of on top of it. The ladder got its own worker, its own inputs, its own simulation count and seed; the advanced panel kept its own. Nobody decided they should differ. They were simply never made to be the same thing, and no test asked.\n\nThis is sol-023 at the scale of a page rather than a table. That entry's rule - a view must never re-derive what the engine already knows - was written about a ledger. It was always about every surface.",
+    "rules": [
+      "One computation per set of inputs, and every surface subscribes to it. Not \"the same function called twice\" - the same result, distributed.",
+      "Inputs are entered once. A second set of fields for the same quantity is a second source of truth and will drift within a day.",
+      "When a simple view and an expert view coexist, the simple one is a projection of the expert one. Building it alongside guarantees divergence; building it on top makes divergence impossible.",
+      "A shared number gets a test that asserts the two surfaces agree. Agreement that rests on both being written correctly is not agreement, it is a coincidence with a deadline."
+    ],
+    "applies_to": [
+      "calculators",
+      "any page with more than one view of the same computation"
+    ],
+    "test": "Change one input and read every figure on the page. Does any quantity appear twice with two values? If two surfaces can be made to disagree by any input, they are two engines and the page is lying to somebody."
   }
 ]
