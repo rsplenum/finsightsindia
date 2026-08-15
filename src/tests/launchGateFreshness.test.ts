@@ -63,7 +63,19 @@ describe.skipIf(!hasGit || !fs.existsSync(STATE))('the Launch Gate must not sile
   it('the published source lives in the repo, where git can see it', () => {
     // It used to live only in a scratchpad, which is why nothing could tell
     // it had drifted.
-    expect(fs.existsSync('docs/launch-gate.html')).toBe(true);
-    expect(fs.statSync('docs/launch-gate.html').size).toBeGreaterThan(5000);
+    expect(fs.existsSync(state.gateFile)).toBe(true);
+    expect(fs.statSync(state.gateFile).size).toBeGreaterThan(1000);
+  });
+
+  it('stays a list, not a document', () => {
+    // dd-011: an expensive record gets skipped. It was 600 lines of
+    // hand-patched HTML and every update was a tax, which is a cause of the
+    // drift this file exists to catch. Markdown, one line per item, so an
+    // update is a single edit.
+    const body = fs.readFileSync(state.gateFile, 'utf-8');
+    expect(state.gateFile.endsWith('.md')).toBe(true);
+    const lines = body.split('\n').length;
+    expect(lines, `${lines} lines - if it needs this much, it has stopped being a list`).toBeLessThan(220);
+    expect(body).toMatch(/- \[[ x]\]/);
   });
 });

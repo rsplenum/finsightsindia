@@ -53,12 +53,13 @@ somewhere that outlives the session.
 | Feedback about spirit, feel, or how something should read | `src/data/design-doctrine.json` — verbatim words, the principle, and a test | **Before** acting on it |
 | A technical fault and its fix | `src/data/engineering-solutions.json` | When fixed, or when deliberately deferred |
 | A decision and its reasoning | The commit message, written long | At commit |
-| State of play, plan changes, deferrals, open decisions | The Launch Gate artifact | **At every checkpoint** |
+| State of play, plan changes, deferrals, open decisions | `docs/launch-gate.md` — a plain list, one line per item | **At every checkpoint**, then `npm run gate:sync` |
 
 ### The rules
 
 1. **Record Rahul's feedback before acting on it.** Capture the verbatim words — his phrasing carries nuance a paraphrase loses, and he has said he may not reproduce good feedback as well a second time. Acting first and recording later means it never gets recorded.
-2. **A change of plan updates the Launch Gate artifact in the same turn.** An out-of-date tracker is worse than none: it misinforms with authority. If the plan moved and the artifact did not, the plan is not real.
+2. **A change of plan updates `docs/launch-gate.md` in the same turn**, then `npm run gate:sync`. An out-of-date tracker is worse than none: it misinforms with authority. `launchGateFreshness.test.ts` fails and names the commits if it falls behind, because an intention was tried first and did not hold (dd-011).
+   **Keep it a list.** It is a yellow legal pad: tick items, add items, one line each. It was once 600 lines of hand-patched HTML, and the cost of updating it was itself a cause of the drift. A test caps its length.
 3. **Deferrals are recorded with their reason.** "We will do this later" that exists only in chat is a decision that will be silently reversed or forgotten. Say what was deferred, why, and what it is waiting on.
 4. **Open decisions belong to Rahul and must be visible.** Anything awaiting his judgement is listed explicitly, not carried in an agent's head.
 5. **Never rely on an in-session task list.** It decays within hours and then quietly misleads. The durable stores above are the memory; a task list is at best a scratchpad for the current hour.
