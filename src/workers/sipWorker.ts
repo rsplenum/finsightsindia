@@ -29,6 +29,136 @@ function getRandomNormal() {
 	return z0;
 }
 
+// Asset assumptions. Hoisted to module scope because runGoalSeek and
+// runSimulation had identical copies of them, and duplicated constants are how
+// two engines drift apart.
+const SQRT12 = Math.sqrt(12);
+
+const eqDrift = (0.12 - 0.5 * 0.15 * 0.15) / 12;
+const debtDrift = (0.071 - 0.5 * 0.02 * 0.02) / 12;
+const goldDrift = (0.085 - 0.5 * 0.10 * 0.10) / 12;
+
+const eqVolMult = 0.15 / SQRT12;
+const debtVolMult = 0.02 / SQRT12;
+const goldVolMult = 0.10 / SQRT12;
+
+// --- Portfolio insurance (sol-018) -------------------------------------------
+//
+// A rate compounds; a floor binds. The two are not interchangeable, and the
+// original defect was `const monthlyFloor = -0.08 / 12` — an annual floor
+// divided by twelve and applied to every month, which truncated the loss in
+// 35.8% of months where a real annual floor binds in about 10% of years, and
+// so made insurance more than double the median outcome.
+//
+// The four modelling decisions recorded as open on sol-018, answered here:
+//
+//   1. WHAT THE FLOOR IS MEASURED ON. The index, not the portfolio. A put is
+//      written on NIFTY, so protection is a function of the equity RETURN
+//      SERIES, which `hedgeIndex` tracks and resets at each roll. The
+//      portfolio's own money-weighted return is a different, higher-variance
+//      number once instalments arrive; flooring that would over-protect —
+//      the original bug wearing a new hat.
+//
+//   2. ROLLING, NOT CONTINUOUS. A 12-month put, rolled at each anniversary —
+//      the short end of the site's own "rolling every 12 to 18 months". The
+//      consequence is real and deliberate: protection RESETS every year and
+//      never accumulates, so two consecutive floored years lose about 15% and
+//      not 8%; and a crash that falls and recovers inside one term pays
+//      nothing at all, because the put is European and only expiry counts.
+//
+//   3. CONTRIBUTIONS ARE NOT RETROACTIVELY INSURED. `coveredNotional` is fixed
+//      at the strike date. An instalment arriving in month 11 bought no
+//      protection for that year, so it earns no payout. Paying out on the
+//      whole year-end balance would credit insurance that was never bought.
+//
+//   4. THE PREMIUM IS PAID WHETHER OR NOT THE PUT PAYS. It is charged up front
+//      at every strike and is never netted against a payoff — they are two
+//      separate statements in the loop below, deliberately not one expression,
+//      because netting them is exactly what would make hedging look free.
+//
+// `annualHedgingDragCost` is the annual premium as a fraction of the TOTAL
+// portfolio — the same meaning it carries in swpWorker and in the planner's
+// tooltip. Call sites pass `0.0185 * eqPct`, so the charge works out to 1.85%
+// of the equity sleeve actually insured, which is the same balance
+// `coveredNotional` is taken from. Previously the premium was subtracted from
+// the equity return and then weighted by eqPct a second time, charging
+// 1.85% × eqPct² and undercharging the premium by a third at a 70% equity
+// allocation.
+const HEDGE_FLOOR_ANNUAL = -0.08;
+const HEDGE_TERM_MONTHS = 12;
+
+/**
+ * One Monte Carlo path, shared by both engines. Extracted because the floor
+ * defect existed twice, in two hand-copied loops, and a fix applied to one of
+ * them would have left the other quietly wrong.
+ *
+ * `recordYear` is called with the nominal balance at each year end; goal seek
+ * passes null and reads the return value.
+ */
+function simulatePath(
+	seedCapital: number,
+	monthlySip: number,
+	stepUpRate: number,
+	horizonYears: number,
+	eqPct: number,
+	debtPct: number,
+	goldPct: number,
+	bsEnabled: boolean,
+	annualHedgingDragCost: number,
+	recordYear: ((yr: number, balance: number) => void) | null
+): number {
+	let portBal = seedCapital;
+	let currentSip = monthlySip;
+
+	// Nothing to insure if there is no equity sleeve, so no premium is charged.
+	const hedged = !!bsEnabled && eqPct > 0;
+	let hedgeIndex = 1;
+	let coveredNotional = 0;
+	let monthOfTerm = 0;
+
+	for (let yr = 1; yr <= horizonYears; yr++) {
+		if (yr > 1) { currentSip = currentSip * (1 + stepUpRate); }
+
+		for (let m = 1; m <= 12; m++) {
+			portBal += currentSip;
+
+			if (hedged) {
+				if (monthOfTerm === 0) {
+					// Strike a new put: fix the notional, pay the premium, and
+					// start the index it is written on again from par.
+					coveredNotional = eqPct * portBal;
+					portBal -= portBal * annualHedgingDragCost;
+					hedgeIndex = 1;
+				}
+				monthOfTerm++;
+			}
+
+			const rEqM = Math.exp(eqDrift + eqVolMult * getRandomNormal()) - 1;
+			const rDebtM = Math.exp(debtDrift + debtVolMult * getRandomNormal()) - 1;
+			const rGoldM = Math.exp(goldDrift + goldVolMult * getRandomNormal()) - 1;
+
+			// The equity return itself is never truncated. The put is an asset
+			// held alongside the portfolio, not a cap on monthly returns.
+			if (hedged) { hedgeIndex = hedgeIndex * (1 + rEqM); }
+
+			const portReturn = (eqPct * rEqM) + (debtPct * rDebtM) + (goldPct * rGoldM);
+			portBal = portBal * (1 + portReturn);
+
+			if (hedged && monthOfTerm === HEDGE_TERM_MONTHS) {
+				const indexReturn = hedgeIndex - 1;
+				if (indexReturn < HEDGE_FLOOR_ANNUAL) {
+					portBal += coveredNotional * (HEDGE_FLOOR_ANNUAL - indexReturn);
+				}
+				monthOfTerm = 0;
+			}
+		}
+
+		if (recordYear) { recordYear(yr, Math.max(0, portBal)); }
+	}
+
+	return portBal;
+}
+
 // Worker entry point, kept thin. All logic lives in the exported functions
 // below so they can be tested without a worker runtime. Guarded so the module
 // can be imported in a plain Node/vitest context where `self` does not exist.
@@ -54,17 +184,6 @@ export function runGoalSeek(params: any) {
 	rand = mulberry32(1234567);
 	hasSpare = false;
 
-	const monthlyFloor = -0.08 / 12;
-	const sqrt12 = Math.sqrt(12);
-
-	const eqDrift = (0.12 - 0.5 * 0.15 * 0.15) / 12;
-	const debtDrift = (0.071 - 0.5 * 0.02 * 0.02) / 12;
-	const goldDrift = (0.085 - 0.5 * 0.10 * 0.10) / 12;
-
-    const eqVolMult = 0.15 / sqrt12;
-    const debtVolMult = 0.02 / sqrt12;
-    const goldVolMult = 0.10 / sqrt12;
-
 	let lowSip = 0;
 	let highSip = 10000000;
 	const numMiniSims = 250;
@@ -81,24 +200,11 @@ export function runGoalSeek(params: any) {
 		}
 
 		for (let s = 0; s < numMiniSims; s++) {
-			let portBal = seedCapital;
-			let currentSip = midSip;
-			for (let yr = 1; yr <= horizonYears; yr++) {
-				if (yr > 1) { currentSip = currentSip * (1 + stepUpRate); }
-				for (let m = 1; m <= 12; m++) {
-					portBal += currentSip;
+			const portBal = simulatePath(
+				seedCapital, midSip, stepUpRate, horizonYears,
+				eqPct, debtPct, goldPct, bsEnabled, annualHedgingDragCost, null
+			);
 
-					let rEqM = Math.exp(eqDrift + eqVolMult * getRandomNormal()) - 1;
-					if (bsEnabled) { rEqM = Math.max(monthlyFloor, rEqM) - (annualHedgingDragCost / 12); }
-					
-					const rDebtM = Math.exp(debtDrift + debtVolMult * getRandomNormal()) - 1;
-					const rGoldM = Math.exp(goldDrift + goldVolMult * getRandomNormal()) - 1;
-					
-					const portReturn = (eqPct * rEqM) + (debtPct * rDebtM) + (goldPct * rGoldM);
-					portBal = portBal * (1 + portReturn);
-				}
-			}
-			
             let postTaxNominal = portBal;
 			if (isPostTax) {
                 const taxableGain = Math.max(0, portBal - totalNominalInvested - 125000);
@@ -134,17 +240,6 @@ export function runSimulation(params: any) {
 
 	// Injectable so tests can run a smaller sweep. Production callers omit it.
 	const numSims = Number(params.numSims) > 0 ? Number(params.numSims) : 10000;
-	const sqrt12 = Math.sqrt(12);
-
-    const eqDrift = (0.12 - 0.5 * 0.15 * 0.15) / 12;
-    const debtDrift = (0.071 - 0.5 * 0.02 * 0.02) / 12;
-    const goldDrift = (0.085 - 0.5 * 0.10 * 0.10) / 12;
-
-    const eqVolMult = 0.15 / sqrt12;
-    const debtVolMult = 0.02 / sqrt12;
-    const goldVolMult = 0.10 / sqrt12;
-    const monthlyFloor = -0.08 / 12;
-    const dragMonthly = annualHedgingDragCost / 12;
 
 	let realOutflowPV = seedCapital;
     let nominalTotalInvested = seedCapital;
@@ -163,29 +258,11 @@ export function runSimulation(params: any) {
 	const yearlyPathsNominal = Array.from({ length: horizonYears + 1 }, () => new Float64Array(numSims));
 
 	for (let s = 0; s < numSims; s++) {
-		let portBal = seedCapital;
-		let currentSip = monthlySip;
-
-		for (let yr = 1; yr <= horizonYears; yr++) {
-			if (yr > 1) { currentSip = currentSip * (1 + stepUpRate); }
-
-			for (let m = 1; m <= 12; m++) {
-				portBal += currentSip;
-
-				let rEqM = Math.exp(eqDrift + eqVolMult * getRandomNormal()) - 1;
-				if (bsEnabled) {
-					rEqM = Math.max(monthlyFloor, rEqM) - dragMonthly;
-				}
-
-				const rDebtM = Math.exp(debtDrift + debtVolMult * getRandomNormal()) - 1;
-				const rGoldM = Math.exp(goldDrift + goldVolMult * getRandomNormal()) - 1;
-
-				const portMonthlyReturn = (eqPct * rEqM) + (debtPct * rDebtM) + (goldPct * rGoldM);
-				portBal = portBal * (1 + portMonthlyReturn);
-			}
-
-			yearlyPathsNominal[yr][s] = Math.max(0, portBal);
-		}
+		simulatePath(
+			seedCapital, monthlySip, stepUpRate, horizonYears,
+			eqPct, debtPct, goldPct, bsEnabled, annualHedgingDragCost,
+			(yr, balance) => { yearlyPathsNominal[yr][s] = balance; }
+		);
 	}
 
     const p90Nominal = [];

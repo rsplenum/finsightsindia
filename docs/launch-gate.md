@@ -1,6 +1,6 @@
 # FinSight — Launch Gate
 
-**Not live. No domain.** 125 tests green · 25 commits on `fix/learning-loop-integrity-and-calculator-correctness`
+**Not live. No domain.** 132 tests green · 26 commits on `fix/learning-loop-integrity-and-calculator-correctness`
 
 This is a list, not a document. Explanations live in commit messages, `design-doctrine.json` and `engineering-solutions.json`. This says what is done and what is next.
 
@@ -10,16 +10,18 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 
 ## Doing now
 
-- [ ] **Fix sol-018** — hedging floor: an annual −8% floor divided by 12 and applied monthly. Blocks rung 5.
-- [ ] **T2 rung 5** — what protection costs. Blocked on sol-018.
+- [x] **Fix sol-018** — hedging floor now annual, on the index. Median ×0.92, goal seek 19,646 → 20,561. 132 tests
+- [ ] **T2 rung 5** — what protection costs. Unblocked, but its headline depends on the premium question below.
 
 ## Waiting on Rahul
 
-*(nothing open)*
+- [ ] **Is 1.85%/yr the right premium?** At our own assumptions the hedge only improves p10 below ~1.00%; BS fair value is ~1.18%. sol-018 `open_question_for_rahul`
+- [ ] **The floor depth is three different numbers** — SIP engine −8%, swp-planner input −10%, copy says −10% or −15%
+- [ ] **May rung 5 say protection is not worth its price?** It is the strongest honest finding, and a claim about a product people are sold
 
 ## Blocked / deferred — with the reason
 
-- [ ] **sol-018 hedging floor** → T4. Fixing it means tracking the equity sleeve separately; a redesign of the loop, not a repair. Recorded as a deliberate `it.fails` test.
+- [ ] **sol-023: the sip-engine hedging ledger invents its numbers** → T3. Four columns are computed beside the engine, not from it, so fixing sol-018 moved none of them. Do not cite the ledger.
 - [ ] **Insurance `runReplicationAnalysis()` is untestable** → T5 starts with extracting it from the 35KB page.
 - [ ] **Rule retirements in the content factory** → needs logging coverage above 30% (now 5.9%). The operator self-blocks until then.
 - [ ] **Three silent reversals: M2, M4, M9** → needs Rahul's judgement. `ceiling.py relax` lists them.
@@ -49,7 +51,7 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 - [x] Rungs 1–2: the two rates, then where the money goes `1c26a7b`
 - [x] Rung 3: growth slider, boundary on the track, no sentence churn `d5da508`
 - [x] Rung 4: bad years first — rebuilt after review `c193203`
-- [ ] Rung 5: what protection costs *(blocked on sol-018)*
+- [ ] Rung 5: what protection costs *(engine fixed; headline waits on the premium question)*
 - [ ] Proposed rung: what if life happens?
 - [ ] Retire the single "show the workings" door — expert panel becomes the last rung
 
@@ -61,12 +63,12 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 - [ ] Surface total cost drag — fund fees, exit load, tax
 - [ ] Share the assumption panel with T2
 
-## T4 — Goal engine (accumulate → draw down) · 0/6
+## T4 — Goal engine (accumulate → draw down) · 1/6
 
 - [ ] Spike: can SIP and SWP share one core?
 - [ ] Goal presets — retirement, education, marriage, house, car, holiday
 - [ ] One continuous timeline
-- [ ] **Fix sol-018** — equity sleeve tracked separately, floor applied at year end
+- [x] **sol-018 fixed early** — hedge index tracked separately, floor applied at expiry; both SIP engines now share one path
 - [ ] Explain the hedging mechanic plainly
 - [ ] Make the tradeoff explicit: cut lifestyle, or pay to protect it
 
