@@ -1,8 +1,10 @@
 # FinSight — Launch Gate
 
-**Not live. No domain.** 124 tests green · 25 commits on `fix/learning-loop-integrity-and-calculator-correctness`
+**Not live. No domain.** 125 tests green · 25 commits on `fix/learning-loop-integrity-and-calculator-correctness`
 
 This is a list, not a document. Explanations live in commit messages, `design-doctrine.json` and `engineering-solutions.json`. This says what is done and what is next.
+
+Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 
 ---
 
@@ -22,6 +24,9 @@ This is a list, not a document. Explanations live in commit messages, `design-do
 - [ ] **Rule retirements in the content factory** → needs logging coverage above 30% (now 5.9%). The operator self-blocks until then.
 - [ ] **Three silent reversals: M2, M4, M9** → needs Rahul's judgement. `ceiling.py relax` lists them.
 - [ ] **Regression set is only 4 cases** → grow it before leaning harder. Two were passing for the wrong reason until 15 Aug.
+- [ ] **13 articles fail the R2 screen, 26 fail R7** → sol-021, worklist committed. Rahul's publishing gate 2.
+- [ ] **Property-based testing (`fast-check`)** → sol-022, the real answer to "correct across all inputs". Needs boundary behaviour defined first.
+- [ ] **19 loose python scripts at repo root** → never triaged; some may be live tooling.
 - [ ] **Proposed rung: "what if life happens?"** — a lump-sum shock (marriage, an operation no insurance covers). Liquidity risk, not market risk. Rahul's idea; not yet scoped.
 
 ---
