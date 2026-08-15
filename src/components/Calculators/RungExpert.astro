@@ -8,6 +8,11 @@
 // ladder above it had been rebuilt and the cliff underneath had been left with
 // a politer sign on it.
 //
+// Reviewed by Rahul and revised: the guardrails control is gone, the section
+// headings are plain language instead of numbered jargon, the controls door
+// opens by default, and the live answer sits above the doors - changing a
+// number with no visible consequence is the worst kind of control.
+//
 // Two changes. It is framed as a RUNG, because after "what does protection
 // cost?" the reader's honest next question is "but those are your numbers, not
 // mine" - which turns a mystery door into a step. And the inside is split into
@@ -37,13 +42,31 @@
       </p>
     </div>
 
+    <!-- The answer, always visible, whichever door is open.
+         Rahul, 15 Aug: "once the user changes the assumptions they dont see the
+         result as the result is hidden in see it year by year." He is right and
+         it was a fault of my own making - changing a number with no visible
+         consequence is the worst kind of control. This is the ladder's own
+         headline, live, in a fixed slot, using nothing the reader has not
+         already been given. -->
+    <div class="rounded-xl border border-gold-500/30 bg-gold-500/5 px-4 py-3.5 space-y-1">
+      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-500 dark:text-navy-400">
+        With your numbers
+      </p>
+      <p id="expertLiveHeadline" class="text-base font-semibold leading-snug text-navy-900 dark:text-navy-100">
+        Working it out…
+      </p>
+      <p id="expertLiveDetail" class="text-sm text-navy-600 dark:text-navy-400"></p>
+    </div>
+
     <div class="space-y-3">
-      <!-- Opens on the CONTROLS, because that is what the question asks for. -->
-      <details class="group rounded-xl border border-navy-200 dark:border-navy-700 overflow-hidden">
+      <!-- Open by default: the rung's question IS "change the assumptions", so
+           the controls are the thing, not a door to the thing. -->
+      <details open class="group rounded-xl border border-navy-200 dark:border-navy-700 overflow-hidden">
         <summary class="cursor-pointer list-none flex items-center justify-between gap-3 px-4 py-3.5 hover:bg-navy-50 dark:hover:bg-navy-900/60 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50">
           <span>
             <span class="block text-sm font-semibold text-navy-900 dark:text-navy-100">Change the assumptions</span>
-            <span class="block text-xs text-navy-500 dark:text-navy-400">savings, income, growth, roughness, tax, guardrails, protection</span>
+            <span class="block text-xs text-navy-500 dark:text-navy-400">savings, income, growth, roughness, tax, horizon, protection</span>
           </span>
           <svg class="w-4 h-4 shrink-0 text-navy-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -87,3 +110,24 @@
 
   </div>
 </section>
+
+<script>
+  // One subscriber to the shared result (dd-013). No computation here.
+  window.addEventListener('swp:result', (e) => {
+    const d = (e as CustomEvent).detail;
+    const o = d?.outlook;
+    if (!o) return;
+    const head = document.getElementById('expertLiveHeadline');
+    const detail = document.getElementById('expertLiveDetail');
+    if (!head || !detail) return;
+
+    const years = d.inputs.horizonYears;
+    const lasted = Math.round(o.survival * 100);
+    head.textContent =
+      o.medianDepletionYear !== null
+        ? `Your money typically runs out in year ${o.medianDepletionYear} of ${years}.`
+        : `Your money lasts the full ${years} years.`;
+    detail.textContent =
+      `It lasted in ${lasted} of every 100 futures. Change anything below and this line moves.`;
+  });
+</script>

@@ -56,7 +56,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 					
 					<!-- Section 1: Starting Investments -->
 					<div class="space-y-4">
-						<SectionTitle title="01 / Starting Investments" />
+						<SectionTitle title="What you have, and what you need" />
 						
 						<InputGroup 
 							id="initialCorpus"
@@ -88,7 +88,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 
 					<!-- Section 2: Macro Economics & Market Expectations -->
 					<div class="space-y-4">
-						<SectionTitle title="02 / Macro Economics & Expected Rates" />
+						<SectionTitle title="What you assume the market does" />
 
 						<div class="grid grid-cols-1 sm:grid-cols-2 reveal-stagger gap-6">
 							<InputGroup 
@@ -164,7 +164,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 
 					<!-- Section 3: Tax Friction & Horizon -->
 					<div class="space-y-4">
-						<SectionTitle title="03 / Tax Friction & Time Horizon" />
+						<SectionTitle title="Tax, and how long it must last" />
 
 						<div class="grid grid-cols-1 sm:grid-cols-2 reveal-stagger gap-6">
 							<InputGroup 
@@ -191,28 +191,15 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 					
 					<hr class="section-divider" />
 					
-					<!-- Section 04: Advanced Risk Controls -->
-					<div class="space-y-3">
-						<SectionTitle title="04 / The Lifestyle Sacrifice (Guardrails)" />
-						<div class="flex items-center justify-between gap-3">
-							<span class="text-xs font-semibold text-navy-800 dark:text-navy-200">
-								Enable Paycheck Guardrails
-							</span>
-							<label class="relative inline-flex items-center cursor-pointer shrink-0">
-								<input type="checkbox" id="useGuardrails" name="useGuardrails" class="sr-only peer">
-								<div class="w-11 h-6 bg-navy-200 dark:bg-navy-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-navy-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-navy-900 dark:peer-checked:bg-white"></div>
-							</label>
-						</div>
-						<p class="text-xs text-navy-500 dark:text-navy-400 leading-relaxed">
-							You choose to ride the market's rollercoaster without a seatbelt. If the market crashes, you agree to tighten your belt and take a 10% pay cut for a few years until the market recovers.
-						</p>
-					</div>
+					<!-- Guardrails control removed on Rahul's instruction, 15 Aug. The
+					     engine still supports useGuardrails and surfaceParity still
+					     sweeps it; nothing on the page sets it, so it is now always
+					     off. Removing the capability too would have been a bigger
+					     decision than the one he made. -->
 
-					<hr class="section-divider" />
-					
 					<!-- Section 05: Portfolio Insurance (Hedging) -->
 					<div class="space-y-4">
-						<SectionTitle title="05 / The Yield Sacrifice (Hedging)" />
+						<SectionTitle title="Whether you buy a floor" />
 						<div class="flex items-center justify-between gap-3">
 							<span class="text-xs font-semibold text-navy-800 dark:text-navy-200">
 								Buy Portfolio Insurance

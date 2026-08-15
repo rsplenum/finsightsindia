@@ -16,7 +16,7 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 ✅ **sol-027** one engine, not two — `returnsByYear` retired the duplicate `swpDeterministic`
 ✅ **sol-028** volatility default was the calmest decade in 35 years. Named periods now, computed from real data. **Survival on the shipped plan: 9534 → 7025**
 ✅ **rung 5** built, rejected, rebuilt to dd-012 — leads with ruined retirements, premium priced not chosen
-✅ **rung 6** — one `<details>` over ~590 lines became the ladder's last step, split by question. dd-002's origin case, finally closed
+✅ **rung 6** — one `<details>` over ~590 lines became the ladder's last step, split by question. dd-002's origin case, finally closed. Revised after review: live answer always visible, controls open by default, plain headings, guardrails removed
 ✅ **sol-023 second instance** on the planner ledger · **sol-029** premium had two sources after I priced it in rung 5
 ✅ **dd-012, dd-013** recorded · 166 tests (was 125) · 4 new detectors
 

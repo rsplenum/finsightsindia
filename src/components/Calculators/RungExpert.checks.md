@@ -27,6 +27,30 @@ was left in place with a politer sign on it.
 | dd-009 | any unexplained figure? | **This is why the ledger was fixed first.** Four of six columns in the hedging table were computed beside the engine and would have been reframed rather than corrected. A better frame around invented numbers is worse than the door was. |
 | dd-012 | shown in the situation it exists for? | The rung exists for the reader who does not accept our assumptions, so it opens on the controls, not on the output. |
 
+**Revised after review, 15 Aug**
+
+Rahul: *"once the user changes the assumptions they dont see the result as the
+result is hidden in see it year by year"* and *"it is still a steep ladder of
+complexity from rung 5 to rung 6 and the cognitive load rises to such level that
+the user will quit."*
+
+Three changes, and the first was a fault of my own making — a control whose
+effect is invisible is the worst kind of control:
+
+- **The answer is always visible**, above the doors, in a fixed slot, using the
+  ladder's own headline. Changing CAGR to 8% moves it from "lasts the full 30
+  years · 70 in 100" to "runs out in year 24 of 30 · 37 in 100" without opening
+  anything.
+- **The controls door opens by default.** The rung's question *is* "change the
+  assumptions", so the controls are the thing rather than a door to the thing.
+- **Plain headings instead of numbered jargon.** "01 / Starting Investments",
+  "02 / Macro Economics & Expected Rates" and "03 / Tax Friction & Time Horizon"
+  were half the cliff on their own. They are now the questions they answer.
+- **Guardrails removed**, on his instruction. The engine still supports the
+  parameter and `surfaceParity` still sweeps it; nothing on the page sets it, so
+  it is always off. Removing the capability as well would have been a larger
+  decision than the one he made.
+
 **Deliberate choices**
 
 - **It is a rung, not a door.** The ladder's other five each answer a question
