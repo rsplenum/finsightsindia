@@ -1,0 +1,50 @@
+[
+  {
+    "id": "dd-000",
+    "date": "2026-08-15",
+    "title": "Why this file exists",
+    "trigger": "Rahul, after reviewing the first redesigned calculator screen: feedback about spirit was being acted on but not recorded, so it survived only as long as the conversation did.",
+    "verbatim": "i hope every feed back i give is recorded in spirit so that it remains material and effective for everything we do. because we are designing a system and most of my feedback will be about the spirit we should follow and i may not be able to reproduce a good feedback everytime, but we must move forward not run on a treadmill... we are running towards a goal and the most important part is to make sure that our list of failure has no repetitions and once we learn a lesson it becomes our guide for the future and the lesson may come out of a small thing but the spirit underneath it may apply to everything",
+    "spirit": "Engineering faults go to engineering-solutions.json. Content faults go to failure_log.jsonl. Judgment about SPIRIT had no home, so it lived in conversation and died with it. This file is that home. A lesson is only learned once it stops being re-learnable.",
+    "rules": [
+      "Record the spirit, not just the fix. The instance is the occasion; the principle is the asset.",
+      "Preserve the verbatim words. Rahul's phrasing carries nuance that a paraphrase loses, and he may not reproduce it as well a second time.",
+      "A principle that cannot be checked will be violated again. Every entry carries a test.",
+      "The lesson may arrive attached to something small. Its scope is not the size of its trigger."
+    ],
+    "test": "Before any design or UX decision, this file is read. Any principle here that has been violated twice is a process failure, not a mistake."
+  },
+  {
+    "id": "dd-001",
+    "date": "2026-08-15",
+    "title": "The offering is all the complexity, packaged - never reduced",
+    "trigger": "Clarifying the purpose of the whole product while reviewing the calculator redesign.",
+    "verbatim": "our audience is the lay person but our product and offering is all the complexities in the world, not reduced not diluted not stripped down, packaged in a way that it becomes available, accessible and affordable to our user",
+    "spirit": "Simplicity here is a property of DELIVERY, not of content. Nothing is removed, softened, or dumbed down. The layperson gets the whole of it - the difficulty lives in the packaging, which is our work, not theirs. This is the operational meaning of 'it is so simple to be difficult but it is so difficult to be simple': the difficulty is ours to absorb.",
+    "corrects": "sol-019's 'three inputs' rule, which could be misread as reduction. Three inputs is the ENTRY, not the offering. Everything else must remain present and reachable - moved, never deleted.",
+    "applies_to": ["calculators", "articles", "homepage", "illustrations"],
+    "test": "For any simplification, ask: did the complexity move, or did it disappear? If a capability is no longer reachable by a determined user, this has been violated."
+  },
+  {
+    "id": "dd-002",
+    "date": "2026-08-15",
+    "title": "Layer by the user's next question, not by volume of content",
+    "trigger": "The first redesigned SWP screen. Layer 1 was three questions; opening the next layer exposed the entire original page at once.",
+    "verbatim": "the transition from the minimal UI to the complexities has to be layered and more nuanced and the user has to be hand held throughout the way... its like at one moment we are teaching the user the A,B,C and the very next moment they are exposed to the shakesperian or aristotalian level dense prose to parse",
+    "spirit": "Progressive disclosure measured in quantity revealed is not layering - it relocates the wall. Layers must follow the questions a user is actually having, in the order they have them. Each layer answers ONE question, exposes ONE control, shows ONE consequence, and hands off to the next question. A person who has just been taught the alphabet cannot be handed Aristotle.",
+    "note": "This is sol-008's constructivism applied to interface instead of prose: people absorb concepts they construct, not concepts delivered to them. The article doctrine already knew this; the UI had not inherited it.",
+    "applies_to": ["calculators", "interactive components", "workbenches"],
+    "test": "Count the controls and new concepts revealed by a single disclosure step. More than about two means the step is a cliff. Every step must be answerable: which question of the user's does this answer?"
+  },
+  {
+    "id": "dd-003",
+    "date": "2026-08-15",
+    "title": "The user pays in time and attention",
+    "trigger": "Defining what value from a calculator actually means.",
+    "verbatim": "How i define value derived from this calculator: not what it is capable of, thats the non-negotiable infra (the features and the absolutely correct and empirically verifiable calculation and results) but whether it can get to the user's mind and reserve mindspace for itself, become a tool for the user, like bicycle for the mind... the user pays us in the currency of their time and attention",
+    "spirit": "Capability is the floor, not the product. Correct maths and full features are the price of admission, not the achievement. The achievement is that the user leaves able to think about the problem - carrying a transferable intuition rather than a number and a dependency. A tool that is used once and never re-enters the mind has failed even if every figure it printed was right.",
+    "consequence": "Every screen is charged for. If a screen costs thirty seconds of attention and leaves nothing the user can carry away and use, we have taken payment and delivered nothing.",
+    "applies_to": ["calculators", "articles", "homepage", "the whole product"],
+    "test": "For every screen: what idea does the user leave with that they did not arrive with, and could they now use it without us? If the honest answer is 'a number', that screen has taken payment without delivering."
+  }
+]

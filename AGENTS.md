@@ -23,8 +23,20 @@ Consult these guides before working on related tasks:
 
 ## Institutional Memory (CRITICAL)
 
-Before proposing technical solutions, making UI changes, or debugging build errors, you **MUST** read `src/data/engineering-solutions.json`.
-This file acts as our institutional memory. If a problem is listed there, you must strictly implement the documented solution to avoid repeating mistakes.
+We keep two memories, and they answer different questions. Read both before you act.
+
+**`src/data/engineering-solutions.json` — what broke and how it was fixed.**
+Read it before proposing technical solutions, making UI changes, or debugging build errors. If a problem is listed there, strictly implement the documented solution rather than rediscovering it.
+
+**`src/data/design-doctrine.json` — the spirit we work in.**
+Read it before ANY design, UX, copy, or product decision. This is Rahul's judgment, recorded verbatim, about how things should feel rather than how they should function. Feedback about spirit used to live only in conversation and died with it; that is why this file exists.
+
+Three rules govern it:
+- **The lesson may arrive attached to something small. Its scope is not the size of its trigger.** A remark about one calculator screen may govern the entire product.
+- **A principle that has been violated twice is a process failure, not a mistake.** The list of failures must not repeat.
+- **Record the spirit, not just the fix.** When Rahul gives feedback about how something should feel, capture the generalisable principle and his verbatim words, then apply it — do not silently patch the one instance and move on.
+
+The meta-principle both files serve: *it is so simple to be difficult, but it is so difficult to be simple.* Our audience is the layperson; our offering is the whole of the complexity, not a reduced or diluted version of it. The difficulty of packaging it is ours to absorb, never theirs. The user pays us in the currency of their time and attention.
 
 ## FinSight Article Publishing Pipeline (CRITICAL STANDARD)
 
