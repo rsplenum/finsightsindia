@@ -1,6 +1,6 @@
 # FinSight — Launch Gate
 
-**Not live. No domain.** 153 tests green · 30 commits on `fix/learning-loop-integrity-and-calculator-correctness`
+**Not live. No domain.** 155 tests green · 31 commits on `fix/learning-loop-integrity-and-calculator-correctness`
 
 This is a list, not a document. Explanations live in commit messages, `design-doctrine.json` and `engineering-solutions.json`. This says what is done and what is next.
 
@@ -20,12 +20,13 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 - [x] **sol-027 — one engine, not two.** `runSWPMonteCarlo` now takes `returnsByYear`, so rung 4 no longer needs the duplicate `swpDeterministic`. `singleEngine.test.ts` guards it
 - [ ] **Deferred, with reason:** delete `swpDeterministic.ts`. No production caller left, but 11 tests use it as a harness — including the LTCG double-charge guards — and they read `growth`/`netMonthly` the MC engine doesn't expose. Port those first
 
-**P1 · rung 5 is framed wrong (dd-012).** Judged by an all-futures average, which is the one thing insurance is not for.
+**P1 · rung 5 rebuilt to dd-012 — DONE.** Leads with ruined retirements, not a survival average.
 
-- [ ] Kill "futures in 100" as headline and the "− 2 in 100" verdict line
-- [ ] Lead with the bad futures — worst decile and the sequence case, with and without cover
-- [ ] Say what the floor does NOT do: consecutive bad years, −10% each, compounding to −27%
-- [ ] Cost stated at full weight, in rupees and %, not small grey type (dd-007)
+- [x] "futures in 100" and the "− 2 in 100" verdict are gone
+- [x] Leads with the bad futures: *out of 100 retirements, the ones where the money ran out* — 5→8 at 15%, 21→12 at 23%, 43→10 at 30%
+- [x] Verdict is a count you can picture: "the floor rescues 33 of them" / "ruins a further 3 of them"
+- [x] The limit stated, not discovered: three bad years cost ~27% and the fee is paid in all three
+- [x] Bill at full weight — ₹2.77 lakh a year at 36px, the largest thing on the screen (was the smallest)
 
 **P2 · make it explorable — Rahul's asks**
 

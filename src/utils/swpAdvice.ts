@@ -449,6 +449,12 @@ export interface ProtectionPoint {
   net: number;
   survivalUnprotected: number; // 0..1
   survivalProtected: number;   // 0..1
+
+  // The bad futures. A floor can only act here, so this is what the screen
+  // leads with rather than an average taken over every future (dd-012).
+  /** Out of 100 futures, how many ended with the money gone. */
+  ruinedUnprotected: number;
+  ruinedProtected: number;
 }
 
 export interface ProtectionCurve {
@@ -518,7 +524,6 @@ export function protectionCurve(
   const k = floor / 100;
 
   const points: ProtectionPoint[] = [];
-
   for (let r = min; r <= max + 1e-9; r += step) {
     const roughness = Math.round(r * 10) / 10;
     const sigma = roughness / 100;
@@ -529,6 +534,15 @@ export function protectionCurve(
     const payout = sigma * (z * normalCdf(z) + normalPdf(z)) * 100;
 
     const at = { ...inputs, annualVolatility: roughness };
+    // Both runs on the same seed and the same paths, so every difference
+    // between the columns is the hedge and nothing else.
+    const u = runSWPMonteCarlo({
+      ...at, bsEnabled: false, numSimulations: sims, seed: SEARCH_SEED,
+    });
+    const h = runSWPMonteCarlo({
+      ...at, bsEnabled: true, hedgingDragCost: premium, hedgingFloorLimit: floor,
+      numSimulations: sims, seed: SEARCH_SEED,
+    });
     points.push({
       roughness,
       bindFrequency,
@@ -536,13 +550,10 @@ export function protectionCurve(
       payout,
       premium,
       net: payout - premium,
-      survivalUnprotected: survivalAt({ ...at, bsEnabled: false }, sims),
-      survivalProtected: survivalAt({
-        ...at,
-        bsEnabled: true,
-        hedgingDragCost: premium,
-        hedgingFloorLimit: floor,
-      }, sims),
+      survivalUnprotected: u.probabilityOfSuccess / 100,
+      survivalProtected: h.probabilityOfSuccess / 100,
+      ruinedUnprotected: (u.failureCount / sims) * 100,
+      ruinedProtected: (h.failureCount / sims) * 100,
     });
   }
 

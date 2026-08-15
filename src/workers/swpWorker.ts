@@ -355,6 +355,15 @@ export function runSWPMonteCarlo(data: any = {}) {
     idealPaycheckTimeline,
     actualPaycheckTimeline,
     probabilityOfSuccess,
+    /**
+     * Trials in which the money ran out before the horizon. A COUNT, not a
+     * rate: rung 5 leads with the futures that failed, because a floor can
+     * only act there and an average over every future is the wrong measure
+     * for it (dd-012). Percentile years-lasted and a median ruin year were
+     * both built here first and removed - these plans die in the final year,
+     * so both read "year 30" at every input and discriminated nothing.
+     */
+    failureCount: numSimulations - successfulTrials,
     medianFinalBalance: p50[p50.length - 1],
     p10FinalBalance: p10[p10.length - 1],
     p90FinalBalance: p90[p90.length - 1],

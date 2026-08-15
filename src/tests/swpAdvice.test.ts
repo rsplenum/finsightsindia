@@ -372,6 +372,28 @@ describe('protection curve - what a floor costs and what it is worth', () => {
     }
   });
 
+  it('leads with the futures that failed, and they respond the right way', () => {
+    // dd-012: the quantity rung 5 headlines. A count of ruined retirements,
+    // not a survival average - and it must move the opposite way to survival,
+    // or the screen is saying two different things at once.
+    for (const p of curve.points) {
+      expect(p.ruinedUnprotected).toBeCloseTo((1 - p.survivalUnprotected) * 100, 6);
+      expect(p.ruinedProtected).toBeCloseTo((1 - p.survivalProtected) * 100, 6);
+    }
+    // Rough markets ruin more plans than calm ones, unprotected.
+    const calm = curve.points[0];
+    const rough = curve.points[curve.points.length - 1];
+    expect(rough.ruinedUnprotected).toBeGreaterThan(calm.ruinedUnprotected);
+  });
+
+  it('a floor in a calm market ruins MORE plans than it saves', () => {
+    // The finding rung 5 now states outright, and the one the first version
+    // buried in an average. At low roughness the fee is charged every year and
+    // the floor almost never triggers, so protection is a net destroyer.
+    const calm = curve.points[0];
+    expect(calm.ruinedProtected).toBeGreaterThan(calm.ruinedUnprotected);
+  });
+
   it('protection costs survival in calm markets and buys it in rough ones', () => {
     // The finding rung 5 is built on, and the one sol-018 had backwards. At
     // the shipped 15% assumption this protection is a net loss; it only earns
