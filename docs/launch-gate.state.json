@@ -1,0 +1,12 @@
+{
+  "_readme": "Freshness marker for the Launch Gate. The gate was the only durable store with no failure mode - it aged silently while every other store broke loudly when neglected. This records the commit it was last synced to, so a test can tell when code has outrun the record. Update it by running `npm run gate:sync` in the SAME commit that publishes the artifact.",
+  "syncedAtCommit": "7bbfe6ff89b99e74339161d08a4c7c1e252562d2",
+  "artifactUrl": "https://claude.ai/code/artifact/d60774ff-930a-45df-a956-1cf0fc6269a4",
+  "maxCommitsBehind": 2,
+  "watchedPaths": [
+    "src/components/Calculators",
+    "src/pages",
+    "src/utils",
+    "src/data/design-doctrine.json"
+  ]
+}

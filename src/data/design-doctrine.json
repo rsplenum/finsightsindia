@@ -183,5 +183,28 @@
       "articles"
     ],
     "test": "Ask what the person would actually feel, month to month, living inside this projection. If the headline figure is not something they would ever experience, it is the wrong headline."
+  },
+  {
+    "id": "dd-011",
+    "date": "2026-08-15",
+    "title": "A record with no failure mode will drift, and an expensive record will be skipped",
+    "trigger": "The Launch Gate fell two commits behind within two hours of a protocol saying it must be updated in the same turn - and I had written that protocol.",
+    "verbatim": "why did this happen and how to prevent, you from breaking your own rule, from happening again?",
+    "spirit": "Discipline is not what keeps records current; consequences are. Every store that held up under pressure had a way of breaking loudly when neglected - a commit needs a message, a ratchet turns the suite red, an invariant fails. The Launch Gate had only an intention, lived outside the repository where git could not see it, and therefore aged in silence. Nothing detected it because nothing could.\n\nThe second cause is quieter and just as real: the gate was six hundred lines of hand-patched HTML, so every update was a tax. Expensive obligations get rationalised away at the end of long turns, exactly when fatigue is highest and the work feels finished. Making the right thing cheap is not a convenience, it is a control.",
+    "rules": [
+      "Every durable store gets a detector. If neglecting it produces no signal, it will be neglected - not through carelessness but because nothing distinguishes the neglected state from the healthy one.",
+      "The detector names what is missing and what to do, not merely that something is wrong. A red light with no address gets muted.",
+      "Keep the record where the tooling can see it. A file outside the repository cannot be checked by anything the repository runs.",
+      "Reduce the cost of compliance. If updating a record is laborious, the laboriousness is a cause of the drift and fixing it is part of the fix.",
+      "Restating a rule more firmly is not a mechanism. That had already been tried once, on dd-000, and failed within a day."
+    ],
+    "note": "Written after the second process failure of the same session. The first was skipping the doctrine checks before rung 4; the second was this. Both were answered with intentions before they were answered with tests, and only the tests held.",
+    "applies_to": [
+      "the launch gate",
+      "design-doctrine.json",
+      "engineering-solutions.json",
+      "any record we intend to keep current"
+    ],
+    "test": "For each store we rely on: what breaks, visibly, if it is neglected for a week? If the answer is 'nothing', it is already drifting and we simply cannot see it yet."
   }
 ]
