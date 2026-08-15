@@ -67,7 +67,7 @@ const {
 
 	function formatRupee(val: number): string {
 		if (isNaN(val) || val < 0) return '₹0';
-		return `₹${tableFormatter.format(Math.round(val))}`;
+		return `${tableFormatter.format(Math.round(val))}`;
 	}
 
 	function runGainCalc() {
@@ -98,7 +98,7 @@ const {
                 recEl.innerText = "No Capital Gains incurred. You sold the asset at a loss or at par.";
             } else {
                 recEl.className = "p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-xs font-bold text-emerald-700 dark:text-emerald-400 text-center tracking-wide";
-				recEl.innerText = `💡 To save ₹${tableFormatter.format(Math.round(propertyTax))} in property tax, you can reinvest the gains under Section 54 (New House) or Section 54EC (Bonds).`;
+				recEl.innerText = `💡 To save ${tableFormatter.format(Math.round(propertyTax))} in property tax, you can reinvest the gains under Section 54 (New House) or Section 54EC (Bonds).`;
 			}
 		}
 	}

@@ -76,7 +76,7 @@ const {
 
 	function formatRupee(val: number): string {
 		if (isNaN(val)) return '₹0';
-		return `₹${tableFormatter.format(Math.round(val))}`;
+		return `${tableFormatter.format(Math.round(val))}`;
 	}
 
 	function run270ACalc() {
