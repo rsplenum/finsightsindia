@@ -1,5 +1,4 @@
 import { runSWPMonteCarlo } from '../workers/swpWorker';
-import { runDeterministicSWP } from './swpDeterministic';
 
 /**
  * Turning a verdict into a decision.
@@ -294,6 +293,29 @@ export interface SequenceRisk {
  * Deterministic on purpose. A Monte Carlo here would blur the very effect
  * being isolated.
  */
+/**
+ * Drive the ONE engine along a fixed sequence of annual returns.
+ *
+ * This used to call runDeterministicSWP - a second, independent implementation
+ * of the same withdrawal, tax and cost-basis maths. Two engines meant the LTCG
+ * double-charge had to be found and fixed twice, and only a parity test stood
+ * between us and a table that silently contradicted its own headline. The
+ * Monte Carlo engine now accepts an explicit return sequence, so the duplicate
+ * is gone rather than policed (dd-013).
+ *
+ * One trial, zero volatility, returns supplied: the percentile arrays collapse
+ * to that single path, which is exactly the deterministic walk.
+ */
+function runFixedSequence(inputs: AdviceInputs, returnsPct: number[]) {
+  const r = runSWPMonteCarlo({
+    ...inputs,
+    annualVolatility: 0,
+    numSimulations: 1,
+    returnsByYear: returnsPct.map((x) => x / 100),
+  });
+  return { balances: r.p50 as number[], withdrawals: r.medianWithdrawals as number[] };
+}
+
 export function sequenceRisk(
   inputs: AdviceInputs,
   crashPct = -30,
@@ -308,7 +330,7 @@ export function sequenceRisk(
       const y = i + 1;
       return y >= startYear && y < startYear + duration ? crashPct : inputs.expectedReturn;
     });
-    const run = runDeterministicSWP({ ...inputs, returnsByYear: returns });
+    const run = runFixedSequence(inputs, returns);
 
     let depletionYear: number | null = null;
     for (let y = 1; y < run.balances.length; y++) {

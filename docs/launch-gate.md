@@ -1,6 +1,6 @@
 # FinSight — Launch Gate
 
-**Not live. No domain.** 148 tests green · 29 commits on `fix/learning-loop-integrity-and-calculator-correctness`
+**Not live. No domain.** 153 tests green · 30 commits on `fix/learning-loop-integrity-and-calculator-correctness`
 
 This is a list, not a document. Explanations live in commit messages, `design-doctrine.json` and `engineering-solutions.json`. This says what is done and what is next.
 
@@ -17,6 +17,8 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 - [x] The toggles reach the rungs
 - [x] `surfaceParity.test.ts` — 13-input sweep asserts no quantity can differ
 - [x] Second instance found and fixed: panel summed per-year medians, ladder used per-path averages
+- [x] **sol-027 — one engine, not two.** `runSWPMonteCarlo` now takes `returnsByYear`, so rung 4 no longer needs the duplicate `swpDeterministic`. `singleEngine.test.ts` guards it
+- [ ] **Deferred, with reason:** delete `swpDeterministic.ts`. No production caller left, but 11 tests use it as a harness — including the LTCG double-charge guards — and they read `growth`/`netMonthly` the MC engine doesn't expose. Port those first
 
 **P1 · rung 5 is framed wrong (dd-012).** Judged by an all-futures average, which is the one thing insurance is not for.
 

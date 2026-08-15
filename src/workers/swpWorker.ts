@@ -107,6 +107,13 @@ export function runSWPMonteCarlo(data: any = {}) {
   }
   const rand = mulberry32(Number(data.seed) || 1234567);
 
+  // When supplied, every trial follows this exact sequence of annual returns
+  // and no randomness is used at all. Values are decimals, e.g. -0.30 for a
+  // 30% fall, indexed from year 1.
+  const returnsByYear: number[] | null = Array.isArray(data.returnsByYear)
+    ? data.returnsByYear.map((r: number) => Number(r))
+    : null;
+
   // Box-Muller transform generator for standard normal N(0, 1)
   function getRandomNormal() {
     let u1 = 0, u2 = 0;
@@ -161,7 +168,15 @@ export function runSWPMonteCarlo(data: any = {}) {
         trialMinPurchasingPower = Math.min(trialMinPurchasingPower, retentionRatio);
       }
 
-      let randomReturn = mu + sigma * getRandomNormal();
+      // An explicit return sequence drives the engine deterministically. This
+      // is what lets the ladder ask "same returns, different order" (rung 4)
+      // WITHOUT a second implementation of the withdrawal, tax and cost-basis
+      // maths - which is what src/utils/swpDeterministic.ts used to be, and why
+      // the LTCG double-charge once had to be fixed twice. One engine, driven
+      // two ways (dd-013).
+      let randomReturn = returnsByYear
+        ? (returnsByYear[year - 1] ?? mu)
+        : mu + sigma * getRandomNormal();
       if (bsEnabled) {
           randomReturn = Math.max(floorLimit, randomReturn) - dragCost;
       }
