@@ -24,11 +24,17 @@
 
     <!-- Proportional bar. Static by design - editorial, not a game UI. -->
     <div class="space-y-3">
-      <p class="text-xs text-navy-500 dark:text-navy-400">
-        Over <span id="flowYears" class="font-semibold text-navy-700 dark:text-navy-300">30</span> years,
-        every rupee that passes through the plan — counted as the actual rupees
-        that change hands, not in today's money:
-      </p>
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <p class="text-xs text-navy-500 dark:text-navy-400">
+          Over <span id="flowYears" class="font-semibold text-navy-700 dark:text-navy-300">30</span> years,
+          every rupee that passes through the plan:
+        </p>
+        <!-- dd-004: the frame is a permanent, visible marker, not a caption. -->
+        <span class="shrink-0 inline-flex items-center gap-1.5 rounded-md border border-navy-200 dark:border-navy-700 bg-navy-50 dark:bg-navy-900/60 px-2 py-1 text-[11px] font-medium text-navy-600 dark:text-navy-300">
+          <span class="h-1.5 w-1.5 rounded-full bg-gold-500"></span>
+          in today's money — what it would buy now
+        </span>
+      </div>
 
       <div class="flex h-9 w-full overflow-hidden rounded-lg border border-navy-200 dark:border-navy-700" role="img" aria-labelledby="flowBarDesc">
         <div id="barSpent" class="bg-gold-500/85 dark:bg-gold-500/70 min-w-[2px]"></div>
@@ -98,57 +104,65 @@
   function render(detail: any) {
     const { inputs, outlook } = detail;
     const f = outlook?.flow;
-    if (!f) return;
+    if (!f?.real) return;
 
-    const total = Math.max(1, f.netToYou + f.tax + Math.max(0, f.left));
+    // Today's money is what we show. A reader knows what a rupee buys now and
+    // has no feel for what one buys in 2056 (dd-004).
+    const r = f.real;
+
+    const total = Math.max(1, r.netToYou + r.tax + Math.max(0, r.left));
     const pct = (n: number) => `${Math.max(0, (n / total) * 100).toFixed(2)}%`;
 
-    ($('barSpent') as HTMLElement).style.width = pct(f.netToYou);
-    ($('barTax') as HTMLElement).style.width = pct(f.tax);
-    ($('barLeft') as HTMLElement).style.width = pct(Math.max(0, f.left));
+    ($('barSpent') as HTMLElement).style.width = pct(r.netToYou);
+    ($('barTax') as HTMLElement).style.width = pct(r.tax);
+    ($('barLeft') as HTMLElement).style.width = pct(Math.max(0, r.left));
 
     $('flowYears')!.textContent = String(inputs.horizonYears);
-    $('flowSpent')!.textContent = money(f.netToYou);
-    $('flowTax')!.textContent = money(f.tax);
-    $('flowLeft')!.textContent = money(Math.max(0, f.left));
+    $('flowSpent')!.textContent = money(r.netToYou);
+    $('flowTax')!.textContent = money(r.tax);
+    $('flowLeft')!.textContent = money(Math.max(0, r.left));
     $('flowBarDesc')!.textContent =
-      `You spend ${money(f.netToYou)}, tax takes ${money(f.tax)}, ` +
-      `and ${money(Math.max(0, f.left))} is still there at the end.`;
+      `In today's money you spend ${money(r.netToYou)}, tax takes ${money(r.tax)}, ` +
+      `and ${money(Math.max(0, r.left))} is still there at the end.`;
 
     // The insight adapts to what actually happened, because a plan that
     // depletes teaches the same lesson from the other direction.
-    if (f.left > 0 && f.growth > f.drawn) {
+    // Real growth as a residual, so the sentence's claim is backed by a figure
+    // the reader can check against the three shown above it.
+    const realGrowth = r.drawn + r.left - f.started;
+
+    if (r.left > 0) {
       $('flowInsight')!.textContent =
-        `You started with ${money(f.started)} and took out ${money(f.drawn)} — ` +
-        `${f.multiple.toFixed(1)} times what you began with — and there is still ` +
-        `${money(f.left)} left. Your savings did not pay you. Growth did: ` +
-        `the pot earned ${money(f.growth)} along the way.`;
+        `In what it can actually buy, you take out ${money(r.drawn)} — ` +
+        `${r.multiple.toFixed(1)} times what you started with — and still have ` +
+        `${money(r.left)} left at the end. Your savings did not pay you. Growth did: ` +
+        `the pot earned ${money(realGrowth)} more than you put in, after allowing ` +
+        `for rising prices.`;
       $('flowIdea')!.textContent =
         `That only works because you drew ${f.initialRate.toFixed(1)}% in the first year ` +
-        `and the pot grew faster than that. This is the thing worth remembering: ` +
-        `the rate you draw matters far more than the amount you start with. ` +
-        `Double the savings and draw double, and you are in exactly the same place.`;
+        `and the pot grew faster than that. The rate you draw matters far more than ` +
+        `the amount you start with: double the savings and draw double, and you are ` +
+        `in exactly the same place.`;
     } else {
       $('flowInsight')!.textContent =
-        `You started with ${money(f.started)} and took out ${money(f.drawn)}, ` +
-        `and the pot earned ${money(f.growth)} on the way — but not fast enough. ` +
-        `Drawing ${f.initialRate.toFixed(1)}% in the first year outran what the money could earn.`;
+        `In what it can actually buy, you take out ${money(r.drawn)} and end with ` +
+        `nothing. Drawing ${f.initialRate.toFixed(1)}% in the first year outran what ` +
+        `the money could earn.`;
       $('flowIdea')!.textContent =
-        `This is the thing worth remembering: the rate you draw matters far more ` +
-        `than the amount you start with. A bigger pot drawn at the same rate runs ` +
-        `out at the same time — only a slower rate changes the ending.`;
+        `The rate you draw matters far more than the amount you start with. A bigger ` +
+        `pot drawn at the same rate runs out at the same time — only a slower rate ` +
+        `changes the ending.`;
     }
 
-    const realLeft =
-      Math.max(0, f.left) / Math.pow(1 + inputs.expectedInflation / 100, inputs.horizonYears);
-    $('flowReconcile')!.textContent = Math.max(0, f.left) > 0
-      ? `The figures above are the rupees actually changing hands. That is why the ` +
-        `${money(f.left)} left here is the ${money(realLeft)} we quoted at the top — ` +
-        `same money, ${inputs.horizonYears} years of inflation apart. Which is the ` +
-        `next thing worth understanding.`
-      : `The figures above are the rupees actually changing hands, so they are worth ` +
-        `less than they look — ${inputs.horizonYears} years of inflation sit between ` +
-        `the first withdrawal and the last.`;
+    // The nominal figures are the opt-in, not the default, and they are named
+    // as the same money rather than left to look like a contradiction.
+    $('flowReconcile')!.textContent = r.left > 0
+      ? `On a statement in ${inputs.horizonYears} years those numbers look bigger — ` +
+        `the leftover reads ${money(f.left)} rather than ${money(r.left)}. It is the ` +
+        `same money. Prices will have risen too, so it buys what ${money(r.left)} ` +
+        `buys today. That gap is why we show you today's money.`
+      : `On a statement the yearly figures look bigger than these, because prices ` +
+        `rise alongside them. These are what the money would actually buy you.`;
   }
 
   window.addEventListener('swp:result', (e) => render((e as CustomEvent).detail));

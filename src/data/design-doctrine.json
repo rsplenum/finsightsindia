@@ -22,7 +22,12 @@
     "verbatim": "our audience is the lay person but our product and offering is all the complexities in the world, not reduced not diluted not stripped down, packaged in a way that it becomes available, accessible and affordable to our user",
     "spirit": "Simplicity here is a property of DELIVERY, not of content. Nothing is removed, softened, or dumbed down. The layperson gets the whole of it - the difficulty lives in the packaging, which is our work, not theirs. This is the operational meaning of 'it is so simple to be difficult but it is so difficult to be simple': the difficulty is ours to absorb.",
     "corrects": "sol-019's 'three inputs' rule, which could be misread as reduction. Three inputs is the ENTRY, not the offering. Everything else must remain present and reachable - moved, never deleted.",
-    "applies_to": ["calculators", "articles", "homepage", "illustrations"],
+    "applies_to": [
+      "calculators",
+      "articles",
+      "homepage",
+      "illustrations"
+    ],
     "test": "For any simplification, ask: did the complexity move, or did it disappear? If a capability is no longer reachable by a determined user, this has been violated."
   },
   {
@@ -33,7 +38,11 @@
     "verbatim": "the transition from the minimal UI to the complexities has to be layered and more nuanced and the user has to be hand held throughout the way... its like at one moment we are teaching the user the A,B,C and the very next moment they are exposed to the shakesperian or aristotalian level dense prose to parse",
     "spirit": "Progressive disclosure measured in quantity revealed is not layering - it relocates the wall. Layers must follow the questions a user is actually having, in the order they have them. Each layer answers ONE question, exposes ONE control, shows ONE consequence, and hands off to the next question. A person who has just been taught the alphabet cannot be handed Aristotle.",
     "note": "This is sol-008's constructivism applied to interface instead of prose: people absorb concepts they construct, not concepts delivered to them. The article doctrine already knew this; the UI had not inherited it.",
-    "applies_to": ["calculators", "interactive components", "workbenches"],
+    "applies_to": [
+      "calculators",
+      "interactive components",
+      "workbenches"
+    ],
     "test": "Count the controls and new concepts revealed by a single disclosure step. More than about two means the step is a cliff. Every step must be answerable: which question of the user's does this answer?"
   },
   {
@@ -44,7 +53,46 @@
     "verbatim": "How i define value derived from this calculator: not what it is capable of, thats the non-negotiable infra (the features and the absolutely correct and empirically verifiable calculation and results) but whether it can get to the user's mind and reserve mindspace for itself, become a tool for the user, like bicycle for the mind... the user pays us in the currency of their time and attention",
     "spirit": "Capability is the floor, not the product. Correct maths and full features are the price of admission, not the achievement. The achievement is that the user leaves able to think about the problem - carrying a transferable intuition rather than a number and a dependency. A tool that is used once and never re-enters the mind has failed even if every figure it printed was right.",
     "consequence": "Every screen is charged for. If a screen costs thirty seconds of attention and leaves nothing the user can carry away and use, we have taken payment and delivered nothing.",
-    "applies_to": ["calculators", "articles", "homepage", "the whole product"],
+    "applies_to": [
+      "calculators",
+      "articles",
+      "homepage",
+      "the whole product"
+    ],
     "test": "For every screen: what idea does the user leave with that they did not arrive with, and could they now use it without us? If the honest answer is 'a number', that screen has taken payment without delivering."
+  },
+  {
+    "id": "dd-004",
+    "date": "2026-08-15",
+    "title": "Never use a concept the reader has not been given",
+    "trigger": "The money-flow rung mixed today's money and future rupees, and reconciled them in a closing line that assumed the reader already knew the distinction.",
+    "verbatim": "One thing that confuses me, when i am looking at a number is it real or nominal ? Are we assuming that a reader knows about real and nominal ? ... it is not clear that: the 1.57 crore left is the purchasing power or the amount of money left in corpus after 30 years ?",
+    "spirit": "A distinction the reader does not hold cannot be resolved by a footnote. If two number systems appear on a screen, the difference between them is itself an idea and earns its own step - it is never a parenthetical. Reconciling in passing looks like rigour and reads like noise.",
+    "rules": [
+      "Every figure carries its frame visibly and permanently, not in a caption the eye skips.",
+      "Default to the reader's native units. A person knows what Rs 40,000 a month buys today; nobody has intuition for Rs 2.3 lakh a month in 2056. Today's money is the default; future rupees are the thing you opt into.",
+      "Teach the distinction before relying on it, on its own step, in the reader's words - not 'real and nominal'."
+    ],
+    "applies_to": [
+      "calculators",
+      "articles",
+      "illustrations",
+      "any figure projected forward"
+    ],
+    "test": "Point at any number on any screen. Can the reader say which money it is in, without scrolling and without knowing the words real or nominal? If not, this is violated."
+  },
+  {
+    "id": "dd-005",
+    "date": "2026-08-15",
+    "title": "Find the one comparison the whole subject reduces to",
+    "trigger": "Asking what the corpus actually has to survive - inflation, withdrawals, corrections, capital gains tax, optional hedging premiums - and still compound.",
+    "verbatim": "it is not clear that: if inflation is eroding my real value by 6% every year and i withdrew 6%, then at what rate is my corpus growing ? maybe 1-2% real rate of return. ... corpus has to survive inflation, monthly withdrawal, occational market correction or recession, capital gain taxes, maybe insurance premiums if the user chooses and still compound that has to be explained to the user too but without any cognitive load.",
+    "spirit": "A long list of things to worry about is cognitive load. The same list, expressed as pressure on ONE comparison, is a mental model. For withdrawal planning that comparison is: what the pot really grows at, against what you are really taking out. Every other factor - tax, fees, inflation, hedging premium, a crash - is a force pushing one of those two numbers. Show the comparison, then let each concern arrive as a push on it, and the reader assembles the whole picture without carrying a list.",
+    "note": "This is what 'bicycle for the mind' (dd-003) looks like in practice. The reader who leaves holding one comparison can reason about products we have never built; the reader who leaves holding seven caveats has memorised our screen.",
+    "applies_to": [
+      "calculators",
+      "articles"
+    ],
+    "test": "For any calculator, name the single comparison it reduces to. If there isn't one, the model has not been found yet and the screen is still a list."
   }
 ]

@@ -67,6 +67,21 @@ export interface Outlook {
     multiple: number;
     /** First-year withdrawal as a percentage of the starting corpus. */
     initialRate: number;
+    /**
+     * The same journey in today's money (dd-004). A reader knows what a rupee
+     * buys now and has no intuition for what one buys in 2056, so this is the
+     * frame we lead with; the nominal figures above are the opt-in.
+     * Each year's flow is discounted at its own distance, not the total at the
+     * end - money drawn in year 2 has barely lost value, money drawn in year
+     * 30 has lost most of it.
+     */
+    real: {
+      drawn: number;
+      tax: number;
+      netToYou: number;
+      left: number;
+      multiple: number;
+    };
   };
 }
 
@@ -101,6 +116,19 @@ export function outlook(inputs: AdviceInputs, sims = 2000): Outlook {
   const tax = r.avgTotalTaxPaid;
   const left = r.medianFinalBalance;
 
+  // Discount each year's flow at its own distance. Deflating the 30-year total
+  // by 30 years of inflation would be wrong by a wide margin, because most of
+  // the money comes out long before year 30.
+  const d = (n: number, years: number) =>
+    n / Math.pow(1 + inputs.expectedInflation / 100, years);
+  const w: number[] = r.medianWithdrawals ?? [];
+  const t: number[] = r.medianTaxes ?? [];
+  let realDrawn = 0;
+  let realTax = 0;
+  for (let y = 1; y < w.length; y++) realDrawn += d(w[y] ?? 0, y);
+  for (let y = 1; y < t.length; y++) realTax += d(t[y] ?? 0, y);
+  const realLeft = d(left, inputs.horizonYears);
+
   return {
     survival: r.probabilityOfSuccess / 100,
     medianDepletionYear: depletion,
@@ -115,6 +143,13 @@ export function outlook(inputs: AdviceInputs, sims = 2000): Outlook {
       left,
       multiple: started > 0 ? drawn / started : 0,
       initialRate: started > 0 ? (inputs.monthlyWithdrawal * 12) / started * 100 : 0,
+      real: {
+        drawn: realDrawn,
+        tax: realTax,
+        netToYou: realDrawn - realTax,
+        left: realLeft,
+        multiple: started > 0 ? realDrawn / started : 0,
+      },
     },
   };
 }

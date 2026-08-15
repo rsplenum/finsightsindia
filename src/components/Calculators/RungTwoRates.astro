@@ -1,0 +1,138 @@
+---
+// The spine (dd-005). Every worry a reader has about a retirement pot -
+// inflation, withdrawals, tax, fees, crashes, hedging premiums - is a force
+// pushing on one of two numbers: what the money really grows at, and what
+// they are really taking out. Show that comparison first and every later
+// concern arrives as a push on it, instead of as another item on a list.
+//
+// It also discharges dd-004. "Your money grows 12%, prices rise 6%, so you
+// are really only 5.7% better off" teaches the real/nominal distinction in
+// the reader's own words, without ever using either word - and it has to be
+// taught here, because every screen after this one depends on it.
+---
+
+<section id="rungRates" class="max-w-3xl mx-auto px-4 sm:px-6 py-4" aria-labelledby="rungRatesQ">
+  <div class="card-premium rounded-2xl p-6 sm:p-8 space-y-6">
+
+    <div>
+      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-400 dark:text-navy-500">
+        Next question
+      </p>
+      <h2 id="rungRatesQ" class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 mt-1">
+        So how fast is your money really growing?
+      </h2>
+      <p class="text-sm text-navy-500 dark:text-navy-400 mt-2">
+        Everything below turns on this one comparison.
+      </p>
+    </div>
+
+    <!-- The ledger. Deliberately plain: two things going up, one thing coming
+         out, and the gap between them. -->
+    <div class="rounded-xl border border-navy-200 dark:border-navy-700 divide-y divide-navy-200 dark:divide-navy-700 overflow-hidden">
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">Your savings grow by</span>
+        <span id="rateGross" class="text-base font-semibold tabular-nums text-navy-900 dark:text-navy-100">—</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">
+          Prices rise by
+          <span class="block text-xs text-navy-500 dark:text-navy-400">so the same rupee buys less each year</span>
+        </span>
+        <span id="rateInflation" class="text-base font-semibold tabular-nums text-rose-600 dark:text-rose-400">—</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3 bg-navy-50/60 dark:bg-navy-900/40">
+        <span class="text-sm font-medium text-navy-800 dark:text-navy-200">
+          So you are genuinely better off by
+          <span class="block text-xs font-normal text-navy-500 dark:text-navy-400">this is the number that actually matters</span>
+        </span>
+        <span id="rateReal" class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">—</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">And you are taking out</span>
+        <span id="rateDraw" class="text-base font-semibold tabular-nums text-gold-600 dark:text-gold-400">—</span>
+      </div>
+      <div id="headroomRow" class="flex items-baseline justify-between gap-4 px-4 py-3.5 bg-navy-50/60 dark:bg-navy-900/40">
+        <span class="text-sm font-semibold text-navy-900 dark:text-navy-100">Which leaves you</span>
+        <span id="rateHeadroom" class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">—</span>
+      </div>
+    </div>
+
+    <div class="space-y-3">
+      <p id="ratesInsight" class="text-base leading-relaxed text-navy-800 dark:text-navy-200"></p>
+      <p id="ratesIdea" class="text-sm leading-relaxed text-navy-600 dark:text-navy-400"></p>
+    </div>
+
+    <div class="pt-4 border-t border-navy-200 dark:border-navy-800">
+      <p id="ratesHandoff" class="text-sm text-navy-600 dark:text-navy-400"></p>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  const $ = (id: string) => document.getElementById(id);
+  const pct = (n: number, dp = 1) => `${n >= 0 ? '' : '−'}${Math.abs(n).toFixed(dp)}%`;
+
+  function render(detail: any) {
+    const { inputs } = detail;
+    const g = inputs.expectedReturn;
+    const i = inputs.expectedInflation;
+
+    // Real growth is the ratio, not the difference. 12% and 6% leaves 5.66%,
+    // not 6% - and over thirty years that gap compounds into a large error.
+    const real = ((1 + g / 100) / (1 + i / 100) - 1) * 100;
+    const draw = (inputs.monthlyWithdrawal * 12) / inputs.initialCorpus * 100;
+    const headroom = real - draw;
+
+    $('rateGross')!.textContent = `+ ${pct(g)} a year`;
+    $('rateInflation')!.textContent = `− ${pct(i)} a year`;
+    $('rateReal')!.textContent = `${pct(real, 1)} a year`;
+    $('rateDraw')!.textContent = `− ${pct(draw)} a year`;
+    $('rateHeadroom')!.textContent = `${pct(headroom, 1)} a year`;
+
+    const head = $('rateHeadroom') as HTMLElement;
+    head.className =
+      'text-lg font-bold tabular-nums ' +
+      (headroom >= 1.5
+        ? 'text-emerald-700 dark:text-emerald-400'
+        : headroom >= 0
+          ? 'text-amber-600 dark:text-amber-400'
+          : 'text-rose-600 dark:text-rose-400');
+
+    if (headroom < 0) {
+      $('ratesInsight')!.textContent =
+        `You are taking out ${pct(draw)} a year while your savings only get you ` +
+        `${pct(real, 1)} ahead of rising prices. You are ${pct(Math.abs(headroom), 1)} ` +
+        `a year short, so the pot is shrinking in what it can actually buy — ` +
+        `even in years when the balance on the statement goes up.`;
+    } else if (headroom < 1.5) {
+      $('ratesInsight')!.textContent =
+        `Your savings grow ${pct(g)}, but prices rise ${pct(i)}, so you are only ` +
+        `genuinely ${pct(real, 1)} better off each year. You are taking out ` +
+        `${pct(draw)} of that. The ${pct(headroom, 1)} left over is the entire ` +
+        `margin your plan runs on.`;
+    } else {
+      $('ratesInsight')!.textContent =
+        `Your savings grow ${pct(g)}, but prices rise ${pct(i)}, so you are ` +
+        `genuinely ${pct(real, 1)} better off each year — and you are taking out ` +
+        `${pct(draw)}. That leaves ${pct(headroom, 1)} a year of room, which is ` +
+        `what lets the pot keep growing while it pays you.`;
+    }
+
+    $('ratesIdea')!.textContent =
+      `This is the comparison worth carrying away. Not the balance, not the ` +
+      `percentage odds — just these two numbers. Anything that helps pushes ` +
+      `the first one up or the second one down, and anything that hurts does ` +
+      `the reverse.`;
+
+    $('ratesHandoff')!.innerHTML =
+      `And there are three things that eat into that ` +
+      `<span class="font-medium text-navy-800 dark:text-navy-200">${pct(real, 1)}</span> ` +
+      `before you ever see it: <span class="font-medium text-navy-800 dark:text-navy-200">tax on your gains</span>, ` +
+      `<span class="font-medium text-navy-800 dark:text-navy-200">a market fall at the wrong moment</span>, and ` +
+      `<span class="font-medium text-navy-800 dark:text-navy-200">anything you pay to protect yourself</span>. ` +
+      `Each gets its own step.`;
+  }
+
+  window.addEventListener('swp:result', (e) => render((e as CustomEvent).detail));
+</script>

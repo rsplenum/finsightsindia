@@ -6,6 +6,7 @@ import InputGroup from '../components/InputGroup.astro';
 import SectionTitle from '../components/SectionTitle.astro';
 import ButtonGold from '../components/ButtonGold.astro';
 import RetirementAnswer from '../components/Calculators/RetirementAnswer.astro';
+import RungTwoRates from '../components/Calculators/RungTwoRates.astro';
 import RungMoneyFlow from '../components/Calculators/RungMoneyFlow.astro';
 ---
 
@@ -21,7 +22,10 @@ import RungMoneyFlow from '../components/Calculators/RungMoneyFlow.astro';
 
 	<!-- The ladder (dd-002): one question per rung, in the order a reader has
 	     them. Each rung subscribes to the same computation, so no two views
-	     can disagree. -->
+	     can disagree. The two-rates rung comes first: it is the model everything
+	     else is a push on (dd-005), and it teaches the money distinction the
+	     later rungs depend on (dd-004). -->
+	<RungTwoRates />
 	<RungMoneyFlow />
 
 	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-16 sm:pt-6 sm:pb-24">
