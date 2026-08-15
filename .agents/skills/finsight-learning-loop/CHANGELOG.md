@@ -1,5 +1,19 @@
 # finsight-learning-loop — CHANGELOG
 
+## v2.1 — 2026-08-15
+
+- **Merged the H6/H7/H8 sections** documenting the verdict log, the ceiling
+  (pairwise preference + relaxation) and rule identity across rubric versions.
+- **H3 hardened after its first real run.** The gate had stopped measuring what
+  it claimed to: every frozen case is a 166–606 character excerpt, but the
+  runner applied the entire rubric, so PASS cases failed on M1 and M5 —
+  criteria a fragment cannot satisfy — while FAIL cases passed for the same
+  irrelevant reasons, defeating the only mechanism that could catch a rubric
+  quietly loosening. `rules_under_test` is now mandatory and scoped in the
+  current namespace. Evidence: sol-020.
+- **H2 auditor prompt corrected** from the orphaned R1–R6 / M1–M12 / S1–S7
+  enumeration to R1–R7 / M1–M5 / S1–S5, and pointed at `actionable_patterns()`.
+
 ## v2.0 — 2026-08-15 (infrastructure only; rubric changes staged separately)
 
 Audit of the loop against 51 published articles found that three of its five

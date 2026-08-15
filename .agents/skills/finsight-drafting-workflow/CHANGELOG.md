@@ -1,3 +1,36 @@
+## v5.0 — 2026-08-15
+
+Merged `_proposals/ceiling-and-variants/` after a clean H3 regression run
+(4/4 on both the live rubric and the proposal, gemini-3.1-pro-preview).
+
+- **Split the evaluator's two jobs.** `content_evaluator` now guards the Floor
+  only and is explicitly told not to rank, compare or praise. Layer B renamed
+  **The Mandate Minimum**, with a line stating that 5/5 means the draft failed
+  to violate anything we thought to ask for — not that it is good.
+- **Added `content_ranker`** (Part B, agent 4). Owns the ceiling and may only
+  compare two drafts, never score one in isolation. Required to name the
+  deciding dimension in its own words even when no rule covers it, and to
+  report a `RULE_GAP` when none does.
+- **Twin variants.** Step 3 now drafts the same dossier twice under different
+  Forms (primary + contrast, both nominated by the strategist), with an honest
+  escape hatch when the topic admits only one sane structure. Step 4b ranks
+  them and records the outcome via `ceiling.py::log_preference`.
+- **Step 9 now calls `audit_due()`** rather than `should_run_pattern_audit()`.
+  The latter fires only on an exact multiple and increments as a side effect,
+  so a missed tick cost another ten articles — which is what happened when the
+  counter file did not exist and five trigger points passed unnoticed.
+- **Part H, asset safety.** Never overwrite an untracked file at a target path
+  without asking. Evidence: failure_log `a92b8d4f` (a human-approved hero
+  illustration destroyed via a hardcoded filename) and `sol-014` (articles
+  silently dropped from the live site).
+- **Pattern auditor corrected.** It was being told to reason about
+  "R1–R6, M1–M12, S1–S7", a rubric that stopped existing at commit 59c3970.
+  Now R1–R7, M1–M5, S1–S5, and it must work from
+  `learning_loop.py::actionable_patterns()` rather than counting raw rule ids.
+  Evidence: raw counting peaked at 2 against its own threshold of 3, so it
+  would have reported "no patterns found"; resolved, the same 18 entries yield
+  M3 ×5 and M2 ×3.
+
 ## v4.1 — 2026-08-11
 - Integrated `finsight-strategist` as Step 0 (Strategist Dispatch) of the fast loop.
 - Added `content_strategist` subagent to Part B to force angle generation against competitive gaps.
