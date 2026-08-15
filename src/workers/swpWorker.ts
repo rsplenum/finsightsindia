@@ -174,7 +174,13 @@ export function runSWPMonteCarlo(data: any = {}) {
       const actualWithdrawal = Math.min(intendedWithdrawal, grownBalance);
       trialActualGross += actualWithdrawal;
 
-      if (actualWithdrawal <= 0) {
+      // A withdrawal of zero has two very different causes and they were being
+      // treated identically. If the portfolio is gone, the trial has failed.
+      // If the user simply asked for nothing, the corpus should just keep
+      // compounding - that is a plan that trivially survives, not one that
+      // collapsed. Conflating them made survival at a zero withdrawal report
+      // 0%, which is how the "spend less" remedy search first surfaced this.
+      if (grownBalance <= 0) {
         yearlyBalancesMatrix[year][sim] = 0;
         yearlyWithdrawalsMatrix[year][sim] = 0;
         yearlyTaxesMatrix[year][sim] = 0;
@@ -182,6 +188,16 @@ export function runSWPMonteCarlo(data: any = {}) {
         currentBalance = 0;
         costBasis = 0;
         trialFailed = true;
+        continue;
+      }
+
+      if (actualWithdrawal <= 0) {
+        yearlyBalancesMatrix[year][sim] = grownBalance;
+        yearlyWithdrawalsMatrix[year][sim] = 0;
+        yearlyTaxesMatrix[year][sim] = 0;
+        yearlyMonthlyPaychecksMatrix[year][sim] = 0;
+        currentBalance = grownBalance;
+        if (sim < samplePathCount) samplePaths[sim][year] = currentBalance;
         continue;
       }
 

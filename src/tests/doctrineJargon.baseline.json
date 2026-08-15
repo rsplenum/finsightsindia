@@ -20,12 +20,9 @@
     "index"
   ],
   "stochastic": [
-    "creator-log",
     "faq",
     "index",
-    "shelved-ideas",
     "sip-engine",
-    "solutions",
     "swp-planner",
     "terms"
   ],

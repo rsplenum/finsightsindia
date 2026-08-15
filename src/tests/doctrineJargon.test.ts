@@ -34,6 +34,20 @@ const BANNED = [
   'institutional quantitative', 'leptokurtic', 'heteroskedastic',
 ];
 
+// Pages that document how the site is built, for an audience that came to
+// read about the process. The ban list exists so a layperson meeting a
+// calculator is not intimidated by vocabulary; it is not a prohibition on
+// naming a term while explaining it. sol-019 itself lists the banned words,
+// and /solutions renders sol-019 - so without this the doctrine page can
+// never satisfy the doctrine.
+//
+// FAQ is deliberately NOT here. It is product copy a confused user reaches
+// for, so "stochastic" on /faq stays flagged.
+const META_ROUTES = new Set([
+  'solutions', 'creator-log', 'shelved-ideas', 'standards',
+  'research-ledger', 'reels',
+]);
+
 const routeOf = (file: string): string =>
   file.replace(`${DIST}/`, '').replace(/\/index\.html$/, '').replace(/\.html$/, '') || '/';
 
@@ -44,6 +58,7 @@ function scan(): Record<string, string[]> {
       const p = path.join(dir, e.name);
       if (e.isDirectory()) { walk(p); continue; }
       if (!e.name.endsWith('.html')) continue;
+      if (META_ROUTES.has(routeOf(p))) continue;
 
       const text = fs
         .readFileSync(p, 'utf-8')
