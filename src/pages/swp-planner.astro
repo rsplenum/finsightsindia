@@ -5,16 +5,33 @@ import CardPremium from '../components/CardPremium.astro';
 import InputGroup from '../components/InputGroup.astro';
 import SectionTitle from '../components/SectionTitle.astro';
 import ButtonGold from '../components/ButtonGold.astro';
+import RetirementAnswer from '../components/Calculators/RetirementAnswer.astro';
 ---
 
 <Layout title="Retirement Withdrawal Planner — SWP Intelligence Engine">
-	<Hero 
-		badge="SWP Intelligence Engine"
-		title="Retirement Withdrawal Planner"
-		description="A systematic withdrawal engine engineered to stress-test your wealth against inflation, market volatility, and tax friction over your lifetime."
+	<Hero
+		badge="Retirement Planner"
+		title="Will my savings last?"
+		description="Tell us three things and we will tell you how long your money lasts — and what to change if the answer is not good enough."
 	/>
 
+	<!-- Layer 1: the Answer (sol-019) -->
+	<RetirementAnswer />
+
 	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-16 sm:pt-6 sm:pb-24">
+
+		<!-- Layers 2 and 3: the workings and the expert controls. Nothing has been
+		     removed - the depth sits behind a door instead of standing in the
+		     doorway. -->
+		<details id="detailLayer" class="group mb-6">
+			<summary class="cursor-pointer list-none flex items-center justify-center gap-2 py-3 text-sm font-medium text-navy-600 dark:text-navy-300 hover:text-gold-600 dark:hover:text-gold-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50 rounded-lg transition-colors">
+				<span class="group-open:hidden">Show the workings and change the assumptions</span>
+				<span class="hidden group-open:inline">Hide the detail</span>
+				<svg class="w-4 h-4 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+				</svg>
+			</summary>
+
 		<!-- 2-Column Responsive Grid -->
 		<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 			
@@ -566,6 +583,8 @@ import ButtonGold from '../components/ButtonGold.astro';
 				</table>
 			</div>
 		</CardPremium>
+
+		</details>
 	</main>
 </Layout>
 

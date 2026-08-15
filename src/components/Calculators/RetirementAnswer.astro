@@ -1,0 +1,262 @@
+---
+// Layer 1 of sol-019: the Answer.
+//
+// Three inputs, opinionated defaults for everything else, and a result stated
+// as a sentence. Everything the old page asked for up front - inflation,
+// step-up, CAGR, volatility, LTCG rate, premium drag, protected floor - is
+// still there, one layer down, because it is an assumption rather than
+// something the visitor arrived knowing.
+---
+
+<section
+  id="answerLayer"
+  class="max-w-3xl mx-auto px-4 sm:px-6 pt-6 pb-2"
+  aria-label="Your retirement plan"
+>
+  <div class="card-premium rounded-2xl p-6 sm:p-8 space-y-7">
+
+    <!-- The page hero already asks the question; repeating it here would be a
+         second title doing no work. Straight to the three inputs. -->
+    <p class="text-sm text-navy-500 dark:text-navy-400">
+      Three questions. You can change everything else afterwards.
+    </p>
+
+    <!-- The three inputs, phrased as a sentence rather than a form -->
+    <div class="space-y-4 text-base sm:text-lg leading-relaxed text-navy-800 dark:text-navy-200">
+      <div class="flex flex-wrap items-baseline gap-x-3 gap-y-2">
+        <label for="ansCorpus" class="shrink-0">I have saved</label>
+        <span class="inline-flex items-baseline gap-1 border-b-2 border-gold-500/60 focus-within:border-gold-500 transition-colors">
+          <span class="text-navy-500 dark:text-navy-400">₹</span>
+          <input
+            id="ansCorpus" type="text" inputmode="numeric" value="1,00,00,000"
+            class="w-40 sm:w-44 bg-transparent py-0.5 font-semibold tabular-nums text-navy-900 dark:text-navy-100 focus:outline-none"
+          />
+        </span>
+      </div>
+
+      <div class="flex flex-wrap items-baseline gap-x-3 gap-y-2">
+        <label for="ansMonthly" class="shrink-0">I need</label>
+        <span class="inline-flex items-baseline gap-1 border-b-2 border-gold-500/60 focus-within:border-gold-500 transition-colors">
+          <span class="text-navy-500 dark:text-navy-400">₹</span>
+          <input
+            id="ansMonthly" type="text" inputmode="numeric" value="40,000"
+            class="w-28 sm:w-32 bg-transparent py-0.5 font-semibold tabular-nums text-navy-900 dark:text-navy-100 focus:outline-none"
+          />
+        </span>
+        <span class="shrink-0">a month to live on</span>
+      </div>
+
+      <div class="flex flex-wrap items-baseline gap-x-3 gap-y-2">
+        <label for="ansYears" class="shrink-0">and it has to last</label>
+        <span class="inline-flex items-baseline border-b-2 border-gold-500/60 focus-within:border-gold-500 transition-colors">
+          <input
+            id="ansYears" type="text" inputmode="numeric" value="30"
+            class="w-14 bg-transparent py-0.5 font-semibold tabular-nums text-navy-900 dark:text-navy-100 focus:outline-none"
+          />
+        </span>
+        <span class="shrink-0">years.</span>
+      </div>
+    </div>
+
+    <!-- The answer -->
+    <div class="pt-6 border-t border-navy-200 dark:border-navy-800">
+      <p id="ansHeadline"
+         class="text-lg sm:text-xl leading-snug font-medium text-navy-900 dark:text-navy-100">
+        Working it out…
+      </p>
+      <p id="ansDetail" class="text-sm text-navy-600 dark:text-navy-400 mt-2 leading-relaxed"></p>
+
+      <!-- Assumptions, visible at the point of use, not buried in a tooltip -->
+      <p class="text-xs text-navy-500 dark:text-navy-400 mt-4">
+        <span id="ansAssumptions">Assuming 12% returns, 6% inflation and 12.5% tax on gains.</span>
+        <button
+          id="ansOpenDetail" type="button"
+          class="underline underline-offset-2 decoration-dotted hover:text-gold-600 dark:hover:text-gold-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50 rounded"
+        >Change these</button>
+      </p>
+    </div>
+
+    <!-- The levers. Hidden when the plan already works. -->
+    <div id="ansRemedies" class="hidden pt-5 border-t border-navy-200 dark:border-navy-800">
+      <p class="text-xs font-semibold uppercase tracking-wider text-navy-500 dark:text-navy-400 mb-3">
+        To make this safer, change one of these
+      </p>
+      <div id="ansRemedyGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
+      <p class="text-xs text-navy-500 dark:text-navy-400 mt-3">
+        Tap one to apply it.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  import { formatIndianRupeeLabel } from '../../utils/formatters';
+
+  const $ = (id: string) => document.getElementById(id);
+  const clean = (s: string) => Number(String(s).replace(/[^0-9.]/g, '')) || 0;
+  const grp = (n: number) => n.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+
+  // A layperson reads crore and lakh, not 59,500,000.
+  function money(n: number): string {
+    const v = Math.round(n);
+    if (v >= 10000000) return `₹${(v / 10000000).toFixed(2)} crore`;
+    if (v >= 100000) return `₹${(v / 100000).toFixed(1)} lakh`;
+    return `₹${grp(v)}`;
+  }
+
+  let adviceWorker: Worker | null = null;
+  let pending = 0;
+
+  function readInputs() {
+    const corpus = clean(($('ansCorpus') as HTMLInputElement)?.value ?? '');
+    const monthly = clean(($('ansMonthly') as HTMLInputElement)?.value ?? '');
+    const years = Math.max(1, Math.min(60, clean(($('ansYears') as HTMLInputElement)?.value ?? '')));
+    return {
+      initialCorpus: corpus,
+      monthlyWithdrawal: monthly,
+      horizonYears: years,
+      // Defaults live here, not in the user's lap. Layer 3 can override them.
+      annualStepUp: 0,
+      expectedReturn: 12,
+      expectedInflation: 6,
+      annualVolatility: 15,
+      ltcgTax: 12.5,
+    };
+  }
+
+  function renderAnswer(inputs: any, outlook: any, remedies: any[]) {
+    const headline = $('ansHeadline')!;
+    const detail = $('ansDetail')!;
+    const years = inputs.horizonYears;
+
+    // Both figures, always labelled. A rupee amount thirty years out means
+    // nothing without saying which money it is in - this is the pattern T8
+    // will apply across the site.
+    const realFinal =
+      outlook.medianFinalBalance / Math.pow(1 + inputs.expectedInflation / 100, years);
+
+    if (outlook.medianDepletionYear !== null) {
+      headline.textContent =
+        `Your money typically runs out in year ${outlook.medianDepletionYear} of ${years}.`;
+      detail.textContent =
+        `That is the middle outcome. Markets could be kinder or crueller, but on a ` +
+        `typical run you would be ${years - outlook.medianDepletionYear} years short.`;
+    } else if (outlook.healthy) {
+      headline.textContent = `Your savings comfortably last the full ${years} years.`;
+      detail.textContent =
+        `You would typically finish with ${money(realFinal)} left in today's money ` +
+        `(${money(outlook.medianFinalBalance)} at the time). ` +
+        `Around ${Math.round(outlook.survival * 100)} out of 100 futures see you through.`;
+    } else {
+      const oneIn = Math.max(2, Math.round(1 / Math.max(0.01, 1 - outlook.survival)));
+      headline.textContent =
+        `You would typically finish with ${money(realFinal)} left — but this plan is tight.`;
+      detail.textContent =
+        `That figure is in today's money (${money(outlook.medianFinalBalance)} at the time). ` +
+        `About 1 in ${oneIn} futures run dry before ${years} years are up, ` +
+        `which is more risk than most people want to carry into retirement.`;
+    }
+
+    const box = $('ansRemedies')!;
+    const grid = $('ansRemedyGrid')!;
+    grid.innerHTML = '';
+
+    if (!remedies.length) {
+      box.classList.add('hidden');
+      return;
+    }
+    box.classList.remove('hidden');
+
+    for (const r of remedies) {
+      if (r.outOfReach) continue;
+      let title = '', sub = '', apply: () => void = () => {};
+
+      if (r.kind === 'spend_less') {
+        title = `Spend ₹${grp(r.delta)} less`;
+        sub = `₹${grp(r.value)} a month instead`;
+        apply = () => { ($('ansMonthly') as HTMLInputElement).value = grp(r.value); };
+      } else if (r.kind === 'save_more') {
+        title = `Save ${money(r.delta)} more`;
+        sub = `${money(r.value)} before you start`;
+        apply = () => { ($('ansCorpus') as HTMLInputElement).value = grp(r.value); };
+      } else {
+        title = `Fund ${r.delta} fewer ${r.delta === 1 ? 'year' : 'years'}`;
+        sub = `${r.value} years instead of ${years}`;
+        apply = () => { ($('ansYears') as HTMLInputElement).value = String(r.value); };
+      }
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className =
+        'text-left rounded-xl border border-navy-200 dark:border-navy-700 bg-white/60 dark:bg-navy-900/40 ' +
+        'p-4 hover:border-gold-500 dark:hover:border-gold-500 transition-colors ' +
+        'focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50';
+      btn.innerHTML =
+        `<span class="block text-sm font-semibold text-navy-900 dark:text-navy-100">${title}</span>` +
+        `<span class="block text-xs text-navy-500 dark:text-navy-400 mt-1">${sub}</span>` +
+        `<span class="block text-xs font-medium text-emerald-700 dark:text-emerald-400 mt-2">` +
+        `${Math.round(r.survival * 100)} out of 100 futures work</span>`;
+      btn.addEventListener('click', () => { apply(); recalc(); });
+      grid.appendChild(btn);
+    }
+  }
+
+  function recalc() {
+    const inputs = readInputs();
+    if (!inputs.initialCorpus || !inputs.monthlyWithdrawal) return;
+
+    // Mirror into the detailed form below so the two layers never disagree.
+    const mirror: Record<string, string> = {
+      initialCorpus: grp(inputs.initialCorpus),
+      monthlyWithdrawal: grp(inputs.monthlyWithdrawal),
+      horizonYears: String(inputs.horizonYears),
+    };
+    for (const [id, v] of Object.entries(mirror)) {
+      const el = document.getElementById(id) as HTMLInputElement | null;
+      if (el && el.value !== v) el.value = v;
+    }
+
+    $('ansHeadline')!.textContent = 'Working it out…';
+    $('ansDetail')!.textContent = '';
+
+    const token = ++pending;
+    adviceWorker?.postMessage(inputs);
+    (adviceWorker as any).__token = token;
+  }
+
+  function init() {
+    adviceWorker = new Worker(new URL('../../workers/swpAdviceWorker.ts', import.meta.url), {
+      type: 'module',
+    });
+    adviceWorker.onmessage = (e) => {
+      if (!e.data?.ok) {
+        $('ansHeadline')!.textContent = 'Something went wrong working that out.';
+        $('ansDetail')!.textContent = 'Try changing one of the numbers above.';
+        return;
+      }
+      renderAnswer(readInputs(), e.data.outlook, e.data.remedies);
+    };
+
+    let t: any;
+    for (const id of ['ansCorpus', 'ansMonthly', 'ansYears']) {
+      $(id)?.addEventListener('input', () => {
+        clearTimeout(t);
+        t = setTimeout(recalc, 400);
+      });
+    }
+
+    $('ansOpenDetail')?.addEventListener('click', () => {
+      const d = document.getElementById('detailLayer') as HTMLDetailsElement | null;
+      if (d) { d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+
+    recalc();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+</script>
