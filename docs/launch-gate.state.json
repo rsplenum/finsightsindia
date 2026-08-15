@@ -1,6 +1,6 @@
 {
   "_readme": "Freshness marker for the Launch Gate. The gate is docs/launch-gate.md - a plain list, edited one line at a time. It used to be 600 lines of hand-patched HTML, and the cost of updating it was itself a cause of the drift it now guards against (dd-011). Update it by running `npm run gate:sync` in the SAME commit that republishes the artifact.",
-  "syncedAtCommit": "64f8f7dceb8cdb10d7ac803cf84a0c9973215311",
+  "syncedAtCommit": "b250abd55b687f1305adbaf3be0082cd45d73c46",
   "artifactUrl": "https://claude.ai/code/artifact/d60774ff-930a-45df-a956-1cf0fc6269a4",
   "maxCommitsBehind": 2,
   "watchedPaths": [

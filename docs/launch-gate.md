@@ -8,43 +8,29 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 
 ---
 
-## Doing now — Rahul's review of 15 Aug, ordered by severity
+## Done today · 15 Aug
 
-**P0 · sol-026 — DONE.** Both surfaces now read 16.96 Cr / 36.8 L / 3.37 cr. Insurance ON moves the whole page (16.96 → 10.26 Cr); CAGR 10% moves the whole page (→ 7.20 Cr).
+✅ **sol-018** hedging floor — annual, on the index. Goal seek said insurance *cut* the SIP needed, 19,646 → 7,744; now 20,561
+✅ **sol-023** SIP ledger fed from the engine, not invented beside it · column widths
+✅ **sol-026** the page ran **two engines on two input sets** and showed both. One input set, one simulation, one seed. The rungs had been deaf to CAGR, inflation, volatility, tax and both toggles
+✅ **sol-027** one engine, not two — `returnsByYear` retired the duplicate `swpDeterministic`
+✅ **sol-028** volatility default was the calmest decade in 35 years. Named periods now, computed from real data. **Survival on the shipped plan: 9534 → 7025**
+✅ **rung 5** built, rejected, rebuilt to dd-012 — leads with ruined retirements, premium priced not chosen
+✅ **dd-012, dd-013** recorded · 166 tests (was 125) · 4 new detectors
 
-- [x] One input set — `utils/plannerInputs.ts` is the only DOM reader; hardcoded macros deleted
-- [x] One computation — swpAdviceWorker runs it once at 10,000/seed 20260815; the page's own Worker is gone
-- [x] The toggles reach the rungs
-- [x] `surfaceParity.test.ts` — 13-input sweep asserts no quantity can differ
-- [x] Second instance found and fixed: panel summed per-year medians, ladder used per-path averages
-- [x] **sol-027 — one engine, not two.** `runSWPMonteCarlo` now takes `returnsByYear`, so rung 4 no longer needs the duplicate `swpDeterministic`. `singleEngine.test.ts` guards it
-- [ ] **Deferred, with reason:** delete `swpDeterministic.ts`. No production caller left, but 11 tests use it as a harness — including the LTCG double-charge guards — and they read `growth`/`netMonthly` the MC engine doesn't expose. Port those first
+## Next — in order
 
-**P1 · rung 5 rebuilt to dd-012 — DONE.** Leads with ruined retirements, not a survival average.
-
-- [x] "futures in 100" and the "− 2 in 100" verdict are gone
-- [x] Leads with the bad futures: *out of 100 retirements, the ones where the money ran out* — 5→8 at 15%, 21→12 at 23%, 43→10 at 30%
-- [x] Verdict is a count you can picture: "the floor rescues 33 of them" / "ruins a further 3 of them"
-- [x] The limit stated, not discovered: three bad years cost ~27% and the fee is paid in all three
-- [x] Bill at full weight — ₹2.77 lakh a year at 36px, the largest thing on the screen (was the smallest)
-
-**P2 · make it explorable — mostly done**
-
-- [x] **Premium priced, not slid.** Black-Scholes at implied vol; the spread that lands on Rahul's 1.85% is **4.37 points**, inside the 3–5pt index-put risk premium — his number is a real market price
-- [x] Floor depth −5/−10/−15/−20 as buttons, price follows: ₹4.61 L → ₹75,630 a year. Markup rises as cover cheapens: 1.7× fair at −5%, 3.7× at −20%
-- [x] Cost in ₹ and %, plus what the cover is actually worth and the multiple paid
-- [ ] **Deferred — the 3/6/9/12-month term selector.** The engine can roll sub-annually, but sub-period returns compound differently, so the *unhedged* baseline drifts 39→42 ruined when only the term changes. That is an artefact, not a finding, and shipping it would be an unexplained number (dd-009). Needs term-invariant return generation (monthly steps, floor applied per term) first
-- [x] **Real data in the repo** — Rahul's 434-row monthly file + derived annual/decade/rolling-30y series. Validated: 24 of 27 years match published figures to 0.05pp, and it caught two errors in *my* fetched source (1999 published +8.7% vs actual +67.4%)
-- [x] **sol-028 fixed — Rahul chose named presets.** Computed from his data, never typed: last 10y 14.1%/8.9%, 20y 13.2%/26.7%, 30y 13.3%/28.4%. Each sets growth *and* roughness. Default is the 30y regime; survival on the shipped plan moved 9534 → 7025 and "highly secure" became "tight"
-- [x] **Roughness explainer** — real periods marked on rung 5's track, so the reader crosses them while dragging
+- [ ] **T2 last item** — retire the "show the workings" door; the expert panel becomes the final rung
+- [ ] **T3** — apply the ladder to the SIP engine, which now shares T2's engine and presets
+- [ ] **T1 homepage** — six items, untouched since the audit
+- [ ] Delete `swpDeterministic.ts` — no production caller; 11 tests still use it as a harness *(needs `growth`/`netMonthly` on the MC engine first)*
+- [ ] Rung 5 term selector, 3/6/9/12 months — *needs term-invariant return generation; today it drifts the unhedged baseline 39→42, an artefact*
 
 ## Waiting on Rahul
 
-
-- [x] **Is 1.85%/yr the right premium?** → **Rahul, 15 Aug: "1.85% is right, keep it."** Settled; the premium is not a variable to tune
-- [x] **May rung 5 say protection is not worth its price?** → yes, implied by keeping 1.85% and asking for rung 5. Rung 5 states what the engine finds
-- [ ] **The floor depth is three different numbers** — SIP engine −8%, swp-planner input −10%, copy says −10% or −15%. Still open; rung 5 uses the planner's −10%
-- [ ] **CLAUDE.md's dev-server instruction is wrong for this harness** — it says `astro dev --background`; dev servers must go through the preview tools. sol-025
+- [ ] **The floor depth is three different numbers** — SIP engine −8%, planner −10%, copy says −10% or −15%
+- [ ] **CLAUDE.md's dev-server instruction is wrong for this harness** — says `astro dev --background`; must use the preview tools. sol-025
+- [ ] **Does the SIP engine get the same regime presets?** It still assumes 12% / 15% vol internally — the same defect sol-028 just fixed on the planner
 
 ## Blocked / deferred — with the reason
 
@@ -68,7 +54,7 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 - [ ] Demote the five hubs to a second screen
 - [ ] Cut page weight so the first real choice is above the fold
 
-## T2 — SWP planner (the pilot) · 9/10
+## T2 — SWP planner (the pilot) · 8/10
 
 - [x] LTCG double-charge fixed in both engines `0dd3950`
 - [x] Zero-valued inputs fixed — survival was reported 22% instead of 78% `3c4bab0`
@@ -81,7 +67,7 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 - [ ] Proposed rung: what if life happens?
 - [ ] Retire the single "show the workings" door — expert panel becomes the last rung
 
-## T3 — SIP engine · 2/5
+## T3 — SIP engine · 2/6
 
 - [x] Engine testable and seeded; 16 characterization tests `8c61dbf`
 - [x] Hedging ledger fed from the engine, not recomputed beside it — sol-023
