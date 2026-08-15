@@ -34,9 +34,12 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 - [x] Floor depth −5/−10/−15/−20 as buttons, price follows: ₹4.61 L → ₹75,630 a year. Markup rises as cover cheapens: 1.7× fair at −5%, 3.7× at −20%
 - [x] Cost in ₹ and %, plus what the cover is actually worth and the multiple paid
 - [ ] **Deferred — the 3/6/9/12-month term selector.** The engine can roll sub-annually, but sub-period returns compound differently, so the *unhedged* baseline drifts 39→42 ruined when only the term changes. That is an artefact, not a finding, and shipping it would be an unexplained number (dd-009). Needs term-invariant return generation (monthly steps, floor applied per term) first
-- [ ] **Blocked on data — roughness explained by the last 30 years.** No sourced return series in the repo; I will not fabricate one for a financial claim. Needs Rahul's source or approval to fetch one
+- [x] **Return series fetched and stored** with provenance, two independent bases that cross-check — `src/data/nifty-annual-returns.json`
+- [ ] **Build the roughness explainer** on it — waits on the default below, since the explainer's punchline is the gap between assumption and record
 
 ## Waiting on Rahul
+
+- [ ] **sol-028 — the volatility default is the wrong quantity.** The engine uses sigma as the spread of ANNUAL returns; 15% is the annualised DAILY volatility. Measured: Nifty TRI 2005–25 sd **26.8%**, price 1996–2022 **28.2%**, and **18–23% even with 2008–09 deleted**. At 15% a floor ruins 4 more per 100; at 25%+ it rescues ~10–33. **Rung 5's verdict inverts on this one input**, and the tooltip's "NIFTY 50 is ~15%" cannot stand beside an engine using it as an annual spread. Three options on sol-028; changing it moves every published number, so it is his call
 
 - [x] **Is 1.85%/yr the right premium?** → **Rahul, 15 Aug: "1.85% is right, keep it."** Settled; the premium is not a variable to tune
 - [x] **May rung 5 say protection is not worth its price?** → yes, implied by keeping 1.85% and asking for rung 5. Rung 5 states what the engine finds
