@@ -105,7 +105,11 @@ export function runDeterministicSWP(inputs: SWPInputs): SWPDeterministicOutput {
         const principalPortionInWithdrawal = actualWithdrawal * (1 - gainRatio);
         const ltcgTaxAmount = gainPortionInWithdrawal * taxRate;
 
-        const totalOutflow = actualWithdrawal + ltcgTaxAmount;
+        // The withdrawal IS the gross paycheck: LTCG is deducted out of it, not
+        // levied on top of it. Debiting withdrawal + tax while also reporting
+        // net income as withdrawal - tax charged the same tax twice and quietly
+        // cost the portfolio ~3 years of runway on the default scenario.
+        const totalOutflow = actualWithdrawal;
 
         let finalBalance = 0;
         if (grownBalance < totalOutflow) {

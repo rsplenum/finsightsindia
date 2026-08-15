@@ -157,7 +157,10 @@ self.onmessage = function (e) {
       yearlyWithdrawalsMatrix[year][sim] = actualWithdrawal;
       yearlyTaxesMatrix[year][sim] = ltcgTaxAmount;
 
-      const totalOutflow = actualWithdrawal + ltcgTaxAmount;
+      // Gross paycheck out; LTCG comes out of it, not on top of it. Must stay
+      // identical to runDeterministicSWP - if these two drift, the headline
+      // survival score stops matching the year-by-year table beneath it.
+      const totalOutflow = actualWithdrawal;
 
       if (grownBalance < totalOutflow) {
         currentBalance = 0;

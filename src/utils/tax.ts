@@ -285,7 +285,10 @@ export function calculateIndiaTaxEngine(input: TaxInput): TaxComparisonResult {
             standardDeduction: newStdDed,
             taxableIncome: newTaxableIncome,
             slabs: newBase.slabs,
-            baseTax: newBase.baseTax + newRebate87A + new87AMarginalRelief,
+            // Pre-rebate slab tax. The rebate and reliefs are separate line
+            // items below, so adding them back here would count them twice
+            // and the on-screen breakdown would stop reconciling to totalTax.
+            baseTax: newBase.baseTax,
             rebate87A: newRebate87A,
             surcharge: newSur.surcharge,
             marginalRelief: new87AMarginalRelief + newSur.relief,
@@ -300,7 +303,7 @@ export function calculateIndiaTaxEngine(input: TaxInput): TaxComparisonResult {
             standardDeduction: oldStdDed,
             taxableIncome: oldTaxableIncome,
             slabs: oldBase.slabs,
-            baseTax: oldBase.baseTax + oldRebate87A,
+            baseTax: oldBase.baseTax,
             rebate87A: oldRebate87A,
             surcharge: oldSur.surcharge,
             marginalRelief: oldSur.relief,
