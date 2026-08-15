@@ -20,6 +20,7 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 - [x] **Is 1.85%/yr the right premium?** → **Rahul, 15 Aug: "1.85% is right, keep it."** Settled; the premium is not a variable to tune
 - [x] **May rung 5 say protection is not worth its price?** → yes, implied by keeping 1.85% and asking for rung 5. Rung 5 states what the engine finds
 - [ ] **The floor depth is three different numbers** — SIP engine −8%, swp-planner input −10%, copy says −10% or −15%. Still open; rung 5 uses the planner's −10%
+- [ ] **CLAUDE.md's dev-server instruction is wrong for this harness** — it says `astro dev --background`; dev servers must go through the preview tools. sol-025
 
 ## Blocked / deferred — with the reason
 
