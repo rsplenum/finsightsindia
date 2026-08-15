@@ -108,6 +108,12 @@
   let adviceWorker: Worker | null = null;
   let pending = 0;
 
+  // Shared with the rungs below. Whichever way the reader is looking at money,
+  // every screen looks the same way - two screens disagreeing about the same
+  // quantity is the trust failure we have already fixed once here.
+  let moneyMode: 'buy' | 'statement' = 'buy';
+  let lastResult: any = null;
+
   function readInputs() {
     const corpus = clean(($('ansCorpus') as HTMLInputElement)?.value ?? '');
     const monthly = clean(($('ansMonthly') as HTMLInputElement)?.value ?? '');
@@ -142,20 +148,25 @@
       detail.textContent =
         `That is the middle outcome. Markets could be kinder or crueller, but on a ` +
         `typical run you would be ${years - outlook.medianDepletionYear} years short.`;
-    } else if (outlook.healthy) {
-      headline.textContent = `Your savings comfortably last the full ${years} years.`;
-      detail.textContent =
-        `You would typically finish with ${money(realFinal)} left in today's money ` +
-        `(${money(outlook.medianFinalBalance)} at the time). ` +
-        `Around ${Math.round(outlook.survival * 100)} out of 100 futures see you through.`;
     } else {
-      const oneIn = Math.max(2, Math.round(1 / Math.max(0.01, 1 - outlook.survival)));
-      headline.textContent =
-        `You would typically finish with ${money(realFinal)} left — but this plan is tight.`;
-      detail.textContent =
-        `That figure is in today's money (${money(outlook.medianFinalBalance)} at the time). ` +
-        `About 1 in ${oneIn} futures run dry before ${years} years are up, ` +
-        `which is more risk than most people want to carry into retirement.`;
+      const shown = moneyMode === 'buy' ? realFinal : outlook.medianFinalBalance;
+      const frame = moneyMode === 'buy'
+        ? `in today's prices`
+        : `as your statement will read it`;
+
+      if (outlook.healthy) {
+        headline.textContent = `Your savings comfortably last the full ${years} years.`;
+        detail.textContent =
+          `You would typically finish with ${money(shown)} left, ${frame}. ` +
+          `Around ${Math.round(outlook.survival * 100)} out of 100 futures see you through.`;
+      } else {
+        const oneIn = Math.max(2, Math.round(1 / Math.max(0.01, 1 - outlook.survival)));
+        headline.textContent =
+          `You would typically finish with ${money(shown)} left — but this plan is tight.`;
+        detail.textContent =
+          `That is ${frame}. About 1 in ${oneIn} futures run dry before ${years} years ` +
+          `are up, which is more risk than most people want to carry into retirement.`;
+      }
     }
 
     const box = $('ansRemedies')!;
@@ -236,6 +247,7 @@
         return;
       }
       const inputs = readInputs();
+      lastResult = { inputs, outlook: e.data.outlook, remedies: e.data.remedies };
       renderAnswer(inputs, e.data.outlook, e.data.remedies);
       // The rungs below subscribe to this rather than each re-running the
       // simulation. One computation, many views - and they cannot disagree.
@@ -251,6 +263,13 @@
         t = setTimeout(recalc, 400);
       });
     }
+
+    window.addEventListener('swp:mode', (e) => {
+      moneyMode = (e as CustomEvent).detail.mode;
+      if (lastResult) {
+        renderAnswer(lastResult.inputs, lastResult.outlook, lastResult.remedies);
+      }
+    });
 
     $('ansOpenDetail')?.addEventListener('click', () => {
       const d = document.getElementById('detailLayer') as HTMLDetailsElement | null;
