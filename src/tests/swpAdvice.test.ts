@@ -34,6 +34,31 @@ describe('outlook', () => {
   });
 });
 
+describe('the money-flow figures must reconcile on screen', () => {
+  // Five numbers are shown side by side and a reader can add them up. If they
+  // do not balance, the whole screen loses its authority - the same failure as
+  // the tax breakdown that displayed double the base tax.
+  it('what went in equals what came out', () => {
+    const f = outlook(healthy, 600).flow;
+    expect(Math.abs((f.started + f.growth) - (f.drawn + f.left))).toBeLessThan(1);
+  });
+
+  it('net to the user is the gross draw less tax', () => {
+    const f = outlook(healthy, 600).flow;
+    expect(Math.abs(f.netToYou - (f.drawn - f.tax))).toBeLessThan(1);
+  });
+
+  it('the stated withdrawal rate matches the inputs', () => {
+    const f = outlook(healthy, 400).flow;
+    expect(f.initialRate).toBeCloseTo((20000 * 12) / 10000000 * 100, 6);
+  });
+
+  it('a sustainable plan earns more than it draws', () => {
+    const f = outlook(healthy, 600).flow;
+    expect(f.growth).toBeGreaterThan(f.drawn);
+  });
+});
+
 describe('remedies', () => {
   it('a healthy plan is offered none - do not invent a problem', () => {
     expect(findRemedies(healthy)).toEqual([]);

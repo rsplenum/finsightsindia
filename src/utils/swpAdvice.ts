@@ -51,6 +51,23 @@ export interface Outlook {
   /** Median balance remaining at the end of the horizon. */
   medianFinalBalance: number;
   healthy: boolean;
+  /** Where the money actually went, over the whole horizon. */
+  flow: {
+    started: number;
+    /** Everything the portfolio earned. Derived as a residual so the five
+     *  figures always reconcile on screen: started + growth = drawn + left. */
+    growth: number;
+    /** Gross withdrawn, tax included. */
+    drawn: number;
+    tax: number;
+    /** What actually reached the user's pocket. */
+    netToYou: number;
+    left: number;
+    /** Gross drawn as a multiple of the starting corpus. */
+    multiple: number;
+    /** First-year withdrawal as a percentage of the starting corpus. */
+    initialRate: number;
+  };
 }
 
 /**
@@ -79,11 +96,26 @@ export function outlook(inputs: AdviceInputs, sims = 2000): Outlook {
     if (p50[y] <= 0) { depletion = y; break; }
   }
 
+  const started = inputs.initialCorpus;
+  const drawn = r.avgTotalWithdrawals;
+  const tax = r.avgTotalTaxPaid;
+  const left = r.medianFinalBalance;
+
   return {
     survival: r.probabilityOfSuccess / 100,
     medianDepletionYear: depletion,
-    medianFinalBalance: r.medianFinalBalance,
+    medianFinalBalance: left,
     healthy: r.probabilityOfSuccess / 100 >= HEALTHY_SURVIVAL,
+    flow: {
+      started,
+      growth: drawn + left - started,
+      drawn,
+      tax,
+      netToYou: drawn - tax,
+      left,
+      multiple: started > 0 ? drawn / started : 0,
+      initialRate: started > 0 ? (inputs.monthlyWithdrawal * 12) / started * 100 : 0,
+    },
   };
 }
 

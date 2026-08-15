@@ -235,7 +235,13 @@
         $('ansDetail')!.textContent = 'Try changing one of the numbers above.';
         return;
       }
-      renderAnswer(readInputs(), e.data.outlook, e.data.remedies);
+      const inputs = readInputs();
+      renderAnswer(inputs, e.data.outlook, e.data.remedies);
+      // The rungs below subscribe to this rather than each re-running the
+      // simulation. One computation, many views - and they cannot disagree.
+      window.dispatchEvent(new CustomEvent('swp:result', {
+        detail: { inputs, outlook: e.data.outlook, remedies: e.data.remedies },
+      }));
     };
 
     let t: any;
