@@ -1,6 +1,6 @@
 # FinSight — Launch Gate
 
-**Not live. No domain.** 144 tests green · 27 commits on `fix/learning-loop-integrity-and-calculator-correctness`
+**Not live. No domain.** 148 tests green · 29 commits on `fix/learning-loop-integrity-and-calculator-correctness`
 
 This is a list, not a document. Explanations live in commit messages, `design-doctrine.json` and `engineering-solutions.json`. This says what is done and what is next.
 
@@ -10,12 +10,13 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 
 ## Doing now — Rahul's review of 15 Aug, ordered by severity
 
-**P0 · sol-026 — the page runs two engines and shows both.** Ladder 17.15 cr vs advanced 17.02 cr at the same inputs; the ladder hardcodes CAGR/inflation/vol/tax and never sees the hedging or guardrail toggles.
+**P0 · sol-026 — DONE.** Both surfaces now read 16.96 Cr / 36.8 L / 3.37 cr. Insurance ON moves the whole page (16.96 → 10.26 Cr); CAGR 10% moves the whole page (→ 7.20 Cr).
 
-- [ ] One input set — advanced form is the source; the Answer's three fields become a two-way projection
-- [ ] One computation, one seed, one sim count, distributed to every surface
-- [ ] The toggles reach the rungs — insurance ON must change the whole page, not just rung 5
-- [ ] Test that sweeps inputs and asserts no quantity differs between surfaces
+- [x] One input set — `utils/plannerInputs.ts` is the only DOM reader; hardcoded macros deleted
+- [x] One computation — swpAdviceWorker runs it once at 10,000/seed 20260815; the page's own Worker is gone
+- [x] The toggles reach the rungs
+- [x] `surfaceParity.test.ts` — 13-input sweep asserts no quantity can differ
+- [x] Second instance found and fixed: panel summed per-year medians, ladder used per-path averages
 
 **P1 · rung 5 is framed wrong (dd-012).** Judged by an all-futures average, which is the one thing insurance is not for.
 
@@ -26,7 +27,8 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 
 **P2 · make it explorable — Rahul's asks**
 
-- [ ] Sliders for floor depth, premium (₹ and %), roughness — let him game the scenarios
+- [ ] Sliders for floor depth, term and roughness. **Rahul, 15 Aug: price the premium, don't slide it** — Black-Scholes from floor/term/roughness, markup calibrated so −10%/15%/12mo lands on 1.85%. Shown in ₹ and %. A free premium slider would let the user build a −5% floor at 0.5%, which nobody would sell
+- [ ] **Order, Rahul 15 Aug: P0 before rung 5.** Rebuilding the rung on two disagreeing engines would bury the fault
 - [ ] Define roughness with the actual last-30-years return sequence
 - [ ] Term of 3 / 6 / 9 / 12 months, and a volatility-driven floor
 

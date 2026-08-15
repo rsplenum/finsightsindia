@@ -94,6 +94,12 @@
   import { formatIndianRupeeLabel } from '../../utils/formatters';
 
   const $ = (id: string) => document.getElementById(id);
+  import {
+    readPlannerInputs,
+    syncAdvancedFromEntry,
+    syncEntryFromAdvanced,
+  } from '../../utils/plannerInputs';
+
   const clean = (s: string) => Number(String(s).replace(/[^0-9.]/g, '')) || 0;
   const grp = (n: number) => n.toLocaleString('en-IN', { maximumFractionDigits: 0 });
 
@@ -114,22 +120,15 @@
   // (dd-006).
   const moneyMode: 'buy' = 'buy';
 
-  function readInputs() {
-    const corpus = clean(($('ansCorpus') as HTMLInputElement)?.value ?? '');
-    const monthly = clean(($('ansMonthly') as HTMLInputElement)?.value ?? '');
-    const years = Math.max(1, Math.min(60, clean(($('ansYears') as HTMLInputElement)?.value ?? '')));
-    return {
-      initialCorpus: corpus,
-      monthlyWithdrawal: monthly,
-      horizonYears: years,
-      // Defaults live here, not in the user's lap. Layer 3 can override them.
-      annualStepUp: 0,
-      expectedReturn: 12,
-      expectedInflation: 6,
-      annualVolatility: 15,
-      ltcgTax: 12.5,
-    };
-  }
+  // sol-026: this function used to read three fields and then HARDCODE
+  // expectedReturn 12, expectedInflation 6, annualVolatility 15, ltcgTax 12.5
+  // and annualStepUp 0, while never reading the hedging or guardrail toggles at
+  // all. So the reader could set growth to 10% in the panel below and every rung
+  // above would go on answering at 12% - wrong by five times, in silence - and
+  // could switch portfolio insurance on while rungs 1-4 pretended it had not
+  // been bought. There is now exactly one reader of the inputs, and this is a
+  // call to it.
+  const readInputs = readPlannerInputs;
 
   function renderAnswer(inputs: any, outlook: any, remedies: any[]) {
     const headline = $('ansHeadline')!;
@@ -214,19 +213,16 @@
   }
 
   function recalc() {
+    // Entry edits land in the canonical fields before anything is read, so
+    // there is only ever one place the numbers come from.
+    syncAdvancedFromEntry();
     const inputs = readInputs();
     if (!inputs.initialCorpus || !inputs.monthlyWithdrawal) return;
 
-    // Mirror into the detailed form below so the two layers never disagree.
-    const mirror: Record<string, string> = {
-      initialCorpus: grp(inputs.initialCorpus),
-      monthlyWithdrawal: grp(inputs.monthlyWithdrawal),
-      horizonYears: String(inputs.horizonYears),
-    };
-    for (const [id, v] of Object.entries(mirror)) {
-      const el = document.getElementById(id) as HTMLInputElement | null;
-      if (el && el.value !== v) el.value = v;
-    }
+    // The three entry fields are a projection of the form below, not a second
+    // copy of it. Pushing the canonical values back up keeps them identical
+    // whichever end the reader typed at.
+    syncEntryFromAdvanced();
 
     $('ansHeadline')!.textContent = 'Working it out…';
     $('ansDetail')!.textContent = '';
@@ -270,12 +266,24 @@
       }
 
       renderAnswer(inputs, e.data.outlook, e.data.remedies);
-      // The rungs below subscribe to this rather than each re-running the
-      // simulation. One computation, many views - and they cannot disagree.
+      // Every surface subscribes to this rather than running its own
+      // simulation - including the advanced panel below, which used to own a
+      // second worker and print its own slightly different answers (sol-026).
+      // `simulation` is the raw engine result; it is what the panel renders.
       window.dispatchEvent(new CustomEvent('swp:result', {
-        detail: { inputs, outlook: e.data.outlook, remedies: e.data.remedies },
+        detail: {
+          inputs,
+          outlook: e.data.outlook,
+          remedies: e.data.remedies,
+          simulation: e.data.simulation,
+        },
       }));
     };
+
+    // The compute host. The advanced panel no longer runs anything itself; it
+    // asks, and this answers - which is what makes disagreement impossible
+    // rather than merely unlikely.
+    window.addEventListener('swp:recompute', () => recalc());
 
     let t: any;
     for (const id of ['ansCorpus', 'ansMonthly', 'ansYears']) {

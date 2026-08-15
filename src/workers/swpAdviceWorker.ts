@@ -1,4 +1,5 @@
-import { outlook, findRemedies, growthCurve, sequenceRisk, protectionCurve, type AdviceInputs } from '../utils/swpAdvice';
+import { outlookFrom, findRemedies, growthCurve, sequenceRisk, protectionCurve, type AdviceInputs } from '../utils/swpAdvice';
+import { runSWPMonteCarlo } from './swpWorker';
 
 /**
  * Runs the outlook and the remedy search off the main thread.
@@ -16,12 +17,24 @@ if (typeof self !== 'undefined' && typeof self.postMessage === 'function') {
   self.onmessage = (e) => {
     const inputs = e.data as AdviceInputs;
     try {
+      // ONE simulation, for every surface on the page (sol-026, dd-013).
+      //
+      // This used to be `outlook(inputs)`, which ran its own 2,000-path sweep,
+      // while the advanced panel ran a separate 10,000-path sweep of its own
+      // from a second worker. Two runs meant two answers to one question, and
+      // the reader was shown both. The raw result now travels with the outlook
+      // so the panel can render from the very same numbers rather than
+      // recomputing them - a view must never re-derive what the engine already
+      // knows, which is sol-023's rule at the scale of a page.
+      const simulation = runSWPMonteCarlo(inputs);
+
       // The answer and the levers first, so the top of the page can render
       // while the curve is still being built.
       self.postMessage({
         ok: true,
         stage: 'primary',
-        outlook: outlook(inputs),
+        simulation,
+        outlook: outlookFrom(simulation, inputs),
         remedies: findRemedies(inputs),
       });
       self.postMessage({

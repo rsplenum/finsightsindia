@@ -612,6 +612,17 @@ import RungProtection from '../components/Calculators/RungProtection.astro';
 		setupFormattingField,
 		formatIndianRupeeLabel 
 	} from '../utils/formatters';
+
+	// sol-026 / dd-013: this page no longer computes anything. It reads the one
+	// input set and renders the one simulation, which the compute host in
+	// RetirementAnswer broadcasts. It used to own a second worker and a second
+	// input reader, and printed its own slightly different answers beside the
+	// ladder's - 17.02 cr against 17.15 cr, at the same inputs.
+	import {
+		readPlannerInputs,
+		syncEntryFromAdvanced,
+		requestRecompute,
+	} from '../utils/plannerInputs';
 	
 	import html2pdf from 'html2pdf.js';
 	
@@ -623,7 +634,15 @@ import RungProtection from '../components/Calculators/RungProtection.astro';
 	import { debounce } from '../utils/debounce';
 
 	// Client-side JavaScript
-	let worker: Worker | null = null;
+	// No worker here any more (sol-026). This only records whether the page has
+	// subscribed to the shared result yet, so it subscribes exactly once - a
+	// boolean rather than the old `if (!worker)` guard, which would have
+	// attached a fresh listener on every run once the worker went away.
+	let subscribed = false;
+	// The derived view of the shared simulation, as the ladder sees it. The
+	// panel reads its lifetime totals from here so both surfaces quote one set
+	// of numbers (sol-026).
+	let lastOutlook: any = null;
 	let currentChart: any = null;
 	let currentMicroChart: any = null;
 	let lastWorkerData: any = null;
@@ -688,33 +707,22 @@ import RungProtection from '../components/Calculators/RungProtection.astro';
 	}
 
 	function initWorker() {
-		if (window.Worker) {
-			worker = new Worker(new URL('../workers/swpWorker.ts', import.meta.url), { type: 'module' });
-			worker.onmessage = function (e: MessageEvent) {
-				lastWorkerResponse = e.data;
-				renderDashboard(lastWorkerResponse);
-			};
-		}
+		if (subscribed) return;
+		subscribed = true;
+		// Deliberately no worker here any more. One simulation serves the whole
+		// page; this listens for it instead of racing it with a second one.
+		window.addEventListener('swp:result', (e) => {
+			const d = (e as CustomEvent).detail;
+			if (!d?.simulation) return;
+			lastWorkerResponse = d.simulation;
+			lastOutlook = d.outlook;
+			renderDashboard(d.simulation);
+		});
 	}
 
-	function getInputs() {
-		return {
-			initialCorpus: parseFormattedNumber((document.getElementById('initialCorpus') as HTMLInputElement)?.value || 10000000),
-			monthlyWithdrawal: parseFormattedNumber((document.getElementById('monthlyWithdrawal') as HTMLInputElement)?.value || 50000),
-			annualStepUp: parseFloat((document.getElementById('stepUp') as HTMLInputElement)?.value || '5'),
-			expectedReturn: parseFloat((document.getElementById('expectedReturn') as HTMLInputElement)?.value || '12'),
-			annualVolatility: parseFloat((document.getElementById('annualVolatility') as HTMLInputElement)?.value || '15'),
-			expectedInflation: parseFloat((document.getElementById('expectedInflation') as HTMLInputElement)?.value || '6'),
-			ltcgTax: parseFloat((document.getElementById('ltcgTax') as HTMLInputElement)?.value || '12.5'),
-			horizonYears: parseInt((document.getElementById('horizonYears') as HTMLInputElement)?.value || '30', 10),
-			useGuardrails: (document.getElementById('useGuardrails') as HTMLInputElement)?.checked || false,
-			bsEnabled: (document.getElementById('bsHedgingToggle') as HTMLInputElement)?.checked || false,
-			hedgingDragCost: parseFloat((document.getElementById('hedgingDragCost') as HTMLInputElement)?.value || '1.85'),
-			hedgingFloorLimit: parseFloat((document.getElementById('hedgingFloorLimit') as HTMLInputElement)?.value || '-10'),
-			numSimulations: 10000,
-			initialMonthly: parseFormattedNumber((document.getElementById('monthlyWithdrawal') as HTMLInputElement)?.value || 50000)
-		};
-	}
+	// One reader for the whole page (sol-026). This used to be a second,
+	// independent copy that happened to read the same fields - until it didn't.
+	const getInputs = readPlannerInputs;
 
 	function syncUrlParams(inputs: any) {
 		const params = new URLSearchParams(window.location.search);
@@ -786,7 +794,7 @@ import RungProtection from '../components/Calculators/RungProtection.astro';
 	}
 
 	function triggerSimulation() {
-		if (!worker) initWorker();
+		initWorker();
 
 		if (runBtn) {
 			runBtn.disabled = true;
@@ -799,7 +807,10 @@ import RungProtection from '../components/Calculators/RungProtection.astro';
 		const inputs = getInputs();
 		checkSanity(inputs);
 		syncUrlParams(inputs);
-		worker?.postMessage(inputs);
+		// The three entry fields at the top mirror three of these, so they move
+		// together whichever end was typed at.
+		syncEntryFromAdvanced();
+		requestRecompute();
 	}
 
 	function renderScheduleTable(
@@ -1058,22 +1069,21 @@ import RungProtection from '../components/Calculators/RungProtection.astro';
 			}
 		}
 
-		let totalGrossPayout = 0;
-		let totalTaxesPaid = 0;
-		let totalNetPayout = 0;
-		let currentMonthly = initialMonthly;
-		const escalationFactor = (1 + expectedInflation / 100) * (1 + annualStepUp / 100);
-
-		for (let yr = 1; yr <= horizonYears; yr++) {
-			if (yr > 1) currentMonthly = currentMonthly * escalationFactor;
-			let grossAnnual = currentMonthly * 12;
-			if (data.medianWithdrawals && data.medianWithdrawals[yr] !== undefined) grossAnnual = data.medianWithdrawals[yr];
-			const annualTax = (data.medianTaxes && data.medianTaxes[yr] !== undefined) ? data.medianTaxes[yr] : 0;
-			const netAnnual = Math.max(0, grossAnnual - annualTax);
-			totalGrossPayout += grossAnnual;
-			totalTaxesPaid += annualTax;
-			totalNetPayout += netAnnual;
-		}
+		// sol-026, second instance. These three totals used to be built here by
+		// SUMMING THE PER-YEAR MEDIANS - and the ladder took the engine's
+		// per-path averages, so the same page reported tax of 38.46 L and
+		// 36.8 L at once. Neither figure was arithmetically wrong; they were
+		// different statistics wearing one label.
+		//
+		// The sum of per-year medians is also the weaker of the two, and for
+		// the reason that keeps recurring in this codebase: the median path in
+		// year 1 is not the median path in year 20, so the total is a number no
+		// one ever lives through. The engine's average of per-path totals is
+		// something a person could actually experience, so that is what both
+		// surfaces now quote.
+		const totalGrossPayout = lastOutlook ? lastOutlook.flow.drawn : (data.avgTotalWithdrawals ?? 0);
+		const totalTaxesPaid = lastOutlook ? lastOutlook.flow.tax : (data.avgTotalTaxPaid ?? 0);
+		const totalNetPayout = lastOutlook ? lastOutlook.flow.netToYou : Math.max(0, totalGrossPayout - totalTaxesPaid);
 
 		const wowInitialCorpusEl = document.getElementById('wowInitialCorpus');
 		if (wowInitialCorpusEl) wowInitialCorpusEl.innerText = formatShortRupee(initialCorpus);

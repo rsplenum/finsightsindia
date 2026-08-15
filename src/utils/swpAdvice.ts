@@ -104,7 +104,22 @@ function survivalAt(inputs: AdviceInputs, sims = SEARCH_SIMS): number {
 }
 
 export function outlook(inputs: AdviceInputs, sims = 2000): Outlook {
-  const r = runSWPMonteCarlo({ ...inputs, numSimulations: sims, seed: SEARCH_SEED });
+  return outlookFrom(
+    runSWPMonteCarlo({ ...inputs, numSimulations: sims, seed: SEARCH_SEED }),
+    inputs
+  );
+}
+
+/**
+ * The same outlook, derived from a simulation someone else already ran.
+ *
+ * sol-026: the ladder and the advanced panel each ran their own Monte Carlo and
+ * then printed overlapping quantities that did not match. Splitting the
+ * derivation from the run is what lets ONE simulation feed every surface, so
+ * agreement is structural rather than a coincidence of two call sites happening
+ * to pass the same arguments (dd-013).
+ */
+export function outlookFrom(r: any, inputs: AdviceInputs): Outlook {
   const p50: number[] = r.p50;
 
   let depletion: number | null = null;
