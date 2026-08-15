@@ -1,13 +1,16 @@
 ---
 // Rung 2 of the ladder (dd-002): "Where does the money actually go?"
 //
-// Two number systems live here and the reader holds neither by name. Rather
-// than pick one and hide the other, the switch between them IS the lesson
-// (dd-004): its two labels name the things in the reader's own words, so
-// flipping it teaches the distinction instead of requiring it.
+// Both moneys are shown side by side rather than behind a toggle (dd-006).
+// The difference between the two columns IS the lesson, and a lesson cannot
+// be a mode - hiding half of a comparison behind a control turns it into a
+// spot-the-difference puzzle.
 //
-// The gap between the two is not a caveat to be managed - it is the most
-// arresting fact on the page, and the only place a reader will ever see it.
+// One prose voice, one size (dd-007). The earlier version cascaded three
+// paragraphs through shrinking type, asserting a hierarchy that did not exist.
+//
+// No new concept is introduced here. Rung 1 already established that prices
+// rise and that only the gap matters; this shows what that does in rupees.
 ---
 
 <section id="rungFlow" class="max-w-3xl mx-auto px-4 sm:px-6 py-4" aria-labelledby="rungFlowQ">
@@ -20,69 +23,62 @@
       <h2 id="rungFlowQ" class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 mt-1">
         Where does the money actually go?
       </h2>
-    </div>
-
-    <!-- The switch. Deliberately not labelled "real / nominal": these two
-         phrases name the same two things without requiring the concept. -->
-    <div class="flex flex-wrap items-center gap-3">
-      <div role="radiogroup" aria-label="How to show the money"
-           class="inline-flex rounded-lg border border-navy-200 dark:border-navy-700 p-0.5 bg-navy-50 dark:bg-navy-900/60">
-        <button id="modeBuy" type="button" role="radio" aria-checked="true"
-                class="rounded-md px-3 py-1.5 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50">
-          What it will buy
-        </button>
-        <button id="modeStatement" type="button" role="radio" aria-checked="false"
-                class="rounded-md px-3 py-1.5 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50">
-          What the statement will say
-        </button>
-      </div>
-      <p id="modeHint" class="text-xs text-navy-500 dark:text-navy-400"></p>
-    </div>
-
-    <div class="space-y-3">
-      <p class="text-xs text-navy-500 dark:text-navy-400">
-        Over <span id="flowYears" class="font-semibold text-navy-700 dark:text-navy-300">30</span> years,
-        every rupee that passes through the plan:
+      <p class="text-sm text-navy-500 dark:text-navy-400 mt-2">
+        Over <span id="flowYears" class="font-medium text-navy-700 dark:text-navy-300">30</span> years,
+        starting from <span id="flowStart" class="font-medium text-navy-700 dark:text-navy-300">—</span>.
       </p>
-
-      <div class="flex h-9 w-full overflow-hidden rounded-lg border border-navy-200 dark:border-navy-700" role="img" aria-labelledby="flowBarDesc">
-        <div id="barSpent" class="bg-gold-500/85 dark:bg-gold-500/70 min-w-[2px] transition-[width] duration-300"></div>
-        <div id="barTax" class="bg-rose-500/70 dark:bg-rose-500/60 min-w-[2px] transition-[width] duration-300"></div>
-        <div id="barLeft" class="bg-emerald-500/60 dark:bg-emerald-500/45 min-w-[2px] transition-[width] duration-300"></div>
-      </div>
-      <p id="flowBarDesc" class="sr-only"></p>
-
-      <div class="grid grid-cols-3 gap-3 text-xs">
-        <div class="flex items-start gap-2">
-          <span class="mt-1 h-2.5 w-2.5 shrink-0 rounded-sm bg-gold-500/85 dark:bg-gold-500/70"></span>
-          <span>
-            <span class="block text-navy-500 dark:text-navy-400">You spend</span>
-            <span id="flowSpent" class="block font-semibold tabular-nums text-navy-900 dark:text-navy-100">—</span>
-          </span>
-        </div>
-        <div class="flex items-start gap-2">
-          <span class="mt-1 h-2.5 w-2.5 shrink-0 rounded-sm bg-rose-500/70 dark:bg-rose-500/60"></span>
-          <span>
-            <span class="block text-navy-500 dark:text-navy-400">Tax takes</span>
-            <span id="flowTax" class="block font-semibold tabular-nums text-navy-900 dark:text-navy-100">—</span>
-          </span>
-        </div>
-        <div class="flex items-start gap-2">
-          <span class="mt-1 h-2.5 w-2.5 shrink-0 rounded-sm bg-emerald-500/60 dark:bg-emerald-500/45"></span>
-          <span>
-            <span class="block text-navy-500 dark:text-navy-400">Still there at the end</span>
-            <span id="flowLeft" class="block font-semibold tabular-nums text-navy-900 dark:text-navy-100">—</span>
-          </span>
-        </div>
-      </div>
     </div>
 
-    <!-- The headline. True in both modes, impressive in both, different story. -->
-    <div class="pt-5 border-t border-navy-200 dark:border-navy-800 space-y-3">
-      <p id="flowInsight" class="text-base leading-relaxed text-navy-800 dark:text-navy-200"></p>
-      <p id="flowIdea" class="text-sm leading-relaxed text-navy-600 dark:text-navy-400"></p>
-      <p id="flowGap" class="text-xs leading-relaxed text-navy-500 dark:text-navy-400 border-l-2 border-gold-500/50 pl-3"></p>
+    <div class="overflow-x-auto -mx-2 px-2">
+      <table class="w-full text-sm border-collapse">
+        <caption class="sr-only">
+          Where the money goes, shown both in today's prices and as your statement will report it.
+        </caption>
+        <thead>
+          <tr class="border-b border-navy-200 dark:border-navy-700">
+            <th scope="col" class="text-left font-normal text-navy-500 dark:text-navy-400 pb-2"></th>
+            <th scope="col" class="text-right pb-2 pl-4">
+              <span class="block text-xs font-semibold text-navy-900 dark:text-navy-100">What it buys</span>
+              <span class="block text-[11px] font-normal text-navy-500 dark:text-navy-400">in today's prices</span>
+            </th>
+            <th scope="col" class="text-right pb-2 pl-4">
+              <span class="block text-xs font-semibold text-navy-500 dark:text-navy-400">What your statement says</span>
+              <span class="block text-[11px] font-normal text-navy-400 dark:text-navy-500">the number on the screen</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-navy-100 dark:divide-navy-800">
+          <tr>
+            <th scope="row" class="text-left font-normal text-navy-700 dark:text-navy-300 py-2.5">You spend</th>
+            <td id="cellSpendReal" class="text-right tabular-nums font-semibold text-navy-900 dark:text-navy-100 py-2.5 pl-4">—</td>
+            <td id="cellSpendNom" class="text-right tabular-nums text-navy-500 dark:text-navy-400 py-2.5 pl-4">—</td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-left font-normal text-navy-700 dark:text-navy-300 py-2.5">Tax takes</th>
+            <td id="cellTaxReal" class="text-right tabular-nums font-semibold text-navy-900 dark:text-navy-100 py-2.5 pl-4">—</td>
+            <td id="cellTaxNom" class="text-right tabular-nums text-navy-500 dark:text-navy-400 py-2.5 pl-4">—</td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-left font-normal text-navy-700 dark:text-navy-300 py-2.5">Still there at the end</th>
+            <td id="cellLeftReal" class="text-right tabular-nums font-semibold text-navy-900 dark:text-navy-100 py-2.5 pl-4">—</td>
+            <td id="cellLeftNom" class="text-right tabular-nums text-navy-500 dark:text-navy-400 py-2.5 pl-4">—</td>
+          </tr>
+          <tr class="border-t-2 border-navy-300 dark:border-navy-600">
+            <th scope="row" class="text-left font-semibold text-navy-900 dark:text-navy-100 py-3">
+              What the pot gave you
+            </th>
+            <td id="cellTotalReal" class="text-right tabular-nums font-bold text-base text-navy-900 dark:text-navy-100 py-3 pl-4">—</td>
+            <td id="cellTotalNom" class="text-right tabular-nums font-semibold text-navy-500 dark:text-navy-400 py-3 pl-4">—</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+
+    <!-- The one thing the two columns exist to show. -->
+    <p id="flowGap" class="rounded-lg bg-gold-500/10 border border-gold-500/30 px-4 py-3 text-sm leading-relaxed text-navy-800 dark:text-navy-200"></p>
+
+    <!-- One idea, one voice, one size. -->
+    <p id="flowIdea" class="text-base leading-relaxed text-navy-800 dark:text-navy-200"></p>
 
     <div class="pt-4 border-t border-navy-200 dark:border-navy-800">
       <p class="text-sm text-navy-600 dark:text-navy-400">
@@ -101,117 +97,54 @@
   function money(n: number): string {
     const v = Math.round(Math.abs(n));
     const sign = n < 0 ? '−' : '';
-    if (v >= 10000000) return `${sign}₹${(v / 10000000).toFixed(2)} crore`;
-    if (v >= 100000) return `${sign}₹${(v / 100000).toFixed(1)} lakh`;
+    if (v >= 10000000) return `${sign}₹${(v / 10000000).toFixed(2)} cr`;
+    if (v >= 100000) return `${sign}₹${(v / 100000).toFixed(1)} L`;
     return `${sign}₹${v.toLocaleString('en-IN')}`;
   }
 
-  const ON = 'bg-white dark:bg-navy-800 text-navy-900 dark:text-navy-100 shadow-sm';
-  const OFF = 'text-navy-500 dark:text-navy-400 hover:text-navy-800 dark:hover:text-navy-200';
-  const BASE = 'rounded-md px-3 py-1.5 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50 ';
-
-  let mode: 'buy' | 'statement' = 'buy';
-  let last: any = null;
-
-  function paintToggle() {
-    const buy = $('modeBuy')!, st = $('modeStatement')!;
-    buy.className = BASE + (mode === 'buy' ? ON : OFF);
-    st.className = BASE + (mode === 'statement' ? ON : OFF);
-    buy.setAttribute('aria-checked', String(mode === 'buy'));
-    st.setAttribute('aria-checked', String(mode === 'statement'));
-    $('modeHint')!.textContent =
-      mode === 'buy'
-        ? 'Today’s prices, so you can picture it.'
-        : 'The numbers your account will actually show.';
-  }
-
-  function render() {
-    if (!last) return;
-    const { inputs, outlook } = last;
+  function render(detail: any) {
+    const { inputs, outlook } = detail;
     const f = outlook?.flow;
     if (!f?.real) return;
 
-    const view = mode === 'buy' ? f.real : f;
-    const spend = view.netToYou, tax = view.tax, left = Math.max(0, view.left);
-    const drawn = view.drawn;
+    const realLeft = Math.max(0, f.real.left);
+    const nomLeft = Math.max(0, f.left);
 
-    const total = Math.max(1, spend + tax + left);
-    const w = (n: number) => `${Math.max(0, (n / total) * 100).toFixed(2)}%`;
-    ($('barSpent') as HTMLElement).style.width = w(spend);
-    ($('barTax') as HTMLElement).style.width = w(tax);
-    ($('barLeft') as HTMLElement).style.width = w(left);
+    // What the pot gave YOU: spending money plus what you still hold. Tax went
+    // to the government, so it is shown but not counted in the total - the
+    // three rows above must add to the row below, because a reader will check.
+    const realTotal = f.real.netToYou + realLeft;
+    const nomTotal = f.netToYou + nomLeft;
+    const eaten = nomTotal - realTotal;
 
     $('flowYears')!.textContent = String(inputs.horizonYears);
-    $('flowSpent')!.textContent = money(spend);
-    $('flowTax')!.textContent = money(tax);
-    $('flowLeft')!.textContent = money(left);
-    $('flowBarDesc')!.textContent =
-      `${mode === 'buy' ? 'In today’s prices' : 'On the statement'}: you spend ` +
-      `${money(spend)}, tax takes ${money(tax)}, and ${money(left)} is still there at the end.`;
+    $('flowStart')!.textContent = money(f.started);
 
-    // What the pot delivered TO YOU: what you spent plus what you still hold.
-    // Not the gross draw - tax went to the government, not to you - and not
-    // withdrawals alone, which understated the result by more than half.
-    // The three figures on screen must add up to this, because a reader can
-    // and will check.
-    const delivered = spend + left;
-    const multiple = f.started > 0 ? delivered / f.started : 0;
+    $('cellSpendReal')!.textContent = money(f.real.netToYou);
+    $('cellSpendNom')!.textContent = money(f.netToYou);
+    $('cellTaxReal')!.textContent = money(f.real.tax);
+    $('cellTaxNom')!.textContent = money(f.tax);
+    $('cellLeftReal')!.textContent = money(realLeft);
+    $('cellLeftNom')!.textContent = money(nomLeft);
+    $('cellTotalReal')!.textContent = money(realTotal);
+    $('cellTotalNom')!.textContent = money(nomTotal);
 
-    if (left > 0) {
-      $('flowInsight')!.textContent =
-        `From ${money(f.started)}, this pot hands you ${money(spend)} to live on and ` +
-        `still holds ${money(left)} at the end — ${money(delivered)} in all, ` +
-        `${multiple.toFixed(1)} times what you started with. Your savings did not ` +
-        `pay you. Growth did.`;
-      $('flowIdea')!.textContent =
-        `That only works because you drew ${f.initialRate.toFixed(1)}% in the first year ` +
-        `and the pot grew faster than that. The rate you draw matters far more than ` +
-        `the amount you start with: double the savings and draw double, and you are ` +
-        `in exactly the same place.`;
-    } else {
-      $('flowInsight')!.textContent =
-        `From ${money(f.started)}, this pot hands you ${money(spend)} and then runs ` +
-        `out. Drawing ${f.initialRate.toFixed(1)}% in the first year outran what the ` +
-        `money could earn.`;
-      $('flowIdea')!.textContent =
-        `The rate you draw matters far more than the amount you start with. A bigger ` +
-        `pot drawn at the same rate runs out at the same time — only a slower rate ` +
-        `changes the ending.`;
-    }
+    $('flowGap')!.textContent =
+      `The two columns are the same money. The ${money(eaten)} between them is ` +
+      `inflation — and no statement you ever receive will show you that line.`;
 
-    // The gap is the lesson, not a caveat. It is stated from whichever side the
-    // reader is standing on.
-    // Same basis on both sides, so the comparison is like for like.
-    const nominalDelivered = f.netToYou + Math.max(0, f.left);
-    const realDelivered = f.real.netToYou + Math.max(0, f.real.left);
-    const eaten = nominalDelivered - realDelivered;
-
-    $('flowGap')!.textContent = mode === 'buy'
-      ? `Your statement will show a bigger number — ${money(nominalDelivered)} rather ` +
-        `than ${money(realDelivered)} — because prices rise too. Inflation quietly ` +
-        `takes ${money(eaten)} of it, and no statement will ever show you that line. ` +
-        `Switch the view above to see what your account will say.`
-      : `These are the numbers your account will show. They buy what ` +
-        `${money(realDelivered)} buys today — prices rise alongside them, so ` +
-        `${money(eaten)} of that total is inflation rather than gain. Switch back to ` +
-        `see the money in terms you can picture.`;
+    const multiple = f.started > 0 ? realTotal / f.started : 0;
+    $('flowIdea')!.textContent = realLeft > 0
+      ? `So a ${money(f.started)} pot pays you ${money(f.real.netToYou)} to live on and ` +
+        `still holds ${money(realLeft)} — ${multiple.toFixed(1)} times what you put in, ` +
+        `in what it can actually buy. Your savings did not pay you; growth did, and it ` +
+        `only worked because you drew ${f.initialRate.toFixed(1)}% while the pot grew faster. ` +
+        `The rate you draw matters far more than the amount you start with.`
+      : `So a ${money(f.started)} pot pays you ${money(f.real.netToYou)} and then runs out. ` +
+        `Drawing ${f.initialRate.toFixed(1)}% in the first year outran what the money could ` +
+        `earn. The rate you draw matters far more than the amount you start with — a bigger ` +
+        `pot drawn at the same rate runs out at the same time.`;
   }
 
-  function setMode(next: 'buy' | 'statement') {
-    mode = next;
-    paintToggle();
-    render();
-    // Broadcast so no other screen can contradict this one.
-    window.dispatchEvent(new CustomEvent('swp:mode', { detail: { mode } }));
-  }
-
-  $('modeBuy')?.addEventListener('click', () => setMode('buy'));
-  $('modeStatement')?.addEventListener('click', () => setMode('statement'));
-
-  window.addEventListener('swp:result', (e) => {
-    last = (e as CustomEvent).detail;
-    render();
-  });
-
-  paintToggle();
+  window.addEventListener('swp:result', (e) => render((e as CustomEvent).detail));
 </script>

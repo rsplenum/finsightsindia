@@ -10,9 +10,10 @@
       "Record the spirit, not just the fix. The instance is the occasion; the principle is the asset.",
       "Preserve the verbatim words. Rahul's phrasing carries nuance that a paraphrase loses, and he may not reproduce it as well a second time.",
       "A principle that cannot be checked will be violated again. Every entry carries a test.",
-      "The lesson may arrive attached to something small. Its scope is not the size of its trigger."
+      "The lesson may arrive attached to something small. Its scope is not the size of its trigger.",
+      "Run the tests BEFORE designing, not after building. Every entry's `test` is a question to be answered on paper while the thing is still cheap to change. Recording a lesson and then designing without consulting it is the same failure as never recording it, and it is how a doctrine becomes an archive."
     ],
-    "test": "Before any design or UX decision, this file is read. Any principle here that has been violated twice is a process failure, not a mistake."
+    "test": "Before any design or UX decision this file is read, and each relevant entry's test is answered explicitly for the thing being designed. Any principle here violated twice is a process failure, not a mistake."
   },
   {
     "id": "dd-001",
@@ -94,5 +95,35 @@
       "articles"
     ],
     "test": "For any calculator, name the single comparison it reduces to. If there isn't one, the model has not been found yet and the screen is still a list."
+  },
+  {
+    "id": "dd-006",
+    "date": "2026-08-15",
+    "title": "Never make the reader diff two states",
+    "trigger": "The what-it-buys / what-the-statement-says toggle. Flipping it rewrote three paragraphs in which most words were identical and a few numbers changed mid-sentence.",
+    "verbatim": "when i switch from one toggle to other and vice versa, i encounter cognitive load, as majority of the text stays the same and something in the middle of the text changes, i am challenged to find out what changes with the toggle... Now it is a lot of cognitive work to find out what changed and that is a problem for me.",
+    "spirit": "A control that swaps one body of text for a nearly identical one hands the reader a spot-the-difference puzzle and calls it a feature. Holding state A in memory to compare against state B is the most expensive thing an interface can ask for. When two views of the same thing both matter, SHOW BOTH, adjacent, so the comparison is free. A toggle is only honest when the two states are genuinely alternatives the reader chooses between - never when the difference between them is itself the point.",
+    "note": "The irony recorded for the future: the gap between the two figures had already been identified as the most valuable fact on the screen, and then half of it was hidden behind a control. If a difference is the lesson, it cannot be a mode.",
+    "applies_to": [
+      "calculators",
+      "interactive components",
+      "any toggle, tab or mode"
+    ],
+    "test": "Flip the control and watch your own eyes. If you have to hunt for what changed, the reader will fail where you merely struggled. Prefer adjacency to alternation."
+  },
+  {
+    "id": "dd-007",
+    "date": "2026-08-15",
+    "title": "Every visual difference must mean something",
+    "trigger": "Three stacked paragraphs in the money-flow rung, each set smaller than the one above it, with no rule behind the sizing.",
+    "verbatim": "the result displays three cascading sections of text, each gets progressively smaller in font size, what does that indicate ? is the progressive text less important, what does the change in font size really trying to communicate to the reader ? I am not clear about it.",
+    "spirit": "Size, weight, colour and order are claims about importance, and a reader decodes them whether or not anything was meant. A cascade of shrinking paragraphs asserts a hierarchy that does not exist, so the reader spends attention working out a rule that was never there. If three things matter equally they look equal; if one matters more it is alone. Decorative hierarchy is not neutral - it is a false statement rendered in typography.",
+    "applies_to": [
+      "calculators",
+      "articles",
+      "illustrations",
+      "every screen"
+    ],
+    "test": "For each difference in size, weight or colour on a screen, state what it asserts. If the answer is 'it looked better', remove it and make the elements equal."
   }
 ]

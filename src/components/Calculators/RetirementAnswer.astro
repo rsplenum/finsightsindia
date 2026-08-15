@@ -108,11 +108,11 @@
   let adviceWorker: Worker | null = null;
   let pending = 0;
 
-  // Shared with the rungs below. Whichever way the reader is looking at money,
-  // every screen looks the same way - two screens disagreeing about the same
-  // quantity is the trust failure we have already fixed once here.
-  let moneyMode: 'buy' | 'statement' = 'buy';
-  let lastResult: any = null;
+  // Every figure on this screen is in today's prices, stated as such. The rung
+  // below shows both moneys side by side; there is no mode to keep in sync,
+  // because a difference that matters cannot be hidden behind a control
+  // (dd-006).
+  const moneyMode: 'buy' = 'buy';
 
   function readInputs() {
     const corpus = clean(($('ansCorpus') as HTMLInputElement)?.value ?? '');
@@ -247,7 +247,6 @@
         return;
       }
       const inputs = readInputs();
-      lastResult = { inputs, outlook: e.data.outlook, remedies: e.data.remedies };
       renderAnswer(inputs, e.data.outlook, e.data.remedies);
       // The rungs below subscribe to this rather than each re-running the
       // simulation. One computation, many views - and they cannot disagree.
@@ -263,13 +262,6 @@
         t = setTimeout(recalc, 400);
       });
     }
-
-    window.addEventListener('swp:mode', (e) => {
-      moneyMode = (e as CustomEvent).detail.mode;
-      if (lastResult) {
-        renderAnswer(lastResult.inputs, lastResult.outlook, lastResult.remedies);
-      }
-    });
 
     $('ansOpenDetail')?.addEventListener('click', () => {
       const d = document.getElementById('detailLayer') as HTMLDetailsElement | null;
