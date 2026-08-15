@@ -4,25 +4,45 @@
  * using the Capital Buffer & Target Restoration Dynamic Guardrails Architecture.
  */
 
-self.onmessage = function (e) {
-  const data = e.data || {};
+/**
+ * Run the Monte Carlo simulation.
+ *
+ * Exported as a plain function so it can be tested without a worker runtime.
+ * Previously all of this lived inside `self.onmessage`, which made 300 lines
+ * of simulation logic unreachable by any test - and this is the code that
+ * produces the headline survival score.
+ */
+export function runSWPMonteCarlo(data: any = {}) {
+
+  // `Number(x) || fallback` treats a deliberate 0 as a missing value, because 0
+  // is falsy. Every numeric input here was affected: setting Market Volatility
+  // to 0 silently ran at 15%, and setting Lifestyle Step-Up to 0 silently ran
+  // at 5% - even though the input's own tooltip instructs "Set to 0 to simply
+  // maintain purchasing power". Following the app's instruction produced an
+  // escalation the user had explicitly declined, and made the headline
+  // disagree with the year-by-year table, which reads its inputs correctly.
+  const num = (v: any, fallback: number): number => {
+    if (v === undefined || v === null || v === '') return fallback;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : fallback;
+  };
 
   // Extract parameters with robust defaults
-  const initialCorpus = Number(data.initialCorpus) || 10000000;
-  const monthlyWithdrawal = Number(data.monthlyWithdrawal) || 50000;
-  const annualStepUp = Number(data.annualStepUp) || 5; // %
-  const expectedReturn = Number(data.expectedReturn) || 12; // %
-  const annualVolatility = Number(data.annualVolatility) || 15; // %
-  const expectedInflation = Number(data.expectedInflation) || 6; // %
-  const ltcgTax = Number(data.ltcgTax) || 12.5; // %
-  const horizonYears = Number(data.horizonYears) || 30;
-  const numSimulations = Number(data.numSimulations) || 10000;
+  const initialCorpus = num(data.initialCorpus, 10000000);
+  const monthlyWithdrawal = num(data.monthlyWithdrawal, 50000);
+  const annualStepUp = num(data.annualStepUp, 5); // %
+  const expectedReturn = num(data.expectedReturn, 12); // %
+  const annualVolatility = num(data.annualVolatility, 15); // %
+  const expectedInflation = num(data.expectedInflation, 6); // %
+  const ltcgTax = num(data.ltcgTax, 12.5); // %
+  const horizonYears = Math.max(1, num(data.horizonYears, 30));
+  const numSimulations = Math.max(1, num(data.numSimulations, 10000));
   const useGuardrails = Boolean(data.useGuardrails);
   
   // Black-Scholes Hedging Params
   const bsEnabled = Boolean(data.bsEnabled);
-  const hedgingDragCost = Number(data.hedgingDragCost) || 1.85; // %
-  const hedgingFloorLimit = Number(data.hedgingFloorLimit) || -10; // %
+  const hedgingDragCost = num(data.hedgingDragCost, 1.85); // %
+  const hedgingFloorLimit = num(data.hedgingFloorLimit, -10); // %
 
   // Rate conversions
   const mu = expectedReturn / 100;
@@ -72,11 +92,26 @@ self.onmessage = function (e) {
     samplePaths[s][0] = initialCorpus;
   }
 
+  // Seeded PRNG, matching sipWorker. This used to call Math.random() directly,
+  // which meant the survival score changed on every page refresh - the same
+  // inputs would report 22.79% and then 22.6%, which reads as the tool being
+  // unsure of itself. It also made the result impossible to assert in a test.
+  // Callers may pass `seed` to explore a different draw deliberately.
+  function mulberry32(a: number) {
+    return function () {
+      let t = (a += 0x6D2B79F5);
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  const rand = mulberry32(Number(data.seed) || 1234567);
+
   // Box-Muller transform generator for standard normal N(0, 1)
   function getRandomNormal() {
     let u1 = 0, u2 = 0;
-    while (u1 === 0) u1 = Math.random();
-    while (u2 === 0) u2 = Math.random();
+    while (u1 === 0) u1 = rand();
+    while (u2 === 0) u2 = rand();
     return Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
   }
 
@@ -277,7 +312,7 @@ self.onmessage = function (e) {
   const stdDevFinalBalance = Math.sqrt(variance);
   const skewnessFinalBalance = stdDevFinalBalance > 0 ? (sumCubeDiff / numSimulations) / Math.pow(stdDevFinalBalance, 3) : 0;
 
-  self.postMessage({
+  return {
     years,
     p10,
     p25,
@@ -308,5 +343,15 @@ self.onmessage = function (e) {
       stdDevFinalBalance,
       skewnessFinalBalance
     }
-  });
-};
+  };
+}
+
+// Worker entry point, kept deliberately thin. All logic lives in the exported
+// function above; this only moves data across the worker boundary. Guarded so
+// the module can be imported in a plain Node/vitest context where `self` does
+// not exist.
+if (typeof self !== 'undefined' && typeof self.postMessage === 'function') {
+  self.onmessage = function (e) {
+    self.postMessage(runSWPMonteCarlo(e.data || {}));
+  };
+}
