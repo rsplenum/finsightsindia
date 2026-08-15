@@ -29,19 +29,22 @@ function getRandomNormal() {
 	return z0;
 }
 
-self.onmessage = (e) => {
-	const { type, params } = e.data;
-	
-	if (type === 'GOAL_SEEK') {
-		const result = runGoalSeek(params);
-		self.postMessage({ type: 'GOAL_SEEK_RESULT', result });
-	} else if (type === 'SIMULATE') {
-		const result = runSimulation(params);
-		self.postMessage({ type: 'SIMULATE_RESULT', result });
-	}
-};
+// Worker entry point, kept thin. All logic lives in the exported functions
+// below so they can be tested without a worker runtime. Guarded so the module
+// can be imported in a plain Node/vitest context where `self` does not exist.
+if (typeof self !== 'undefined' && typeof self.postMessage === 'function') {
+	self.onmessage = (e) => {
+		const { type, params } = e.data;
 
-function runGoalSeek(params: any) {
+		if (type === 'GOAL_SEEK') {
+			self.postMessage({ type: 'GOAL_SEEK_RESULT', result: runGoalSeek(params) });
+		} else if (type === 'SIMULATE') {
+			self.postMessage({ type: 'SIMULATE_RESULT', result: runSimulation(params) });
+		}
+	};
+}
+
+export function runGoalSeek(params: any) {
 	const {
 		targetRealWealth, seedCapital, stepUpRate, horizonYears, inflationRate,
 		eqPct, debtPct, goldPct, bsEnabled, annualHedgingDragCost, isPostTax
@@ -119,17 +122,18 @@ function runGoalSeek(params: any) {
 	return Math.round((lowSip + highSip) / 2);
 }
 
-function runSimulation(params: any) {
+export function runSimulation(params: any) {
 	const {
 		seedCapital, monthlySip, stepUpRate, horizonYears, inflationRate,
 		eqPct, debtPct, goldPct, bsEnabled, annualHedgingDragCost
 	} = params;
 
 	// Reset RNG seed for deterministic runs
-	rand = mulberry32(1234567);
+	rand = mulberry32(Number(params.seed) > 0 ? Number(params.seed) : 1234567);
 	hasSpare = false;
 
-	const numSims = 10000;
+	// Injectable so tests can run a smaller sweep. Production callers omit it.
+	const numSims = Number(params.numSims) > 0 ? Number(params.numSims) : 10000;
 	const sqrt12 = Math.sqrt(12);
 
     const eqDrift = (0.12 - 0.5 * 0.15 * 0.15) / 12;
