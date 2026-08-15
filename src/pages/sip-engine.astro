@@ -5,224 +5,328 @@ import CardPremium from '../components/CardPremium.astro';
 import InputGroup from '../components/InputGroup.astro';
 import SectionTitle from '../components/SectionTitle.astro';
 import ButtonGold from '../components/ButtonGold.astro';
+import { REGIME_PRESETS, DEFAULT_REGIME } from '../utils/regimePresets';
+import SipAnswer from '../components/Calculators/SipAnswer.astro';
+import RungSipRates from '../components/Calculators/RungSipRates.astro';
+import RungSipFlow from '../components/Calculators/RungSipFlow.astro';
+import RungSipGrowth from '../components/Calculators/RungSipGrowth.astro';
+import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 ---
 
-<Layout 
-	title="SIP Wealth Builder — Real Value & Market Scenarios"
-	description="Advanced Time Value of Money (TVM) Purchasing Power Simulator with 10,000 market paths, Real Capital Sacrifice vs Real Wealth Created analysis, and year-by-year Black-Scholes put option hedging ledger."
+<Layout
+	title="SIP Planner — will I get there?"
+	description="Tell us what you can put away, for how long, and what you are aiming at. We stress-test it across 10,000 market paths built from the Nifty 50's own record, and tell you what to change if the answer is not good enough."
 >
-	<Hero 
-		badge="WEALTH ACCUMULATION ENGINE"
-		title="SIP Wealth Builder"
-		description="Visualize your future wealth in today's purchasing power, stress-tested across 10,000 market scenarios to give you a realistic picture of your financial future."
+	<Hero
+		badge="Savings Planner"
+		title="Will I get there?"
+		description="Tell us three things and we will tell you whether your savings reach your goal — and what to change if they do not."
 	/>
 
-	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-16 sm:pt-6 sm:pb-24 space-y-8">
+	<!-- Layer 1: the Answer (sol-019) -->
+	<SipAnswer />
 
-		<!-- SECTION 1: COMPACT 2-COLUMN DASHBOARD (5/12 vs 7/12 Proportions) -->
-		<section class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full">
+	<!-- The ladder (dd-002): one question per rung, in the order a reader has
+	     them. The two-rates rung comes first: it is the model everything else is
+	     a push on (dd-005), and it teaches the money distinction the later rungs
+	     depend on (dd-004). -->
+	<RungSipRates />
+	<RungSipFlow />
+	<RungSipGrowth />
 
-			<!-- Left Column: Input Parameters & Asset Matrix (5/12 Width) -->
-			<CardPremium class="lg:col-span-5">
-				
-				<div class="flex items-center justify-between border-b border-navy-200 dark:border-navy-800 pb-3 mb-4">
-					<h2 class="text-xs font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100 flex items-center gap-2">
-						<svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
-						</svg>
-						SACRIFICE MATRIX
-					</h2>
-					<span class="text-[10px] text-navy-400 dark:text-navy-500">INPUT CONTROLS</span>
+	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-16 sm:pt-6 sm:pb-24">
+
+		<RungSipExpert>
+
+		<div slot="controls">
+			<CardPremium glass={true}>
+				<div class="pb-4 border-b border-navy-200 dark:border-navy-800">
+					<h3 class="text-lg font-bold tracking-tight text-navy-900 dark:text-navy-100">Your Plan Details</h3>
+					<p class="text-xs text-navy-500 dark:text-navy-400 mt-0.5">What you invest, what you are aiming at, and what you assume the market does.</p>
 				</div>
 
 				<form id="sipForm" onsubmit="event.preventDefault();" class="space-y-6">
-					
-					<!-- ENGINE MODE SWITCHER -->
-					<div class="p-1 bg-navy-100 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg flex items-center justify-between gap-1 text-[10px] uppercase font-bold">
-						<button id="modeForwardBtn" type="button" class="btn-primary flex-1 py-1.5 text-center cursor-pointer rounded">
-							FORWARD: STOCHASTIC
-						</button>
-						<button id="modeReverseBtn" type="button" class="btn-ghost flex-1 py-1.5 text-center cursor-pointer rounded">
-							REVERSE: GOAL-SEEK
-						</button>
-					</div>
 
+					<!-- Section 1: What you are putting in, and what for -->
 					<div class="space-y-4">
-						<InputGroup 
-							id="seedCapital"
-							label="Initial Seed Capital"
-							tooltip="Initial lump sum capital deployed at t = 0."
+						<SectionTitle title="What you put in, and what you want" />
+
+						<InputGroup
+							id="monthlySip"
+							label="Monthly Investment"
+							required={true}
+							tooltip="What you put away every month, before any step-up."
 							prefix="₹"
-							suffix="Lump Sum"
+							suffix="/month"
+							value="25,000"
+							formattedId="sipFormatted"
+							formattedClass="text-xs text-navy-600 dark:text-navy-400 bg-navy-100 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 px-2 py-0.5 rounded-md font-medium"
+							formattedDefault="₹ 25,000 / month"
+						/>
+
+						<InputGroup
+							id="targetRealWealth"
+							label="What You Are Aiming At"
+							required={true}
+							tooltip="In TODAY'S money — what the amount buys now, not what the number will read at the end. A goal stated in future rupees is not a goal."
+							prefix="₹"
+							suffix="today's ₹"
+							value="1,00,00,000"
+							formattedId="targetFormatted"
+							formattedClass="text-xs text-navy-600 dark:text-navy-400 bg-navy-100 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 px-2 py-0.5 rounded-md font-medium"
+							formattedDefault="₹ 1,00,00,000 (1 Cr)"
+						/>
+
+						<InputGroup
+							id="seedCapital"
+							label="Lump Sum You Already Have"
+							tooltip="Anything already invested today. Leave it at zero if you are starting from nothing."
+							prefix="₹"
+							suffix="one-off"
 							value="0"
 							formattedId="seedFormatted"
 							formattedClass="text-xs text-navy-500"
 						/>
 
-						<div id="monthlySipContainer">
-							<InputGroup 
-								id="monthlySip"
-								label="Monthly SIP Contribution"
-								tooltip="Monthly capital deployed into your portfolio."
-								prefix="₹"
-								suffix="/ Month"
-								value="25,000"
-								formattedId="sipFormatted"
-								formattedClass="text-xs text-navy-500"
+						<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+							<InputGroup
+								id="investmentYears"
+								label="How Long You Invest For"
+								tooltip="The number of years you keep putting money in before you stop."
+								suffix="years"
+								type="number"
+								value="20"
+								min="1" max="60" step="1" required={true}
+							/>
+
+							<InputGroup
+								id="stepUpRate"
+								label="Yearly Increase"
+								tooltip="How much you raise the monthly amount each year. At zero, a fixed instalment shrinks in real terms every year — rung 1 shows by how much."
+								suffix="% / yr"
+								type="number"
+								value="0"
+								min="0" max="25" step="0.5"
 							/>
 						</div>
+					</div>
 
-						<div id="targetRealWealthContainer" class="hidden">
-							<InputGroup 
-								id="targetRealWealth"
-								label="Target Real Wealth"
-								tooltip="Target real purchasing power in today's rupees."
-								prefix="₹"
-								suffix="Target PV"
-								value="5,00,00,000"
+					<hr class="section-divider" />
+
+					<!-- Section 2: The market you assume -->
+					<div class="space-y-4">
+						<SectionTitle title="What you assume the market does" />
+
+						<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+							<InputGroup
+								id="inflationRate"
+								label="Expected Inflation %"
+								tooltip="How fast prices rise. This is what turns the final number into what it will actually buy."
+								suffix="% / yr"
+								type="number"
+								value="6.0"
+								min="0" max="20" step="0.5" required={true}
 							/>
-						</div>
 
-						<!-- Required Starting SIP Hairline Result Card -->
-						<div id="requiredSipResultCard" class="hidden bg-emerald-500/10 border border-emerald-500/30 rounded-md p-3 space-y-1">
-							<div class="flex justify-between items-center text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
-								<span>REQUIRED STARTING SIP</span>
-								<span>GOAL-SEEK RESULT</span>
-							</div>
-							<div id="valRequiredSip" class="stat-value text-xl text-emerald-600 dark:text-emerald-400">
-								₹ 0 / Month
+							<InputGroup
+								id="sipLtcgTax"
+								label="Tax on Gains %"
+								tooltip="Long-term capital gains, charged only on profit and only when you sell. The first ₹1.25 lakh of gain is exempt."
+								suffix="% tax"
+								type="number"
+								value="12.5"
+								min="0" max="50" step="0.1" required={true}
+							/>
+
+							<InputGroup
+								id="sipExpectedReturn"
+								label="Expected Growth on Shares %"
+								tooltip="Long-term average annual return on the equity part, including dividends. Pick a period below rather than a number, so the growth and the roughness come from the same world."
+								suffix="% a year"
+								type="number"
+								value={DEFAULT_REGIME.growth.toFixed(1)}
+								min="0" max="30" step="0.5" required={true}
+							/>
+
+							<InputGroup
+								id="sipVolatility"
+								label="Market Roughness %"
+								tooltip="The spread of the Nifty 50's ANNUAL returns. Not the day-to-day figure people quote: over the last 10 years this was 8.9%, but over the last 30 it was 28.4%."
+								suffix="% swings"
+								type="number"
+								value={DEFAULT_REGIME.roughness.toFixed(1)}
+								min="5" max="50" step="0.5" required={true}
+							/>
+
+							<!-- sol-028, second instance. Until now these two numbers were not
+							     inputs at all on this page: `eqDrift` and `eqVolMult` were
+							     module constants inside sipWorker at 12% and 15%, so a preset
+							     here would have moved a label and nothing else. The engine takes
+							     them now, and refuses to run without them. Each preset sets BOTH,
+							     because a regime is a pair. -->
+							<div class="sm:col-span-2 space-y-2">
+								<div class="flex items-baseline justify-between gap-3">
+									<span class="text-[11px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">
+										Or take both from a real period
+									</span>
+									<span class="text-[10px] text-navy-400 dark:text-navy-500">Nifty 50, to {REGIME_PRESETS[0].span.split('–')[1]}</span>
+								</div>
+								<div id="sipRegimePresets" role="radiogroup" aria-label="Take growth and roughness from a real period"
+									 class="grid grid-cols-3 gap-1.5">
+									{REGIME_PRESETS.map((p) => (
+										<button type="button" role="radio" data-regime={p.id}
+												data-growth={String(p.growth)} data-roughness={String(p.roughness)}
+												class="sip-regime-btn border border-navy-200 dark:border-navy-800 rounded p-1.5 text-left transition-colors hover:bg-navy-100 dark:hover:bg-navy-800">
+											<span class="block text-[9px] font-bold uppercase text-navy-700 dark:text-navy-300">{p.label.replace('The last ', '')}</span>
+											<span class="block text-[10px] tabular-nums text-navy-500 dark:text-navy-400">{p.growth}% · {p.roughness}% swings</span>
+										</button>
+									))}
+								</div>
+								<p id="sipRegimeNote" class="text-[10px] leading-relaxed text-navy-500 dark:text-navy-400"></p>
 							</div>
 						</div>
 					</div>
 
 					<hr class="section-divider" />
 
-					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-						<InputGroup 
-							id="stepUpRate"
-							label="Annual Step-Up"
-							tooltip="Annual escalation percentage on monthly SIP."
-							suffix="% / YR"
-							type="number"
-							value="0"
-						/>
-						<InputGroup 
-							id="investmentYears"
-							label="Horizon"
-							tooltip="Total accumulation horizon."
-							suffix="YRS"
-							type="number"
-							value="20"
-						/>
-						<InputGroup 
-							id="inflationRate"
-							label="Inflation Rate"
-							tooltip="Discount rate for Real TVM purchasing power."
-							suffix="%"
-							type="number"
-							value="6.0"
-						/>
-					</div>
-
-					<!-- PURCHASING POWER SACRIFICE HIGHLIGHT CELL -->
-					<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-3.5 space-y-1">
-						<div class="flex justify-between items-center">
-							<span class="text-[11px] uppercase tracking-wider font-semibold text-navy-500 dark:text-navy-400">Purchasing Power Sacrificed (PV)</span>
-							<span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase">TODAY'S VALUE</span>
-						</div>
-						<div id="valSacrificePV" class="stat-value text-xl text-navy-900 dark:text-navy-100">₹ 0</div>
-					</div>
-
-					<hr class="section-divider" />
-
-					<!-- ASSET ALLOCATION MATRIX -->
+					<!-- Section 3: How the money is split -->
 					<div class="space-y-4">
 						<div class="flex items-center justify-between">
-							<SectionTitle title="PROPORTIONAL ASSET MATRIX" />
+							<SectionTitle title="How the money is split" />
 							<span id="allocationTotalBadge" class="text-xs font-bold text-emerald-600 dark:text-emerald-400">Total: 100%</span>
 						</div>
 
-						<div class="grid grid-cols-4 gap-1.5 mb-4">
-							<button type="button" data-preset="conservative" class="preset-btn border border-navy-200 dark:border-navy-800 hover:bg-navy-100 dark:hover:bg-navy-800 text-[9px] uppercase font-bold text-navy-600 dark:text-navy-400 rounded transition-colors p-1">CONSERVATIVE</button>
+						<div class="grid grid-cols-4 gap-1.5">
+							<button type="button" data-preset="conservative" class="preset-btn border border-navy-200 dark:border-navy-800 hover:bg-navy-100 dark:hover:bg-navy-800 text-[9px] uppercase font-bold text-navy-600 dark:text-navy-400 rounded transition-colors p-1">CAUTIOUS</button>
 							<button type="button" data-preset="balanced" class="preset-btn border border-navy-200 dark:border-navy-800 hover:bg-navy-100 dark:hover:bg-navy-800 text-[9px] uppercase font-bold text-navy-600 dark:text-navy-400 rounded transition-colors p-1">BALANCED</button>
-							<button type="button" data-preset="aggressive" class="preset-btn border border-navy-200 dark:border-navy-800 hover:bg-navy-100 dark:hover:bg-navy-800 text-[9px] uppercase font-bold text-navy-600 dark:text-navy-400 rounded transition-colors p-1">AGGRESSIVE</button>
-							<button type="button" data-preset="fire" class="preset-btn border border-navy-200 dark:border-navy-800 hover:bg-navy-100 dark:hover:bg-navy-800 text-[9px] uppercase font-bold text-navy-600 dark:text-navy-400 rounded transition-colors p-1">FIRE 15-YR</button>
+							<button type="button" data-preset="aggressive" class="preset-btn border border-navy-200 dark:border-navy-800 hover:bg-navy-100 dark:hover:bg-navy-800 text-[9px] uppercase font-bold text-navy-600 dark:text-navy-400 rounded transition-colors p-1">BOLD</button>
+							<button type="button" data-preset="fire" class="preset-btn border border-navy-200 dark:border-navy-800 hover:bg-navy-100 dark:hover:bg-navy-800 text-[9px] uppercase font-bold text-navy-600 dark:text-navy-400 rounded transition-colors p-1">RETIRE IN 15</button>
 						</div>
 
-						<!-- Equity Slider -->
 						<div class="space-y-1.5">
 							<div class="flex justify-between items-center text-xs">
-								<span class="text-navy-700 dark:text-navy-300 font-medium">Equity (12% CAGR, 15% Vol)</span>
+								<span class="text-navy-700 dark:text-navy-300 font-medium">
+									Shares — <span id="sipEquityLabel">the period you chose above</span>
+								</span>
 								<span id="equityVal" class="font-bold text-navy-900 dark:text-navy-100">70%</span>
 							</div>
 							<input type="range" id="equitySlider" min="0" max="100" value="70" class="w-full accent-navy-900 dark:accent-white cursor-pointer h-1.5 rounded-md bg-navy-200 dark:bg-navy-800" />
 						</div>
 
-						<!-- Debt Slider -->
 						<div class="space-y-1.5">
 							<div class="flex justify-between items-center text-xs">
-								<span class="text-navy-700 dark:text-navy-300 font-medium">Debt (7.1% Risk-Free)</span>
+								<span class="text-navy-700 dark:text-navy-300 font-medium">Bonds and deposits — 7.1% a year, barely moves</span>
 								<span id="debtVal" class="font-bold text-navy-900 dark:text-navy-100">20%</span>
 							</div>
 							<input type="range" id="debtSlider" min="0" max="100" value="20" class="w-full accent-navy-900 dark:accent-white cursor-pointer h-1.5 rounded-md bg-navy-200 dark:bg-navy-800" />
 						</div>
 
-						<!-- Gold Slider -->
 						<div class="space-y-1.5">
 							<div class="flex justify-between items-center text-xs">
-								<span class="text-navy-700 dark:text-navy-300 font-medium">Gold (8.5% Inflation Hedge)</span>
+								<span class="text-navy-700 dark:text-navy-300 font-medium">Gold — 8.5% a year, moves when shares fall</span>
 								<span id="goldVal" class="font-bold text-navy-900 dark:text-navy-100">10%</span>
 							</div>
 							<input type="range" id="goldSlider" min="0" max="100" value="10" class="w-full accent-navy-900 dark:accent-white cursor-pointer h-1.5 rounded-md bg-navy-200 dark:bg-navy-800" />
+						</div>
+
+						<p class="text-[10px] leading-relaxed text-navy-500 dark:text-navy-400">
+							The share figures come from the period you picked above. The bond and
+							gold figures do not — they are long-run averages we typed in, and the
+							gate records that as an open debt rather than dressing them up as
+							measurements.
+						</p>
+					</div>
+
+					<hr class="section-divider" />
+
+					<!-- Section 4: Protection -->
+					<div class="space-y-4">
+						<SectionTitle title="Whether you buy a floor" />
+						<div class="flex items-center justify-between gap-3">
+							<span class="text-xs font-semibold text-navy-800 dark:text-navy-200">
+								Buy Portfolio Insurance
+							</span>
+							<label class="relative inline-flex items-center cursor-pointer shrink-0">
+								<input type="checkbox" id="bsHedgingToggle" name="bsHedgingToggle" class="sr-only peer" />
+								<div class="w-11 h-6 bg-navy-200 dark:bg-navy-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-navy-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600 dark:peer-checked:bg-emerald-500"></div>
+							</label>
+						</div>
+						<p class="text-xs text-navy-500 dark:text-navy-400 leading-relaxed">
+							You buy rolling put options on the share part of your savings. You pay a
+							premium every year whether or not it is needed; in exchange, in any year
+							the market falls past your floor, the contract pays the difference. The
+							premium is paid in every year of the plan and the floor pays out in very
+							few of them — the ledger below shows both.
+						</p>
+						<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+							<InputGroup
+								id="sipHedgingDrag"
+								label="Premium"
+								tooltip="Priced, not chosen: Black-Scholes on the floor depth and the roughness above, at implied volatility. A floor you could set a price for independently would be a contract nobody would write."
+								suffix="% / yr"
+								type="number"
+								value="1.85"
+								min="0" max="10" step="0.05"
+								readonly={true}
+							/>
+
+							<InputGroup
+								id="sipHedgingFloor"
+								label="Protected Floor"
+								tooltip="How far the market may fall in a year before the contract pays. Matches the planner's own floor, so the two calculators price the same contract."
+								suffix="% drop"
+								type="number"
+								value="-10"
+								max="0" min="-50" step="1" required={true}
+							/>
 						</div>
 					</div>
 
 					<div class="pt-2">
 						<ButtonGold id="runSipBtn">
-							<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path></svg>
-							<span>SIMULATE REAL TVM PATHS</span>
+							<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+							<span class="text-sm font-semibold">Stress-Test This Plan (10,000 Futures)</span>
 						</ButtonGold>
 					</div>
 				</form>
 			</CardPremium>
+		</div>
 
-			<!-- Right Column: Real TVM Dashboard (7/12 Width) -->
-			<div class="col-span-1 lg:col-span-7 flex flex-col space-y-6">
-				
-				<CardPremium class="p-0 overflow-hidden">
-					<!-- Top Data Ribbon -->
+		<div slot="results">
+			<section class="space-y-6">
+				<CardPremium glass={true} class="p-0 overflow-hidden">
 					<div class="border-b border-navy-200 dark:border-navy-800 p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center bg-navy-50 dark:bg-navy-900 gap-3">
 						<div class="flex items-center gap-2 flex-wrap">
 							<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-							<h2 class="text-xs font-bold tracking-widest text-navy-800 dark:text-navy-200 uppercase">REAL PURCHASING POWER PROJECTION</h2>
-							<button id="taxToggleBtn" type="button" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider transition-all duration-200 bg-navy-200 text-navy-800 dark:bg-navy-800 dark:text-navy-200 border border-navy-300 dark:border-navy-700 cursor-pointer">PRE-TAX</button>
+							<h2 class="text-xs font-bold tracking-widest text-navy-800 dark:text-navy-200 uppercase">What your savings are worth, in today's money</h2>
+							<!-- The post-tax state lives on the button now, where the one
+							     input reader can find it. It used to be a module-scoped
+							     variable no other surface could see. -->
+							<button id="taxToggleBtn" type="button" aria-pressed="false" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider transition-all duration-200 bg-navy-200 text-navy-800 dark:bg-navy-800 dark:text-navy-200 border border-navy-300 dark:border-navy-700 cursor-pointer">BEFORE TAX</button>
 						</div>
-						
-						<!-- Multiplier Badges -->
+
 						<div class="flex flex-wrap items-center gap-2">
-							<span id="worstMultiplierTag" class="badge-danger">--x Worst (10th)</span>
-							<span id="expectedMultiplierTag" class="badge-warning">--x Expected (50th)</span>
-							<span id="bestMultiplierTag" class="badge-safe flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span><span>--x Best (90th)</span></span>
+							<span id="worstMultiplierTag" class="badge-danger">--x Unlucky (10th)</span>
+							<span id="expectedMultiplierTag" class="badge-warning">--x Typical (50th)</span>
+							<span id="bestMultiplierTag" class="badge-safe">--x Lucky (90th)</span>
 						</div>
 					</div>
 
-					<!-- Real Purchasing Power HUD Ribbon -->
 					<div class="p-4 sm:p-5 border-b border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-950 space-y-4">
 						<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-4 border-b border-navy-200/80 dark:border-navy-800 items-center">
 							<div class="space-y-0.5">
-								<span class="stat-label">Real Capital Sacrificed (PV Outflow)</span>
+								<span class="stat-label">What you put in, in today's money</span>
 								<div id="statTotalInvested" class="stat-value text-xl sm:text-2xl text-navy-900 dark:text-navy-100">₹ 0</div>
 							</div>
 							<div class="space-y-0.5 sm:text-right">
-								<span class="stat-label">50th Expected Real Wealth (PV)</span>
+								<span class="stat-label">What you typically end up with</span>
 								<div id="statRealWealth" class="stat-value text-2xl sm:text-3xl text-gold-500">₹ 0</div>
-								<div id="statNominalEquivalent" class="text-[10px] text-navy-600 tracking-tight mt-1">Nominal Equivalent: ₹ 0</div>
-								
-								<!-- Leverage Split Bar -->
+								<div id="statNominalEquivalent" class="text-[10px] text-navy-600 dark:text-navy-400 tracking-tight mt-1">The number on screen that year: ₹ 0</div>
+
 								<div class="mt-4 space-y-1.5 w-full">
 									<div class="flex justify-between text-[10px] uppercase tracking-widest font-bold">
-										<span class="text-navy-500 dark:text-navy-500">Sacrificed (<span id="pctSacrifice">0%</span>)</span>
-										<span class="text-emerald-600 dark:text-emerald-400">Created (<span id="pctCreated">0%</span>)</span>
+										<span class="text-navy-500 dark:text-navy-500">Yours (<span id="pctSacrifice">0%</span>)</span>
+										<span class="text-emerald-600 dark:text-emerald-400">The market's (<span id="pctCreated">0%</span>)</span>
 									</div>
 									<div class="w-full h-1.5 flex rounded-full overflow-hidden bg-navy-200 dark:bg-navy-800">
 										<div id="barSacrifice" class="h-full bg-navy-400 dark:bg-navy-500 transition-all duration-500" style="width: 100%"></div>
@@ -234,571 +338,329 @@ import ButtonGold from '../components/ButtonGold.astro';
 
 						<div class="grid grid-cols-2 gap-4 pt-0.5">
 							<div class="space-y-0.5">
-								<span class="stat-label">10th Bear (Worst Case)</span>
+								<span class="stat-label">If you are unlucky (10th)</span>
 								<div id="statBearWealth" class="stat-value text-lg sm:text-xl text-rose-600 dark:text-rose-400">₹ 0</div>
 							</div>
 							<div class="space-y-0.5 text-right">
-								<span class="stat-label">90th Bull (Best Case)</span>
+								<span class="stat-label">If you are lucky (90th)</span>
 								<div id="statBullWealth" class="stat-value text-lg sm:text-xl text-emerald-600 dark:text-emerald-400">₹ 0</div>
 							</div>
 						</div>
 					</div>
 
-					<!-- Chart Canvas Container -->
 					<div class="relative w-full h-[300px] sm:h-[330px] bg-white dark:bg-navy-950 p-4 flex items-center justify-center">
 						<canvas id="sipChart" class="w-full h-full"></canvas>
 					</div>
 
 					<div class="p-3.5 border-t border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900 flex flex-wrap items-center justify-between text-xs text-navy-600 dark:text-navy-400 gap-3">
 						<div class="flex flex-wrap items-center gap-4">
-							<span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400"></span><span class="font-bold tracking-tight text-navy-900 dark:text-navy-100">90th Bull</span></span>
-							<span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-navy-900 dark:bg-navy-100"></span><span class="font-bold tracking-tight text-navy-900 dark:text-navy-100">50th Expected</span></span>
-							<span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-600 dark:bg-rose-400"></span><span class="font-bold tracking-tight text-navy-900 dark:text-navy-100">10th Bear</span></span>
+							<span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400"></span><span class="font-bold tracking-tight text-navy-900 dark:text-navy-100">Lucky</span></span>
+							<span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-navy-900 dark:bg-navy-100"></span><span class="font-bold tracking-tight text-navy-900 dark:text-navy-100">Typical</span></span>
+							<span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-600 dark:bg-rose-400"></span><span class="font-bold tracking-tight text-navy-900 dark:text-navy-100">Unlucky</span></span>
+							<span class="flex items-center gap-1.5"><span class="w-4 border-t-2 border-dashed border-gold-500"></span><span class="font-bold tracking-tight text-navy-900 dark:text-navy-100">Your goal</span></span>
 						</div>
 						<div class="flex gap-2">
 							<button id="downloadPdfBtn" class="btn-ghost px-3 py-1 text-[10px] uppercase tracking-widest cursor-pointer border border-navy-200 dark:border-navy-800 rounded hover:bg-navy-100 dark:hover:bg-navy-800 transition-colors">↓ Download PDF Report</button>
 							<button id="exportCsvBtn" class="btn-ghost px-3 py-1 text-[10px] uppercase tracking-widest cursor-pointer border border-navy-200 dark:border-navy-800 rounded hover:bg-navy-100 dark:hover:bg-navy-800 transition-colors">↓ Export CSV</button>
 						</div>
 					</div>
-					
+
 					<div id="milestoneTimeline" class="p-3.5 border-t border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-950 flex flex-wrap gap-2.5 items-center text-xs min-h-[48px]">
 					   <!-- Populated by JS -->
 					</div>
 				</CardPremium>
-			</div>
-		</section>
+			</section>
+		</div>
 
-		<!-- SECTION 2: BLACK-SCHOLES HEDGING & YEAR-BY-YEAR LEDGER -->
-		<CardPremium>
-			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-navy-200 dark:border-navy-800 pb-4 mb-4">
-				<div class="flex items-center gap-3">
-					<label class="relative inline-flex items-center cursor-pointer shrink-0">
-						<input type="checkbox" id="bsHedgingToggle" class="sr-only peer" />
-						<div class="w-11 h-6 bg-navy-300 dark:bg-navy-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-navy-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600 dark:peer-checked:bg-emerald-500"></div>
-					</label>
-					<div>
+		<div slot="workings">
+			<CardPremium glass={true} class="w-full">
+				<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-navy-200 dark:border-navy-800 pb-4 mb-4">
+					<div class="flex flex-col gap-1">
 						<h3 class="text-sm sm:text-base font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">
-							Black-Scholes Put Option Downside Hedging
+							What the protection cost, and what it absorbed
 						</h3>
 						<p class="text-xs text-navy-500 dark:text-navy-400 mt-0.5 leading-relaxed">
-							Continuously purchase rolling European put options to cap equity drawdowns during severe bear markets.
+							Rolling put options on the share sleeve, re-struck every twelve months.
 						</p>
 					</div>
+					<span id="bsStatusBadge" class="badge-warning text-xs">NO PROTECTION BOUGHT</span>
 				</div>
-				<span id="bsStatusBadge" class="badge-warning text-xs">UNHEDGED PORTFOLIO</span>
-			</div>
 
-			<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-				<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-4 space-y-1">
-					<span class="text-xs font-bold text-navy-500 dark:text-navy-400 uppercase tracking-widest">Option Premium Drag</span>
-					<div id="valHedgingDrag" class="stat-value text-xl text-navy-900 dark:text-navy-100">0.00% / Year</div>
+				<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+					<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-4 space-y-1">
+						<span class="text-xs font-bold text-navy-500 dark:text-navy-400 uppercase tracking-widest">Premium, a year</span>
+						<div id="valHedgingDrag" class="stat-value text-xl text-navy-900 dark:text-navy-100">0.00% / Year</div>
+					</div>
+					<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-4 space-y-1">
+						<span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">What the floor paid out</span>
+						<div id="valProtectedFloor" class="stat-value text-xl text-emerald-600 dark:text-emerald-400">₹ 0</div>
+					</div>
+					<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-4 space-y-1">
+						<span class="text-xs font-bold text-navy-500 dark:text-navy-400 uppercase tracking-widest">Your return, after inflation</span>
+						<div id="valAdjustedYield" class="stat-value text-xl text-navy-900 dark:text-navy-100">0.00% a year</div>
+					</div>
 				</div>
-				<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-4 space-y-1">
-					<span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Floor Paid Out (PV)</span>
-					<div id="valProtectedFloor" class="stat-value text-xl text-emerald-600 dark:text-emerald-400">₹ 0</div>
-				</div>
-				<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-4 space-y-1">
-					<span class="text-xs font-bold text-navy-500 dark:text-navy-400 uppercase tracking-widest">Hedged Real Yield</span>
-					<div id="valAdjustedYield" class="stat-value text-xl text-navy-900 dark:text-navy-100">0.00% Real XIRR</div>
-				</div>
-			</div>
 
-			<SectionTitle title="YEAR-BY-YEAR OPTION COST & PROTECTION LEDGER" />
-			<p id="ledgerCaption" class="mt-2 text-xs text-navy-500 dark:text-navy-400">
-				Every figure below is in today's money and comes from the simulation itself —
-				the same market paths run twice, once with the floor and once without.
-			</p>
-			<!-- sol-023: these columns used to be invented at render time beside the
-			     engine. They are now read from its output, so a change to the hedging
-			     model moves them. Widths are fixed by colgroup and every numeric cell
-			     is nowrap: six currency columns were wrapping mid-figure, which made
-			     "₹ 1,03,85,340" read as two numbers. -->
-			<div class="w-full mt-2 max-h-[360px] overflow-x-auto overflow-y-auto border border-navy-200 dark:border-navy-800 rounded-md bg-white dark:bg-navy-950 scrollbar-thin scrollbar-thumb-navy-300 dark:scrollbar-thumb-navy-700">
-				<table class="table-premium w-full min-w-[760px] tabular-nums">
-					<colgroup>
-						<col class="w-[9%]" />
-						<col class="w-[18%]" />
-						<col class="w-[19%]" />
-						<col class="w-[19%]" />
-						<col class="w-[17%]" />
-						<col class="w-[18%]" />
-					</colgroup>
-					<thead class="sticky top-0 z-20 bg-navy-100 dark:bg-navy-900 border-b border-navy-200 dark:border-navy-800 shadow-xs">
-						<tr>
-							<th class="py-2.5 px-3 text-left font-bold text-navy-700 dark:text-navy-300 whitespace-nowrap">Year</th>
-							<th class="py-2.5 px-3 text-right font-bold text-navy-700 dark:text-navy-300 whitespace-nowrap">Invested So Far</th>
-							<th class="py-2.5 px-3 text-right font-bold text-navy-700 dark:text-navy-300 whitespace-nowrap">Unprotected</th>
-							<th class="py-2.5 px-3 text-right font-bold text-emerald-600 dark:text-emerald-400 whitespace-nowrap">Protected</th>
-							<th class="py-2.5 px-3 text-right font-bold text-navy-700 dark:text-navy-300 whitespace-nowrap">Premium Paid</th>
-							<th class="py-2.5 px-3 text-right font-bold text-navy-700 dark:text-navy-300 whitespace-nowrap">Floor Paid Out</th>
-						</tr>
-					</thead>
-					<tbody id="hedgingLedgerBody" class="divide-y divide-navy-100 dark:divide-white/5 bg-white dark:bg-navy-950">
-						<!-- Populated from the engine's `hedging` output. -->
-					</tbody>
-				</table>
-			</div>
-		</CardPremium>
+				<SectionTitle title="YEAR-BY-YEAR COST AND PROTECTION LEDGER" />
+				<p id="ledgerCaption" class="mt-2 text-xs text-navy-500 dark:text-navy-400">
+					Every figure below is in today's money and comes from the simulation itself —
+					the same market paths run twice, once with the floor and once without.
+				</p>
+				<!-- sol-023: these columns used to be invented at render time beside the
+				     engine. They are now read from its output, so a change to the hedging
+				     model moves them. Widths are fixed by colgroup and every numeric cell
+				     is nowrap: six currency columns were wrapping mid-figure, which made
+				     "₹ 1,03,85,340" read as two numbers. -->
+				<div class="w-full mt-2 max-h-[360px] overflow-x-auto overflow-y-auto border border-navy-200 dark:border-navy-800 rounded-md bg-white dark:bg-navy-950 scrollbar-thin scrollbar-thumb-navy-300 dark:scrollbar-thumb-navy-700">
+					<table class="table-premium w-full min-w-[760px] tabular-nums">
+						<colgroup>
+							<col class="w-[9%]" />
+							<col class="w-[18%]" />
+							<col class="w-[19%]" />
+							<col class="w-[19%]" />
+							<col class="w-[17%]" />
+							<col class="w-[18%]" />
+						</colgroup>
+						<thead class="sticky top-0 z-20 bg-navy-100 dark:bg-navy-900 border-b border-navy-200 dark:border-navy-800 shadow-xs">
+							<tr>
+								<th class="py-2.5 px-3 text-left font-bold text-navy-700 dark:text-navy-300 whitespace-nowrap">Year</th>
+								<th class="py-2.5 px-3 text-right font-bold text-navy-700 dark:text-navy-300 whitespace-nowrap">Put In So Far</th>
+								<th class="py-2.5 px-3 text-right font-bold text-navy-700 dark:text-navy-300 whitespace-nowrap">Unprotected</th>
+								<th class="py-2.5 px-3 text-right font-bold text-emerald-600 dark:text-emerald-400 whitespace-nowrap">Protected</th>
+								<th class="py-2.5 px-3 text-right font-bold text-navy-700 dark:text-navy-300 whitespace-nowrap">Premium Paid</th>
+								<th class="py-2.5 px-3 text-right font-bold text-navy-700 dark:text-navy-300 whitespace-nowrap">Floor Paid Out</th>
+							</tr>
+						</thead>
+						<tbody id="hedgingLedgerBody" class="divide-y divide-navy-100 dark:divide-white/5 bg-white dark:bg-navy-950">
+							<!-- Populated from the engine's `hedging` output. -->
+						</tbody>
+					</table>
+				</div>
+			</CardPremium>
+		</div>
+
+		</RungSipExpert>
 	</main>
 </Layout>
 
 <script>
-	import { 
-		parseFormattedNumber, 
-		formatShortRupee, 
-		tableFormatter, 
+	import {
+		parseFormattedNumber,
+		formatShortRupee,
+		tableFormatter,
 		setupFormattingField,
-		formatIndianRupeeLabel 
 	} from '../utils/formatters';
 
 	import { calculateXIRR } from '../utils/xirr';
 	import html2pdf from 'html2pdf.js';
+	import { debounce } from '../utils/debounce';
 
-	// Quantitative Stochastic Engine Controller
+	// sol-026 / dd-013: this page no longer computes anything. It reads the one
+	// input set and renders the one simulation, which the compute host in
+	// SipAnswer broadcasts. It used to own a worker of its own, a second input
+	// reader made of `getNumValue` calls, a module-scoped `isPostTax` no other
+	// surface could see, and two separate literal `0.0185` premiums.
+	import {
+		readSipInputs,
+		syncEntryFromAdvanced,
+		requestRecompute,
+	} from '../utils/sipInputs';
+
 	let sipChartInstance: any = null;
-	let lastSimulationResult: any = null;
-	let isPostTax = false;
-	let isReverseGoalSeek = false;
+	let lastSimulation: any = null;
+	let lastInputs: any = null;
+	// Subscribes exactly once. A boolean rather than the old `if (!worker)`
+	// guard, which would have attached a fresh listener on every run once the
+	// worker went away.
+	let subscribed = false;
 
-	let sipWorker: Worker | null = null;
-	if (typeof window !== 'undefined' && window.Worker) {
-		sipWorker = new Worker(new URL('../workers/sipWorker.ts', import.meta.url), { type: 'module' });
-	}
+	// One reader for the whole page (sol-026).
+	const getInputs = readSipInputs;
 
-	function runWorkerTask(type: string, params: any): Promise<any> {
-		return new Promise((resolve) => {
-			if (!sipWorker) return resolve(null);
-			const handler = (e: MessageEvent) => {
-				if (e.data.type === type + '_RESULT') {
-					sipWorker?.removeEventListener('message', handler);
-					resolve(e.data.result);
-				}
-			};
-			sipWorker.addEventListener('message', handler);
-			sipWorker.postMessage({ type, params });
+	function subscribe() {
+		if (subscribed) return;
+		subscribed = true;
+		window.addEventListener('sip:result', (e) => {
+			const d = (e as CustomEvent).detail;
+			if (!d?.simulation) return;
+			lastSimulation = d.simulation;
+			lastInputs = d.inputs;
+			renderPanel(d.inputs, d.simulation, d.outlook);
 		});
 	}
 
-	function debounce(fn: Function, ms = 300) { let t: any; return (...a: any) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
-
-	function getNumValue(id: string, defaultVal: number): number {
-		const el = document.getElementById(id) as HTMLInputElement;
-		if (!el) return defaultVal;
-		const parsed = parseFormattedNumber(el.value);
-		return isNaN(parsed) ? defaultVal : parsed;
-	}
-
-	function handleCalculationTrigger() {
+	function trigger() {
+		subscribe();
+		syncEntryFromAdvanced();
 		syncStateToUrl();
-		if (isReverseGoalSeek) {
-			runGoalSeek();
-		} else {
-			runSimulation();
-		}
+		requestRecompute();
 	}
+
+	const debouncedTrigger = debounce(trigger, 300);
+
+	// ---- URL state ---------------------------------------------------------
+
+	const URL_FIELDS = [
+		'seedCapital', 'monthlySip', 'targetRealWealth', 'stepUpRate',
+		'investmentYears', 'inflationRate', 'sipExpectedReturn', 'sipVolatility',
+		'sipLtcgTax', 'sipHedgingFloor', 'equitySlider', 'debtSlider', 'goldSlider',
+	];
 
 	function parseUrlParams() {
 		const params = new URLSearchParams(window.location.search);
-		const fields = ['seedCapital', 'monthlySip', 'targetRealWealth', 'stepUpRate', 'investmentYears', 'inflationRate', 'equitySlider', 'debtSlider', 'goldSlider'];
-		
-		fields.forEach(id => {
-			if (params.has(id)) {
-				const el = document.getElementById(id) as HTMLInputElement;
-				if (el) {
-					if (el.type === 'range' || el.type === 'number') {
-						el.value = params.get(id)!;
-					} else {
-						el.value = Number(params.get(id)).toLocaleString('en-IN');
-					}
-				}
+		URL_FIELDS.forEach(id => {
+			if (!params.has(id)) return;
+			const el = document.getElementById(id) as HTMLInputElement;
+			if (!el) return;
+			if (el.type === 'range' || el.type === 'number') {
+				el.value = params.get(id)!;
+			} else {
+				el.value = Number(params.get(id)).toLocaleString('en-IN');
 			}
 		});
-		
+
 		if (params.has('bsHedgingToggle')) {
 			const el = document.getElementById('bsHedgingToggle') as HTMLInputElement;
 			if (el) el.checked = params.get('bsHedgingToggle') === 'true';
 		}
-
 		if (params.has('isPostTax')) {
-			isPostTax = params.get('isPostTax') === 'true';
-		}
-		
-		if (params.has('isReverseGoalSeek') && params.get('isReverseGoalSeek') === 'true') {
-			isReverseGoalSeek = true;
+			setPostTax(params.get('isPostTax') === 'true');
 		}
 	}
 
 	function syncStateToUrl() {
 		const params = new URLSearchParams(window.location.search);
-		const fields = ['seedCapital', 'monthlySip', 'targetRealWealth', 'stepUpRate', 'investmentYears', 'inflationRate', 'equitySlider', 'debtSlider', 'goldSlider'];
-		
-		fields.forEach(id => {
+		URL_FIELDS.forEach(id => {
 			const el = document.getElementById(id) as HTMLInputElement;
-			if (el) {
-				const val = (el.type === 'range' || el.type === 'number') ? el.value : parseFormattedNumber(el.value);
-				params.set(id, val.toString());
-			}
+			if (!el) return;
+			const val = (el.type === 'range' || el.type === 'number')
+				? el.value : parseFormattedNumber(el.value);
+			params.set(id, val.toString());
 		});
-		
 		const bsToggle = document.getElementById('bsHedgingToggle') as HTMLInputElement;
 		if (bsToggle) params.set('bsHedgingToggle', bsToggle.checked.toString());
-		
-		params.set('isReverseGoalSeek', isReverseGoalSeek.toString());
-		params.set('isPostTax', isPostTax.toString());
-		
+		params.set('isPostTax', String(isPostTax()));
 		window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
 	}
 
-	function initModeSwitcher() {
-		const fwdBtn = document.getElementById('modeForwardBtn');
-		const revBtn = document.getElementById('modeReverseBtn');
-		const sipContainer = document.getElementById('monthlySipContainer');
-		const targetContainer = document.getElementById('targetRealWealthContainer');
-		const reqCard = document.getElementById('requiredSipResultCard');
-		const runBtn = document.getElementById('runSipBtn');
-		const btnText = runBtn ? runBtn.querySelector('span') : null;
+	// ---- the post-tax view -------------------------------------------------
 
-		if (!fwdBtn || !revBtn) return;
+	const taxBtn = () => document.getElementById('taxToggleBtn');
+	const isPostTax = () => taxBtn()?.getAttribute('aria-pressed') === 'true';
 
-		fwdBtn.addEventListener('click', () => {
-			isReverseGoalSeek = false;
-			fwdBtn.className = 'btn-primary flex-1 py-1.5 text-center cursor-pointer rounded';
-			revBtn.className = 'btn-ghost flex-1 py-1.5 text-center cursor-pointer rounded text-navy-600 dark:text-navy-400 hover:text-navy-900 dark:hover:text-white transition-colors';
-			
-			sipContainer?.classList.remove('hidden');
-			targetContainer?.classList.add('hidden');
-			reqCard?.classList.add('hidden');
-
-			if (btnText) btnText.innerText = 'SIMULATE REAL TVM PATHS';
-			runSimulation();
-		});
-
-		revBtn.addEventListener('click', () => {
-			isReverseGoalSeek = true;
-			revBtn.className = 'btn-primary flex-1 py-1.5 text-center cursor-pointer rounded';
-			fwdBtn.className = 'btn-ghost flex-1 py-1.5 text-center cursor-pointer rounded text-navy-600 dark:text-navy-400 hover:text-navy-900 dark:hover:text-white transition-colors';
-
-			sipContainer?.classList.add('hidden');
-			targetContainer?.classList.remove('hidden');
-			reqCard?.classList.remove('hidden');
-
-			if (btnText) btnText.innerText = 'CALCULATE REQUIRED SIP';
-			runGoalSeek();
-		});
-	}
-
-	async function runGoalSeek() {
-		const btnText = document.querySelector('#runSipBtn span') as HTMLElement;
-		const originalText = btnText ? btnText.innerText : '';
-		if (btnText) btnText.innerText = 'CALCULATING...';
-
-		const targetRealWealth = getNumValue('targetRealWealth', 50000000);
-		const seedCapital = getNumValue('seedCapital', 0);
-		const stepUpRate = getNumValue('stepUpRate', 0) / 100;
-		const horizonYears = getNumValue('investmentYears', 20);
-		const inflationRate = getNumValue('inflationRate', 6.0) / 100;
-
-		const eqPct = getNumValue('equitySlider', 70) / 100;
-		const debtPct = getNumValue('debtSlider', 20) / 100;
-		const goldPct = getNumValue('goldSlider', 10) / 100;
-
-		const bsToggle = document.getElementById('bsHedgingToggle') as HTMLInputElement;
-		const bsEnabled = bsToggle ? bsToggle.checked : false;
-		const annualHedgingDragCost = bsEnabled ? (0.0185 * eqPct) : 0;
-
-		const reqSip = await runWorkerTask('GOAL_SEEK', {
-			targetRealWealth, seedCapital, stepUpRate, horizonYears, inflationRate,
-			eqPct, debtPct, goldPct, bsEnabled, annualHedgingDragCost, isPostTax
-		});
-
-		const reqCardVal = document.getElementById('valRequiredSip');
-		if (reqCardVal) reqCardVal.innerText = `${tableFormatter.format(reqSip)} / Month`;
-
-		const sipInput = document.getElementById('monthlySip') as HTMLInputElement;
-		if (sipInput) sipInput.value = reqSip.toLocaleString('en-IN');
-
-		if (btnText) btnText.innerText = originalText;
-		runSimulation();
-	}
-
-	function calculateNetRealWealth(nominalVal: number, totalNominalInvested: number, inflationRate: number, horizonYears: number): number {
-		if (!isPostTax) {
-			return nominalVal / Math.pow(1 + inflationRate, horizonYears);
-		}
-		const taxableGain = Math.max(0, nominalVal - totalNominalInvested - 125000);
-		const ltcgTax = taxableGain * 0.125;
-		const postTaxNominal = nominalVal - ltcgTax;
-		return Math.max(0, Math.round(postTaxNominal / Math.pow(1 + inflationRate, horizonYears)));
-	}
-
-	function initTaxToggle() {
-		const btn = document.getElementById('taxToggleBtn');
+	function setPostTax(on: boolean) {
+		const btn = taxBtn();
 		if (!btn) return;
+		btn.setAttribute('aria-pressed', String(on));
+		btn.innerText = on ? 'AFTER TAX' : 'BEFORE TAX';
+		btn.className = on
+			? 'px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider transition-all duration-200 bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 cursor-pointer'
+			: 'px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider transition-all duration-200 bg-navy-200 text-navy-800 dark:bg-navy-800 dark:text-navy-200 border border-navy-300 dark:border-navy-700 cursor-pointer';
+	}
 
-		const updateBtnState = () => {
-			if (isPostTax) {
-				btn.innerText = 'POST-TAX (12.5% LTCG)';
-				btn.className = 'px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider transition-all duration-200 bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 cursor-pointer';
-			} else {
-				btn.innerText = 'PRE-TAX';
-				btn.className = 'px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider transition-all duration-200 bg-navy-200 text-navy-800 dark:bg-navy-800 dark:text-navy-200 border border-navy-300 dark:border-navy-700 cursor-pointer';
-			}
+	// ---- rendering ---------------------------------------------------------
+
+	function renderPanel(inputs: any, sim: any, outlook: any) {
+		const years = inputs.horizonYears;
+		const set = (id: string, text: string) => {
+			const el = document.getElementById(id);
+			if (el) el.innerText = text;
 		};
 
-		// Initial setup based on parsed state
-		updateBtnState();
+		// Every figure here is the engine's. sol-023 at the scale of a page: a
+		// view must never re-derive what the engine already knows, and the old
+		// version of this function recomputed the tax, the real values and the
+		// multiples from three percentiles it had been handed.
+		const invested = outlook.flow.investedReal;
+		const typical = outlook.endReal.p50;
 
-		btn.addEventListener('click', () => {
-			isPostTax = !isPostTax;
-			updateBtnState();
-			handleCalculationTrigger();
-		});
-	}
+		set('statTotalInvested', tableFormatter.format(invested));
+		set('statRealWealth', tableFormatter.format(typical));
+		set('statNominalEquivalent', `The number on screen that year: ${tableFormatter.format(outlook.flow.endNominal)}`);
+		set('statBearWealth', tableFormatter.format(outlook.endReal.p10));
+		set('statBullWealth', tableFormatter.format(outlook.endReal.p90));
 
-	function initPresets() {
-		const btns = document.querySelectorAll('.preset-btn');
-		btns.forEach(btn => {
-			btn.addEventListener('click', () => {
-				const type = btn.getAttribute('data-preset');
-				const eq = document.getElementById('equitySlider') as HTMLInputElement;
-				const dt = document.getElementById('debtSlider') as HTMLInputElement;
-				const gd = document.getElementById('goldSlider') as HTMLInputElement;
-				const years = document.getElementById('investmentYears') as HTMLInputElement;
+		// What is yours and what compounding added, as a share of the total.
+		const yours = typical > 0 ? Math.min(100, (invested / typical) * 100) : 100;
+		const market = Math.max(0, 100 - yours);
+		set('pctSacrifice', `${yours.toFixed(1)}%`);
+		set('pctCreated', `${market.toFixed(1)}%`);
+		const barA = document.getElementById('barSacrifice');
+		const barB = document.getElementById('barCreated');
+		if (barA) barA.style.width = `${yours}%`;
+		if (barB) barB.style.width = `${market}%`;
 
-				const eqV = document.getElementById('equityVal');
-				const dtV = document.getElementById('debtVal');
-				const gdV = document.getElementById('goldVal');
-
-				if (type === 'conservative') {
-					if (eq) eq.value = '50';
-					if (dt) dt.value = '40';
-					if (gd) gd.value = '10';
-				} else if (type === 'balanced') {
-					if (eq) eq.value = '70';
-					if (dt) dt.value = '20';
-					if (gd) gd.value = '10';
-				} else if (type === 'aggressive') {
-					if (eq) eq.value = '80';
-					if (dt) dt.value = '10';
-					if (gd) gd.value = '10';
-				} else if (type === 'fire') {
-					if (eq) eq.value = '80';
-					if (dt) dt.value = '10';
-					if (gd) gd.value = '10';
-					if (years) years.value = '15';
-				}
-
-				if (eqV && eq) eqV.innerText = `${eq.value}%`;
-				if (dtV && dt) dtV.innerText = `${dt.value}%`;
-				if (gdV && gd) gdV.innerText = `${gd.value}%`;
-
-				handleCalculationTrigger();
-			});
-		});
-	}
-
-	function initSliders() {
-		const eq = document.getElementById('equitySlider') as HTMLInputElement;
-		const dt = document.getElementById('debtSlider') as HTMLInputElement;
-		const gd = document.getElementById('goldSlider') as HTMLInputElement;
-		const eqV = document.getElementById('equityVal');
-		const dtV = document.getElementById('debtVal');
-		const gdV = document.getElementById('goldVal');
-
-		if (!eq || !dt || !gd) return;
-
-		function adjust(changed: string) {
-			let e = parseInt(eq.value) || 0;
-			let d = parseInt(dt.value) || 0;
-			let g = parseInt(gd.value) || 0;
-
-			if (changed === 'eq') {
-				const rem = 100 - e;
-				const sumOthers = d + g;
-				if (sumOthers > 0) { d = Math.round((d / sumOthers) * rem); g = rem - d; }
-				else { d = Math.round(rem / 2); g = rem - d; }
-			} else if (changed === 'dt') {
-				const rem = 100 - d;
-				const sumOthers = e + g;
-				if (sumOthers > 0) { e = Math.round((e / sumOthers) * rem); g = rem - e; }
-				else { e = Math.round(rem / 2); g = rem - e; }
-			} else if (changed === 'gd') {
-				const rem = 100 - g;
-				const sumOthers = e + d;
-				if (sumOthers > 0) { e = Math.round((e / sumOthers) * rem); d = rem - e; }
-				else { e = Math.round(rem / 2); d = rem - e; }
-			}
-
-			eq.value = e.toString();
-			dt.value = d.toString();
-			gd.value = g.toString();
-
-			if (eqV) eqV.innerText = `${e}%`;
-			if (dtV) dtV.innerText = `${d}%`;
-			if (gdV) gdV.innerText = `${g}%`;
-
-			handleCalculationTrigger();
+		if (invested > 0) {
+			set('worstMultiplierTag', `${(outlook.endReal.p10 / invested).toFixed(2)}x Unlucky (10th)`);
+			set('expectedMultiplierTag', `${(typical / invested).toFixed(2)}x Typical (50th)`);
+			set('bestMultiplierTag', `${(outlook.endReal.p90 / invested).toFixed(2)}x Lucky (90th)`);
 		}
 
-		eq.addEventListener('input', () => adjust('eq'));
-		dt.addEventListener('input', () => adjust('dt'));
-		gd.addEventListener('input', () => adjust('gd'));
-	}
-
-	function exportToCSV() {
-		if (!lastSimulationResult) return;
-		const { horizonYears, p90Real, p50Real, p10Real } = lastSimulationResult;
-		let csv = 'Year,10th Bear Real (PV),50th Expected Real (PV),90th Bull Real (PV)\n';
-		for (let yr = 0; yr <= horizonYears; yr++) {
-			csv += `${yr},${p10Real[yr] || 0},${p50Real[yr] || 0},${p90Real[yr] || 0}\n`;
-		}
-		const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-		const url = URL.createObjectURL(blob);
-		const link = document.createElement('a');
-		link.setAttribute('href', url);
-		link.setAttribute('download', 'quant_tvm_ledger.csv');
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
-	}
-
-	async function runSimulation() {
-		const btnText = document.querySelector('#runSipBtn span') as HTMLElement;
-		const originalText = btnText ? btnText.innerText : '';
-		if (btnText) btnText.innerText = 'SIMULATING...';
-
-		const seedCapital = getNumValue('seedCapital', 0);
-		const monthlySip = getNumValue('monthlySip', 25000);
-		const stepUpRate = getNumValue('stepUpRate', 0) / 100;
-		const horizonYears = getNumValue('investmentYears', 20);
-		const inflationRate = getNumValue('inflationRate', 6.0) / 100;
-		
-		const eqPct = getNumValue('equitySlider', 70) / 100;
-		const debtPct = getNumValue('debtSlider', 20) / 100;
-		const goldPct = getNumValue('goldSlider', 10) / 100;
-
-		const bsToggle = document.getElementById('bsHedgingToggle') as HTMLInputElement;
-		const bsEnabled = bsToggle ? bsToggle.checked : false;
-		const annualHedgingDragCost = 0.0185 * eqPct;
-
-		const simResult = await runWorkerTask('SIMULATE', {
-			seedCapital, monthlySip, stepUpRate, horizonYears, inflationRate,
-			eqPct, debtPct, goldPct, bsEnabled, annualHedgingDragCost
-		});
-
-		if (btnText) btnText.innerText = originalText;
-		if (!simResult) return;
-
-		const { p90Nominal, p50Nominal, p10Nominal, p90Real, p50Real, p10Real, realOutflowPV, expectedNominalMedian, nominalTotalInvested } = simResult;
-
-		const sacrificePVEl = document.getElementById('valSacrificePV');
-		const totalInvestedEl = document.getElementById('statTotalInvested');
-		const realWealthEl = document.getElementById('statRealWealth');
-		const bearWealthEl = document.getElementById('statBearWealth');
-		const bullWealthEl = document.getElementById('statBullWealth');
-		const worstTagEl = document.getElementById('worstMultiplierTag');
-		const expectedTagEl = document.getElementById('expectedMultiplierTag');
-		const bestTagEl = document.getElementById('bestMultiplierTag');
-
-		const expectedRealFinal = calculateNetRealWealth(p50Nominal[horizonYears], nominalTotalInvested, inflationRate, horizonYears);
-		const bearRealFinal = calculateNetRealWealth(p10Nominal[horizonYears], nominalTotalInvested, inflationRate, horizonYears);
-		const bullRealFinal = calculateNetRealWealth(p90Nominal[horizonYears], nominalTotalInvested, inflationRate, horizonYears);
-
-		const pctSacrificed = expectedRealFinal > 0 ? Math.min(100, (realOutflowPV / expectedRealFinal) * 100) : 100;
-		const pctCreated = Math.max(0, 100 - pctSacrificed);
-		const elPctSacrifice = document.getElementById('pctSacrifice');
-		const elPctCreated = document.getElementById('pctCreated');
-		const elBarSacrifice = document.getElementById('barSacrifice');
-		const elBarCreated = document.getElementById('barCreated');
-		
-		if (elPctSacrifice) elPctSacrifice.innerText = `${pctSacrificed.toFixed(1)}%`;
-		if (elPctCreated) elPctCreated.innerText = `${pctCreated.toFixed(1)}%`;
-		if (elBarSacrifice) elBarSacrifice.style.width = `${pctSacrificed}%`;
-		if (elBarCreated) elBarCreated.style.width = `${pctCreated}%`;
-
-		const nominalEquivalentEl = document.getElementById('statNominalEquivalent');
-		if (nominalEquivalentEl) nominalEquivalentEl.innerText = `Nominal Equivalent: ${tableFormatter.format(expectedNominalMedian)}`;
-
-		lastSimulationResult = { horizonYears, monthlySip, inflationRate, p90Real, p50Real, p10Real };
-
-		if (sacrificePVEl) sacrificePVEl.innerText = tableFormatter.format(realOutflowPV);
-		if (totalInvestedEl) totalInvestedEl.innerText = tableFormatter.format(realOutflowPV);
-		if (realWealthEl) realWealthEl.innerText = tableFormatter.format(expectedRealFinal);
-		if (bearWealthEl) bearWealthEl.innerText = tableFormatter.format(bearRealFinal);
-		if (bullWealthEl) bullWealthEl.innerText = tableFormatter.format(bullRealFinal);
-
-		if (realOutflowPV > 0) {
-			const worstMult = (bearRealFinal / realOutflowPV).toFixed(2);
-			const expectedMult = (expectedRealFinal / realOutflowPV).toFixed(2);
-			const bestMult = (bullRealFinal / realOutflowPV).toFixed(2);
-
-			if (worstTagEl) worstTagEl.innerText = `${worstMult}x Worst (10th)`;
-			if (expectedTagEl) expectedTagEl.innerText = `${expectedMult}x Expected (50th)`;
-			if (bestTagEl) bestTagEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span><span>${bestMult}x Best (90th)</span>`;
-		}
-
-		// Black-Scholes Panel Updates
+		// Protection panel
 		const statusBadgeEl = document.getElementById('bsStatusBadge');
-		const dragEl = document.getElementById('valHedgingDrag');
-		const floorEl = document.getElementById('valProtectedFloor');
-		const yieldEl = document.getElementById('valAdjustedYield');
-
 		if (statusBadgeEl) {
-			if (bsEnabled) {
-				statusBadgeEl.innerText = "ACTIVE PUT HEDGING ON";
-				statusBadgeEl.className = "px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-md bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800";
+			if (inputs.bsEnabled) {
+				statusBadgeEl.innerText = 'PROTECTION BOUGHT';
+				statusBadgeEl.className = 'px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-md bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800';
 			} else {
-				statusBadgeEl.innerText = "UNHEDGED PORTFOLIO";
-				statusBadgeEl.className = "badge-warning text-xs";
+				statusBadgeEl.innerText = 'NO PROTECTION BOUGHT';
+				statusBadgeEl.className = 'badge-warning text-xs';
 			}
 		}
+		// The quoted premium is a percentage of the share sleeve, which is what
+		// the contract is written on. Saying "1.85% a year" beside a portfolio
+		// that is 70% shares without saying which base it is on is how sol-029
+		// happened.
+		set('valHedgingDrag', inputs.bsEnabled
+			? `${inputs.hedgingDragCost.toFixed(2)}% of the share sleeve`
+			: 'nothing — not bought');
+		set('valProtectedFloor', sim.hedging
+			? tableFormatter.format(sim.hedging.floorPayoutReal[years] ?? 0)
+			: 'not bought');
 
-		if (dragEl) dragEl.innerText = bsEnabled ? `${(annualHedgingDragCost * 100).toFixed(2)}% / Year` : "0.00% / Year";
-		// sol-023: was Math.max(realOutflowPV, bearRealFinal * 1.15) - a number the
-		// engine never produced. This is what the floor actually paid the median path.
-		if (floorEl) {
-			floorEl.innerText = simResult.hedging
-				? tableFormatter.format(simResult.hedging.floorPayoutReal[horizonYears] ?? 0)
-				: 'Not hedged';
-		}
-
-		// Calculate exact XIRR using CashFlows
-		const cfs: {amount: number, date: Date}[] = [];
+		// What the plan actually returned the reader, after inflation: the real
+		// XIRR of the money in against the money out.
+		const cfs: { amount: number, date: Date }[] = [];
 		const d = new Date();
-		let curSip = monthlySip;
-		if (seedCapital > 0) cfs.push({ amount: -seedCapital, date: new Date(d) });
-		
-		for(let yr = 1; yr <= horizonYears; yr++) {
-			if (yr > 1) curSip *= (1 + stepUpRate);
-			for(let m = 1; m <= 12; m++) {
+		let curSip = inputs.monthlySip;
+		if (inputs.seedCapital > 0) cfs.push({ amount: -inputs.seedCapital, date: new Date(d) });
+		for (let yr = 1; yr <= years; yr++) {
+			if (yr > 1) curSip *= (1 + inputs.annualStepUp / 100);
+			for (let m = 1; m <= 12; m++) {
 				d.setMonth(d.getMonth() + 1);
-				cfs.push({ amount: -curSip, date: new Date(d) });
+				// Each instalment discounted from the month it is actually paid,
+				// so the rate that comes out is genuinely after inflation.
+				const monthsIn = (yr - 1) * 12 + m;
+				cfs.push({
+					amount: -curSip / Math.pow(1 + inputs.expectedInflation / 100, monthsIn / 12),
+					date: new Date(d),
+				});
 			}
 		}
-		cfs.push({ amount: expectedRealFinal, date: new Date(d) });
-		
-		const netRealXIRR = calculateXIRR(cfs, 0.1) || 0;
-		if (yieldEl) yieldEl.innerText = `${netRealXIRR.toFixed(2)}% Real XIRR`;
+		cfs.push({ amount: typical, date: new Date(d) });
+		set('valAdjustedYield', `${(calculateXIRR(cfs, 0.1) || 0).toFixed(2)}% a year, after inflation`);
 
-		renderHedgingLedger(horizonYears, monthlySip, stepUpRate, inflationRate, p50Real, simResult.hedging);
+		renderHedgingLedger(inputs, sim);
+		renderMilestones(inputs, sim);
+		renderChart(inputs, sim);
+	}
 
-		const targets = [5000000, 10000000, 25000000, 50000000, 100000000];
-		const timelineContainer = document.getElementById('milestoneTimeline');
-		if (timelineContainer) {
-			let timelineHTML = `<span class="text-navy-500 dark:text-navy-500 uppercase tracking-widest font-bold text-[10px] mr-1">Milestones (PV):</span>`;
-			let milestonesHit = 0;
-			targets.forEach(target => {
-				const hitYear = p50Real.findIndex(val => val >= target);
-				if (hitYear > 0) {
-					milestonesHit++;
-					timelineHTML += `<span class="px-2 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 rounded text-[10px] font-bold tracking-tight">Yr ${hitYear}: ${formatShortRupee(target)}</span>`;
-				}
-			});
-			if (milestonesHit === 0) timelineHTML += `<span class="text-navy-400 dark:text-navy-600 text-[10px] italic">No major milestones reached in horizon.</span>`;
-			timelineContainer.innerHTML = timelineHTML;
+	function renderMilestones(inputs: any, sim: any) {
+		const curve: number[] = sim.final.p50RealNet ?? sim.p50Real;
+		const container = document.getElementById('milestoneTimeline');
+		if (!container) return;
+
+		let html = `<span class="text-navy-500 dark:text-navy-500 uppercase tracking-widest font-bold text-[10px] mr-1">In today's money, you pass:</span>`;
+		let hits = 0;
+		for (const target of [5000000, 10000000, 25000000, 50000000, 100000000]) {
+			const hitYear = curve.findIndex((val) => val >= target);
+			if (hitYear > 0) {
+				hits++;
+				html += `<span class="px-2 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 rounded text-[10px] font-bold tracking-tight">Yr ${hitYear}: ${formatShortRupee(target)}</span>`;
+			}
 		}
-
-		renderChart(horizonYears, p90Real, p50Real, p10Real);
+		if (!hits) html += `<span class="text-navy-400 dark:text-navy-600 text-[10px] italic">None of the usual milestones inside this horizon.</span>`;
+		container.innerHTML = html;
 	}
 
 	/**
@@ -806,31 +668,26 @@ import ButtonGold from '../components/ButtonGold.astro';
 	 *
 	 * sol-023: four of these columns used to be computed here, beside the
 	 * simulation rather than from it - a "Floor Benefit" of contributions minus
-	 * 92% of the median balance, and a net figure floored at total contributions.
-	 * None of them moved when the hedging model was corrected, and none would
-	 * have moved if it never had been. A view must never re-derive what the
-	 * engine already knows.
+	 * 92% of the median balance, and a net figure floored at total
+	 * contributions. None of them moved when the hedging model was corrected,
+	 * and none would have moved if it never had been.
 	 *
-	 * `ledger` is null whenever hedging is off, in which case there is nothing
-	 * to account for and the table says so rather than printing zeroes.
+	 * `hedging` is null whenever protection is off, in which case there is
+	 * nothing to account for and the table says so rather than printing zeroes.
 	 */
-	function renderHedgingLedger(
-		years: number,
-		monthlySip: number,
-		stepUpRate: number,
-		inflationRate: number,
-		protectedReal: number[],
-		ledger: any
-	) {
+	function renderHedgingLedger(inputs: any, sim: any) {
 		const tbody = document.getElementById('hedgingLedgerBody');
 		const caption = document.getElementById('ledgerCaption');
 		if (!tbody) return;
 
+		const ledger = sim.hedging;
+		const years = inputs.horizonYears;
+
 		if (!ledger) {
 			tbody.innerHTML =
 				'<tr><td colspan="6" class="py-8 px-3 text-center text-sm text-navy-500 dark:text-navy-400">' +
-				'Put option hedging is off, so there is no premium to pay and no floor to pay out. ' +
-				'Switch it on above to see what protection would cost.' +
+				'Protection is off, so there is no premium to pay and no floor to pay out. ' +
+				'Switch it on above to see what it would cost.' +
 				'</td></tr>';
 			if (caption) {
 				caption.textContent =
@@ -847,13 +704,14 @@ import ButtonGold from '../components/ButtonGold.astro';
 				"the premium was paid in every one of them.";
 		}
 
+		const protectedReal: number[] = sim.p50Real;
 		let html = '';
 		let cumPV = 0;
-		let sip = monthlySip;
+		let sip = inputs.monthlySip;
 		for (let yr = 1; yr <= years; yr++) {
-			if (yr > 1) sip = sip * (1 + stepUpRate);
+			if (yr > 1) sip = sip * (1 + inputs.annualStepUp / 100);
 			for (let m = (yr - 1) * 12 + 1; m <= yr * 12; m++) {
-				cumPV += sip / Math.pow(1 + inflationRate, m / 12);
+				cumPV += sip / Math.pow(1 + inputs.expectedInflation / 100, m / 12);
 			}
 
 			const unprotected = ledger.unhedgedReal[yr] ?? 0;
@@ -884,49 +742,45 @@ import ButtonGold from '../components/ButtonGold.astro';
 		tbody.innerHTML = html;
 	}
 
-	async function renderChart(horizonYears: number, p90: number[], p50: number[], p10: number[]) {
+	async function renderChart(inputs: any, sim: any) {
 		const canvas = document.getElementById('sipChart') as HTMLCanvasElement;
 		if (!canvas) return;
 
 		const { Chart } = await import('chart.js/auto');
-
 		if (sipChartInstance) { sipChartInstance.destroy(); sipChartInstance = null; }
 		const ctx = canvas.getContext('2d');
 		if (!ctx) return;
 
-		const labels = Array.from({ length: horizonYears + 1 }, (_, i) => `Yr ${i}`);
+		const years = inputs.horizonYears;
+		const labels = Array.from({ length: years + 1 }, (_, i) => `Yr ${i}`);
 		const isDark = document.documentElement.classList.contains('dark');
 		const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : '#e2e8f0';
 		const tickTextColor = isDark ? '#a1a1aa' : '#64748b';
 		const expectedLineColor = isDark ? '#f4f4f5' : '#0f172a';
+
+		const line = (label: string, data: number[], color: string, width: number) => ({
+			label, data, borderColor: color, borderWidth: width,
+			pointRadius: 0, tension: 0.35, fill: false,
+		});
 
 		sipChartInstance = new Chart(ctx, {
 			type: 'line',
 			data: {
 				labels,
 				datasets: [
+					line('Lucky (90th)', sim.p90Real, isDark ? '#34d399' : '#059669', 2),
+					line('Typical (50th)', sim.p50Real, expectedLineColor, 2.5),
+					line('Unlucky (10th)', sim.p10Real, isDark ? '#f87171' : '#dc2626', 2),
 					{
-						label: '90th Bull Real TVM',
-						data: p90,
-						borderColor: isDark ? '#34d399' : '#059669',
-						backgroundColor: isDark ? 'rgba(52, 211, 153, 0.04)' : 'rgba(5, 150, 105, 0.04)',
-						borderWidth: 2, pointRadius: 0, tension: 0.35, fill: false
+						// The goal, drawn on the same axis as the outcome. A target
+						// the reader has to hold in their head while reading a chart
+						// is the reader doing the tool's work (dd-006).
+						label: 'Your goal',
+						data: Array.from({ length: years + 1 }, () => inputs.targetRealWealth),
+						borderColor: isDark ? '#fbbf24' : '#d97706',
+						borderWidth: 1.5, borderDash: [6, 4], pointRadius: 0, fill: false,
 					},
-					{
-						label: '50th Expected Real TVM',
-						data: p50,
-						borderColor: expectedLineColor,
-						backgroundColor: isDark ? 'rgba(244, 244, 245, 0.04)' : 'rgba(15, 23, 42, 0.04)',
-						borderWidth: 2.5, pointRadius: 0, tension: 0.35, fill: false
-					},
-					{
-						label: '10th Bear Real TVM',
-						data: p10,
-						borderColor: isDark ? '#f87171' : '#dc2626',
-						backgroundColor: isDark ? 'rgba(248, 113, 113, 0.04)' : 'rgba(220, 38, 38, 0.04)',
-						borderWidth: 2, pointRadius: 0, tension: 0.35, fill: false
-					}
-				]
+				],
 			},
 			options: {
 				responsive: true, maintainAspectRatio: false, animation: { duration: 200 },
@@ -938,7 +792,7 @@ import ButtonGold from '../components/ButtonGold.astro';
 						borderColor: isDark ? 'rgba(255, 255, 255, 0.15)' : '#334155',
 						borderWidth: 1, titleColor: '#f8fafc', bodyColor: '#e2e8f0', padding: 12,
 						callbacks: {
-							label: function (context: any) {
+							label: (context: any) => {
 								const val = context.raw;
 								let formatted = val;
 								if (typeof val === 'number') {
@@ -947,9 +801,9 @@ import ButtonGold from '../components/ButtonGold.astro';
 									else formatted = `₹ ${Math.round(val).toLocaleString('en-IN')}`;
 								}
 								return ` ${context.dataset.label}: ${formatted}`;
-							}
-						}
-					}
+							},
+						},
+					},
 				},
 				scales: {
 					x: { grid: { color: gridColor }, ticks: { color: tickTextColor, font: { family: 'Inter', size: 11 } } },
@@ -957,79 +811,219 @@ import ButtonGold from '../components/ButtonGold.astro';
 						grid: { color: gridColor },
 						ticks: {
 							color: tickTextColor, font: { family: 'Inter', size: 11 },
-							callback: function (val: any) {
+							callback: (val: any) => {
 								if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)}Cr`;
 								if (val >= 100000) return `₹${(val / 100000).toFixed(0)}L`;
 								return `₹${val.toLocaleString('en-IN')}`;
-							}
-						}
-					}
-				}
-			}
+							},
+						},
+					},
+				},
+			},
 		});
 	}
 
-	document.addEventListener('DOMContentLoaded', () => {
+	function exportToCSV() {
+		if (!lastSimulation || !lastInputs) return;
+		const years = lastInputs.horizonYears;
+		let csv = 'Year,Unlucky (10th) today\'s ₹,Typical (50th) today\'s ₹,Lucky (90th) today\'s ₹\n';
+		for (let yr = 0; yr <= years; yr++) {
+			csv += `${yr},${lastSimulation.p10Real[yr] || 0},${lastSimulation.p50Real[yr] || 0},${lastSimulation.p90Real[yr] || 0}\n`;
+		}
+		const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+		const url = URL.createObjectURL(blob);
+		const link = document.createElement('a');
+		link.setAttribute('href', url);
+		link.setAttribute('download', 'sip_projection.csv');
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+	}
+
+	// ---- controls ----------------------------------------------------------
+
+	function initRegimePresets() {
+		const growth = document.getElementById('sipExpectedReturn') as HTMLInputElement;
+		const rough = document.getElementById('sipVolatility') as HTMLInputElement;
+		const note = document.getElementById('sipRegimeNote');
+		const label = document.getElementById('sipEquityLabel');
+		const btns = Array.from(document.querySelectorAll('.sip-regime-btn')) as HTMLButtonElement[];
+
+		const paint = () => {
+			const g = growth?.value, r = rough?.value;
+			let matched: HTMLButtonElement | null = null;
+			for (const b of btns) {
+				const on = b.dataset.growth === g && b.dataset.roughness === r;
+				if (on) matched = b;
+				b.setAttribute('aria-checked', String(on));
+				b.classList.toggle('border-gold-500', on);
+				b.classList.toggle('bg-gold-500/10', on);
+			}
+			if (label) {
+				label.textContent = matched
+					? `${g}% a year, ${r}% swings`
+					: `${g}% a year, ${r}% swings — your own numbers`;
+			}
+			if (note) {
+				note.textContent = matched
+					? `Growth and roughness both taken from ${matched.querySelector('span')?.textContent?.toLowerCase()} of the Nifty 50. A period sets both, because a calm market and a generous one are not independent choices.`
+					: `These are your own numbers rather than a period from the record. Every complete 30-year window on the Nifty 50 has swings near 29%.`;
+			}
+		};
+
+		for (const b of btns) {
+			b.addEventListener('click', () => {
+				if (growth) growth.value = b.dataset.growth!;
+				if (rough) rough.value = b.dataset.roughness!;
+				paint();
+				trigger();
+			});
+		}
+		growth?.addEventListener('input', paint);
+		rough?.addEventListener('input', paint);
+		paint();
+	}
+
+	function initPresets() {
+		document.querySelectorAll('.preset-btn').forEach(btn => {
+			btn.addEventListener('click', () => {
+				const type = btn.getAttribute('data-preset');
+				const eq = document.getElementById('equitySlider') as HTMLInputElement;
+				const dt = document.getElementById('debtSlider') as HTMLInputElement;
+				const gd = document.getElementById('goldSlider') as HTMLInputElement;
+				const years = document.getElementById('investmentYears') as HTMLInputElement;
+
+				const split: Record<string, [string, string, string]> = {
+					conservative: ['50', '40', '10'],
+					balanced: ['70', '20', '10'],
+					aggressive: ['80', '10', '10'],
+					fire: ['80', '10', '10'],
+				};
+				const chosen = split[type ?? 'balanced'] ?? split.balanced;
+				if (eq) eq.value = chosen[0];
+				if (dt) dt.value = chosen[1];
+				if (gd) gd.value = chosen[2];
+				if (type === 'fire' && years) years.value = '15';
+
+				paintAllocation();
+				trigger();
+			});
+		});
+	}
+
+	function paintAllocation() {
+		const eq = document.getElementById('equitySlider') as HTMLInputElement;
+		const dt = document.getElementById('debtSlider') as HTMLInputElement;
+		const gd = document.getElementById('goldSlider') as HTMLInputElement;
+		const set = (id: string, v: string) => {
+			const el = document.getElementById(id);
+			if (el) el.innerText = v;
+		};
+		if (eq) set('equityVal', `${eq.value}%`);
+		if (dt) set('debtVal', `${dt.value}%`);
+		if (gd) set('goldVal', `${gd.value}%`);
+		const total = (parseInt(eq?.value ?? '0') || 0) + (parseInt(dt?.value ?? '0') || 0) + (parseInt(gd?.value ?? '0') || 0);
+		set('allocationTotalBadge', `Total: ${total}%`);
+	}
+
+	function initSliders() {
+		const eq = document.getElementById('equitySlider') as HTMLInputElement;
+		const dt = document.getElementById('debtSlider') as HTMLInputElement;
+		const gd = document.getElementById('goldSlider') as HTMLInputElement;
+		if (!eq || !dt || !gd) return;
+
+		function adjust(changed: string) {
+			let e = parseInt(eq.value) || 0;
+			let d = parseInt(dt.value) || 0;
+			let g = parseInt(gd.value) || 0;
+
+			if (changed === 'eq') {
+				const rem = 100 - e;
+				const sumOthers = d + g;
+				if (sumOthers > 0) { d = Math.round((d / sumOthers) * rem); g = rem - d; }
+				else { d = Math.round(rem / 2); g = rem - d; }
+			} else if (changed === 'dt') {
+				const rem = 100 - d;
+				const sumOthers = e + g;
+				if (sumOthers > 0) { e = Math.round((e / sumOthers) * rem); g = rem - e; }
+				else { e = Math.round(rem / 2); g = rem - e; }
+			} else {
+				const rem = 100 - g;
+				const sumOthers = e + d;
+				if (sumOthers > 0) { e = Math.round((e / sumOthers) * rem); d = rem - e; }
+				else { e = Math.round(rem / 2); d = rem - e; }
+			}
+
+			eq.value = String(e);
+			dt.value = String(d);
+			gd.value = String(g);
+			paintAllocation();
+			debouncedTrigger();
+		}
+
+		eq.addEventListener('input', () => adjust('eq'));
+		dt.addEventListener('input', () => adjust('dt'));
+		gd.addEventListener('input', () => adjust('gd'));
+	}
+
+	function init() {
+		subscribe();
 		parseUrlParams();
 
 		setupFormattingField(document.getElementById('seedCapital') as HTMLInputElement, () => {});
 		setupFormattingField(document.getElementById('monthlySip') as HTMLInputElement, () => {});
 		setupFormattingField(document.getElementById('targetRealWealth') as HTMLInputElement, () => {});
 
-		// Adjust sliders labels initially if parsed from URL
-		['equity', 'debt', 'gold'].forEach(id => {
-			const el = document.getElementById(`${id}Slider`) as HTMLInputElement;
-			const val = document.getElementById(`${id}Val`);
-			if (el && val) val.innerText = `${el.value}%`;
-		});
-
+		paintAllocation();
 		initSliders();
 		initPresets();
-		initTaxToggle();
-		initModeSwitcher();
-		
-		if (isReverseGoalSeek) {
-			const revBtn = document.getElementById('modeReverseBtn');
-			if (revBtn) revBtn.click();
-		} else {
-			runSimulation();
-		}
+		initRegimePresets();
+		setPostTax(isPostTax());
 
-		const debouncedHandleCalculationTrigger = debounce(handleCalculationTrigger, 300);
+		document.getElementById('runSipBtn')?.addEventListener('click', debouncedTrigger);
+		document.getElementById('bsHedgingToggle')?.addEventListener('change', debouncedTrigger);
+		document.getElementById('taxToggleBtn')?.addEventListener('click', () => {
+			setPostTax(!isPostTax());
+			trigger();
+		});
+		document.getElementById('exportCsvBtn')?.addEventListener('click', exportToCSV);
 
-		const runBtn = document.getElementById('runSipBtn');
-		if (runBtn) runBtn.addEventListener('click', debouncedHandleCalculationTrigger);
-
-		const toggle = document.getElementById('bsHedgingToggle');
-		if (toggle) toggle.addEventListener('change', debouncedHandleCalculationTrigger);
-
-		const exportCsvBtn = document.getElementById('exportCsvBtn');
-		if (exportCsvBtn) exportCsvBtn.addEventListener('click', exportToCSV);
-
-		['seedCapital', 'monthlySip', 'targetRealWealth', 'stepUpRate', 'investmentYears', 'inflationRate'].forEach(id => {
-			document.getElementById(id)?.addEventListener('input', debouncedHandleCalculationTrigger);
+		[
+			'seedCapital', 'monthlySip', 'targetRealWealth', 'stepUpRate',
+			'investmentYears', 'inflationRate', 'sipExpectedReturn', 'sipVolatility',
+			'sipLtcgTax', 'sipHedgingFloor',
+		].forEach(id => {
+			document.getElementById(id)?.addEventListener('input', debouncedTrigger);
 		});
 
-		window.addEventListener('theme-changed', () => debouncedHandleCalculationTrigger());
+		window.addEventListener('theme-changed', () => {
+			if (lastInputs && lastSimulation) renderChart(lastInputs, lastSimulation);
+		});
 
 		document.getElementById('downloadPdfBtn')?.addEventListener('click', () => {
 			const element = document.querySelector('main');
 			if (!element) return;
-			
 			const opt = {
-				margin:       10,
-				filename:     'sip_engine_report.pdf',
-				image:        { type: 'jpeg', quality: 0.98 },
-				html2canvas:  { scale: 2, useCORS: true },
-				jsPDF:        { unit: 'mm', format: 'a3', orientation: 'portrait' }
+				margin: 10,
+				filename: 'sip_plan.pdf',
+				image: { type: 'jpeg', quality: 0.98 },
+				html2canvas: { scale: 2, useCORS: true },
+				jsPDF: { unit: 'mm', format: 'a3', orientation: 'portrait' },
 			};
-			
 			const btn = document.getElementById('downloadPdfBtn');
-			if(btn) btn.innerText = "Generating PDF...";
-			
+			if (btn) btn.innerText = 'Generating PDF...';
 			html2pdf().set(opt).from(element).save().then(() => {
-				if(btn) btn.innerText = "↓ Download PDF Report";
+				if (btn) btn.innerText = '↓ Download PDF Report';
 			});
 		});
-	});
+
+		// The Answer's own worker fires the first run; this page only listens.
+		// Kicking off a second one here is exactly what sol-026 was about.
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', init);
+	} else {
+		init();
+	}
 </script>

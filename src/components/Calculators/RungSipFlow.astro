@@ -1,0 +1,161 @@
+---
+// Rung 2 of the SIP ladder (dd-002): "What did you put in, and what did the
+// market add?"
+//
+// Both moneys side by side rather than behind a toggle (dd-006). The difference
+// between the two columns IS the lesson, and a lesson cannot be a mode - hiding
+// half of a comparison behind a control turns it into a spot-the-difference
+// puzzle.
+//
+// One prose voice, one size (dd-007).
+//
+// No new concept. Rung 1 established that prices rise and that only the gap
+// matters; this shows what that does in rupees, and answers the question every
+// saver eventually asks: of everything I end up with, how much did I actually
+// provide?
+---
+
+<section id="rungSipFlow" class="max-w-3xl mx-auto px-4 sm:px-6 py-4" aria-labelledby="rungSipFlowQ">
+  <div class="card-premium rounded-2xl p-6 sm:p-8 space-y-6">
+
+    <div>
+      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-400 dark:text-navy-500">
+        Next question
+      </p>
+      <h2 id="rungSipFlowQ" class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 mt-1">
+        How much of that is yours, and how much is the market's?
+      </h2>
+      <p class="text-sm text-navy-500 dark:text-navy-400 mt-2">
+        Over <span id="sipFlowYears" class="font-medium text-navy-700 dark:text-navy-300">20</span> years,
+        putting in <span id="sipFlowMonthly" class="font-medium text-navy-700 dark:text-navy-300">—</span> a month.
+      </p>
+    </div>
+
+    <div class="overflow-x-auto -mx-2 px-2">
+      <table class="w-full text-sm border-collapse">
+        <caption class="sr-only">
+          What you put in and what the market added, shown both in today's prices
+          and as your statement will report it.
+        </caption>
+        <thead>
+          <tr class="border-b border-navy-200 dark:border-navy-700">
+            <th scope="col" class="text-left font-normal text-navy-500 dark:text-navy-400 pb-2"></th>
+            <th scope="col" class="text-right pb-2 pl-4">
+              <span class="block text-xs font-semibold text-navy-900 dark:text-navy-100">What it is worth</span>
+              <span class="block text-[11px] font-normal text-navy-500 dark:text-navy-400">in today's prices</span>
+            </th>
+            <th scope="col" class="text-right pb-2 pl-4">
+              <span class="block text-xs font-semibold text-navy-500 dark:text-navy-400">What your statement says</span>
+              <span class="block text-[11px] font-normal text-navy-400 dark:text-navy-500">the number on the screen</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-navy-100 dark:divide-navy-800">
+          <tr>
+            <th scope="row" class="text-left font-normal text-navy-700 dark:text-navy-300 py-2.5">You put in</th>
+            <td id="sipCellInReal" class="text-right tabular-nums font-semibold text-navy-900 dark:text-navy-100 py-2.5 pl-4">—</td>
+            <td id="sipCellInNom" class="text-right tabular-nums text-navy-500 dark:text-navy-400 py-2.5 pl-4">—</td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-left font-normal text-navy-700 dark:text-navy-300 py-2.5">The market added</th>
+            <td id="sipCellGrowthReal" class="text-right tabular-nums font-semibold text-navy-900 dark:text-navy-100 py-2.5 pl-4">—</td>
+            <td id="sipCellGrowthNom" class="text-right tabular-nums text-navy-500 dark:text-navy-400 py-2.5 pl-4">—</td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-left font-normal text-navy-700 dark:text-navy-300 py-2.5">
+              Tax takes, when you sell
+            </th>
+            <td id="sipCellTaxReal" class="text-right tabular-nums font-semibold text-navy-900 dark:text-navy-100 py-2.5 pl-4">—</td>
+            <td id="sipCellTaxNom" class="text-right tabular-nums text-navy-500 dark:text-navy-400 py-2.5 pl-4">—</td>
+          </tr>
+          <tr class="border-t-2 border-navy-300 dark:border-navy-600">
+            <th scope="row" class="text-left font-semibold text-navy-900 dark:text-navy-100 py-3">
+              You end up with
+            </th>
+            <td id="sipCellEndReal" class="text-right tabular-nums font-bold text-base text-navy-900 dark:text-navy-100 py-3 pl-4">—</td>
+            <td id="sipCellEndNom" class="text-right tabular-nums font-semibold text-navy-500 dark:text-navy-400 py-3 pl-4">—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- The one thing the two columns exist to show. -->
+    <p id="sipFlowGap" class="rounded-lg bg-gold-500/10 border border-gold-500/30 px-4 py-3 text-sm leading-relaxed text-navy-800 dark:text-navy-200"></p>
+
+    <!-- One idea, one voice, one size. -->
+    <p id="sipFlowIdea" class="text-base leading-relaxed text-navy-800 dark:text-navy-200"></p>
+
+    <div class="pt-4 border-t border-navy-200 dark:border-navy-800">
+      <p class="text-sm text-navy-600 dark:text-navy-400">
+        All of which assumes the market delivers what we assumed it would.
+        <span class="font-medium text-navy-800 dark:text-navy-200">What if it does not?</span>
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  const $ = (id: string) => document.getElementById(id);
+  const grp = (n: number) => Math.round(n).toLocaleString('en-IN');
+
+  function money(n: number): string {
+    const v = Math.round(n);
+    if (Math.abs(v) >= 10000000) return `₹${(v / 10000000).toFixed(2)} crore`;
+    if (Math.abs(v) >= 100000) return `₹${(v / 100000).toFixed(1)} lakh`;
+    return `₹${grp(v)}`;
+  }
+
+  function render(detail: any) {
+    const { inputs, outlook, simulation } = detail;
+    const f = outlook.flow;
+    const years = inputs.horizonYears;
+
+    $('sipFlowYears')!.textContent = String(years);
+    $('sipFlowMonthly')!.textContent = `₹${grp(inputs.monthlySip)}`;
+
+    // Every figure is the engine's; nothing here is re-derived (sol-023). Both
+    // columns close: put in + market added − tax = what you keep.
+    $('sipCellInReal')!.textContent = money(f.investedReal);
+    $('sipCellInNom')!.textContent = money(f.investedNominal);
+    $('sipCellGrowthReal')!.textContent = money(f.growthReal);
+    $('sipCellGrowthNom')!.textContent = money(f.growthNominal);
+    // Before-tax figures are not "zero tax" - the tax simply has not been
+    // counted yet, and saying so is the honest reading (dd-009).
+    $('sipCellTaxReal')!.textContent = inputs.isPostTax
+      ? `− ${money(f.taxReal)}` : 'not counted yet';
+    $('sipCellTaxNom')!.textContent = inputs.isPostTax
+      ? `− ${money(f.taxNominal)}` : 'switch on "after tax" above';
+    $('sipCellEndReal')!.textContent = money(f.endReal);
+    $('sipCellEndNom')!.textContent = money(f.endNominal);
+
+    // The gap between the columns, said plainly. This is the whole reason both
+    // are on screen: the statement figure is the one the reader will see, and
+    // it is not the one that matters.
+    const shrink = f.endNominal > 0 ? 1 - f.endReal / f.endNominal : 0;
+    $('sipFlowGap')!.textContent =
+      `The number on the screen at the end will be ${money(f.endNominal)}. What ` +
+      `that will actually buy, in the prices you know today, is ` +
+      `${money(f.endReal)} — about ${Math.round(shrink * 100)}% less. Both ` +
+      `numbers are true; only the second one is a plan.`;
+
+    // The multiple is the thing worth carrying away (dd-010): not the total,
+    // but what each rupee genuinely given up came back as.
+    const mult = f.multiple;
+    const share = f.endReal > 0 ? Math.min(1, f.investedReal / f.endReal) : 1;
+    $('sipFlowIdea')!.textContent =
+      `Of the ${money(f.endReal)} you keep, ${money(f.investedReal)} is money ` +
+      `you provided and ${money(f.endReal - f.investedReal)} is what time did ` +
+      `with it. Every rupee you really gave up came back as ${mult.toFixed(2)} — ` +
+      `so about ${Math.round(share * 100)} paise in the rupee is yours and the ` +
+      `other ${Math.round((1 - share) * 100)} is compounding. That ratio is what ` +
+      `a longer horizon buys you, and it is why the second lever on the answer ` +
+      `above is years rather than money.`;
+
+    // Unused, but read deliberately: the engine result is here so that a future
+    // row can be added from it rather than computed beside it.
+    void simulation;
+  }
+
+  window.addEventListener('sip:result', (e) => render((e as CustomEvent).detail));
+</script>

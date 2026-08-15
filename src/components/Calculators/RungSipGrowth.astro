@@ -1,0 +1,226 @@
+---
+// Rung 3 of the SIP ladder: "What if growth is slower than you hope?"
+//
+// The first rung with a control, built to dd-008:
+//
+//   - the prose states a PRINCIPLE, true at every slider position, so dragging
+//     can never invalidate it and it never needs rewriting
+//   - the values that move live in FIXED SLOTS, so a change is seen as a digit
+//     ticking in one place rather than read as a sentence rewritten
+//   - the one dynamic sentence states the BOUNDARY, not the state - where the
+//     plan stops working covers the entire range of the control at once, and
+//     only changes when some OTHER input does
+//   - the boundary is marked on the track itself, so the reader crosses a
+//     visible line while dragging and learns the threshold without reading
+//
+// Nothing that moves has to be re-read; nothing that must be read ever moves.
+//
+// One addition to the planner's version: the reader's own assumption is marked
+// on the track as well. It arrived from a named period rather than from a
+// default (sol-028), and seeing where that period sits on the range is the
+// honest reminder that it was a choice.
+---
+
+<section id="rungSipGrowth" class="max-w-3xl mx-auto px-4 sm:px-6 py-4" aria-labelledby="rungSipGrowthQ">
+  <div class="card-premium rounded-2xl p-6 sm:p-8 space-y-6">
+
+    <div>
+      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-400 dark:text-navy-500">
+        Next question
+      </p>
+      <h2 id="rungSipGrowthQ" class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 mt-1">
+        What if growth is slower than you hope?
+      </h2>
+      <p class="text-sm text-navy-500 dark:text-navy-400 mt-2">
+        Drag it and watch the last two rows. Everything else on this screen stays put.
+      </p>
+    </div>
+
+    <!-- The control, with both marks on the track -->
+    <div class="space-y-2">
+      <div class="flex items-baseline justify-between gap-4">
+        <label for="sipGrowthSlider" class="text-sm text-navy-700 dark:text-navy-300">
+          Yearly growth on your savings
+        </label>
+        <output id="sipGrowthValue" for="sipGrowthSlider"
+                class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">—</output>
+      </div>
+
+      <div class="relative pt-1 pb-9">
+        <input id="sipGrowthSlider" type="range" min="4" max="18" step="0.5" value="13"
+               aria-describedby="sipGrowthBoundary"
+               class="w-full accent-gold-500 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50 rounded" />
+        <!-- the notch: a line the reader physically crosses -->
+        <div id="sipBreakevenMark" class="hidden absolute top-0 -translate-x-1/2 pointer-events-none">
+          <div class="h-6 w-0.5 bg-rose-500/80 dark:bg-rose-400/80 mx-auto"></div>
+          <div id="sipBreakevenLabel"
+               class="mt-0.5 whitespace-nowrap text-[10px] font-semibold text-rose-600 dark:text-rose-400 -translate-x-1/2 relative left-1/2"></div>
+        </div>
+        <!-- where the period the reader chose actually sits -->
+        <div id="sipAssumedMark" class="hidden absolute top-0 -translate-x-1/2 pointer-events-none">
+          <div class="h-6 w-0.5 bg-navy-400/70 dark:bg-navy-500/70 mx-auto"></div>
+          <!-- Sits a line below the breakeven label so the two marks can share
+               a track without colliding when the reader's own assumption is
+               close to the boundary. -->
+          <div id="sipAssumedLabel"
+               class="mt-4 whitespace-nowrap text-[10px] font-medium text-navy-500 dark:text-navy-400 relative left-1/2 -translate-x-1/2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fixed slots. The eye returns to the same rows and sees digits change. -->
+    <div class="rounded-xl border border-navy-200 dark:border-navy-700 divide-y divide-navy-200 dark:divide-navy-700 overflow-hidden">
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">Prices rise by</span>
+        <span id="sipgInflation" class="text-base font-semibold tabular-nums text-rose-600 dark:text-rose-400">—</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">So you are genuinely better off by</span>
+        <span id="sipgReal" class="text-base font-semibold tabular-nums text-navy-900 dark:text-navy-100">—</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">
+          You were aiming for
+          <span class="block text-xs text-navy-500 dark:text-navy-400">in today's money</span>
+        </span>
+        <span id="sipgTarget" class="text-base font-semibold tabular-nums text-gold-600 dark:text-gold-400">—</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3.5 bg-navy-50/60 dark:bg-navy-900/40">
+        <span class="text-sm font-semibold text-navy-900 dark:text-navy-100">You would typically finish with</span>
+        <span id="sipgEnd" class="text-lg font-bold tabular-nums">—</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">Futures that reach the goal</span>
+        <span id="sipgOdds" class="text-base font-semibold tabular-nums text-navy-900 dark:text-navy-100">—</span>
+      </div>
+    </div>
+
+    <!-- The boundary. One sentence covering the whole range of the control. -->
+    <p id="sipGrowthBoundary"
+       class="rounded-lg bg-gold-500/10 border border-gold-500/30 px-4 py-3 text-sm leading-relaxed text-navy-800 dark:text-navy-200">
+      Working out where this plan stops working…
+    </p>
+
+    <!-- The principle. True at every position, so dragging never rewrites it. -->
+    <p class="text-base leading-relaxed text-navy-800 dark:text-navy-200">
+      Growth is the one number here you do not control. You choose how much you
+      put away and how long you leave it; what the market returns is not yours
+      to set. So a plan that only reaches the goal at the top of this range is
+      not a plan — it is a hope. The room you leave yourself matters more than
+      the forecast you pick, and the two levers that give you room were on the
+      answer at the top: the amount, and the years.
+    </p>
+
+    <div class="pt-4 border-t border-navy-200 dark:border-navy-800">
+      <p class="text-sm text-navy-600 dark:text-navy-400">
+        And there is a harder version of this:
+        <span class="font-medium text-navy-800 dark:text-navy-200">what if the average is fine, but the bad years come at the end?</span>
+      </p>
+      <p class="text-xs text-navy-400 dark:text-navy-500 mt-1">That is the next step — coming shortly.</p>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  const $ = (id: string) => document.getElementById(id);
+  const pct = (n: number, dp = 1) => `${n < 0 ? '−' : ''}${Math.abs(n).toFixed(dp)}%`;
+
+  function money(n: number): string {
+    const v = Math.round(n);
+    if (v >= 10000000) return `₹${(v / 10000000).toFixed(2)} cr`;
+    if (v >= 100000) return `₹${(v / 100000).toFixed(1)} L`;
+    return `₹${v.toLocaleString('en-IN')}`;
+  }
+
+  let curve: any = null;
+  let inputs: any = null;
+
+  function pointAt(growth: number) {
+    if (!curve?.points?.length) return null;
+    let best = curve.points[0];
+    for (const p of curve.points) {
+      if (Math.abs(p.growth - growth) < Math.abs(best.growth - growth)) best = p;
+    }
+    return best;
+  }
+
+  function place(mark: HTMLElement, growth: number) {
+    const frac = (growth - curve.min) / (curve.max - curve.min);
+    mark.style.left = `${Math.min(100, Math.max(0, frac * 100))}%`;
+    mark.classList.remove('hidden');
+  }
+
+  function paintBoundary() {
+    const el = $('sipGrowthBoundary')!;
+    const mark = $('sipBreakevenMark')!;
+    if (!curve) return;
+
+    if (curve.breakeven === null) {
+      el.textContent =
+        `Even at ${pct(curve.max, 0)} growth this plan does not typically reach ` +
+        `the goal. Growth alone will not close it — the amount, the years or the ` +
+        `size of the goal has to move.`;
+      mark.classList.add('hidden');
+    } else {
+      el.textContent =
+        `This plan needs growth above ${pct(curve.breakeven)} a year to reach the ` +
+        `goal on a typical run. Below that line you finish short however patient ` +
+        `you are.`;
+      $('sipBreakevenLabel')!.textContent = pct(curve.breakeven);
+      place(mark, curve.breakeven);
+    }
+
+    // The reader's own assumption, named. It came from a period, not a default.
+    const assumed = $('sipAssumedMark')!;
+    if (curve.readerGrowth >= curve.min && curve.readerGrowth <= curve.max) {
+      $('sipAssumedLabel')!.textContent = `you assumed ${pct(curve.readerGrowth)}`;
+      place(assumed, curve.readerGrowth);
+    } else {
+      assumed.classList.add('hidden');
+    }
+  }
+
+  function paintRow(growth: number) {
+    const p = pointAt(growth);
+    if (!p || !inputs) return;
+
+    $('sipGrowthValue')!.textContent = pct(growth);
+    $('sipgInflation')!.textContent = `− ${pct(inputs.expectedInflation)} a year`;
+    $('sipgReal')!.textContent = `${pct(p.real)} a year`;
+    $('sipgTarget')!.textContent = money(inputs.targetRealWealth);
+    $('sipgEnd')!.textContent = money(p.endReal);
+    $('sipgOdds')!.textContent = `${Math.round(p.odds * 100)} in 100`;
+
+    const end = $('sipgEnd') as HTMLElement;
+    end.className = 'text-lg font-bold tabular-nums ' +
+      (p.endReal >= inputs.targetRealWealth
+        ? 'text-emerald-700 dark:text-emerald-400'
+        : p.endReal >= inputs.targetRealWealth * 0.75
+          ? 'text-amber-600 dark:text-amber-400'
+          : 'text-rose-600 dark:text-rose-400');
+
+    const odds = $('sipgOdds') as HTMLElement;
+    odds.className = 'text-base font-semibold tabular-nums ' +
+      (p.odds >= 0.5 ? 'text-emerald-700 dark:text-emerald-400'
+       : p.odds >= 0.25 ? 'text-amber-600 dark:text-amber-400'
+       : 'text-rose-600 dark:text-rose-400');
+  }
+
+  const slider = $('sipGrowthSlider') as HTMLInputElement | null;
+  slider?.addEventListener('input', () => paintRow(Number(slider.value)));
+
+  window.addEventListener('sip:curve', (e) => {
+    const d = (e as CustomEvent).detail;
+    curve = d.curve;
+    inputs = d.inputs;
+    if (slider) {
+      slider.min = String(curve.min);
+      slider.max = String(curve.max);
+      slider.step = String(curve.step);
+      slider.value = String(inputs.expectedReturn);
+    }
+    paintBoundary();
+    paintRow(inputs.expectedReturn);
+  });
+</script>

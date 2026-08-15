@@ -1,0 +1,319 @@
+---
+// Layer 1 of sol-019, for accumulation: the Answer.
+//
+// Three inputs, opinionated defaults for everything else, and a result stated
+// as a sentence. Everything the old page asked for up front - a seed capital
+// field, a step-up, an inflation rate, three allocation sliders, four
+// allocation presets, a tax toggle and a mode switch between "FORWARD:
+// STOCHASTIC" and "REVERSE: GOAL-SEEK" - is still there, one layer down,
+// because all of it is an assumption rather than something the visitor arrived
+// knowing.
+//
+// This component is also the page's compute host. One worker, one simulation,
+// broadcast to every surface (sol-026, dd-013).
+---
+
+<section
+  id="sipAnswerLayer"
+  class="max-w-3xl mx-auto px-4 sm:px-6 pt-6 pb-2"
+  aria-label="Your savings plan"
+>
+  <div class="card-premium rounded-2xl p-6 sm:p-8 space-y-7">
+
+    <p class="text-sm text-navy-500 dark:text-navy-400">
+      Three questions. You can change everything else afterwards.
+    </p>
+
+    <!-- The three inputs, phrased as a sentence rather than a form -->
+    <div class="space-y-4 text-base sm:text-lg leading-relaxed text-navy-800 dark:text-navy-200">
+      <div class="flex flex-wrap items-baseline gap-x-3 gap-y-2">
+        <label for="sipAnsMonthly" class="shrink-0">I can put away</label>
+        <span class="inline-flex items-baseline gap-1 border-b-2 border-gold-500/60 focus-within:border-gold-500 transition-colors">
+          <span class="text-navy-500 dark:text-navy-400">₹</span>
+          <input
+            id="sipAnsMonthly" type="text" inputmode="numeric" value="25,000"
+            class="w-28 sm:w-32 bg-transparent py-0.5 font-semibold tabular-nums text-navy-900 dark:text-navy-100 focus:outline-none"
+          />
+        </span>
+        <span class="shrink-0">a month</span>
+      </div>
+
+      <div class="flex flex-wrap items-baseline gap-x-3 gap-y-2">
+        <label for="sipAnsYears" class="shrink-0">for</label>
+        <span class="inline-flex items-baseline border-b-2 border-gold-500/60 focus-within:border-gold-500 transition-colors">
+          <input
+            id="sipAnsYears" type="text" inputmode="numeric" value="20"
+            class="w-14 bg-transparent py-0.5 font-semibold tabular-nums text-navy-900 dark:text-navy-100 focus:outline-none"
+          />
+        </span>
+        <span class="shrink-0">years,</span>
+      </div>
+
+      <div class="flex flex-wrap items-baseline gap-x-3 gap-y-2">
+        <label for="sipAnsTarget" class="shrink-0">and I want</label>
+        <span class="inline-flex items-baseline gap-1 border-b-2 border-gold-500/60 focus-within:border-gold-500 transition-colors">
+          <span class="text-navy-500 dark:text-navy-400">₹</span>
+          <!-- The default goal is deliberately one this default plan MISSES,
+               and misses by a human amount. The figure inherited from the old
+               page was 5 crore against 25,000 a month, which the plan misses
+               eightfold: every lever then reads as a joke - put away 2.12 lakh
+               a month, or wait past your own lifetime - and the reader learns
+               nothing except that the tool is not talking to them. A gap of
+               about 40 lakh is one all three levers can close in a way a person
+               can actually weigh, which is the point of offering them. -->
+          <input
+            id="sipAnsTarget" type="text" inputmode="numeric" value="1,00,00,000"
+            class="w-40 sm:w-44 bg-transparent py-0.5 font-semibold tabular-nums text-navy-900 dark:text-navy-100 focus:outline-none"
+          />
+        </span>
+        <span class="shrink-0">at the end of it.</span>
+      </div>
+
+      <!-- dd-004. The goal is the one input where the frame is not obvious and
+           getting it wrong is silent: a reader who means "a crore, enough to
+           retire on" means today's money, and a crore in 2046 is a different
+           and much smaller wish. Stated at the point of entry, not in a
+           tooltip. -->
+      <p class="text-xs text-navy-500 dark:text-navy-400 pl-0.5">
+        In today's money — what ₹1 crore buys now, not what the number will read
+        in twenty years.
+      </p>
+    </div>
+
+    <!-- The answer -->
+    <div class="pt-6 border-t border-navy-200 dark:border-navy-800">
+      <p id="sipAnsHeadline"
+         class="text-lg sm:text-xl leading-snug font-medium text-navy-900 dark:text-navy-100">
+        Working it out…
+      </p>
+      <p id="sipAnsDetail" class="text-sm text-navy-600 dark:text-navy-400 mt-2 leading-relaxed"></p>
+
+      <!-- Assumptions, visible at the point of use, not buried in a tooltip -->
+      <p class="text-xs text-navy-500 dark:text-navy-400 mt-4">
+        <span id="sipAnsAssumptions">Working out the assumptions…</span>
+        <button
+          id="sipAnsOpenDetail" type="button"
+          class="underline underline-offset-2 decoration-dotted hover:text-gold-600 dark:hover:text-gold-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50 rounded"
+        >Change these</button>
+      </p>
+    </div>
+
+    <!-- The levers. Hidden when the plan already gets there. -->
+    <div id="sipAnsRemedies" class="hidden pt-5 border-t border-navy-200 dark:border-navy-800">
+      <p class="text-xs font-semibold uppercase tracking-wider text-navy-500 dark:text-navy-400 mb-3">
+        To get there, change one of these
+      </p>
+      <div id="sipAnsRemedyGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
+      <p class="text-xs text-navy-500 dark:text-navy-400 mt-3">
+        Tap one to apply it.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  import {
+    readSipInputs,
+    syncAdvancedFromEntry,
+    syncEntryFromAdvanced,
+  } from '../../utils/sipInputs';
+
+  const $ = (id: string) => document.getElementById(id);
+  const grp = (n: number) => n.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+
+  // A layperson reads crore and lakh, not 59,500,000.
+  function money(n: number): string {
+    const v = Math.round(n);
+    if (v >= 10000000) return `₹${(v / 10000000).toFixed(2)} crore`;
+    if (v >= 100000) return `₹${(v / 100000).toFixed(1)} lakh`;
+    return `₹${grp(v)}`;
+  }
+
+  let worker: Worker | null = null;
+
+  // Every figure on this screen is in today's prices, stated as such. Rung 2
+  // shows both moneys side by side; there is no mode to keep in sync, because a
+  // difference that matters cannot be hidden behind a control (dd-006).
+  const readInputs = readSipInputs;
+
+  function renderAnswer(inputs: any, outlook: any) {
+    const headline = $('sipAnsHeadline')!;
+    const detail = $('sipAnsDetail')!;
+    const years = inputs.horizonYears;
+    const odds = Math.round(outlook.odds * 100);
+    const frame = inputs.isPostTax
+      ? `in today's money, after the tax due when you sell`
+      : `in today's money`;
+
+    if (outlook.reachYear !== null && outlook.reachYear < years) {
+      headline.textContent =
+        `You reach ${money(outlook.target)} in year ${outlook.reachYear} of ${years} ` +
+        `— with ${years - outlook.reachYear} years still to run.`;
+      detail.textContent =
+        `On a typical run you would finish with ${money(outlook.endReal.p50)}, ${frame}. ` +
+        `That is the middle outcome: about ${odds} in 100 futures get you there, ` +
+        `and in the unluckiest you finish nearer ${money(outlook.endReal.p10)}.`;
+    } else if (outlook.healthy) {
+      headline.textContent =
+        `You get to ${money(outlook.target)} — but only just, in year ${years}.`;
+      detail.textContent =
+        `On a typical run you finish with ${money(outlook.endReal.p50)}, ${frame}. ` +
+        `About ${odds} in 100 futures get you there, so this plan has very ` +
+        `little room in it.`;
+    } else {
+      headline.textContent =
+        `You typically finish with ${money(outlook.endReal.p50)}, not ` +
+        `${money(outlook.target)}.`;
+      detail.textContent =
+        `That is ${frame}, and it is the middle outcome — about ${odds} in 100 ` +
+        `futures reach the goal. The three ways to close the gap are below, and ` +
+        `every one of them is a real cost.`;
+    }
+
+    // The assumptions line names the period the growth came from, because a
+    // number the reader inherited is a number they never chose (sol-028).
+    $('sipAnsAssumptions')!.textContent =
+      `Assuming ${inputs.expectedReturn}% growth with ${inputs.annualVolatility}% ` +
+      `swings, ${inputs.expectedInflation}% inflation, and ` +
+      `${Math.round(inputs.eqPct * 100)}% of it in shares.`;
+  }
+
+  function renderRemedies(inputs: any, remedies: any[]) {
+    const box = $('sipAnsRemedies')!;
+    const grid = $('sipAnsRemedyGrid')!;
+    grid.innerHTML = '';
+
+    if (!remedies.length) {
+      box.classList.add('hidden');
+      return;
+    }
+    box.classList.remove('hidden');
+
+    for (const r of remedies) {
+      if (r.outOfReach) continue;
+      let title = '', sub = '', apply: () => void = () => {};
+
+      if (r.kind === 'invest_more') {
+        // The old page's REVERSE: GOAL-SEEK mode, in the reader's words.
+        title = `Put away ₹${grp(r.delta)} more`;
+        sub = `₹${grp(r.value)} a month instead`;
+        apply = () => { ($('sipAnsMonthly') as HTMLInputElement).value = grp(r.value); };
+      } else if (r.kind === 'wait_longer') {
+        title = `Give it ${r.delta} more ${r.delta === 1 ? 'year' : 'years'}`;
+        sub = `${r.value} years instead of ${inputs.horizonYears}`;
+        apply = () => { ($('sipAnsYears') as HTMLInputElement).value = String(r.value); };
+      } else {
+        title = `Aim for ${money(r.value)} instead`;
+        sub = `${money(r.delta)} less than you asked for`;
+        apply = () => { ($('sipAnsTarget') as HTMLInputElement).value = grp(r.value); };
+      }
+
+      const odds = Math.round(r.odds * 100);
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className =
+        'text-left rounded-xl border border-navy-200 dark:border-navy-700 bg-white/60 dark:bg-navy-900/40 ' +
+        'p-4 hover:border-gold-500 dark:hover:border-gold-500 transition-colors ' +
+        'focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50';
+      // Both halves, always. "Typically" is a 50/50 word and the honest reading
+      // of it is that the plan still misses in the other half - dressing that
+      // up as safety is exactly the reduction dd-001 forbids.
+      btn.innerHTML =
+        `<span class="block text-sm font-semibold text-navy-900 dark:text-navy-100">${title}</span>` +
+        `<span class="block text-xs text-navy-500 dark:text-navy-400 mt-1">${sub}</span>` +
+        `<span class="block text-xs font-medium text-emerald-700 dark:text-emerald-400 mt-2">` +
+        `${odds} out of 100 futures get there</span>` +
+        `<span class="block text-xs text-navy-500 dark:text-navy-400 mt-0.5">` +
+        `${100 - odds} still fall short</span>`;
+      btn.addEventListener('click', () => { apply(); recalc(); });
+      grid.appendChild(btn);
+    }
+  }
+
+  function recalc() {
+    // Entry edits land in the canonical fields before anything is read, so
+    // there is only ever one place the numbers come from.
+    syncAdvancedFromEntry();
+    const inputs = readInputs();
+    if (!inputs.monthlySip && !inputs.seedCapital) return;
+    if (!inputs.targetRealWealth) return;
+
+    // The three entry fields are a projection of the form below, not a second
+    // copy of it. Pushing the canonical values back up keeps them identical
+    // whichever end the reader typed at.
+    syncEntryFromAdvanced();
+
+    $('sipAnsHeadline')!.textContent = 'Working it out…';
+    $('sipAnsDetail')!.textContent = '';
+
+    worker?.postMessage(inputs);
+  }
+
+  function init() {
+    worker = new Worker(new URL('../../workers/sipAdviceWorker.ts', import.meta.url), {
+      type: 'module',
+    });
+    worker.onmessage = (e) => {
+      if (!e.data?.ok) {
+        $('sipAnsHeadline')!.textContent = 'Something went wrong working that out.';
+        $('sipAnsDetail')!.textContent = 'Try changing one of the numbers above.';
+        return;
+      }
+      const inputs = readInputs();
+
+      // The levers and the growth track arrive after the answer, so neither
+      // holds up the headline.
+      if (e.data.stage === 'remedies') {
+        renderRemedies(inputs, e.data.remedies);
+        return;
+      }
+      if (e.data.stage === 'curve') {
+        window.dispatchEvent(new CustomEvent('sip:curve', {
+          detail: { inputs, curve: e.data.curve },
+        }));
+        return;
+      }
+
+      renderAnswer(inputs, e.data.outlook);
+      // Every surface subscribes to this rather than running its own
+      // simulation - including the expert panel below, which used to own a
+      // second worker and its own input reader (sol-026). `simulation` is the
+      // raw engine result; it is what the panel renders.
+      window.dispatchEvent(new CustomEvent('sip:result', {
+        detail: { inputs, outlook: e.data.outlook, simulation: e.data.simulation },
+      }));
+    };
+
+    // The compute host. Nothing else on the page runs anything; it asks, and
+    // this answers - which is what makes disagreement impossible rather than
+    // merely unlikely.
+    window.addEventListener('sip:recompute', () => recalc());
+
+    let t: any;
+    for (const id of ['sipAnsMonthly', 'sipAnsYears', 'sipAnsTarget']) {
+      $(id)?.addEventListener('input', () => {
+        clearTimeout(t);
+        t = setTimeout(recalc, 400);
+      });
+    }
+
+    // Opens the last rung's first door - the controls - which is what a reader
+    // clicking "change the assumptions" is asking for.
+    $('sipAnsOpenDetail')?.addEventListener('click', () => {
+      const rung = document.getElementById('rungSipExpert');
+      if (!rung) return;
+      const first = rung.querySelector('details') as HTMLDetailsElement | null;
+      if (first) first.open = true;
+      rung.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    recalc();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+</script>

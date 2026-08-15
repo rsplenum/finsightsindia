@@ -19,20 +19,27 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 ✅ **rung 6** — one `<details>` over ~590 lines became the ladder's last step, split by question. dd-002's origin case, finally closed. Revised after review: live answer always visible, controls open by default, plain headings, guardrails removed
 ✅ **sol-023 second instance** on the planner ledger · **sol-029** premium had two sources after I priced it in rung 5
 ✅ **dd-012, dd-013** recorded · 166 tests (was 125) · 4 new detectors
+✅ **T3 started** — the SIP page has the Answer + a four-rung ladder, and the old page is its last rung
+✅ **sol-030** — sol-028's second instance. Growth, roughness and the floor were *unreachable constants* in `sipWorker`; presets would have moved a label only. Now required parameters. The 10-year preset moves the shipped answer 59.4 → 78.4 lakh
+✅ **sol-031** — the flow rung's column did not add up: three medians and one mean sharing four rows
+✅ `InputGroup` never supported `readonly` — the planner's "priced, not chosen" premium has been editable all along
 
 ## Next — in order
 
 - [x] ~~**T2 last item** — the door is gone; the expert panel is rung 6, three doors named by question~~
-- [ ] **T3** — apply the ladder to the SIP engine, which now shares T2's engine and presets
+- [ ] **T3 rungs 4 and 5** — order-of-returns (a crash *late* is the saver's nightmare, the mirror of T2's) and what protection costs
 - [ ] **T1 homepage** — six items, untouched since the audit
 - [ ] Delete `swpDeterministic.ts` — no production caller; 11 tests still use it as a harness *(needs `growth`/`netMonthly` on the MC engine first)*
 - [ ] Rung 5 term selector, 3/6/9/12 months — *needs term-invariant return generation; today it drifts the unhedged baseline 39→42, an artefact*
 
 ## Waiting on Rahul
 
-- [ ] **The floor depth is three different numbers** — SIP engine −8%, planner −10%, copy says −10% or −15%
+- [x] ~~**What counts as "this plan works" when saving?**~~ **Answered 16 Aug: 50%, the typical path.** Not the planner's 85% — that bar is for ruin, and it would tell a saver of ₹25,000/mo that a crore needs ₹83,000/mo. The honesty is carried in the copy instead: every card states "50 still fall short" beside the promise
+- [ ] **The presets state a CAGR; both engines consume it as an arithmetic average** — so the median path lands a few points below the number on the button. True on the planner too, since 15 Aug. Fixing it moves T2's shipped figures, so it is not a silent change
+- [ ] **Debt 7.1% and gold 8.5% are still typed in** — same fault as sol-028, no series in the repo to derive them from. The page says so in plain words rather than hiding it
+- [x] ~~**The floor depth is three different numbers**~~ **Two now.** Both engines take it as a parameter and both pages ship −10%; only the copy's "−10% or −15%" is still loose
 - [ ] **CLAUDE.md's dev-server instruction is wrong for this harness** — says `astro dev --background`; must use the preview tools. sol-025
-- [ ] **Does the SIP engine get the same regime presets?** It still assumes 12% / 15% vol internally — the same defect sol-028 just fixed on the planner
+- [x] ~~**Does the SIP engine get the same regime presets?**~~ **Answered 15 Aug: yes.** T3 inherits the shared engine, `plannerInputs`, the regime presets and the rung pattern
 
 ## Blocked / deferred — with the reason
 
@@ -69,14 +76,20 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 - [x] Rung 6: the expert panel, as the last rung rather than a door
 - [ ] Proposed rung: what if life happens?
 
-## T3 — SIP engine · 2/6
+## T3 — SIP engine · 6/9
+
+Scope, settled 15 Aug: the SIP page inherits T2 whole — shared engine, `plannerInputs`, regime presets, rung pattern. Start cold from this file, dd-012/dd-013 and sol-026 … sol-031.
 
 - [x] Engine testable and seeded; 16 characterization tests `8c61dbf`
 - [x] Hedging ledger fed from the engine, not recomputed beside it — sol-023
-- [ ] Reverse goal-seek becomes the default mode
-- [ ] Three-input entry, ladder for the rest
-- [ ] Surface total cost drag — fund fees, exit load, tax
-- [ ] Share the assumption panel with T2
+- [x] **sol-028 fixed here** — growth, roughness and the floor are required engine parameters; the named periods reach the maths — sol-030
+- [x] Reverse goal-seek becomes the default — as the first *lever* on the Answer, not a mode switch. `FORWARD: STOCHASTIC` / `REVERSE: GOAL-SEEK` is gone
+- [x] Three-input entry, ladder for the rest — `SipAnswer` + rungs 1–3 + the old page as the last rung
+- [x] One input reader, one worker, one simulation — `sipInputs.ts`, `sipAdviceWorker.ts` (sol-026 pre-empted rather than repeated)
+- [x] Assumption panel shared with T2 — same presets, same pricing, both pages quote 5.73% for the same contract
+- [ ] Rung 4: order-of-returns, mirrored — for a saver a crash *late* is the ruinous one
+- [ ] Rung 5: what protection costs, on the dd-012 pattern
+- [ ] Surface total cost drag — fund fees and exit load are still missing; tax is now in the flow rung
 
 ## T4 — Goal engine (accumulate → draw down) · 1/6
 
@@ -111,15 +124,17 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 - [x] Audit the live pages
 - [x] Build-time ratchet: debt cannot grow, must shrink `175ab75`
 - [x] Define "reader-facing" — meta pages out, FAQ in `4b0454f`
+- [x] sip-engine cleared — "stochastic" is off the baseline; the ratchet tightened
 - [ ] Clear the homepage's six occurrences *(with T1)*
-- [ ] Clear the remaining eight across swp-planner, sip-engine, about, faq, terms
+- [ ] Clear the remaining seven across swp-planner, about, faq, terms
 
 ## T8 — Real vs nominal · 3/5
 
 - [x] dd-004 recorded: never use a concept the reader has not been given
 - [x] Teach it inside the two-rates rung, in plain words `b128478`
 - [x] Side-by-side columns, not a toggle (dd-006) `1c26a7b`
-- [ ] Apply the pattern to SIP and insurance
+- [x] Applied to SIP — both columns in the flow rung, and both of them close (sol-031)
+- [ ] Apply the pattern to insurance
 - [ ] Label every currency figure site-wide
 
 ## T9 — Link the writing to the maths · 0/5
@@ -135,7 +150,8 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 - [x] sol-019 written: three layers, entry contract, answer as a sentence `175ab75`
 - [x] dd-000 … dd-011 recorded, verbatim, with tests `fa88e96`
 - [x] Enforced: every calculator needs a `.checks.md`, tested `7bbfe6f`
-- [ ] Promote sol-019 to active once T2 proves it, then apply to T3/T5/T6
+- [x] **sol-019 proved twice** — T2 shipped it, T3 inherited it, and the five new checks files were written *before* their components for the first time
+- [ ] Apply it to T5 and T6
 
 ## T12 — Agentic workflow · 6/8
 
@@ -152,7 +168,8 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 
 - [x] Both workers extracted and seeded `3c4bab0`
 - [x] Two SWP engines asserted to agree at zero volatility `3c4bab0`
-- [x] SIP engine: 16 characterization tests `8c61dbf`
+- [x] SIP engine: 16 characterization tests `8c61dbf`, now 38 — the world it assumes is stated in them
+- [x] SIP derivation layer covered: 21 tests, including the one that caught sol-031
 - [x] Build output smoke test; integrity baseline restored `c0fb12a`
 - [x] Conservation-of-money and reconciliation invariants `df5f3bc`
 

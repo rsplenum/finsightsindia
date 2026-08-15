@@ -1,0 +1,124 @@
+---
+// The last rung of the SIP ladder: "What if your numbers are different?"
+//
+// The planner's RungExpert, for accumulation. It exists for the same reason:
+// the whole of the old page is still here, and revealing all of it on one click
+// is what dd-002 was written against. Three doors, named by the question each
+// answers, and the live answer above them - because changing a number with no
+// visible consequence is the worst kind of control.
+//
+// What is gone from the old page is one thing only: the FORWARD / REVERSE mode
+// switch. It offered a choice between two vocabularies for the same question,
+// and the reverse half - "what do I need to invest?" - is now the first lever
+// on the Answer, in the reader's own words.
+//
+// Slots: `controls`, `results`, `workings`.
+---
+
+<section id="rungSipExpert" class="max-w-3xl mx-auto px-4 sm:px-6 py-4" aria-labelledby="rungSipExpertQ">
+  <div class="card-premium rounded-2xl p-6 sm:p-8 space-y-6">
+
+    <div>
+      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-400 dark:text-navy-500">
+        Last question
+      </p>
+      <h2 id="rungSipExpertQ" class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 mt-1">
+        What if your numbers are different from ours?
+      </h2>
+      <p class="text-sm leading-relaxed text-navy-600 dark:text-navy-400 mt-2">
+        Everything above was worked out from assumptions we chose — a period of
+        market history, an inflation rate, a split between shares, bonds and
+        gold. None of them are facts. Here is every one of them, and everything
+        the engine did with them.
+      </p>
+    </div>
+
+    <!-- The answer, always visible, whichever door is open. -->
+    <div class="rounded-xl border border-gold-500/30 bg-gold-500/5 px-4 py-3.5 space-y-1">
+      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-500 dark:text-navy-400">
+        With your numbers
+      </p>
+      <p id="sipExpertLiveHeadline" class="text-base font-semibold leading-snug text-navy-900 dark:text-navy-100">
+        Working it out…
+      </p>
+      <p id="sipExpertLiveDetail" class="text-sm text-navy-600 dark:text-navy-400"></p>
+    </div>
+
+    <div class="space-y-3">
+      <!-- Open by default: the rung's question IS "change the assumptions", so
+           the controls are the thing, not a door to the thing. -->
+      <details open class="group rounded-xl border border-navy-200 dark:border-navy-700 overflow-hidden">
+        <summary class="cursor-pointer list-none flex items-center justify-between gap-3 px-4 py-3.5 hover:bg-navy-50 dark:hover:bg-navy-900/60 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50">
+          <span>
+            <span class="block text-sm font-semibold text-navy-900 dark:text-navy-100">Change the assumptions</span>
+            <span class="block text-xs text-navy-500 dark:text-navy-400">what you invest, for how long, the market you assume, the split, tax, protection</span>
+          </span>
+          <svg class="w-4 h-4 shrink-0 text-navy-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </summary>
+        <div class="border-t border-navy-200 dark:border-navy-700 p-4 sm:p-5">
+          <slot name="controls" />
+        </div>
+      </details>
+
+      <details class="group rounded-xl border border-navy-200 dark:border-navy-700 overflow-hidden">
+        <summary class="cursor-pointer list-none flex items-center justify-between gap-3 px-4 py-3.5 hover:bg-navy-50 dark:hover:bg-navy-900/60 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50">
+          <span>
+            <span class="block text-sm font-semibold text-navy-900 dark:text-navy-100">See it year by year</span>
+            <span class="block text-xs text-navy-500 dark:text-navy-400">the full projection, the range of outcomes and when each milestone arrives</span>
+          </span>
+          <svg class="w-4 h-4 shrink-0 text-navy-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </summary>
+        <div class="border-t border-navy-200 dark:border-navy-700 p-4 sm:p-5">
+          <slot name="results" />
+        </div>
+      </details>
+
+      <details class="group rounded-xl border border-navy-200 dark:border-navy-700 overflow-hidden">
+        <summary class="cursor-pointer list-none flex items-center justify-between gap-3 px-4 py-3.5 hover:bg-navy-50 dark:hover:bg-navy-900/60 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50">
+          <span>
+            <span class="block text-sm font-semibold text-navy-900 dark:text-navy-100">Check the workings</span>
+            <span class="block text-xs text-navy-500 dark:text-navy-400">what the protection cost, year by year, and what the floor absorbed</span>
+          </span>
+          <svg class="w-4 h-4 shrink-0 text-navy-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </summary>
+        <div class="border-t border-navy-200 dark:border-navy-700 p-4 sm:p-5">
+          <slot name="workings" />
+        </div>
+      </details>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  // One subscriber to the shared result (dd-013). No computation here.
+  window.addEventListener('sip:result', (e) => {
+    const d = (e as CustomEvent).detail;
+    const o = d?.outlook;
+    if (!o) return;
+    const head = document.getElementById('sipExpertLiveHeadline');
+    const detail = document.getElementById('sipExpertLiveDetail');
+    if (!head || !detail) return;
+
+    const money = (n: number) => {
+      const v = Math.round(n);
+      if (v >= 10000000) return `₹${(v / 10000000).toFixed(2)} crore`;
+      if (v >= 100000) return `₹${(v / 100000).toFixed(1)} lakh`;
+      return `₹${v.toLocaleString('en-IN')}`;
+    };
+
+    head.textContent =
+      o.reachYear !== null
+        ? `You reach ${money(o.target)} in year ${o.reachYear} of ${d.inputs.horizonYears}.`
+        : `You finish with ${money(o.endReal.p50)}, short of ${money(o.target)}.`;
+    detail.textContent =
+      `${Math.round(o.odds * 100)} of every 100 futures get you there. ` +
+      `Change anything below and this line moves.`;
+  });
+</script>

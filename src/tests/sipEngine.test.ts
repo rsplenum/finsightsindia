@@ -17,6 +17,15 @@ const base = {
   goldPct: 0.10,
   bsEnabled: false,
   annualHedgingDragCost: 0,
+  // sol-028, second instance. These three were module constants inside the
+  // engine until 15 Aug - 12% growth, 15% roughness, a -8% floor - which is
+  // why no control on the page could move them. They are stated here so that
+  // every characterization figure below still describes exactly the world it
+  // was recorded in, and so that the world is now VISIBLE rather than
+  // inherited. The shipped page passes the regime preset instead.
+  equityReturn: 12,
+  equityVolatility: 15,
+  hedgingFloorLimit: -8,
 };
 
 const sim = (over = {}) => runSimulation({ ...base, monthlySip: 20000, numSims: 800, ...over });
@@ -32,6 +41,61 @@ describe('SIP simulation - reproducibility', () => {
   it('a different seed gives a different draw', () => {
     expect(sim({ seed: 1 }).expectedNominalMedian)
       .not.toBe(sim({ seed: 2 }).expectedNominalMedian);
+  });
+});
+
+// sol-028, second instance. The planner was fixed on 15 Aug and this engine was
+// not, because here the growth and roughness were not inputs at all - they were
+// `const eqDrift = (0.12 - 0.5 * 0.15 * 0.15) / 12` at module scope. A regime
+// preset on this page would have moved a label and left every number alone.
+// These are the guards that say the assumption now reaches the maths.
+describe('sol-028 - the engine has no opinion about the market', () => {
+  it('growth and roughness must be stated, not inherited', () => {
+    // A silent fallback is how the last default survived unexamined. Omitting
+    // the assumption is an error, and the error says which one is missing.
+    const { equityReturn, ...noGrowth } = base;
+    expect(() => runSimulation({ ...noGrowth, monthlySip: 20000, numSims: 10 }))
+      .toThrow(/equityReturn is required/);
+
+    const { equityVolatility, ...noVol } = base;
+    expect(() => runSimulation({ ...noVol, monthlySip: 20000, numSims: 10 }))
+      .toThrow(/equityVolatility is required/);
+
+    const { hedgingFloorLimit, ...noFloor } = base;
+    expect(() => runSimulation({ ...noFloor, monthlySip: 20000, numSims: 10 }))
+      .toThrow(/hedgingFloorLimit is required/);
+  });
+
+  it('a different regime gives a different answer', () => {
+    // The last-10-years preset and the last-30-years preset describe worlds
+    // that are not close to each other. If this passes at equality the presets
+    // are decoration.
+    const calm = sim({ equityReturn: 15.9, equityVolatility: 8.9 });
+    const long = sim({ equityReturn: 13.4, equityVolatility: 28.4 });
+    expect(long.expectedNominalMedian).not.toBe(calm.expectedNominalMedian);
+    // Rougher AND lower-growth: the median must be worse, and the spread wider.
+    expect(long.expectedNominalMedian).toBeLessThan(calm.expectedNominalMedian);
+    const spread = (r: any) =>
+      (r.p90Nominal[20] - r.p10Nominal[20]) / r.p50Nominal[20];
+    expect(spread(long)).toBeGreaterThan(spread(calm));
+  });
+
+  it('roughness alone drags the median down, at the same growth', () => {
+    // Volatility drag, isolated. Same expected return, rougher ride, worse
+    // median - the thing the planner's own copy claims and this engine has
+    // never been able to demonstrate because roughness was welded shut.
+    const smooth = sim({ equityVolatility: 10 });
+    const rough = sim({ equityVolatility: 30 });
+    expect(rough.p50Nominal[20]).toBeLessThan(smooth.p50Nominal[20]);
+  });
+
+  it('the floor depth is a parameter, and a deeper floor protects less', () => {
+    // Priced at zero so this compares the contract and nothing else. A -20%
+    // floor binds in far fewer years than a -5% one, so it is worth less.
+    const free = { bsEnabled: true, annualHedgingDragCost: 0 };
+    const shallow = sim({ ...free, hedgingFloorLimit: -5 });
+    const deep = sim({ ...free, hedgingFloorLimit: -20 });
+    expect(deep.p10Nominal[20]).toBeLessThan(shallow.p10Nominal[20]);
   });
 });
 
@@ -194,6 +258,54 @@ describe('SIP simulation - portfolio insurance', () => {
     const allDebt = { eqPct: 0, debtPct: 1, goldPct: 0 };
     expect(sim({ ...allDebt, bsEnabled: true, annualHedgingDragCost: PREMIUM }).expectedNominalMedian)
       .toBe(sim(allDebt).expectedNominalMedian);
+  });
+});
+
+// The Answer layer (sol-019) asks one question: do you get there? That is a
+// probability over paths, and a probability cannot be recovered from three
+// percentiles - so it has to be the engine's, computed while it still holds
+// every path. The page's old `calculateNetRealWealth` could only ever reach
+// p10, p50 and p90, which is why the question was never asked.
+describe('SIP simulation - did you get there', () => {
+  const withGoal = (over = {}) => sim({ targetRealWealth: 10000000, ...over });
+
+  it('there is no verdict without a goal', () => {
+    expect(sim().final.reachedTarget).toBeNull();
+  });
+
+  it('the odds of reaching a goal fall as the goal rises', () => {
+    const odds = [5000000, 10000000, 20000000, 40000000].map(
+      (t) => withGoal({ targetRealWealth: t }).final.reachedTarget
+    );
+    for (let i = 1; i < odds.length; i++) {
+      expect(odds[i]).toBeLessThanOrEqual(odds[i - 1]);
+    }
+    expect(odds[0]).toBeGreaterThan(odds[odds.length - 1]);
+  });
+
+  it('the median net figure is the median path, not a taxed percentile', () => {
+    // Pre-tax the two must agree exactly, which is the check that the new
+    // per-path block and the old percentile arrays describe one simulation.
+    const r = withGoal();
+    expect(r.final.realNet.p50).toBe(r.p50Real[base.horizonYears]);
+    expect(r.final.realNet.p10).toBe(r.p10Real[base.horizonYears]);
+  });
+
+  it('tax lowers what you keep and the odds of getting there', () => {
+    const gross = withGoal();
+    const net = withGoal({ isPostTax: true });
+    expect(net.final.realNet.p50).toBeLessThan(gross.final.realNet.p50);
+    expect(net.final.reachedTarget!).toBeLessThan(gross.final.reachedTarget!);
+    expect(net.final.taxPaidNominal).toBeGreaterThan(0);
+    expect(gross.final.taxPaidNominal).toBe(0);
+  });
+
+  it('a gentler tax rate keeps more', () => {
+    // The rate is a parameter now, matching the planner's own LTCG input, so
+    // the two pages can be told the same thing about tax.
+    const high = withGoal({ isPostTax: true, ltcgTaxPct: 20 });
+    const low = withGoal({ isPostTax: true, ltcgTaxPct: 5 });
+    expect(low.final.realNet.p50).toBeGreaterThan(high.final.realNet.p50);
   });
 });
 

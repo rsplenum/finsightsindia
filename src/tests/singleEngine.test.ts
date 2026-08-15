@@ -33,7 +33,7 @@ function productionFiles(): string[] {
   return out;
 }
 
-describe('dd-013 - the planner runs on one engine', () => {
+describe('dd-013 - each calculator runs on one engine', () => {
   const files = productionFiles();
 
   it('there are production files to check', () => {
@@ -53,17 +53,38 @@ describe('dd-013 - the planner runs on one engine', () => {
     expect(offenders, 'production code importing swpDeterministic').toEqual([]);
   });
 
-  it('exactly one Worker is constructed for the planner page', () => {
-    // sol-026: two `new Worker(...)` calls meant two simulations and two
-    // answers to one question, shown side by side.
-    const planner = files.filter(
-      (f) => f.includes('swp-planner') || f.includes('Calculators')
-    );
-    const constructions = planner.flatMap((f) => {
-      const body = fs.readFileSync(f, 'utf-8');
-      return (body.match(/new Worker\(/g) ?? []).map(() => f);
-    });
-    expect(constructions.length, `Workers constructed in: ${constructions.join(', ')}`).toBe(1);
+  // sol-026: two `new Worker(...)` calls on one page meant two simulations and
+  // two answers to one question, shown side by side.
+  //
+  // Originally this asserted a single Worker across the whole calculator tree,
+  // which was true only while the planner was the one page with a ladder. The
+  // rule was never "one worker in the repository" - it is ONE COMPUTE HOST PER
+  // PAGE, and a page that computes nothing itself. Stated that way it survives
+  // the SIP page inheriting the pattern, and it still fails on the thing that
+  // actually went wrong.
+  const COMPUTE_HOSTS = [
+    'src/components/Calculators/RetirementAnswer.astro',
+    'src/components/Calculators/SipAnswer.astro',
+  ];
+
+  it('each compute host constructs exactly one Worker', () => {
+    for (const host of COMPUTE_HOSTS) {
+      const body = fs.readFileSync(host, 'utf-8');
+      const n = (body.match(/new Worker\(/g) ?? []).length;
+      expect(n, `${host} should own exactly one worker`).toBe(1);
+    }
+  });
+
+  it('no page and no rung constructs a Worker of its own', () => {
+    // The rungs and the expert panel subscribe to the host's broadcast. A page
+    // that starts its own worker is running a second simulation, and the two
+    // will print different numbers for the same input the moment anything
+    // about them diverges - which is exactly what the planner was caught doing.
+    const offenders = files
+      .filter((f) => f.startsWith('src/pages/') || f.includes('Calculators'))
+      .filter((f) => !COMPUTE_HOSTS.includes(f))
+      .filter((f) => /new Worker\(/.test(fs.readFileSync(f, 'utf-8')));
+    expect(offenders, 'files running a simulation of their own').toEqual([]);
   });
 
   it('only the two engine files contain a simulation loop', () => {

@@ -16,6 +16,13 @@ export interface Props {
 	min?: string | number;
 	max?: string | number;
 	step?: string | number;
+	/**
+	 * A field the engine writes and the reader only reads - the priced premium
+	 * on both calculators. The planner already passed this and it was silently
+	 * dropped, because the prop did not exist: a field its own tooltip calls
+	 * "priced, not chosen" has been editable this whole time.
+	 */
+	readonly?: boolean;
 }
 
 const { 
@@ -31,10 +38,11 @@ const {
 	suffix, 
 	type = 'text', 
 	inputmode = 'numeric',
-	value, 
-	min, 
-	max, 
-	step 
+	value,
+	min,
+	max,
+	step,
+	readonly = false
 } = Astro.props;
 
 // Determine padding based on prefix and suffix
@@ -72,7 +80,9 @@ else inputPadding += " pr-4";
 			max={max}
 			step={step}
 			required={required}
-			class={`w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-base font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-400 dark:focus:ring-slate-500 focus:border-transparent transition-all shadow-sm ${inputPadding}`}
+			readonly={readonly}
+			aria-readonly={readonly ? 'true' : undefined}
+			class={`w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-base font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-400 dark:focus:ring-slate-500 focus:border-transparent transition-all shadow-sm ${inputPadding} ${readonly ? 'cursor-default text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-950' : ''}`}
 		/>
 		{suffix && <span class="absolute right-3.5 text-sm font-medium text-slate-400 dark:text-slate-500 select-none transition-colors group-focus-within:text-slate-600 dark:group-focus-within:text-slate-300">{suffix}</span>}
 	</div>
