@@ -1,0 +1,89 @@
+---
+// Rung 6 of the ladder, and the last: "What if your numbers are different?"
+//
+// This replaces a single <details> labelled "Show the workings and change the
+// assumptions" which wrapped about 590 lines - the whole original page - and
+// revealed all of it on one click. That is dd-002's origin case, and it was
+// still standing at the bottom of the page the entry was written about: the
+// ladder above it had been rebuilt and the cliff underneath had been left with
+// a politer sign on it.
+//
+// Two changes. It is framed as a RUNG, because after "what does protection
+// cost?" the reader's honest next question is "but those are your numbers, not
+// mine" - which turns a mystery door into a step. And the inside is split into
+// three doors named by the question each answers, because layering by volume
+// just moves the wall (dd-002); only layering by question is layering.
+//
+// Nothing is removed. dd-001 is satisfied by reachability, not by putting
+// everything on screen at once.
+//
+// Slots: `controls`, `results`, `workings`.
+---
+
+<section id="rungExpert" class="max-w-3xl mx-auto px-4 sm:px-6 py-4" aria-labelledby="rungExpertQ">
+  <div class="card-premium rounded-2xl p-6 sm:p-8 space-y-6">
+
+    <div>
+      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-400 dark:text-navy-500">
+        Last question
+      </p>
+      <h2 id="rungExpertQ" class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 mt-1">
+        What if your numbers are different from ours?
+      </h2>
+      <p class="text-sm leading-relaxed text-navy-600 dark:text-navy-400 mt-2">
+        Everything above was worked out from assumptions we chose — a rate of
+        growth, a roughness, a tax rate, a horizon. None of them are facts. Here
+        is every one of them, and everything the engine did with them.
+      </p>
+    </div>
+
+    <div class="space-y-3">
+      <!-- Opens on the CONTROLS, because that is what the question asks for. -->
+      <details class="group rounded-xl border border-navy-200 dark:border-navy-700 overflow-hidden">
+        <summary class="cursor-pointer list-none flex items-center justify-between gap-3 px-4 py-3.5 hover:bg-navy-50 dark:hover:bg-navy-900/60 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50">
+          <span>
+            <span class="block text-sm font-semibold text-navy-900 dark:text-navy-100">Change the assumptions</span>
+            <span class="block text-xs text-navy-500 dark:text-navy-400">savings, income, growth, roughness, tax, guardrails, protection</span>
+          </span>
+          <svg class="w-4 h-4 shrink-0 text-navy-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </summary>
+        <div class="border-t border-navy-200 dark:border-navy-700 p-4 sm:p-5">
+          <slot name="controls" />
+        </div>
+      </details>
+
+      <details class="group rounded-xl border border-navy-200 dark:border-navy-700 overflow-hidden">
+        <summary class="cursor-pointer list-none flex items-center justify-between gap-3 px-4 py-3.5 hover:bg-navy-50 dark:hover:bg-navy-900/60 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50">
+          <span>
+            <span class="block text-sm font-semibold text-navy-900 dark:text-navy-100">See it year by year</span>
+            <span class="block text-xs text-navy-500 dark:text-navy-400">the full projection, the paycheck schedule and the range of outcomes</span>
+          </span>
+          <svg class="w-4 h-4 shrink-0 text-navy-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </summary>
+        <div class="border-t border-navy-200 dark:border-navy-700 p-4 sm:p-5">
+          <slot name="results" />
+        </div>
+      </details>
+
+      <details class="group rounded-xl border border-navy-200 dark:border-navy-700 overflow-hidden">
+        <summary class="cursor-pointer list-none flex items-center justify-between gap-3 px-4 py-3.5 hover:bg-navy-50 dark:hover:bg-navy-900/60 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50">
+          <span>
+            <span class="block text-sm font-semibold text-navy-900 dark:text-navy-100">Check the workings</span>
+            <span class="block text-xs text-navy-500 dark:text-navy-400">what the protection cost, year by year, and what the floor absorbed</span>
+          </span>
+          <svg class="w-4 h-4 shrink-0 text-navy-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </summary>
+        <div class="border-t border-navy-200 dark:border-navy-700 p-4 sm:p-5">
+          <slot name="workings" />
+        </div>
+      </details>
+    </div>
+
+  </div>
+</section>

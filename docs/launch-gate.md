@@ -16,11 +16,13 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 ✅ **sol-027** one engine, not two — `returnsByYear` retired the duplicate `swpDeterministic`
 ✅ **sol-028** volatility default was the calmest decade in 35 years. Named periods now, computed from real data. **Survival on the shipped plan: 9534 → 7025**
 ✅ **rung 5** built, rejected, rebuilt to dd-012 — leads with ruined retirements, premium priced not chosen
+✅ **rung 6** — one `<details>` over ~590 lines became the ladder's last step, split by question. dd-002's origin case, finally closed
+✅ **sol-023 second instance** on the planner ledger · **sol-029** premium had two sources after I priced it in rung 5
 ✅ **dd-012, dd-013** recorded · 166 tests (was 125) · 4 new detectors
 
 ## Next — in order
 
-- [ ] **T2 last item** — retire the "show the workings" door; the expert panel becomes the final rung
+- [x] ~~**T2 last item** — the door is gone; the expert panel is rung 6, three doors named by question~~
 - [ ] **T3** — apply the ladder to the SIP engine, which now shares T2's engine and presets
 - [ ] **T1 homepage** — six items, untouched since the audit
 - [ ] Delete `swpDeterministic.ts` — no production caller; 11 tests still use it as a harness *(needs `growth`/`netMonthly` on the MC engine first)*
@@ -54,7 +56,7 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 - [ ] Demote the five hubs to a second screen
 - [ ] Cut page weight so the first real choice is above the fold
 
-## T2 — SWP planner (the pilot) · 8/10
+## T2 — SWP planner (the pilot) · 9/10
 
 - [x] LTCG double-charge fixed in both engines `0dd3950`
 - [x] Zero-valued inputs fixed — survival was reported 22% instead of 78% `3c4bab0`
@@ -64,8 +66,8 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 - [x] Rung 3: growth slider, boundary on the track, no sentence churn `d5da508`
 - [x] Rung 4: bad years first — rebuilt after review `c193203`
 - [x] Rung 5: what protection costs — the premium is fixed, the payout is not
+- [x] Rung 6: the expert panel, as the last rung rather than a door
 - [ ] Proposed rung: what if life happens?
-- [ ] Retire the single "show the workings" door — expert panel becomes the last rung
 
 ## T3 — SIP engine · 2/6
 

@@ -66,6 +66,14 @@ export function runSWPMonteCarlo(data: any = {}) {
   const yearlyTaxesMatrix = Array.from({ length: yearsCount }, () => new Float64Array(numSimulations));
   const yearlyMonthlyPaychecksMatrix = Array.from({ length: yearsCount }, () => new Float64Array(numSimulations));
 
+  // sol-023, second instance. The planner's hedging ledger used to compute its
+  // own "Option Drag" and "Net Hedged Balance" beside the engine, and label the
+  // HEDGED balance "Unhedged" - four of six columns derived from nothing the
+  // simulation produced. The premium charged and the shortfall the floor
+  // actually absorbed are recorded here so the view can read them instead.
+  const yearlyPremiumMatrix = Array.from({ length: yearsCount }, () => new Float64Array(numSimulations));
+  const yearlyFloorBenefitMatrix = Array.from({ length: yearsCount }, () => new Float64Array(numSimulations));
+
   const trialLowestPaychecks = new Float64Array(numSimulations);
   const trialSacrifices = new Float64Array(numSimulations);
   const trialRockBottoms = new Float64Array(numSimulations);
@@ -179,12 +187,23 @@ export function runSWPMonteCarlo(data: any = {}) {
       // the LTCG double-charge once had to be fixed twice. One engine, driven
       // two ways (dd-013).
       let randomReturn: number;
+      // What the floor absorbed and what it charged, this year, on this trial.
+      let floorBenefitRate = 0;
+      let premiumRate = 0;
       if (returnsByYear) {
         randomReturn = returnsByYear[year - 1] ?? mu;
-        if (bsEnabled) randomReturn = Math.max(floorLimit, randomReturn) - dragCost;
+        if (bsEnabled) {
+          floorBenefitRate = Math.max(0, floorLimit - randomReturn);
+          premiumRate = dragCost;
+          randomReturn = Math.max(floorLimit, randomReturn) - dragCost;
+        }
       } else if (hedgePeriods === 1) {
         randomReturn = mu + sigma * getRandomNormal();
-        if (bsEnabled) randomReturn = Math.max(floorLimit, randomReturn) - dragCost;
+        if (bsEnabled) {
+          floorBenefitRate = Math.max(0, floorLimit - randomReturn);
+          premiumRate = dragCost;
+          randomReturn = Math.max(floorLimit, randomReturn) - dragCost;
+        }
       } else {
         // Sub-annual rolls. A floor bought every three months is re-struck four
         // times a year, so it caps each QUARTER at the floor rather than the
@@ -203,11 +222,20 @@ export function runSWPMonteCarlo(data: any = {}) {
         let factor = 1;
         for (let k = 0; k < hedgePeriods; k++) {
           let rp = muP + sigmaP * getRandomNormal();
-          if (bsEnabled) rp = Math.max(floorLimit, rp) - dragP;
+          if (bsEnabled) {
+            floorBenefitRate += Math.max(0, floorLimit - rp);
+            premiumRate += dragP;
+            rp = Math.max(floorLimit, rp) - dragP;
+          }
           factor *= 1 + rp;
         }
         randomReturn = factor - 1;
       }
+      // Charged and credited on the balance the year opened with, which is the
+      // balance the contract was written against.
+      yearlyPremiumMatrix[year][sim] = currentBalance * premiumRate;
+      yearlyFloorBenefitMatrix[year][sim] = currentBalance * floorBenefitRate;
+
       const grownBalance = currentBalance * (1 + randomReturn);
 
       const capitalGain = Math.max(0, grownBalance - costBasis);
@@ -300,6 +328,13 @@ export function runSWPMonteCarlo(data: any = {}) {
   const p90 = [];
   const medianWithdrawals = [0];
   const medianTaxes = [0];
+  /**
+   * Premium charged, and shortfall the floor absorbed, per year - MEAN across
+   * trials for both, so the ledger's two columns are the same statistic and can
+   * be read against each other (sol-023).
+   */
+  const avgPremiumPaid = [0];
+  const avgFloorBenefit = [0];
   const idealPaycheckTimeline = [];
   const actualPaycheckTimeline = [];
 
@@ -339,6 +374,20 @@ export function runSWPMonteCarlo(data: any = {}) {
 
       medianWithdrawals.push(Math.round(yearWithdrawals[idx50]));
       medianTaxes.push(Math.round(yearTaxes[idx50]));
+
+      // MEANS, not medians, and both by the same statistic so the two columns
+      // are comparable. The floor pays in roughly a fifth of years, so its
+      // MEDIAN is zero in every single row - a column of 0.00 that reads as
+      // "the floor never pays" when the truth is "the floor did not pay in the
+      // middle year". That is the sparse-series trap this codebase has now
+      // fallen into three times; see sol-023.
+      const mean = (a: Float64Array) => {
+        let t = 0;
+        for (let i = 0; i < a.length; i++) t += a[i];
+        return t / a.length;
+      };
+      avgPremiumPaid.push(Math.round(mean(yearlyPremiumMatrix[year])));
+      avgFloorBenefit.push(Math.round(mean(yearlyFloorBenefitMatrix[year])));
     }
   }
 
@@ -380,6 +429,8 @@ export function runSWPMonteCarlo(data: any = {}) {
     p90,
     medianWithdrawals,
     medianTaxes,
+    avgPremiumPaid,
+    avgFloorBenefit,
     idealPaycheckTimeline,
     actualPaycheckTimeline,
     probabilityOfSuccess,

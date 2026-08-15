@@ -1,5 +1,6 @@
 import { parseFormattedNumber } from './formatters';
 import type { AdviceInputs } from './swpAdvice';
+import { pricePut } from './putPricing';
 
 /**
  * One set of inputs, one simulation, for every surface on the SWP planner.
@@ -74,21 +75,32 @@ const money = (id: string, fallback: number): number => {
 
 const checked = (id: string): boolean => el(id)?.checked ?? false;
 
+/** Rolls every 12 months. The term selector is not shipped yet - see the gate. */
+const HEDGE_TERM_MONTHS = 12;
+
 /** Read the one true input set. Every surface calls this and nothing else. */
 export function readPlannerInputs(): PlannerInputs {
+  const roughness = num(F.vol, 15);
+  const floorPct = num(F.floor, -10);
   return {
     initialCorpus: money(F.corpus, 0),
     monthlyWithdrawal: money(F.monthly, 0),
     annualStepUp: num(F.stepUp, 0),
     expectedReturn: num(F.ret, 12),
-    annualVolatility: num(F.vol, 15),
+    annualVolatility: roughness,
     expectedInflation: num(F.inflation, 6),
     ltcgTax: num(F.tax, 12.5),
     horizonYears: Math.max(1, Math.min(60, Math.round(num(F.years, 30)))),
     useGuardrails: checked(F.guardrails),
     bsEnabled: checked(F.hedgeToggle),
-    hedgingDragCost: num(F.premium, 1.85),
-    hedgingFloorLimit: num(F.floor, -10),
+    // PRICED, not read. dd-013: rung 5 prices the premium from the floor depth
+    // and the assumed roughness, and the panel used to read a free input that
+    // still said 1.85%. At a 28.4% assumption those are 5.73% and 1.85% - two
+    // surfaces quoting different prices for the same contract, and the ledger
+    // duly reported 1.76 rupees back per rupee paid on a floor nobody would
+    // sell at that price. The premium has one source now.
+    hedgingDragCost: pricePut(floorPct, roughness, HEDGE_TERM_MONTHS).annual,
+    hedgingFloorLimit: floorPct,
     numSimulations: PLANNER_SIMS,
     seed: PLANNER_SEED,
   };
@@ -110,6 +122,8 @@ export function syncEntryFromAdvanced(): void {
   set(ENTRY.corpus, grp(i.initialCorpus));
   set(ENTRY.monthly, grp(i.monthlyWithdrawal));
   set(ENTRY.years, String(i.horizonYears));
+  // The premium field is a readout, not a control - show what was priced.
+  set(F.premium, i.hedgingDragCost.toFixed(2));
 }
 
 export function syncAdvancedFromEntry(): void {

@@ -293,9 +293,15 @@
       });
     }
 
+    // The single "show the workings" door is gone; the expert layer is the
+    // ladder's last rung now. This opens its first door - the controls - which
+    // is what a reader clicking "change the assumptions" is asking for.
     $('ansOpenDetail')?.addEventListener('click', () => {
-      const d = document.getElementById('detailLayer') as HTMLDetailsElement | null;
-      if (d) { d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      const rung = document.getElementById('rungExpert');
+      if (!rung) return;
+      const first = rung.querySelector('details') as HTMLDetailsElement | null;
+      if (first) first.open = true;
+      rung.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
     recalc();
