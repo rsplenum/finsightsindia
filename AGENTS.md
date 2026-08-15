@@ -1,3 +1,14 @@
+## Start Here (read in this order)
+
+1. **`docs/launch-gate.md`** — what is done, what is next, what is blocked and why. Start every session here.
+2. **`src/data/design-doctrine.json`** — dd-000 … dd-011. Rahul's judgement about how things should feel, in his own words, each with a test. **Answer the relevant tests before designing anything.**
+3. **`src/data/engineering-solutions.json`** — sol-001 … sol-020. What broke and how it was fixed.
+4. **`git log`** — commit messages are written long on purpose; they carry the reasoning, not just the diff.
+
+Then: `npm run verify` (125 tests + build + output smoke test) to confirm the tree is healthy before changing anything.
+
+The working branch is `fix/learning-loop-integrity-and-calculator-correctness`. `main` is untouched.
+
 ## Development
 
 When starting the dev server, use background mode:
