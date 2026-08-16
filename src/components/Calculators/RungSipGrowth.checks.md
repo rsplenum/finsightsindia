@@ -48,6 +48,10 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-017/dont-3 | N/A | Not the entry. |
 | dd-017/dont-4 | N/A | No step-up control on this rung. |
 | dd-017/dont-5 | PASS | Every figure is a rate a year or a rupee in today's money, and each row says which. |
+| dd-019/dont-1 | PASS | Each row states its quantity in words on the same line as its figure ("You were aiming for", "So you are genuinely better off by"), with the frame set directly beneath the noun inside the same label rather than beside the number. |
+| dd-019/dont-2 | PASS | "in today's money" appears once, on the target. No second quantity on this rung wears it. |
+| dd-019/dont-3 | PASS | Every figure is named by its row label, so the frame is never the only thing identifying it. |
+| dd-019/dont-4 | N/A | No equivalence heading. The rung already warns that the three figures compound rather than subtract, which is the opposite failure and is handled. |
 
 ## The original answers, kept
 

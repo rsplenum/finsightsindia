@@ -4,7 +4,7 @@
 
 The reasoning, the trigger and Rahul's verbatim words live in the JSON and are the part worth reading twice. This page is the other half: the same lessons reduced to lines you can check a screen against without re-reading an essay. dd-016 exists because a cited principle is not an instruction.
 
-19 entries · 105 rules · 13 entries bind any calculator screen
+20 entries · 113 rules · 14 entries bind any calculator screen
 
 ---
 
@@ -41,6 +41,10 @@ Generate the skeleton with `npm run doctrine:checks <ComponentName>`.
 - `dd-017/dont-3` Don't turn the fix into a mode question at the entry; state the interpretation instead of asking for it.
 - `dd-017/dont-4` Don't let a step-up of zero mean the reader's real saving falls every year.
 - `dd-017/dont-5` Don't state a goal in today's money beside a contribution in tomorrow's without saying they differ.
+- `dd-019/dont-1` Don't split a number across a label, a stat block and a caption, as in 'THE SAME MONEY / Rs 9.43 Lakh / in today's prices'.
+- `dd-019/dont-2` Don't attach the same frame phrase to more than one quantity on a screen without naming each one.
+- `dd-019/dont-3` Don't treat a correct frame as sufficient disambiguation; T8 was applied correctly here and the screen was still ambiguous.
+- `dd-019/dont-4` Don't use a heading that reads as a claim of equivalence ('THE SAME MONEY') when it means 'this sum, re-expressed'.
 
 ---
 
@@ -378,3 +382,27 @@ Generate the skeleton with `npm run doctrine:checks <ComponentName>`.
 - `dd-018/dont-4` Don't produce 'lazy AI slop' that blindly lists facts without weaving them into a cohesive, magazine-style narrative.
 
 > **Test.** Read the draft aloud. Does it flow like a cohesive, authoritative article in a premium magazine, or does it sound like a disjointed slide presentation? Are the paragraphs properly structured with complete sentences?
+
+### dd-019 — A number is a quantity, an amount and a frame
+
+*calculators · answer layers · rungs · articles · any surface printing a figure*
+
+**Do**
+
+- `dd-019/do-1` Write quantity + amount + frame as one phrase on one line, in that order: 'Rs 9.14 lakh more, in today's prices'.
+- `dd-019/do-2` Put the noun that says what a figure counts on the same line as the figure itself.
+- `dd-019/do-3` When two figures on one screen share a frame, make the noun the thing that tells them apart.
+- `dd-019/do-4` Name the quantity even when the frame alone feels sufficient - the unit is not the quantity.
+
+**Don't**
+
+- `dd-019/dont-1` Don't split a number across a label, a stat block and a caption, as in 'THE SAME MONEY / Rs 9.43 Lakh / in today's prices'.
+- `dd-019/dont-2` Don't attach the same frame phrase to more than one quantity on a screen without naming each one.
+- `dd-019/dont-3` Don't treat a correct frame as sufficient disambiguation; T8 was applied correctly here and the screen was still ambiguous.
+- `dd-019/dont-4` Don't use a heading that reads as a claim of equivalence ('THE SAME MONEY') when it means 'this sum, re-expressed'.
+
+> **Test.** Cover the whole screen except the figure and whatever names it. Can the reader say what it counts, how much it is, and in whose money?
+
+A row header naming the quantity and a column header naming the frame BOTH COUNT: that is T8's adjacent-columns pattern, it is the shape dd-006 requires, and it passes. The first draft of this test said 'the line it sits on', which would have condemned every real/nominal table we deliberately built - the wording was the agent's, not Rahul's, and it was wrong.
+
+What fails is a figure whose noun sits in a separate block above it while its frame floats as a caption beside it - and above all, the same frame phrase doing that job for more than one quantity on the same page. That is F-12: two bold figures 500px apart, both labelled 'in today's prices', counting different things.

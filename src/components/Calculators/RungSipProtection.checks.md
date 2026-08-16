@@ -45,6 +45,10 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-017/dont-3 | N/A | Not the entry. |
 | dd-017/dont-4 | N/A | No step-up control on this rung. |
 | dd-017/dont-5 | PASS | Both columns are ending wealth in today's money, labelled on the row; the premium is a rate a year and labelled as one. |
+| dd-019/dont-1 | PASS | A three-column grid where the row block names the quantity and its frame together ("In the worst 1 in 10 futures / you finish with, in today's money") and the two figures sit on that row under permanent Unprotected and Protected headers. |
+| dd-019/dont-2 | PASS | The phrase repeats across two rows, but each row names a different and explicit quantity - the worst 1-in-10 future against the typical one. That is the naming this rule requires, not the collision it forbids. |
+| dd-019/dont-3 | PASS | What distinguishes the figures is the row's noun and the column's header, not the frame. |
+| dd-019/dont-4 | N/A | No heading here asserts that two amounts are the same. |
 
 ## Deliberate choices
 

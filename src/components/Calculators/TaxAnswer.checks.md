@@ -125,6 +125,10 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-017/dont-3 | PASS | No mode question at the entry. The page does not ask "are you salaried or self-employed?" before it will say anything — it answers on salary alone and lets the reader add heads. The regime is stated as a comparison, never asked as a choice. |
 | dd-017/dont-4 | N/A | |
 | dd-017/dont-5 | N/A | |
+| dd-019/dont-1 | PASS | The best available form: the figures live inside sentences - "X a month in income tax. That is Y for the year on income of Z" - so the quantity and the amount are one phrase and cannot be separated. The two regime figures are named by their column headings. |
+| dd-019/dont-2 | N/A | No frame phrase is used on this page at all, for the reason already recorded at dd-004/dont-2: a single assessment year, so there is no second money system to name. |
+| dd-019/dont-3 | N/A | No frames in play, so none can be mistaken for sufficient disambiguation. |
+| dd-019/dont-4 | N/A | No equivalence heading; the regimes are presented as two adjacent columns, each named. |
 
 ## Deliberate choices
 

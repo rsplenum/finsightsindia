@@ -59,6 +59,10 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-017/dont-3 | PASS | No mode question is asked. The interpretation — the premium is what the policy demands, in the rupees of each year — is stated, not put to the reader as a choice at the entry. |
 | dd-017/dont-4 | N/A | |
 | dd-017/dont-5 | PASS | The goal and the contribution are both shown in both moneys, adjacently, and the sentence says which is which rather than leaving the reader to assume they are comparable. |
+| dd-019/dont-1 | PASS | Within this component the parts are bound: the card names its quantity once ("Left over at the end") and each of the two rows beneath carries its own frame on the same line as its figure. The defect F-12 names is cross-surface and is answered in dont-2. |
+| dd-019/dont-2 | RISK | F-12. This component's "in today's prices" is one of at least four on the insurance page wearing that phrase for different quantities - the surplus here, the total payout under "THE SAME MONEY" at insurance-analyzer.astro:195, the unpaid income, and the last premium. Two bold figures 500px apart share a label while counting different things, so the reader's first thought is that one is a typo. Fix is the noun on the same line as each figure; scheduled, not yet done. |
+| dd-019/dont-3 | RISK | The same instance, and it is the reason this rule exists beyond T8. The frame here is CORRECT - T8 was applied properly - and the screen is still ambiguous, because the frame disambiguated the unit and left the quantity to be inferred from position. |
+| dd-019/dont-4 | N/A | The "THE SAME MONEY" heading itself lives in insurance-analyzer.astro, which carries no checks file; tracked under F-12. |
 
 ## Deliberate choices
 

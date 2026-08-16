@@ -519,5 +519,34 @@
       "Don't produce 'lazy AI slop' that blindly lists facts without weaving them into a cohesive, magazine-style narrative."
     ],
     "test": "Read the draft aloud. Does it flow like a cohesive, authoritative article in a premium magazine, or does it sound like a disjointed slide presentation? Are the paragraphs properly structured with complete sentences?"
+  },
+  {
+    "id": "dd-019",
+    "date": "2026-08-16",
+    "title": "A number is a quantity, an amount and a frame",
+    "trigger": "Rahul's ruling on D-2, the open decision raised by the 16 Aug interface audit. The audit proposed four visual rules and could not write any of them as doctrine, because every entry in this file carries Rahul's own words and inventing a quote would corrupt the one store that depends on being real. He ruled on all four in one line.",
+    "verbatim": "I agree 100% with your recommendation \"Take the fourth one at minimum. It generalises the T8 frame work you already did, it is the direct cause of two separate findings, and it is the kind of rule that prevents defects rather than describing them. The other three can live as lint rules without ceremony.\"",
+    "provenance": "The sentence Rahul is agreeing to was drafted by the audit, not spoken by him - his verbatim contribution is the ruling itself. Recorded this way on purpose. The alternative was to paraphrase his agreement into first person and present it as his voice, which is the exact failure mode this field exists to prevent. When Rahul ratifies a proposal rather than originating it, the entry says so.",
+    "spirit": "T8 was right and incomplete, and the incompleteness is the lesson. T8 established that every projected figure carries its money's frame, and that discipline was applied correctly - to the UNIT. It said nothing about the QUANTITY, so the frame became a label attached to whatever figure was nearby. On the insurance page the phrase 'in today's prices' ended up on at least four different quantities. Two bold figures 500px apart, Rs 9.14 lakh and Rs 9.43 lakh, shared that label while counting entirely different things - the surplus and the total payout - and the reader's first and most reasonable thought is that one is a typo of the other.\n\nA figure is only traceable when the reader can say three things about it without looking anywhere else: what it counts, how much it is, and whose money it is in. All three have to arrive together, as one phrase on one line. Split across a heading, a stat block and a caption, they stop being one number and become three fragments the reader is asked to reassemble - and the reader will not do that work, because CLAUDE.md's whole position is that the difficulty of packaging is ours to absorb and never theirs.\n\n'THE SAME MONEY' as a heading is the sharpest instance: it reads as a claim that two amounts are equal, when what it means is 'this sum, re-expressed'.",
+    "applies_to": [
+      "calculators",
+      "answer layers",
+      "rungs",
+      "articles",
+      "any surface printing a figure"
+    ],
+    "do": [
+      "Write quantity + amount + frame as one phrase on one line, in that order: 'Rs 9.14 lakh more, in today's prices'.",
+      "Put the noun that says what a figure counts on the same line as the figure itself.",
+      "When two figures on one screen share a frame, make the noun the thing that tells them apart.",
+      "Name the quantity even when the frame alone feels sufficient - the unit is not the quantity."
+    ],
+    "dont": [
+      "Don't split a number across a label, a stat block and a caption, as in 'THE SAME MONEY / Rs 9.43 Lakh / in today's prices'.",
+      "Don't attach the same frame phrase to more than one quantity on a screen without naming each one.",
+      "Don't treat a correct frame as sufficient disambiguation; T8 was applied correctly here and the screen was still ambiguous.",
+      "Don't use a heading that reads as a claim of equivalence ('THE SAME MONEY') when it means 'this sum, re-expressed'."
+    ],
+    "test": "Cover the whole screen except the figure and whatever names it. Can the reader say what it counts, how much it is, and in whose money?\n\nA row header naming the quantity and a column header naming the frame BOTH COUNT: that is T8's adjacent-columns pattern, it is the shape dd-006 requires, and it passes. The first draft of this test said 'the line it sits on', which would have condemned every real/nominal table we deliberately built - the wording was the agent's, not Rahul's, and it was wrong.\n\nWhat fails is a figure whose noun sits in a separate block above it while its frame floats as a caption beside it - and above all, the same frame phrase doing that job for more than one quantity on the same page. That is F-12: two bold figures 500px apart, both labelled 'in today's prices', counting different things."
   }
 ]

@@ -45,6 +45,10 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-017/dont-3 | N/A | Not the entry. |
 | dd-017/dont-4 | N/A | No step-up control on this rung. |
 | dd-017/dont-5 | PASS | Every rupee figure is in today's money and the column head says so; the setback is in years of the reader's own saving. |
+| dd-019/dont-1 | PASS | The two headline figures are timespans, not money, and each sits on a row naming its case in words ("If it comes at the very start"). The money appears beneath inside a full sentence - "you finish with X instead of Y" - where quantity and amount cannot come apart. |
+| dd-019/dont-2 | N/A | No frame phrase is used more than once here; the rung prints no repeated "in today's money" label. |
+| dd-019/dont-3 | RISK | The trio is incomplete rather than split. Both money figures in the end-labels are real values (endReal, smoothEndReal) but carry no frame word at all, so the reader is not told whose money they are in. Small, and it belongs to the same repair pass as the insurance figures. |
+| dd-019/dont-4 | N/A | No equivalence heading on this rung. |
 
 ## Deliberate choices
 

@@ -42,6 +42,10 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-017/dont-3 | N/A | Not the entry. |
 | dd-017/dont-4 | PASS | At a zero real step the rung now states that the instalment rises with prices and what it costs never changes — the opposite of the old copy, which assumed zero meant decay. |
 | dd-017/dont-5 | PASS | The goal does not appear on this rung; the two figures that do are both labelled with their money. |
+| dd-019/dont-1 | RISK | Minor but real. The row reads "Which by the last year is really worth / the same amount, in today's money" - and "Which" is a pronoun pointing at the row above. Cover the screen except this row and the reader has the amount and the frame but must look up one row to learn what is being counted. The prose insight below does it correctly, naming the instalment inside the sentence. |
+| dd-019/dont-2 | PASS | The phrase attaches only to the instalment's real value, and the insight sentence names that quantity explicitly every time it prints it. |
+| dd-019/dont-3 | PASS | The instalment is named in words wherever its real value is printed in prose; only the label row leans on the pronoun, which is recorded above. |
+| dd-019/dont-4 | PASS | This is the honest form of the shape dont-4 forbids. "the same amount, in today's money" states plainly that the figure is the previous row re-expressed, in lowercase prose adjacent to its referent - not an all-caps heading claiming two different quantities are equal. |
 
 ## Deliberate choices
 

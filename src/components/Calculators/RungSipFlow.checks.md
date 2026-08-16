@@ -42,6 +42,10 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-017/dont-3 | N/A | Not the entry. The mode is stated at the top of the page and chosen in rung 1, never asked here. |
 | dd-017/dont-4 | PASS | The "you put in" figures now describe a plan that holds its purchasing power, so the real column no longer flatters a contribution that was quietly shrinking. |
 | dd-017/dont-5 | PASS | Both moneys are adjacent columns with permanent headings, so no figure sits silently in a different frame from its neighbour. |
+| dd-019/dont-1 | PASS | The ledger is a table. Every row header names its quantity on the same row as the figures ("You put in", "The market added", "The fund takes", "Tax takes, when you sell"), and the frame is a permanent column header - "What it is worth / in today's prices" against "What your statement says". Nothing floats as a caption. |
+| dd-019/dont-2 | PASS | One frame phrase governs one column, and every quantity beneath it is named by its own row header. The phrase is never reused for a second, unnamed quantity. |
+| dd-019/dont-3 | PASS | The quantity is carried by the row and never inferred from the frame; the column header only says which money the column is counted in. |
+| dd-019/dont-4 | N/A | No heading here claims equivalence - the two columns are labelled as the two different things they are. |
 
 ## The original answers, kept
 
