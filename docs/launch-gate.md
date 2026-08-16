@@ -74,6 +74,7 @@ the commit messages — which is where it belongs once it is no longer *next*.
 - [ ] **Debt 7.1% and gold 8.5% are still typed in** — same fault as sol-028, no series in the repo to derive them from. The page says so in plain words rather than hiding it
 - [x] ~~**The floor depth is three different numbers**~~ **Two now.** Both engines take it as a parameter and both pages ship −10%; only the copy's "−10% or −15%" is still loose
 - [ ] **CLAUDE.md's dev-server instruction is wrong for this harness** — says `astro dev --background`; must use the preview tools. sol-025
+- [x] ~~**Does `gate:sync`'s "republish the artifact" line matter before launch?**~~ **Answered 16 Aug: no — `docs/launch-gate.html` does not exist.** It is a leftover from when the gate *was* hand-patched HTML, before dd-011/dont-2 turned it into a list. The line has been telling every session to republish nothing. Removed
 - [x] ~~**Does the SIP engine get the same regime presets?**~~ **Answered 15 Aug: yes.** T3 inherits the shared engine, `plannerInputs`, the regime presets and the rung pattern
 
 ## Blocked / deferred — with the reason
