@@ -8,6 +8,18 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 
 ---
 
+## Done · 16 Aug (later session)
+
+**T7 closed 5/5** — the jargon ratchet's baseline is 8 → 2, and both survivors
+are the content workstream's. **T8 closed 5/5** — the planner's two 30-year
+tables and the FAQ's purchasing-power card now carry their money's frame.
+**sol-044 · sol-045 · sol-046** — three correctness defects on the two engine
+pages, all live on default inputs, none caught by 376 green tests. Order of
+discovery matters here: sol-044 was found by reading the live page, sol-045 by
+verifying sol-044's fix, and sol-046 by pointing sol-044's new detector at a
+second page nobody had complained about. The worst of the three was the last:
+`19.20% a year, after inflation` where the truth is `4.09%`.
+
 ## Done today · 16 Aug
 
 **dd-016** the doctrine as do's and don'ts, generated + gated · **dd-017** the
@@ -41,7 +53,7 @@ the commit messages — which is where it belongs once it is no longer *next*.
 - [x] ~~**T2 last item** — the door is gone; the expert panel is rung 6, three doors named by question~~
 - [x] ~~**T3 rungs 4 and 5** — order-of-returns and what protection costs~~ **Both shipped 16 Aug.** The mirror holds: 2 months at the start, 4.8 years at the end
 - [ ] **sol-033 second instance: the planner still assumes a free fund** — `swpWorker` has no expense ratio. Needs the same required-parameter treatment, a control, a row on its money-flow rung, and three test bases updated. Deferred rather than rushed at the end of a long session; until it lands the two pages assume different worlds
-- [ ] **A typed boundary between the compute host and the rungs** — sol-035's real cause. Rungs receive `any` across a CustomEvent, so a renamed field fails silently at runtime. Every rung is exposed to this, not just the one that broke
+- [ ] **A typed boundary between the compute host and the rungs — NOW THE HIGHEST-VALUE ITEM ON THIS LIST.** sol-035's real cause; sol-044 and sol-046 are its second and third instances, both found 16 Aug, both live on default inputs. Rungs receive `any` across a CustomEvent, so a renamed field is `undefined` at runtime and the build stays green. `inputContract.test.ts` now detects the class on both engine pages, but a detector is a smoke alarm, not a wall. `astro check` would catch it at build time and needs `npm i -D @astrojs/check typescript` — deliberately NOT installed in this session, because it would surface an unknown backlog of pre-existing type errors and that is a session's work, not a footnote to another one. **The cost of leaving it: sol-046 printed a confident 19.20% where the truth was 4.09%, on the one figure that says whether the plan was worth it, and no human found it**
 - [ ] **Rung 2 should own the contribution-mode chooser** — it is the rung about inflation eating money, so it is the right home. Today the entry's "change how your contribution grows" link points at the expert rung, where the control actually is; a compact chooser in rung 1 is the proper end state
 - [ ] **The same grid defect is latent in rung 6** — `protectionCurve` steps roughness by 1 from 8, so a shipped 28.4% assumption uses the 28% point. Hidden today only because the rung prints roughness to zero decimals. Anchor it the same way rung 4 now is
 - [x] ~~**T5 — insurance analyser. THE NEXT SESSION.** Starts with extracting `runReplicationAnalysis()`~~ **Extracted 16 Aug, sol-039.** The rest of T5 is unblocked and cheap; four defects it uncovered are listed below
@@ -73,8 +85,9 @@ the commit messages — which is where it belongs once it is no longer *next*.
 - [ ] **13 articles fail the R2 screen, 26 fail R7** → sol-021, worklist committed. Rahul's publishing gate 2.
 - [ ] **Property-based testing (`fast-check`)** → sol-022, the real answer to "correct across all inputs". Needs boundary behaviour defined first.
 - [ ] **19 loose python scripts at repo root** → never triaged; some may be live tooling.
+- [ ] **Two banned terms remain in article copy** — "decision intelligence" on `/tax-code/the-price-you-didnt-receive` and "paradigm shift" on `/tax-code/the-section-270a-200-penalty-trap`. Both are the content workstream's files and one is mid-rewrite, so they were left alone rather than edited across a workstream boundary. They are the whole of the jargon baseline now
 - [ ] **12 checks files predate dd-016** — they cite entries but answer no rules by id. Ratcheted so the count can only fall; retrofit them as each component is next touched, not in one sweep.
-- [ ] **T4 goal engine — deferred 16 Aug; ITS CONDITION IS NOW MET.** Rahul's call was T5 first, because the spike ("can SIP and SWP share one core?") is worth more once a third page has been brought onto the same pattern. T5 did that, and T6 has now done it a fourth time from a cold engine. Nothing blocks the spike any more — but restarting it is still Rahul's call, not an agent's, so it stays here rather than moving to Next
+- [ ] **T4 goal engine — condition met, and Rahul has now ruled on the order: T7/T8 first, then the spike.** The deferral was never about a blocker; the spike ("can SIP and SWP share one core?") is worth more with more pages on the pattern, and T5 then T6 supplied the third and fourth. Asked again 16 Aug and the answer was to close the two tracks that are each one item from done before opening an architectural question. Unblocked, not started
 - [ ] **A PWA service worker can serve a stale page** — `@vite-pwa/astro` kept a fixed rung out of Rahul's browser through a normal reload on 16 Aug. Harmless while nothing is live; a launch blocker once it is, because a reader can be pinned to an old build
 - [ ] **Cross-surface agreement is checked pair by pair, by hand** — sol-038's tests are bespoke, one pair at a time, which is the same weakness the duplicated formulas had. A generalised check would fail the suite when any two surfaces disagree about one quantity
 - [ ] **Proposed rung: "what if life happens?"** — a lump-sum shock (marriage, an operation no insurance covers). Liquidity risk, not market risk. Rahul's idea; not yet scoped.
@@ -151,23 +164,23 @@ Scope, settled 15 Aug: the SIP page inherits T2 whole — shared engine, `planne
 - [x] **Loss set-off and carry-forward** — the three rules kept apart: intra-head (s.70), inter-head (s.71), carry-forward (s.72/74/71B). A capital loss can never touch salary and the engine says so explicitly; a business loss can reach rent, interest *and* capital gains but never salary; brought-forward losses meet their own kind only. Set-off order is dearest-first, and LTCL goes to s.112 before s.112A so the ₹1.25L exemption isn't wasted. Conservation asserted: available = used + carried, on every loss
 - [x] **Progressive disclosure — salaried users never see business fields.** Four chips, closed by default, native `<details>`. **Design settled first, in `TaxAnswer.checks.md`** — entry is one field (gross salary); the heads are additive chips, each ≤2 fields, house property and capital gains split rather than crammed; a chip is not a mode because it adds data rather than hiding half a difference; the regime stays two adjacent columns and never a switch; presumptive is shown adjacently because there the difference *is* the lesson. Answer headlines the monthly bite (dd-010) and the break-even deduction total (dd-008)
 
-## T7 — Dejargonise · 3/5
+## T7 — Dejargonise · 5/5 ✅
 
 - [x] Audit the live pages
 - [x] Build-time ratchet: debt cannot grow, must shrink `175ab75`
 - [x] Define "reader-facing" — meta pages out, FAQ in `4b0454f`
 - [x] sip-engine cleared — "stochastic" is off the baseline; the ratchet tightened
-- [ ] Clear the homepage's six occurrences *(with T1)*
-- [ ] Clear the remaining seven across swp-planner, about, faq, terms
+- [x] ~~Clear the homepage's six occurrences~~ **This line was stale: the homepage is clean.** A fresh scan of `dist/` finds 8 occurrences in total and none on `/`. They went with T1's rewrite and nobody moved the line
+- [x] ~~Clear the six on swp-planner (3), about, faq, terms~~ **Done 16 Aug.** The ratchet's baseline is down from 8 to 2, and both survivors are the content workstream's article copy, listed under blocked/deferred. The planner's "STOCHASTIC REALITY" rung is now "WHAT A BUMPY MARKET COSTS" and explains the −20%/+25% asymmetry instead of naming Brownian motion; a dead `href="#"` link went with it
 
-## T8 — Real vs nominal · 4/5
+## T8 — Real vs nominal · 5/5 ✅
 
 - [x] dd-004 recorded: never use a concept the reader has not been given
 - [x] Teach it inside the two-rates rung, in plain words `b128478`
 - [x] Side-by-side columns, not a toggle (dd-006) `1c26a7b`
 - [x] Applied to SIP — both columns in the flow rung, and both of them close (sol-031)
 - [x] **Applied to insurance** — total paid out, the surplus and the shortfall each carry both moneys, adjacently and permanently. sol-040
-- [ ] Label every currency figure site-wide
+- [x] ~~Label every **forward-projected** currency figure on the pages we own~~ **Done 16 Aug.** Scope settled by Rahul: read literally, "site-wide" is 73 pages carrying ₹, nearly all the content workstream's articles. dd-004's own scope line is *any figure projected forward*, and a statutory figure for this assessment year is today's money by construction — the same reasoning already recorded as `dd-004/dont-2 PASS` in `TaxAnswer.checks.md`. What was actually unlabelled: the planner's two 30-year tables. The schedule's money follows the deflator toggle, so its frame is a live value in a fixed slot (dd-008/do-1) rather than a fixed caption; the hedging ledger is engine-fed and always future rupees, so its frame is fixed. The SIP ledger already carried an accurate frame and was checked rather than assumed. The FAQ's Q01 was reconciling ₹5 Cr against ₹1.16 Cr using the words *nominal* and *Present Value* — `dd-004/dont-2` — and never stated the 25-year horizon that produces ₹1.16 Cr, so the figure was not traceable from the screen (`dd-009/do-1`). Both fixed
 
 ## T9 — Link the writing to the maths · 0/5
 

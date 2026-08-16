@@ -1,22 +1,8 @@
 {
-  "brownian motion": [
-    "swp-planner"
-  ],
   "decision intelligence": [
     "tax-code/the-price-you-didnt-receive"
   ],
   "paradigm shift": [
     "tax-code/the-section-270a-200-penalty-trap"
-  ],
-  "sequence-of-returns": [
-    "about"
-  ],
-  "stochastic": [
-    "faq",
-    "swp-planner",
-    "terms"
-  ],
-  "variance drain": [
-    "swp-planner"
   ]
 }

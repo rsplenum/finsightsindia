@@ -1,4 +1,5 @@
 import { formatShortRupee } from './formatters';
+import type { PlannerInputs } from './plannerInputs';
 
 export async function createLineChart(canvasId: string, data: any, activeViewMode: string = 'percentiles', chartInstance: any = null): Promise<any> {
 	const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null;
@@ -185,7 +186,10 @@ export async function createLineChart(canvasId: string, data: any, activeViewMod
 	});
 }
 
-export async function createMicroCashflowChart(canvasId: string, data: any, inputs: any, chartInstance: any = null): Promise<any> {
+// sol-044: `inputs` was `any` here, which is what let `inputs.initialMonthly` -
+// a field readPlannerInputs has never returned - read as undefined in silence.
+// The planner is the only caller, so the boundary can simply be typed.
+export async function createMicroCashflowChart(canvasId: string, data: any, inputs: PlannerInputs, chartInstance: any = null): Promise<any> {
 	const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null;
 	if (!canvas) return chartInstance;
 
@@ -198,7 +202,7 @@ export async function createMicroCashflowChart(canvasId: string, data: any, inpu
 
 	const { Chart } = await import('chart.js/auto');
 
-	const initialMonthly = inputs.initialMonthly;
+	const initialMonthly = inputs.monthlyWithdrawal;
 	const expectedInflation = inputs.expectedInflation;
 	const annualStepUp = inputs.annualStepUp;
 	const horizonYears = inputs.horizonYears;

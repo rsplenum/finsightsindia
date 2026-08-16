@@ -519,6 +519,10 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 	} from '../utils/formatters';
 
 	import { calculateXIRR } from '../utils/xirr';
+	// sol-046: the escalation is not re-derived here any more. `instalmentInYear`
+	// is the same function the engine is parameterised from, so the instalment
+	// this page discounts and the instalment the simulation invests cannot drift.
+	import { instalmentInYear } from '../utils/sipAdvice';
 	import html2pdf from 'html2pdf.js';
 	import { debounce } from '../utils/debounce';
 
@@ -691,10 +695,15 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 		// XIRR of the money in against the money out.
 		const cfs: { amount: number, date: Date }[] = [];
 		const d = new Date();
-		let curSip = inputs.monthlySip;
 		if (inputs.seedCapital > 0) cfs.push({ amount: -inputs.seedCapital, date: new Date(d) });
 		for (let yr = 1; yr <= years; yr++) {
-			if (yr > 1) curSip *= (1 + inputs.annualStepUp / 100);
+			// sol-046: this read `inputs.annualStepUp`, which readSipInputs has never
+			// returned - the field is `realStepUp`. Every instalment from year 2 on
+			// was therefore NaN, and calculateXIRR absorbed 348 NaN flows out of 361
+			// and returned a confident 19.20% "after inflation" instead of ~5.7%.
+			// It also started from `monthlySip`, which is not the instalment at all
+			// in salary mode. `instalmentInYear` answers both.
+			const curSip = instalmentInYear(inputs, yr);
 			for (let m = 1; m <= 12; m++) {
 				d.setMonth(d.getMonth() + 1);
 				// Each instalment discounted from the month it is actually paid,
@@ -776,9 +785,11 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 		const protectedReal: number[] = sim.p50Real;
 		let html = '';
 		let cumPV = 0;
-		let sip = inputs.monthlySip;
 		for (let yr = 1; yr <= years; yr++) {
-			if (yr > 1) sip = sip * (1 + inputs.annualStepUp / 100);
+			// sol-046: the same wrong field as the yield above, so the "Put In So
+			// Far" column was NaN from year 2 in every row of this ledger whenever
+			// protection was switched on.
+			const sip = instalmentInYear(inputs, yr);
 			for (let m = (yr - 1) * 12 + 1; m <= yr * 12; m++) {
 				cumPV += sip / Math.pow(1 + inputs.expectedInflation / 100, m / 12);
 			}
