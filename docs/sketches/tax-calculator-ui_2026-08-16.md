@@ -1,10 +1,12 @@
 # Tax calculator — UI design · Rahul's sketches, 16 Aug 2026
 
 Two sketches, handed over on 16 Aug. This is the transcription, written before
-anything is built from it, per `README.md`. **The images themselves are not in
-the repo** — they were pasted into a conversation, and a pasted image cannot be
-written to disk from there. Drop the two JPGs into this folder when convenient;
-this file is the reading, not a replacement for the source.
+anything is built from it, per `README.md`.
+
+**Source: [`tax calculator idea UI design.jpeg`](tax%20calculator%20idea%20UI%20design.jpeg)** — sheet 2, placed in this
+folder by Rahul on 16 Aug and checked against this transcription. **Sheet 1 is
+still only a reading**; its photo has not been dropped here, so where the two
+sheets differ, sheet 2 is the one that can be verified.
 
 Anything marked **[?]** is handwriting I could not resolve with confidence and
 should be confirmed before it drives code.
@@ -40,9 +42,12 @@ Age      = ______
      — only those that can be adjusted [?] in dropdown-1
 ```
 
-`Self-employed` is new on this sheet; sheet 1 listed Business / Professional /
-Salaried / Services. **Confirm whether "Services" survives as a fifth category
-or was replaced by "Self-employed".**
+**Checked against the photo, and it settles the category question.** Sheet 2
+reads `Business / Professional / Salaried / Self-employed / etc.` — and the
+`etc.` is written on the sheet, so **the list is deliberately open, not a closed
+set of four**. Sheet 1's "Services" is superseded rather than dropped: build the
+categories as data, not as four hard-coded branches, because Rahul has said in
+the drawing itself that more are coming.
 
 Block (2) is not a third input block. It is an annotation on Dropdown 1, naming
 what that dropdown contains — capital gains, futures and options, and the rest
@@ -104,8 +109,13 @@ that changed, and it changed deliberately.
 
 ## Open, before this is built
 
-1. **Does "Services" survive, or did "Self-employed" replace it?** The two
-   sheets disagree.
+1. ~~Does "Services" survive?~~ **Settled by the photo:** the sheet ends the
+   list with `etc.`, so the categories are open-ended. Model them as data.
+   Still unresolved on the same sheet: one word in block (2)'s note —
+   *"only those that can be **[?]** in dropdown-1"*. Higher resolution did not
+   crack it. The sense is clear enough (block 2 names what Dropdown 1 contains)
+   that it does not block the build, but the exact verb is worth a glance from
+   Rahul when he next passes this file.
 2. **Name and Age — what are they for?** Age has a real computational job
    (60/80 thresholds under the old regime). Name has none, so presumably it is
    for the report or the PDF. Worth confirming it is not meant to do more.
