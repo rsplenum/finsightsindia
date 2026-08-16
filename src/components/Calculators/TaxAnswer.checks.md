@@ -132,6 +132,9 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-020/dont-1 | PASS | Nothing is hidden by guesswork today. All four heads are present for every reader as chips that are closed rather than absent, so an unusual-but-lawful case is always reachable. This is the entry that Rahul's revamp will replace with a real category filter, and the rule now exists BEFORE that is built rather than after - F&O stays visible to a salaried filer, 44AD and 44ADA do not. |
 | dd-020/dont-2 | N/A | The page asks no qualifying question yet - entry is one field, gross salary. The Category selector that would make this rule bite is in the sketch, not in the code. |
 | dd-020/dont-3 | N/A | No category filter exists here yet, so nothing can silently move a computed figure. This is the row to re-answer when the revamp lands. |
+| dd-021/dont-1 | PASS | It compares two regimes and prints whichever wins. sol-043 was exactly this failure caught and fixed - the page had been rendering the LOSING regime as the recommended one - and one verdictFor() now drives ring, weight, colour, both headers and the tag. Both outcomes are reachable and neither is flattered. |
+| dd-021/dont-2 | PASS | Entry is one field, gross salary. Every further input is a head the reader opts into, and each one moves the bill; nothing is asked that cannot change the answer. |
+| dd-021/dont-3 | PASS | It leads with the monthly bite and the break-even deduction total, so the conclusion is stated rather than left to be inferred from two columns of tax. |
 
 ## Deliberate choices
 

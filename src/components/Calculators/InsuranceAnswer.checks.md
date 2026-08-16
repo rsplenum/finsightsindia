@@ -66,6 +66,9 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-020/dont-1 | N/A | The inputs are properties of one policy - premium, term, sum assured - not a menu filtered by who the reader is. There is no eligibility list to prune. |
 | dd-020/dont-2 | N/A | No category or status question is asked, so none is being asked without buying a simplification. |
 | dd-020/dont-3 | N/A | No category filter exists on this surface, so none can change the surplus or the year the money runs out. |
+| dd-021/dont-1 | RISK | This is the entry the rule was written against. The page was built to argue the policy is beatable, and the thesis has already reached the defaults: the safe DIY route is charged NO TAX AT ALL while the growth route pays 12.5% LTCG, which flatters the very route the page uses to win. Rahul's brief is the correction - the maths reveals, it does not argue. Open in the gate; the overhaul is queued behind the token sweep. |
+| dd-021/dont-2 | RISK | The input set is not yet the minimum the brief specifies, and it is missing one the verdict genuinely needs: accident or health cover. The brief's list is annual premium, number of outgoing payments, when income starts and whether it grows, life cover, accident/health cover. Replicating a bundle without pricing its accident leg understates the DIY cost and so tilts the verdict. |
+| dd-021/dont-3 | PASS | This part already holds. sol-040 gave the page one verdictFor() driving the heading, the figure, the colour, the badge and the sentence, so the screen states who wins rather than leaving the reader to subtract two numbers and decide. |
 
 ## Deliberate choices
 

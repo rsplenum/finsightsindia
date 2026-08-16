@@ -52,6 +52,9 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-020/dont-1 | N/A | This rung presents computed results and carries no option list that any category filters, so there is nothing here that eligibility could remove. |
 | dd-020/dont-2 | N/A | The rung asks no qualifying question of its own; the SIP page's inputs live in the entry and the expert rung. |
 | dd-020/dont-3 | N/A | No category filter reaches this rung, so none can move a figure it prints. |
+| dd-021/dont-1 | PASS | It reports that the same crash costs 2 months at the start and 4.8 years at the end - an unflattering fact about the plan, printed rather than softened. |
+| dd-021/dont-2 | PASS | The control is how long the bad run lasts, and it moves both the best and worst timing outcomes. |
+| dd-021/dont-3 | PASS | Each row states what the reader finishes with under that timing, in a sentence, instead of leaving the two figures to be differenced. |
 
 ## Deliberate choices
 

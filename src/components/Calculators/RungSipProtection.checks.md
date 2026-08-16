@@ -52,6 +52,9 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-020/dont-1 | N/A | This rung presents computed results and carries no option list that any category filters, so there is nothing here that eligibility could remove. |
 | dd-020/dont-2 | N/A | The rung asks no qualifying question of its own; the SIP page's inputs live in the entry and the expert rung. |
 | dd-020/dont-3 | N/A | No category filter reaches this rung, so none can move a figure it prints. |
+| dd-021/dont-1 | PASS | The strongest evidence on the site that the design is not arguing a thesis: this rung reports that our own hedging costs more than it returns at the shipped roughness, and says so plainly instead of burying it. A tool willing to print that is willing to print a good policy. |
+| dd-021/dont-2 | PASS | The floor and the roughness are the inputs, and both move the protected and unprotected outcomes. |
+| dd-021/dont-3 | PASS | Worst 1-in-10 and typical futures are set side by side with the verdict stated, never as a difference of averages (dd-012). |
 
 ## Deliberate choices
 

@@ -4,7 +4,7 @@
 
 The reasoning, the trigger and Rahul's verbatim words live in the JSON and are the part worth reading twice. This page is the other half: the same lessons reduced to lines you can check a screen against without re-reading an essay. dd-016 exists because a cited principle is not an instruction.
 
-21 entries · 121 rules · 15 entries bind any calculator screen
+22 entries · 129 rules · 16 entries bind any calculator screen
 
 ---
 
@@ -48,6 +48,9 @@ Generate the skeleton with `npm run doctrine:checks <ComponentName>`.
 - `dd-020/dont-1` Don't hide an option because it is unlikely - unlikely is not inapplicable, and the reader it fits never learns it was there.
 - `dd-020/dont-2` Don't ask a question that does not go on to remove something - a question that buys no simplification is pure cost.
 - `dd-020/dont-3` Don't let a category filter change a computed answer; it removes what cannot apply, never what is inconvenient to support.
+- `dd-021/dont-1` Don't build a tool that argues a thesis; it reports which side the maths favours, including when that is the product we doubt.
+- `dd-021/dont-2` Don't ask a question the comparison does not need - every input must be capable of changing the verdict.
+- `dd-021/dont-3` Don't hand the reader the figures and leave them to reach the conclusion; the screen says who wins.
 
 ---
 
@@ -429,3 +432,23 @@ What fails is a figure whose noun sits in a separate block above it while its fr
 - `dd-020/dont-3` Don't let a category filter change a computed answer; it removes what cannot apply, never what is inconvenient to support.
 
 > **Test.** Take any option the category has removed and ask: is this removed because the statute forbids it, or because we guessed the reader probably will not need it? Only the first survives. If a salaried reader with F&O income, or a professional with capital gains, would be unable to enter something true about their year, the filter is wrong.
+
+### dd-021 — The maths reveals; it does not argue
+
+*calculators · insurance analyser · comparison tools · whole product*
+
+**Do**
+
+- `dd-021/do-1` Collapse a bundled cashflow into one comparable number - a rate of return - so it can be set against anything else.
+- `dd-021/do-2` Price the unbundled replica honestly: same life cover, same accident or health cover, the rest invested at similar risk.
+- `dd-021/do-3` State the verdict outright - the policy wins, or the DIY route wins - and be as willing to print one as the other.
+- `dd-021/do-4` Follow the verdict with how to actually do the DIY route; a verdict the reader cannot act on is half delivered.
+- `dd-021/do-5` Charge both routes the same taxes and costs, because whichever route is flattered is the one the design is arguing for.
+
+**Don't**
+
+- `dd-021/dont-1` Don't build a tool that argues a thesis; it reports which side the maths favours, including when that is the product we doubt.
+- `dd-021/dont-2` Don't ask a question the comparison does not need - every input must be capable of changing the verdict.
+- `dd-021/dont-3` Don't hand the reader the figures and leave them to reach the conclusion; the screen says who wins.
+
+> **Test.** Feed it a genuinely good policy. Does the screen say so, plainly and without hedging? If the design can only produce one verdict, or produces the other one grudgingly, it is advocacy. Then check the costs: if either route is charged a tax or a fee the other is spared, the thesis has already been built into the defaults.

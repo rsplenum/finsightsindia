@@ -334,8 +334,13 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 									<div id="wowInitialCorpus" class="text-2xl font-bold stat-value text-navy-900 dark:text-navy-100 mt-0.5 font-sans">--</div>
 								</div>
 								<div>
-									<div class="text-xs font-medium text-gold-500 dark:text-gold-400">You Received (After Taxes)</div>
-									<div id="wowNetPayout" class="text-3xl sm:text-4xl font-extrabold stat-value text-gold-500 dark:text-gold-400 mt-0.5 font-sans tracking-tight">--</div>
+									<!-- F-02, Rahul's option F. The figure is navy and the BRAND gold
+									     carries it as the rule underneath, rather than being asked to
+									     be readable text on a light card - a job no gold bright
+									     enough to read as gold can do. Dark theme keeps gold-400,
+									     where it clears AA comfortably and looks like itself. -->
+									<div class="text-xs font-medium text-gold-700 dark:text-gold-400">You Received (After Taxes)</div>
+									<div id="wowNetPayout" class="inline-block text-3xl sm:text-4xl font-extrabold stat-value text-navy-900 dark:text-gold-400 mt-0.5 font-sans tracking-tight border-b-[3px] border-gold-500 dark:border-transparent pb-0.5">--</div>
 								</div>
 							</div>
 
@@ -352,8 +357,8 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 										</div>
 										<div id="tier2Taxes" class="text-sm sm:text-base font-bold text-rose-600 dark:text-rose-400">--</div>
 									</div>
-									<div><div class="stat-label text-gold-500 dark:text-gold-400 uppercase tracking-wider">Net In-Hand</div><div id="tier2Net" class="text-sm sm:text-base font-bold text-gold-500 dark:text-gold-400">--</div></div>
-									<div><div class="stat-label text-gold-500 dark:text-gold-400 uppercase tracking-wider">Bal Remaining</div><div id="tier2BalanceRemaining" class="text-sm sm:text-base font-bold text-gold-500 dark:text-gold-400">--</div></div>
+									<div><div class="stat-label text-gold-700 dark:text-gold-400 uppercase tracking-wider">Net In-Hand</div><div id="tier2Net" class="text-sm sm:text-base font-bold text-gold-700 dark:text-gold-400">--</div></div>
+									<div><div class="stat-label text-gold-700 dark:text-gold-400 uppercase tracking-wider">Bal Remaining</div><div id="tier2BalanceRemaining" class="text-sm sm:text-base font-bold text-gold-700 dark:text-gold-400">--</div></div>
 									
 									<div id="taxFormulaPanel" class="hidden col-span-2 md:col-span-5 mt-1 p-4 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 rounded-lg text-xs font-sans text-navy-700 dark:text-navy-300">
 										<div class="font-bold text-navy-900 dark:text-navy-100 mb-2">How are taxes calculated?</div>
@@ -890,7 +895,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 				const netExtracted = Math.max(0, grossExtracted - annualTax);
 				totalNetAnnual += netExtracted;
 				totalTaxes += annualTax;
-				html += `<tr class="${rowBgClass} hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors border-b border-rose-200 dark:border-rose-900/50"><td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-semibold text-rose-700 dark:text-rose-300">Year ${yr} ⚠️</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-500 dark:text-gold-400">${tableFormatter.format(Math.round(currentMonthly))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-amber-600 dark:amber-400">${tableFormatter.format(Math.round(netExtracted))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-600 dark:text-rose-400">${tableFormatter.format(Math.round(annualTax))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-400 dark:text-navy-500">-</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-600 dark:text-rose-400">₹0</td></tr>`;
+				html += `<tr class="${rowBgClass} hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors border-b border-rose-200 dark:border-rose-900/50"><td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-semibold text-rose-700 dark:text-rose-300">Year ${yr} ⚠️</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-700 dark:text-gold-400">${tableFormatter.format(Math.round(currentMonthly))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-amber-600 dark:amber-400">${tableFormatter.format(Math.round(netExtracted))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-600 dark:text-rose-400">${tableFormatter.format(Math.round(annualTax))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-400 dark:text-navy-500">-</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-600 dark:text-rose-400">₹0</td></tr>`;
 			} else {
 				let grossAnnual = currentMonthly * 12;
 				if (medianWithdrawalsArray && medianWithdrawalsArray[yr] !== undefined) grossAnnual = medianWithdrawalsArray[yr];
@@ -917,8 +922,8 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 				
 				html += `<tr class="${rowBgClass} ${extraClasses} hover:bg-navy-100 dark:hover:bg-navy-900 transition-colors border-b border-navy-100 dark:border-white/10">
 					<td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-semibold text-navy-800 dark:text-navy-200">${yearLabel}</td>
-					<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-500 dark:text-gold-400">${tableFormatter.format(Math.round(netMonthly))}</td>
-					<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-500 dark:text-gold-400">${tableFormatter.format(Math.round(netAnnual))}</td>
+					<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-700 dark:text-gold-400">${tableFormatter.format(Math.round(netMonthly))}</td>
+					<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-700 dark:text-gold-400">${tableFormatter.format(Math.round(netAnnual))}</td>
 					<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-600 dark:text-rose-400">${tableFormatter.format(Math.round(annualTax))}</td>
 					<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium ${growthColorClass}">${formattedGrowth}</td>
 					<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-900 dark:text-navy-100">
@@ -932,7 +937,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 		html += `<tr class="sticky bottom-0 z-10 bg-navy-100 dark:bg-navy-900 border-t-2 border-navy-300 dark:border-navy-700">
 			<td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-bold text-navy-800 dark:text-navy-200">Lifetime Totals</td>
 			<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-bold text-navy-500 dark:text-navy-400">-</td>
-			<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-bold text-gold-600 dark:text-gold-400">${tableFormatter.format(Math.round(totalNetAnnual))}</td>
+			<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-bold text-gold-700 dark:text-gold-400">${tableFormatter.format(Math.round(totalNetAnnual))}</td>
 			<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-bold text-rose-600 dark:text-rose-400">${tableFormatter.format(Math.round(totalTaxes))}</td>
 			<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-bold text-navy-500 dark:text-navy-400">-</td>
 			<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-bold text-navy-500 dark:text-navy-400">-</td>
@@ -1178,8 +1183,8 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 				let label = vol <= 5 ? 'Bonds/Index' : vol === 10 ? 'Balanced' : vol === 15 ? 'NIFTY 50' : 'Small Cap';
 				
 				tbodyHtml += `<tr class="${highlight}">
-					<td class="px-4 py-2.5 ${isCurrent ? 'text-gold-600 dark:text-gold-400' : 'text-navy-700 dark:text-navy-300'}">${vol}% <span class="font-sans text-[10px] text-navy-400 ml-1">(${label})</span></td>
-					<td class="px-4 py-2.5 text-right ${isCurrent ? 'text-gold-600 dark:text-gold-400' : 'text-navy-900 dark:text-navy-100'}">${reqCAGR.toFixed(2)}%</td>
+					<td class="px-4 py-2.5 ${isCurrent ? 'text-gold-700 dark:text-gold-400' : 'text-navy-700 dark:text-navy-300'}">${vol}% <span class="font-sans text-[10px] text-navy-400 ml-1">(${label})</span></td>
+					<td class="px-4 py-2.5 text-right ${isCurrent ? 'text-gold-700 dark:text-gold-400' : 'text-navy-900 dark:text-navy-100'}">${reqCAGR.toFixed(2)}%</td>
 				</tr>`;
 			});
 			sensTbody.innerHTML = tbodyHtml;

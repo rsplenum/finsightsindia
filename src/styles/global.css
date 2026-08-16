@@ -46,8 +46,24 @@
   --color-navy-100: #F1F5F9;
   --color-navy-50: #F8FAFC;
 
-  --color-gold-600: #B8941F;
-  --color-gold-500: #D4AF37;
+  /* F-02 / D-2. gold-500 and gold-600 are the BRAND golds and they stay exactly
+     as they are - they carry rules, borders, backgrounds and all dark-theme
+     text, where they work. What they cannot do is be readable text on a light
+     ground: gold-500 measures 2.10:1 on white and gold-600 2.88:1, against the
+     4.5:1 AA needs, and no gold bright enough to still read as gold can clear
+     that bar. gold-700 is the text-on-light gold, and the only one. Rahul chose
+     option F: the big figures go navy with a gold rule beneath, and gold text
+     survives on labels through this token. */
+  /* #8A6D14 was the audit's proposal and clears 4.91:1 on white - but the hero
+     badge sets gold text on a gold-tinted ground over navy-50, where it lands
+     at 4.39:1 and misses. Measured in the browser, then reproduced in the
+     model. Darkened just enough for headroom on a tinted ground rather than
+     thinning the tint, which would have passed at 4.51 and broken again the
+     first time anyone deepened the badge. The shift is imperceptible. */
+  --color-gold-700: #836911;   /* 5.26:1 white · 5.02:1 navy-50 · 4.70:1 on the tinted badge */
+
+  --color-gold-600: #B8941F;   /* 2.88:1 on white - NOT for text on light */
+  --color-gold-500: #D4AF37;   /* 2.10:1 on white - NOT for text on light */
   --color-gold-400: #C5A059;
   --color-gold-300: #E8D48B;
   --color-gold-200: #F5EBBC;

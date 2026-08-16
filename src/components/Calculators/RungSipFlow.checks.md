@@ -49,6 +49,9 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-020/dont-1 | N/A | This rung presents computed results and carries no option list that any category filters, so there is nothing here that eligibility could remove. |
 | dd-020/dont-2 | N/A | The rung asks no qualifying question of its own; the SIP page's inputs live in the entry and the expert rung. |
 | dd-020/dont-3 | N/A | No category filter reaches this rung, so none can move a figure it prints. |
+| dd-021/dont-1 | PASS | The ledger reports where the money went, including the parts that flatter nothing - the fund's fee and the tax both appear as their own rows rather than being netted away quietly. |
+| dd-021/dont-2 | N/A | This rung asks nothing; it renders the one simulation the Answer broadcasts. |
+| dd-021/dont-3 | PASS | The rung's job is the breakdown behind a verdict already stated at rung 1, and it lands the ledger twice - before and after tax - so whichever figure the Answer quotes is present and cannot contradict it. |
 
 ## The original answers, kept
 

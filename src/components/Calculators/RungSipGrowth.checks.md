@@ -55,6 +55,9 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-020/dont-1 | N/A | This rung presents computed results and carries no option list that any category filters, so there is nothing here that eligibility could remove. |
 | dd-020/dont-2 | N/A | The rung asks no qualifying question of its own; the SIP page's inputs live in the entry and the expert rung. |
 | dd-020/dont-3 | N/A | No category filter reaches this rung, so none can move a figure it prints. |
+| dd-021/dont-1 | PASS | The slider moves the outcome in both directions and the rung reports what it finds; there is no assumption here whose default is chosen to make the plan look better. |
+| dd-021/dont-2 | PASS | One control, growth, and it changes the finishing figure directly. |
+| dd-021/dont-3 | PASS | The rung states the conclusion in words - what you were aiming for against what you would typically finish with - rather than printing three figures and leaving the gap to the reader. |
 
 ## The original answers, kept
 

@@ -49,6 +49,9 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-020/dont-1 | N/A | This rung presents computed results and carries no option list that any category filters, so there is nothing here that eligibility could remove. |
 | dd-020/dont-2 | N/A | The rung asks no qualifying question of its own; the SIP page's inputs live in the entry and the expert rung. |
 | dd-020/dont-3 | N/A | No category filter reaches this rung, so none can move a figure it prints. |
+| dd-021/dont-1 | PASS | It reports the real return after inflation whether that figure is flattering or not, and the insight sentence states the erosion case as readily as the growth case. |
+| dd-021/dont-2 | N/A | The rung asks nothing of its own; it reads the shared input set. |
+| dd-021/dont-3 | PASS | The prose insight states the conclusion outright - what the instalment is worth by the final year against what it is today - rather than leaving two rates to be compared. |
 
 ## Deliberate choices
 

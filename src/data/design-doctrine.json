@@ -584,5 +584,32 @@
       "Don't let a category filter change a computed answer; it removes what cannot apply, never what is inconvenient to support."
     ],
     "test": "Take any option the category has removed and ask: is this removed because the statute forbids it, or because we guessed the reader probably will not need it? Only the first survives. If a salaried reader with F&O income, or a professional with capital gains, would be unable to enter something true about their year, the filter is wrong."
+  },
+  {
+    "id": "dd-021",
+    "date": "2026-08-16",
+    "title": "The maths reveals; it does not argue",
+    "trigger": "Rahul's brief for the insurance analyser overhaul, given when asked what specifically felt unintuitive about it. He answered with what the tool is FOR, which turned out to be the more useful answer.",
+    "verbatim": "The insurance policy analyser exists to answer two simple question: reduce the complex cashflow of insurance policy to a number i.e. rate of return, so that it can be compared and second if the policy that has cash return later, life insurance meanwhile, accident insurance, guaranteed return of principal and maturity amount in to one financial product, if we unbundle it and buy term insurance for the same amount, accident insurance for the same amount the hybrid policy is offering, invest in the similar risk-return instrument, how much it will cost us and that would give us a picture about the comparative advantage or disadvantage of the hybrid policy. The UI should ask minimum number of questions like annual premium, no. of outgoing payments, when does incoming payments start and how much (if they grow ?), how much life cover and how much accident or health cover, then it should calculate the DIY cost of all that underneath and just display if the policy wins or the DIY approach wins, then displays how to do DIY generally, that opens oppoutunity to promote genuinely beneficial and advantageous products. A simple calculator can do so much. the challange is to make it so simple and intuitive that everyone can understand the comparison. people are always worried that they might have been taken for a ride and there is so much misselling of insurance products especially hybrid insurance products, if some of them are genuinely superior. the math will reveal that.",
+    "spirit": "The sentence that governs is the last one: 'if some of them are genuinely superior. the math will reveal that.' The tool is not a campaign against bundled insurance. It is an instrument that reports which side the arithmetic favours, and it has to be as willing to say the policy wins as to say it loses - otherwise it is advocacy wearing a calculator's clothes, and a reader who senses that will discount the answer they most needed to trust.\n\nThis is a correction to how the insurance page currently stands. It was built to argue that the policy is beatable, and the gate already records two symptoms of that posture: the safe DIY route is charged no tax at all, which flatters the very route the page uses to win, and the page's own framing leads with unbundling rather than with a neutral comparison. A thesis in the design will find its way into the defaults.\n\nThe motive is stated plainly and is worth keeping in view: 'people are always worried that they might have been taken for a ride'. The reader arrives suspicious and slightly ashamed, and what they want is not an argument, it is a verdict they can trust because it could have gone the other way.\n\nThe method is the two questions. First, collapse a bundle's whole cashflow into one comparable number - a rate of return. Second, price the unbundled replica: term cover for the same sum, accident or health cover for the same sum, and the remainder invested at similar risk. The difference between the two is the comparative advantage, in either direction. Everything else on the screen is in service of those two numbers, and the last screen is a recipe - how to actually do the DIY route - because a verdict a reader cannot act on is only half delivered.",
+    "applies_to": [
+      "calculators",
+      "insurance analyser",
+      "comparison tools",
+      "whole product"
+    ],
+    "do": [
+      "Collapse a bundled cashflow into one comparable number - a rate of return - so it can be set against anything else.",
+      "Price the unbundled replica honestly: same life cover, same accident or health cover, the rest invested at similar risk.",
+      "State the verdict outright - the policy wins, or the DIY route wins - and be as willing to print one as the other.",
+      "Follow the verdict with how to actually do the DIY route; a verdict the reader cannot act on is half delivered.",
+      "Charge both routes the same taxes and costs, because whichever route is flattered is the one the design is arguing for."
+    ],
+    "dont": [
+      "Don't build a tool that argues a thesis; it reports which side the maths favours, including when that is the product we doubt.",
+      "Don't ask a question the comparison does not need - every input must be capable of changing the verdict.",
+      "Don't hand the reader the figures and leave them to reach the conclusion; the screen says who wins."
+    ],
+    "test": "Feed it a genuinely good policy. Does the screen say so, plainly and without hedging? If the design can only produce one verdict, or produces the other one grudgingly, it is advocacy. Then check the costs: if either route is charged a tax or a fee the other is spared, the thesis has already been built into the defaults."
   }
 ]

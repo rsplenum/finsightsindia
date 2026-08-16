@@ -18,7 +18,7 @@
       <div>
         <div class="flex justify-between mb-1">
           <label class="text-sm font-semibold text-slate-700 dark:text-navy-300">Trades per Day</label>
-          <span class="text-sm font-bold text-brand-navy dark:text-gold-500" id="fo-val-trades">20</span>
+          <span class="text-sm font-bold text-brand-navy dark:text-gold-700 dark:text-gold-500" id="fo-val-trades">20</span>
         </div>
         <input type="range" id="fo-in-trades" min="1" max="100" value="20" class="w-full h-2 bg-slate-200 dark:bg-navy-700 rounded-lg appearance-none cursor-pointer accent-brand-navy dark:accent-gold-500" />
       </div>
@@ -42,7 +42,7 @@
       <div>
         <div class="flex justify-between mb-1">
           <label class="text-sm font-semibold text-slate-700 dark:text-navy-300">Win Rate</label>
-          <span class="text-sm font-bold text-brand-navy dark:text-gold-500" id="fo-val-winrate">45%</span>
+          <span class="text-sm font-bold text-brand-navy dark:text-gold-700 dark:text-gold-500" id="fo-val-winrate">45%</span>
         </div>
         <input type="range" id="fo-in-winrate" min="10" max="90" value="45" class="w-full h-2 bg-slate-200 dark:bg-navy-700 rounded-lg appearance-none cursor-pointer accent-brand-navy dark:accent-gold-500" />
       </div>
@@ -54,7 +54,7 @@
       
       <div class="mb-6">
         <h4 class="text-xs font-bold text-slate-400 dark:text-navy-400 uppercase tracking-wider mb-2">Calculated Absolute Turnover</h4>
-        <div id="fo-out-turnover" class="text-4xl font-extrabold font-mono tracking-tight text-brand-navy dark:text-gold-500">
+        <div id="fo-out-turnover" class="text-4xl font-extrabold font-mono tracking-tight text-brand-navy dark:text-gold-700 dark:text-gold-500">
           ₹0
         </div>
         
@@ -158,7 +158,7 @@
         outBar.className = "h-2.5 rounded-full transition-all duration-500 bg-rose-600 dark:bg-rose-500";
         outAlert.classList.remove('hidden');
       } else {
-        outTurnover.className = "text-4xl font-extrabold font-mono tracking-tight text-brand-navy dark:text-gold-500";
+        outTurnover.className = "text-4xl font-extrabold font-mono tracking-tight text-brand-navy dark:text-gold-700 dark:text-gold-500";
         outBar.className = "h-2.5 rounded-full transition-all duration-500 bg-brand-navy dark:bg-gold-500";
         outAlert.classList.add('hidden');
       }
