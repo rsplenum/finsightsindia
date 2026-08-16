@@ -1,6 +1,6 @@
 # FinSight — Launch Gate
 
-**Not live. No domain.** 365 tests green · 46 commits on `fix/learning-loop-integrity-and-calculator-correctness`
+**Not live. No domain.** 376 tests green · 58 commits on `fix/learning-loop-integrity-and-calculator-correctness`
 
 This is a list, not a document. Explanations live in commit messages, `design-doctrine.json` and `engineering-solutions.json`. This says what is done and what is next.
 
@@ -48,7 +48,7 @@ the commit messages — which is where it belongs once it is no longer *next*.
 - [x] ~~**The DIY walk compounds an exhausted portfolio into a debt**~~ **Fixed, sol-040.** The walk pays what it has and reports the year it ran out
 - [x] ~~**A typed maturity benefit of 0 becomes ₹10 lakh**~~ **Fixed, sol-041**
 - [x] ~~**The LTCG exemption is applied once to the terminal gain, not annually**~~ **Fixed, sol-042** — and the note above it was wrong: it said this *overstated* the tax. It did not. Ignoring the gain realised in twenty years of withdrawals understated it by more than one missing exemption overstated it, so the page had been **undertaxing the route it argues for**. Tax ₹6.42 L → ₹8.38 L, surplus ₹54.48 L → ₹52.52 L
-- [ ] **T1 homepage** — six items, untouched since the audit
+- [x] ~~**T1 homepage**~~ — this line was stale: T1 is 6/6 and was archived on 15 Aug. Only T7's six jargon occurrences on the homepage remain, and they are listed under T7
 - [ ] Delete `swpDeterministic.ts` — no production caller; 11 tests still use it as a harness *(needs `growth`/`netMonthly` on the MC engine first)*
 - [ ] Rung 6 term selector, 3/6/9/12 months — *needs term-invariant return generation; today it drifts the unhedged baseline 39→42, an artefact*
 
@@ -74,7 +74,7 @@ the commit messages — which is where it belongs once it is no longer *next*.
 - [ ] **Property-based testing (`fast-check`)** → sol-022, the real answer to "correct across all inputs". Needs boundary behaviour defined first.
 - [ ] **19 loose python scripts at repo root** → never triaged; some may be live tooling.
 - [ ] **12 checks files predate dd-016** — they cite entries but answer no rules by id. Ratcheted so the count can only fall; retrofit them as each component is next touched, not in one sweep.
-- [ ] **T4 goal engine — deliberately deferred, 16 Aug.** Rahul's call: T5 first. T4 asks whether SIP and SWP can share one core, and that spike is worth more once T5 has shown whether a third page can be brought onto the same engine at all
+- [ ] **T4 goal engine — deferred 16 Aug; ITS CONDITION IS NOW MET.** Rahul's call was T5 first, because the spike ("can SIP and SWP share one core?") is worth more once a third page has been brought onto the same pattern. T5 did that, and T6 has now done it a fourth time from a cold engine. Nothing blocks the spike any more — but restarting it is still Rahul's call, not an agent's, so it stays here rather than moving to Next
 - [ ] **A PWA service worker can serve a stale page** — `@vite-pwa/astro` kept a fixed rung out of Rahul's browser through a normal reload on 16 Aug. Harmless while nothing is live; a launch blocker once it is, because a reader can be pinned to an old build
 - [ ] **Cross-surface agreement is checked pair by pair, by hand** — sol-038's tests are bespoke, one pair at a time, which is the same weakness the duplicated formulas had. A generalised check would fail the suite when any two surfaces disagree about one quantity
 - [ ] **Proposed rung: "what if life happens?"** — a lump-sum shock (marriage, an operation no insurance covers). Liquidity risk, not market risk. Rahul's idea; not yet scoped.
