@@ -4,7 +4,7 @@
 
 The reasoning, the trigger and Rahul's verbatim words live in the JSON and are the part worth reading twice. This page is the other half: the same lessons reduced to lines you can check a screen against without re-reading an essay. dd-016 exists because a cited principle is not an instruction.
 
-21 entries · 120 rules · 15 entries bind any calculator screen
+21 entries · 121 rules · 15 entries bind any calculator screen
 
 ---
 
@@ -82,6 +82,7 @@ Generate the skeleton with `npm run doctrine:checks <ComponentName>`.
 
 - `dd-001/do-1` Move complexity to a deeper layer and keep it reachable.
 - `dd-001/do-2` Absorb the difficulty of packaging into our work, never the reader's.
+- `dd-001/do-3` Within a filtered set, offer every eligible option rather than a curated shortlist.
 
 **Don't**
 

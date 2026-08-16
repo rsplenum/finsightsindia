@@ -46,13 +46,22 @@
     ],
     "do": [
       "Move complexity to a deeper layer and keep it reachable.",
-      "Absorb the difficulty of packaging into our work, never the reader's."
+      "Absorb the difficulty of packaging into our work, never the reader's.",
+      "Within a filtered set, offer every eligible option rather than a curated shortlist."
     ],
     "dont": [
       "Don't delete a capability in order to make a screen simpler.",
       "Don't read 'three inputs' as the offering; it is the entry only."
     ],
-    "test": "For any simplification, ask: did the complexity move, or did it disappear? If a capability is no longer reachable by a determined user, this has been violated."
+    "test": "For any simplification, ask: did the complexity move, or did it disappear? If a capability is no longer reachable by a determined user, this has been violated.",
+    "reinforced": [
+      {
+        "date": "2026-08-16",
+        "context": "The note at the foot of Rahul's tax-calculator UI sketch, specifying what the two dropdowns must contain. Transcribed in docs/sketches/tax-calculator-ui_2026-08-16.md.",
+        "verbatim": "The dropdowns will have exhaustive sources of money & deductions category wise. The mechanics underneath will be complex & would clash but the UI to be simple & easy & intuitive.",
+        "note": "Recorded against dd-001 rather than as a new entry: this is dd-001 applied to one screen, and a duplicated rule weakens both copies - the next builder would have to work out which of the two governs. It does add one operational requirement that dd-001 did not state outright, so that is extracted as a `do` below: EXHAUSTIVE within the eligible set. Read with dd-020 it completes the contract - dd-020 says what a category may remove (only the inapplicable), this says how full what remains must be (everything)."
+      }
+    ]
   },
   {
     "id": "dd-002",
