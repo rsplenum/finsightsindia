@@ -1,0 +1,87 @@
+# Design checks — InsuranceAnswer
+
+**Written before the component.** T11's last item: apply sol-019's three layers
+to T5. This is layer 1 for the insurance analyser — the page led with the
+policy's XIRR, which is the answer to an analyst's question, and buried the one
+the reader actually came with.
+
+**Question:** *Should I buy this policy, or buy the cover on its own and invest
+the difference?*
+
+That is the single comparison the whole subject reduces to (dd-005). Everything
+else on the page — the yield, the GST, the commission, the sensitivity table —
+is a push on one side of it.
+
+## The insight the component is built on
+
+The DIY route is **defined** to fund the identical payouts, in the identical
+years. The income is held constant by construction. So the honest headline is
+not "which one gives you more money" but:
+
+> **Same income, same years. The difference is what is left at the end — and
+> what the cover costs you to keep.**
+
+That framing is what makes a terminal surplus a legitimate headline here rather
+than an accountant's summary (dd-010), and it is stated on the screen in those
+words rather than left for the reader to infer.
+
+## Doctrine rules — answered
+
+PASS and RISK need a reason. N/A may stand alone.
+
+| rule | verdict | why |
+|---|---|---|
+| dd-001/dont-1 | PASS | Nothing is removed. The 3-step explainer, the frictions X-ray, the sensitivity table and both route cards all survive; the Answer is added above them, so the page gains a layer instead of losing content. |
+| dd-001/dont-2 | PASS | The seven inputs remain exactly as they are. This is a new READ surface, not a reduced entry — the analyser's entry contract is not being narrowed to three fields. |
+| dd-002/dont-1 | PASS | The step is measured by its question, not its size: one question — policy or unbundle — with the verdict and the cover's cost as its two consequences. |
+| dd-002/dont-2 | PASS | Two new concepts, deliberately: unbundling (buying cover and investment separately), and that the income is identical either way. No new controls at all. |
+| dd-003/dont-1 | PASS | The takeaway is a sentence, and the transferable idea is that a policy which also invests is two products in one wrapper — price them apart and you can see what each costs. That survives without us. |
+| dd-003/dont-2 | PASS | The correct XIRR and the replication walk are the price of admission, not the achievement. What is claimed here is only that the comparison is now stated in one line. |
+| dd-004/dont-1 | PASS | The two moneys sit adjacently in the sentence itself — "₹54.5 lakh, worth ₹9.5 lakh in today's prices" — never in a footnote or a parenthetical aside at the bottom of a card. |
+| dd-004/dont-2 | PASS | The words real and nominal do not appear. It says "in today's prices" and "in the rupees of the day", which is the distinction in the reader's own words. |
+| dd-005/dont-1 | PASS | It names the one comparison and puts it on screen. The frictions and the sensitivity table are pushes on one side of it, and are reachable below rather than listed as worries here. |
+| dd-006/dont-1 | PASS | The sentence skeleton is fixed. Only the slotted values move, and the verdict clause swaps only when the verdict genuinely changes kind — funded versus ran out, which is a different answer, not a rewording of the same one. |
+| dd-006/dont-2 | RISK | The unbundle toggle is still a page-wide mode, and the difference it hides — what the protection costs — is close to being the lesson. Mitigated rather than solved: the cover's cost is now stated IN the Answer whichever way the toggle sits, so the number is never only behind the switch. Removing the toggle in favour of adjacency is on the gate. |
+| dd-007/dont-1 | PASS | Three sizes, each asserting something: the verdict clause is the largest because it is the answer, the two money figures are equal to each other because they are the same quantity in two moneys, and the supporting line is smallest. |
+| dd-007/dont-2 | PASS | The two DIY routes are rendered as equals below; nothing in the Answer implies the growth route is the recommended one, which the old emerald-versus-indigo styling quietly did. |
+| dd-008/dont-1 | PASS | Values live in fixed slots. The prose states the principle — same income either way, the difference is what is left — which stays true at every position of every input. |
+| dd-008/dont-2 | PASS | It states the outcome and, when the route fails, the boundary: the year the money runs out. Not "you are currently looking at a 12% assumption". |
+| dd-009/dont-1 | PASS | Every figure in the sentence is traceable to a figure below it: the surplus is the growth card's, the cover cost is the risk-cost row, the yield is the policy card's. One derivation, `analyseReplication`, feeds all of them. |
+| dd-009/dont-2 | PASS | Nothing below is deleted to make room. The Answer adds the explanation the page was missing rather than trimming one it had. |
+| dd-010/dont-1 | PASS | The shortfall case leads with the lived quantity — the year the income stops arriving — not with a balance. The surplus case may headline the terminal figure only because the income is identical by construction, which the screen says in those words. |
+| dd-012/dont-1 | PASS | No averages anywhere. Every figure is one deterministic path under stated assumptions, and the sensitivity table below shows the spread. |
+| dd-012/dont-2 | PASS | The verdict line is a single concrete quantity the reader can picture — rupees left over, or rupees of income that never arrive — never the difference of two averages. |
+| dd-012/dont-3 | PASS | The confusion this exists to end is the old page's: −₹11.08 lakh printed in emerald green under the word "Surplus" beside a badge reading POLICY WINS. One verdict, from `verdictFor`, now drives the word, the sign, the colour and the badge. |
+| dd-013/dont-1 | PASS | No inputs, no engine, no second read of the form. It renders the same `analyseReplication` result the rest of the page renders, from the single `readPolicyInputs` reader. |
+| dd-013/dont-2 | PASS | Asserted in a test: the Answer's surplus IS the growth card's `finalBalance` and its cover cost IS `riskCostPaid`, by identity rather than by recomputation. |
+| dd-017/dont-1 | PASS | The premium is a ten-year input and the policy fixes it in flat nominal rupees. It was decaying in silence; the Answer now says what the last instalment really costs in today's prices, so the decay is on the screen instead of in the contract's favour. |
+| dd-017/dont-2 | N/A | |
+| dd-017/dont-3 | PASS | No mode question is asked. The interpretation — the premium is what the policy demands, in the rupees of each year — is stated, not put to the reader as a choice at the entry. |
+| dd-017/dont-4 | N/A | |
+| dd-017/dont-5 | PASS | The goal and the contribution are both shown in both moneys, adjacently, and the sentence says which is which rather than leaving the reader to assume they are comparable. |
+
+## Deliberate choices
+
+- **The verdict is computed, not phrased.** `verdictFor()` returns a
+  discriminated union with a `tone`, and every surface renders that. The old
+  page made four independent decisions about one fact — heading, colour, badge,
+  bottom line — and they disagreed. This is the mechanism, not a promise to be
+  careful (dd-011).
+- **The income is held constant, and the screen says so.** Without that
+  sentence the reader has no way to know the surplus is not being bought by
+  cutting their income, and the whole comparison is unreadable.
+- **The shortfall case leads with a YEAR.** "The money runs out in year 16 with
+  ₹1.06 crore of promised income still to come" is a thing a person lives
+  through. "−₹1.06 crore" is not.
+- **The policy's own yield stays on screen but stops leading.** It is the
+  evidence for the verdict, not the verdict.
+
+## Open — for Rahul
+
+- **The unbundle toggle should probably become adjacency** (dd-006). Both
+  states are worth seeing at once: what the cover costs is the entire subject.
+  Not done here because it is a layout change to a card the T5 brief did not
+  scope.
+- **The safe route is charged no tax** while the growth route pays LTCG. Fixing
+  it needs a slab assumption we do not have an input for, and it moves the
+  verdict on the safe card. Listed on the gate as yours.

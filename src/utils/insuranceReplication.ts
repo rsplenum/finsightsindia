@@ -110,20 +110,58 @@ export interface LedgerRow {
   realPremium: number;
 }
 
+/**
+ * What a route did, once it has been walked.
+ *
+ * A route either funds every rupee the policy promised and has something left,
+ * or it runs out - and running out has a year and an amount, not a negative
+ * balance. See `replicate()` for why that distinction is the whole point.
+ */
 export interface RouteResult {
-  /** What is left after funding every payout the policy promised. Negative means the route fell short. */
+  /** What is left after funding every payout the policy promised. Never negative. */
   finalBalance: number;
+  /**
+   * The same surplus in today's money.
+   *
+   * T8/dd-004: a figure thirty years out is not the figure the reader thinks it
+   * is, and the reconciliation belongs beside it rather than in a footnote. It
+   * is computed here, once, so that no surface can discount it its own way.
+   */
+  finalBalanceReal: number;
   /** Total put in, across the premium-paying years. */
   capitalInvested: number;
   /** Total spent on the term and accident cover that replaces the policy's protection. */
   riskCostPaid: number;
   /** Capital gains tax deducted at the end. Zero on the safe route, which this page does not tax. */
   taxDrag: number;
+  /** The year the money first ran out mid-payment, or null if it never did. */
+  exhaustedInYear: number | null;
+  /** Promised income the route could not pay, in the rupees of the years it was owed. */
+  unfundedPayout: number;
+  /** The same shortfall in today's money. */
+  unfundedPayoutReal: number;
 }
+
+/**
+ * The one statement of how a route did.
+ *
+ * It exists so that the badge, the heading, the colour and the sentence cannot
+ * disagree with each other - which they did. The page printed -Rs 11.08 lakh in
+ * emerald green under the word 'Surplus' beside a badge reading POLICY WINS,
+ * and the bottom line called a negative number 'SURPLUS WEALTH'. Four
+ * independent decisions about one fact. There is now one decision, made here,
+ * and every surface renders it.
+ */
+export type RouteVerdict =
+  | { kind: 'surplus'; tone: 'good'; amount: number; amountReal: number }
+  | { kind: 'exact'; tone: 'good' }
+  | { kind: 'shortfall'; tone: 'bad'; exhaustedInYear: number; unfunded: number; unfundedReal: number };
 
 export interface SensitivityRow {
   rate: number;
+  /** What was left over. Zero when the route ran out - read `verdict` for that case. */
   surplus: number;
+  verdict: RouteVerdict;
   /** True for the rate the headline growth route actually used. */
   isBaseline: boolean;
 }
@@ -151,6 +189,15 @@ export interface ReplicationResult {
      * null if they never do within the policy's life.
      */
     breakEvenYear: number | null;
+    /**
+     * What the FINAL premium instalment really costs, in today's prices.
+     *
+     * dd-017: the premium is a ten- or twelve-year input and the policy fixes
+     * it in flat nominal rupees, so it quietly gets cheaper every year - which
+     * flatters the policy, and which the page never said out loud. A ₹1 lakh
+     * premium in year 10 is ₹59,190 of today's money.
+     */
+    lastPremiumReal: number;
   };
   safe: RouteResult;
   growth: RouteResult;
@@ -206,8 +253,21 @@ export function buildLedger(inputs: PolicyInputs): LedgerRow[] {
  *
  * Each year: this year's investable premium goes in at the start, the whole
  * balance compounds, and the payout the policy would have made is taken out at
- * the end. Whatever survives to the final year is the surplus - or, if it is
- * negative, the amount by which the route failed to fund the promise.
+ * the end.
+ *
+ * THE PORTFOLIO CANNOT GO BELOW ZERO. It used to. The balance was allowed to go
+ * negative and then kept compounding, so an exhausted portfolio grew a DEBT at
+ * the equity rate, and the sensitivity table - whose entire purpose is 'what if
+ * returns are lower than you hope' - reported the deficit as WORST around 11%
+ * and better at both 8% and 14%. A higher return, shown as a worse outcome. No
+ * investor experiences that: a portfolio that cannot meet a withdrawal is
+ * empty, it does not borrow at 12% and carry on.
+ *
+ * So a route that cannot pay reports the two things a person would actually
+ * live through (dd-010): the YEAR the money ran out, and how much of the
+ * promised income never arrived. That is also the only version of 'deficit'
+ * that can be labelled honestly, which is why this had to be fixed before the
+ * labels could be.
  *
  * `taxGains` is what separates the two routes on this page. The growth route
  * pays capital gains tax on the terminal balance; the safe route pays none,
@@ -222,9 +282,13 @@ export function replicate(
   const ledger = buildLedger(inputs);
   const investableCapital = investableCapitalOf(inputs);
   const riskCostPerYear = inputs.termCost + inputs.accidentCost;
+  const infl = inputs.inflationRate / 100;
 
   let balance = 0;
   let capitalInvested = 0;
+  let exhaustedInYear: number | null = null;
+  let unfundedPayout = 0;
+  let unfundedPayoutReal = 0;
 
   for (const row of ledger) {
     const investedThisYear = row.year <= inputs.ppt ? investableCapital : 0;
@@ -232,7 +296,18 @@ export function replicate(
 
     balance += investedThisYear;
     balance *= 1 + annualRatePct / 100;
-    balance -= row.payoutIn;
+
+    // Pay what there is. A later premium can refill the pot and the payments
+    // resume, which is why this tracks a total rather than stopping the walk.
+    const paid = Math.min(balance, row.payoutIn);
+    const missed = row.payoutIn - paid;
+    balance -= paid;
+
+    if (missed > 0) {
+      if (exhaustedInYear === null) exhaustedInYear = row.year;
+      unfundedPayout += missed;
+      unfundedPayoutReal += missed / Math.pow(1 + infl, row.year);
+    }
   }
 
   let taxDrag = 0;
@@ -242,11 +317,45 @@ export function replicate(
     balance -= taxDrag;
   }
 
+  const { totalYears } = horizonOf(inputs);
+
   return {
     finalBalance: balance,
+    finalBalanceReal: balance / Math.pow(1 + infl, totalYears),
     capitalInvested,
     riskCostPaid: riskCostPerYear * inputs.ppt,
     taxDrag,
+    exhaustedInYear,
+    unfundedPayout,
+    unfundedPayoutReal,
+  };
+}
+
+/**
+ * How a route did, said once.
+ *
+ * Every surface asks this rather than inspecting the sign of a number for
+ * itself. That is the entire mechanism behind 'sign, word and badge must
+ * agree': there is nothing left to disagree about.
+ */
+export function verdictFor(route: RouteResult): RouteVerdict {
+  if (route.unfundedPayout > 0) {
+    return {
+      kind: 'shortfall',
+      tone: 'bad',
+      exhaustedInYear: route.exhaustedInYear!,
+      unfunded: route.unfundedPayout,
+      unfundedReal: route.unfundedPayoutReal,
+    };
+  }
+  // A rupee either way is not a surplus worth a headline. Rounded to whole
+  // rupees, because that is the resolution the reader is shown.
+  if (Math.round(route.finalBalance) <= 0) return { kind: 'exact', tone: 'good' };
+  return {
+    kind: 'surplus',
+    tone: 'good',
+    amount: route.finalBalance,
+    amountReal: route.finalBalanceReal,
   };
 }
 
@@ -318,11 +427,15 @@ export function analyseReplication(inputs: PolicyInputs): ReplicationResult {
     (a, b) => a - b
   );
 
-  const sensitivity: SensitivityRow[] = rates.map((rate) => ({
-    rate,
-    surplus: replicate(inputs, rate, true).finalBalance,
-    isBaseline: rate === inputs.equityRate,
-  }));
+  const sensitivity: SensitivityRow[] = rates.map((rate) => {
+    const route = replicate(inputs, rate, true);
+    return {
+      rate,
+      surplus: route.finalBalance,
+      verdict: verdictFor(route),
+      isBaseline: rate === inputs.equityRate,
+    };
+  });
 
   return {
     inputs,
@@ -336,6 +449,7 @@ export function analyseReplication(inputs: PolicyInputs): ReplicationResult {
       totalNominalPayout: ledger.reduce((sum, r) => sum + r.payoutIn, 0),
       totalRealPayout: ledger.reduce((sum, r) => sum + r.realValue, 0),
       breakEvenYear: realBreakEvenYear(ledger),
+      lastPremiumReal: ledger[Math.min(inputs.ppt, ledger.length) - 1]?.realPremium ?? 0,
     },
     safe,
     growth,

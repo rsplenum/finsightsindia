@@ -6,6 +6,7 @@ import {
   realBreakEvenYear,
   investableCapitalOf,
   frictionsOf,
+  verdictFor,
   LTCG_RATE_PCT,
   LTCG_EXEMPTION,
   type PolicyInputs,
@@ -168,41 +169,64 @@ describe('replication - one walk, at any rate', () => {
     expect([...surpluses].sort((a, b) => a - b)).toEqual(surpluses);
   });
 
-  it('is NOT monotonic once the route runs out of money - a defect, pinned', () => {
-    // Found on the live page within minutes of the engine being callable.
-    //
-    // The walk lets the balance go negative and then keeps compounding it, so
-    // an exhausted portfolio grows a DEBT at the equity rate. The reader is
-    // told, in a table whose entire purpose is 'what if returns are lower than
-    // you hope', that a HIGHER return leaves them worse off:
+  it('a higher return is never a worse outcome', () => {
+    // The defect this replaced, in full, because it is the kind that comes back:
+    // the walk used to let the balance go negative and keep compounding it, so
+    // an exhausted portfolio grew a DEBT at the equity rate. The sensitivity
+    // table - whose entire purpose is 'what if returns are lower than you hope'
+    // - therefore read
     //
     //   8% -> -1.73 Cr    10% -> -1.81 Cr    12% -> -1.81 Cr    14% -> -1.63 Cr
     //
-    // No investor experiences this. A portfolio that cannot meet a withdrawal
-    // is exhausted; it does not borrow at 12% and carry on. The honest answer
-    // is the year the money ran out, which is also the only answer that makes
-    // the deficit figure mean anything. Deferred rather than fixed inside the
-    // extraction, and listed on the launch gate - it changes what the page
-    // reports, which is a decision, not a refactor.
+    // and told the reader that earning more left them worse off. Now the money
+    // simply runs out, and the same table reports a shortfall that SHRINKS as
+    // returns rise. Asserted on a policy nobody can replicate, which is the
+    // only place the old shape could show itself.
     const generous = at({ payoutAmount: 400000, maturityBenefit: 5000000 });
     const s = analyseReplication(generous).sensitivity;
-    const by = (rate: number) => s.find((row) => row.rate === rate)!.surplus;
+    const short = (rate: number) => {
+      const v = s.find((row) => row.rate === rate)!.verdict;
+      return v.kind === 'shortfall' ? v.unfunded : 0;
+    };
 
-    expect(by(10)).toBeLessThan(by(8));
-    expect(by(14)).toBeGreaterThan(by(12));
+    expect(short(10)).toBeLessThan(short(8));
+    expect(short(12)).toBeLessThan(short(10));
+    expect(short(14)).toBeLessThan(short(12));
   });
 
-  it('lets an exhausted balance compound into a larger debt - the same defect, isolated', () => {
-    // The deficit is worst in the MIDDLE of the range, around 11%: high enough
-    // to have been compounding the shortfall for years, not high enough to have
-    // outgrown it. Nothing but the sign of the balance produces that shape. If
-    // a fix ever floors the walk at zero and reports the year the money ran
-    // out, this test is the one that should fail.
-    const broke = at({ payoutAmount: 400000, maturityBenefit: 5000000 });
-    const worst = replicate(broke, 11, false).finalBalance;
+  it('the money lasts longer at a higher return', () => {
+    // The other half of the same statement, and the one a person actually
+    // lives through (dd-010): year 14, 15, 16, 18.
+    const generous = at({ payoutAmount: 400000, maturityBenefit: 5000000 });
+    const ranOut = (rate: number) => replicate(generous, rate, true).exhaustedInYear!;
 
-    expect(worst).toBeLessThan(replicate(broke, 8, false).finalBalance);
-    expect(worst).toBeLessThan(replicate(broke, 14, false).finalBalance);
+    expect(ranOut(8)).toBeLessThanOrEqual(ranOut(10));
+    expect(ranOut(10)).toBeLessThanOrEqual(ranOut(12));
+    expect(ranOut(12)).toBeLessThan(ranOut(14));
+  });
+
+  it('never lets a portfolio go below zero', () => {
+    // The property, stated directly. A portfolio that cannot meet a withdrawal
+    // is empty; it does not borrow at the equity rate and carry on.
+    const broke = at({ payoutAmount: 400000, maturityBenefit: 5000000 });
+    for (const rate of [0, 4, 8, 11, 12, 14, 20]) {
+      expect(replicate(broke, rate, false).finalBalance).toBeGreaterThanOrEqual(0);
+      expect(replicate(broke, rate, true).finalBalance).toBeGreaterThanOrEqual(0);
+    }
+  });
+
+  it('accounts for every rupee the policy promised - paid or unpaid', () => {
+    // Conservation. What the route paid out plus what it could not pay must be
+    // exactly what the policy owed. Without this, 'ran out in year 16' could
+    // quietly lose money rather than report it.
+    const broke = at({ payoutAmount: 400000, maturityBenefit: 5000000 });
+    const r = analyseReplication(broke);
+    const owed = r.ledger.reduce((sum, row) => sum + row.payoutIn, 0);
+    const paid = owed - r.growth.unfundedPayout;
+
+    expect(paid + r.growth.unfundedPayout).toBeCloseTo(owed, 6);
+    expect(r.growth.unfundedPayout).toBeGreaterThan(0);
+    expect(paid).toBeGreaterThan(0);
   });
 
   it('is deterministic - the same inputs twice give the same numbers', () => {
@@ -249,9 +273,10 @@ describe('tax on the growth route', () => {
     expect(r.growth.taxDrag).toBeGreaterThan(0);
   });
 
-  it('charges nothing when the route ends under water', () => {
+  it('charges nothing when the route ran out of money', () => {
     const r = analyseReplication(at({ payoutAmount: 400000, maturityBenefit: 5000000 }));
-    expect(r.growth.finalBalance).toBeLessThan(0);
+    expect(r.growth.finalBalance).toBe(0);
+    expect(r.growth.unfundedPayout).toBeGreaterThan(0);
     expect(r.growth.taxDrag).toBe(0);
   });
 
@@ -267,42 +292,114 @@ describe('tax on the growth route', () => {
   });
 });
 
-describe('what the page currently says, and where its labels break', () => {
-  it('the safe route FALLS SHORT at the shipped defaults', () => {
-    // The finding the next T5 item exists to fix, pinned as a number.
+describe('the verdict - sign, word and badge cannot disagree', () => {
+  it('the safe route runs out at the shipped defaults, and says so', () => {
+    // What the page used to print here: '-₹11.08 Lakh' in emerald green, under
+    // a heading reading 'Surplus Wealth / Deficit', beside a badge saying
+    // POLICY WINS, while the bottom line called it SURPLUS WEALTH. Four
+    // independent decisions about one fact.
     //
-    // At the defaults the safe route ends ₹11.08 LAKH SHORT of funding the
-    // policy's promises - the policy's 7.22% beats 7.1%, so bonds cannot
-    // replicate it. The page prints that figure under a heading that reads
-    // 'Surplus Wealth / Deficit', in emerald green, with a badge that says
-    // POLICY WINS. Sign, word and colour disagree with one another.
+    // What it says now: the money runs out in year 30 and ₹11.08 lakh of the
+    // promised income - ₹1.93 lakh in today's money - never arrives. The
+    // policy's 7.22% beats the 7.1% safe rate, so bonds genuinely cannot
+    // replicate it, and that is a real finding rather than a formatting bug.
     const r = analyseReplication(shipped);
-    expect(r.safe.finalBalance).toBeLessThan(0);
-    expect(r.safe.finalBalance).toBeCloseTo(-1108260.16, 2);
+    const v = verdictFor(r.safe);
+
+    expect(r.safe.finalBalance).toBe(0);
+    expect(v.kind).toBe('shortfall');
+    expect(v.tone).toBe('bad');
+    if (v.kind !== 'shortfall') throw new Error('unreachable');
+    expect(v.exhaustedInYear).toBe(30);
+    expect(v.unfunded).toBeCloseTo(1108260.16, 2);
+    expect(v.unfundedReal).toBeCloseTo(192959.32, 2);
   });
 
   it('the growth route wins at the shipped defaults, by a lot', () => {
     const r = analyseReplication(shipped);
+    const v = verdictFor(r.growth);
+
+    expect(v.kind).toBe('surplus');
+    expect(v.tone).toBe('good');
     expect(r.growth.finalBalance).toBeCloseTo(5448123.42, 2);
     expect(r.growth.taxDrag).toBeCloseTo(641874.77, 2);
+    expect(r.growth.unfundedPayout).toBe(0);
   });
 
-  it('the growth route can fall short too, and the bottom line still says SURPLUS WEALTH', () => {
-    // A generous policy - ₹4 L a year and ₹50 L at maturity - which 12% equity
-    // cannot fund either. The takeaway sentence is unconditional today: it
-    // reports a negative number as surplus wealth.
-    const r = analyseReplication(at({ payoutAmount: 400000, maturityBenefit: 5000000 }));
-    expect(r.policy.xirrPct).toBeGreaterThan(12);
-    expect(r.safe.finalBalance).toBeLessThan(0);
-    expect(r.growth.finalBalance).toBeLessThan(0);
-  });
-
-  it('a deficit on the safe route does not imply one on the growth route', () => {
-    // Which is why the two cards cannot share one verdict, and why the page
-    // needs the unbundling headline to say which comparison it is making.
+  it('a shortfall on one route does not imply one on the other', () => {
+    // Which is why the two cards cannot share a verdict, and why the headline
+    // has to say which comparison it is making.
     const r = analyseReplication(shipped);
-    expect(r.safe.finalBalance).toBeLessThan(0);
-    expect(r.growth.finalBalance).toBeGreaterThan(0);
+    expect(verdictFor(r.safe).kind).toBe('shortfall');
+    expect(verdictFor(r.growth).kind).toBe('surplus');
+  });
+
+  it('never reports a surplus and a shortfall at the same time', () => {
+    // The property the labels rest on. Across a wide spread of policies and
+    // rates, a route either funded everything or it did not - and the verdict's
+    // tone follows from that one fact, never from a second reading of the sign.
+    const policies = [
+      shipped,
+      at({ termCost: 0, accidentCost: 0 }),
+      at({ payoutAmount: 400000, maturityBenefit: 5000000 }),
+      at({ payoutAmount: 1000, maturityBenefit: 0 }),
+      at({ ppt: 20, payoutStartYear: 3, payoutYears: 5 }),
+      at({ premium: 20000, termCost: 15000, accidentCost: 10000 }),
+    ];
+
+    for (const p of policies) {
+      for (const rate of [0, 5, 7.1, 12, 20]) {
+        const route = replicate(p, rate, true);
+        const v = verdictFor(route);
+
+        expect(route.finalBalance).toBeGreaterThanOrEqual(0);
+
+        if (v.kind === 'shortfall') {
+          expect(v.tone).toBe('bad');
+          expect(v.unfunded).toBeGreaterThan(0);
+          expect(v.exhaustedInYear).toBeGreaterThan(0);
+          // The balance is NOT necessarily zero here - see the refill case
+          // below - but the shortfall must name a real year inside the policy.
+          expect(v.exhaustedInYear).toBeLessThanOrEqual(analyseReplication(p).totalYears);
+        } else {
+          expect(v.tone).toBe('good');
+          expect(route.unfundedPayout).toBe(0);
+          expect(route.exhaustedInYear).toBeNull();
+        }
+      }
+    }
+  });
+
+  it('leads with the missed payment even when the pot refills afterwards', () => {
+    // Income starting in year 3 while premiums run to year 20: the pot is too
+    // thin to pay early, misses instalments, and is then refilled by premiums
+    // that keep arriving - ending with money in it. A positive closing balance
+    // does not undo a payment the reader did not receive in year 3, so the
+    // verdict is still a shortfall. This is why the label reads off the
+    // verdict rather than off the sign of the balance.
+    const r = analyseReplication(at({ ppt: 20, payoutStartYear: 3, payoutYears: 5 }));
+    const route = replicate(r.inputs, 20, true);
+    const v = verdictFor(route);
+
+    expect(route.finalBalance).toBeGreaterThan(0);
+    expect(v.kind).toBe('shortfall');
+    expect(v.tone).toBe('bad');
+  });
+
+  it('calls a rupee either way exact, not a surplus', () => {
+    // A headline that announces ₹0 of surplus wealth is a worse answer than one
+    // that says the route just about covered it.
+    const route: Parameters<typeof verdictFor>[0] = {
+      finalBalance: 0.4,
+      finalBalanceReal: 0.2,
+      capitalInvested: 100,
+      riskCostPaid: 0,
+      taxDrag: 0,
+      exhaustedInYear: null,
+      unfundedPayout: 0,
+      unfundedPayoutReal: 0,
+    };
+    expect(verdictFor(route).kind).toBe('exact');
   });
 });
 

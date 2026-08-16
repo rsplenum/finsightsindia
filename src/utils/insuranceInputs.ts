@@ -54,6 +54,25 @@ const el = (id: string) => document.getElementById(id) as HTMLInputElement | nul
 const money = (id: string, fallback: number): number =>
   parseFormattedNumber(el(id)?.value ?? '') || fallback;
 
+/**
+ * For the fields where ZERO IS AN ANSWER, not an empty box.
+ *
+ * `parseFormattedNumber(...) || fallback` cannot tell "the reader typed 0" from
+ * "the reader typed nothing", so it silently overrode both. The maturity field's
+ * own tooltip says "Type 0 if there is no final bonus" - and typing 0 gave you
+ * back a Rs 10 lakh terminal bonus you had explicitly said you would not
+ * receive, inflating the policy's yield and its real value on a page whose
+ * whole purpose is to tell you the policy is worth less than it claims.
+ *
+ * A blank field still falls back. A typed zero is now honoured.
+ */
+const moneyAllowingZero = (id: string, fallback: number): number => {
+  const raw = (el(id)?.value ?? '').trim();
+  if (raw === '') return fallback;
+  const v = parseFormattedNumber(raw);
+  return Number.isFinite(v) && v >= 0 ? v : fallback;
+};
+
 const int = (id: string, fallback: number): number => {
   const v = parseInt(el(id)?.value ?? '', 10);
   return Number.isFinite(v) && v !== 0 ? v : fallback;
@@ -73,8 +92,11 @@ export function readPolicyInputs(now: Date = new Date()): PolicyInputs {
     ppt: int(F.ppt, 10),
     payoutStartYear: int(F.payoutStart, 11),
     payoutYears: int(F.payoutYears, 20),
-    payoutAmount: money(F.payout, 120000),
-    maturityBenefit: parseFormattedNumber(el(F.maturity)?.value ?? '') || 1000000,
+    // Both of these can legitimately be zero: a policy that pays only a lump
+    // sum at the end has no annual income, and a policy with no terminal bonus
+    // has no maturity benefit. Neither is an empty field.
+    payoutAmount: moneyAllowingZero(F.payout, 120000),
+    maturityBenefit: moneyAllowingZero(F.maturity, 1000000),
     inflationRate: num(F.inflation, 6.0),
     safeRate: SAFE_RATE_PCT,
     equityRate: EQUITY_RATE_PCT,

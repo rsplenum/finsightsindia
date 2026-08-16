@@ -1,0 +1,118 @@
+---
+/**
+ * Layer 1 of the insurance analyser. The answer, as a sentence.
+ *
+ * The page used to lead with the policy's XIRR - the answer to an analyst's
+ * question - and left the reader to assemble the one they actually came with
+ * out of two cards, a badge and a bottom line that contradicted each other.
+ *
+ * The single comparison this whole subject reduces to (dd-005) is: buy the
+ * policy, or buy the cover on its own and invest the difference? Everything
+ * else on this page is a push on one side of it.
+ *
+ * The design note that matters is in InsuranceAnswer.checks.md, written before
+ * this file: the DIY route is DEFINED to fund the identical payouts in the
+ * identical years, so the income is held constant by construction and the only
+ * thing left to compare is what remains at the end. That is said on the screen,
+ * in those words - without it a reader cannot tell whether the surplus was
+ * bought by cutting their income.
+ *
+ * Every figure here is rendered by insurance-analyzer.astro from the one
+ * `analyseReplication` result. This component holds no state and reads no form.
+ */
+---
+
+<section
+	id="insuranceAnswer"
+	class="rounded-2xl border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-950 p-6 sm:p-8"
+	aria-live="polite"
+>
+	<div class="flex items-baseline justify-between gap-4 border-b border-navy-100 dark:border-navy-800 pb-4 mb-6">
+		<h2 class="text-xs font-bold tracking-widest text-navy-500 dark:text-navy-400 uppercase">
+			Should you buy this policy?
+		</h2>
+		<span
+			id="answerBadge"
+			class="shrink-0 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest rounded bg-navy-100 dark:bg-navy-800 text-navy-600 dark:text-navy-400"
+			>Evaluating</span
+		>
+	</div>
+
+	<!--
+		dd-008: the values live in fixed slots the eye can return to, and the prose
+		around them stays true at every position of every input. Nothing here is
+		rewritten as a control moves; only the slots change.
+	-->
+	<p
+		id="answerHeadline"
+		class="text-lg sm:text-xl leading-relaxed text-navy-900 dark:text-navy-100"
+	>
+		Evaluating this policy against buying the cover on its own…
+	</p>
+
+	<!--
+		The premise the comparison rests on. Fixed text on purpose: it is a
+		principle, not a state (dd-008), and without it the surplus below is
+		unreadable - the reader has no way to know it was not bought by cutting
+		their own income.
+	-->
+	<p class="mt-4 text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
+		Both routes pay you <strong class="font-semibold text-navy-900 dark:text-navy-100"
+			>the same income, in the same years</strong
+		>. The DIY route is built to fund every rupee this policy promises, so the
+		only thing left to compare is what is left over at the end — and what the
+		protection costs to keep.
+	</p>
+
+	<!--
+		T8 / dd-004. The two moneys sit next to each other, permanently, with the
+		frame carried on the figure itself. Not a toggle (dd-006), not a footnote
+		(dd-004/dont-1), and never the words "real" or "nominal".
+	-->
+	<div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+		<div class="rounded-lg border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900 p-4">
+			<div id="answerFigureLabel" class="text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">
+				Left over at the end
+			</div>
+			<div class="mt-2 flex flex-col gap-1">
+				<div class="flex items-baseline justify-between gap-2">
+					<span id="answerFigureNominal" class="text-2xl font-extrabold tracking-tight text-navy-900 dark:text-navy-100">₹0</span>
+					<span class="text-[10px] uppercase tracking-widest text-navy-400 dark:text-navy-500">in the rupees of that year</span>
+				</div>
+				<div class="flex items-baseline justify-between gap-2 pt-1 border-t border-navy-200 dark:border-navy-800">
+					<span id="answerFigureReal" class="text-2xl font-extrabold tracking-tight text-navy-900 dark:text-navy-100">₹0</span>
+					<span class="text-[10px] uppercase tracking-widest text-navy-400 dark:text-navy-500">in today's prices</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="rounded-lg border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900 p-4">
+			<div class="text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">
+				The policy pays you back at
+			</div>
+			<div class="mt-2 text-2xl font-extrabold tracking-tight text-navy-900 dark:text-navy-100">
+				<span id="answerYield">0.00%</span> <span class="text-sm font-semibold text-navy-500 dark:text-navy-400">a year</span>
+			</div>
+			<p id="answerYieldNote" class="mt-2 text-xs text-navy-500 dark:text-navy-400 leading-relaxed">&nbsp;</p>
+		</div>
+
+		<div class="rounded-lg border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900 p-4">
+			<div class="text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">
+				What the cover costs
+			</div>
+			<div class="mt-2 text-2xl font-extrabold tracking-tight text-navy-900 dark:text-navy-100">
+				<span id="answerCoverCost">₹0</span>
+			</div>
+			<p id="answerCoverNote" class="mt-2 text-xs text-navy-500 dark:text-navy-400 leading-relaxed">&nbsp;</p>
+		</div>
+	</div>
+
+	<!--
+		dd-017. A level premium is a ten-year commitment quoted in flat nominal
+		rupees, so it gets quietly cheaper every year - which flatters the policy.
+		The page never said so. It does now.
+	-->
+	<p id="answerPremiumDecay" class="mt-5 text-xs text-navy-500 dark:text-navy-400 leading-relaxed">
+		&nbsp;
+	</p>
+</section>

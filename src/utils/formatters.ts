@@ -7,7 +7,11 @@ export function formatShortRupee(val: number): string {
 	const absVal = Math.abs(val);
 	if (absVal >= 10000000) return `₹ ${(val / 10000000).toFixed(2)} Cr`;
 	if (absVal >= 100000) return `₹ ${(val / 100000).toFixed(2)} Lakh`;
-	return `₹ ${val.toLocaleString('en-IN')}`;
+	// Whole rupees below a lakh. Above it the figure is already rounded to two
+	// decimals of its unit, so only this branch could ever leak paise - and it
+	// did, printing "₹ 59,189.846" on the insurance page the first time a
+	// computed rather than typed figure reached it.
+	return `₹ ${Math.round(val).toLocaleString('en-IN')}`;
 }
 
 export const tableFormatter = new Intl.NumberFormat('en-IN', {

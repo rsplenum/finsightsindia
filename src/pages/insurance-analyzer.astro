@@ -4,6 +4,7 @@ import Hero from '../components/Hero.astro';
 import CardPremium from '../components/CardPremium.astro';
 import InputGroup from '../components/InputGroup.astro';
 import SectionTitle from '../components/SectionTitle.astro';
+import InsuranceAnswer from '../components/Calculators/InsuranceAnswer.astro';
 ---
 
 <Layout title="Guaranteed Income ROI Analyzer — SWP Intelligence">
@@ -15,39 +16,14 @@ import SectionTitle from '../components/SectionTitle.astro';
 
 	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-16 sm:pt-6 sm:pb-24 space-y-8">
 		
-		<!-- How This Intelligence Engine Works - 3-Step Explainer Guide -->
-		<CardPremium glass={true} class="mb-10 max-w-7xl mx-auto">
-			<div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 border-b border-navy-200 dark:border-navy-800 pb-4">
-				<SectionTitle title="How This Intelligence Engine Works" />
-				<span class="text-[10px] font-bold text-navy-500 dark:text-navy-400 tracking-widest uppercase">3-Step Breakdown</span>
-			</div>
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-				<!-- Step 1 -->
-				<div class="bg-navy-50 dark:bg-navy-900 rounded-lg p-6 border border-navy-200 dark:border-navy-800">
-					<div class="flex items-center gap-3 mb-4">
-						<span class="px-2.5 py-1 rounded-md bg-navy-200 dark:bg-navy-800 text-navy-900 dark:text-navy-100 text-xs font-bold font-mono">01</span>
-						<h3 class="text-sm font-bold tracking-widest text-navy-900 dark:text-navy-100 uppercase">Map the Cash Flow</h3>
-					</div>
-					<p class="text-sm text-navy-600 dark:text-navy-300 leading-relaxed">You input the premiums you pay and the payouts you are promised. We strip away the marketing jargon to build a raw timeline.</p>
-				</div>
-				<!-- Step 2 -->
-				<div class="bg-navy-50 dark:bg-navy-900 rounded-lg p-6 border border-navy-200 dark:border-navy-800">
-					<div class="flex items-center gap-3 mb-4">
-						<span class="px-2.5 py-1 rounded-md bg-navy-200 dark:bg-navy-800 text-navy-900 dark:text-navy-100 text-xs font-bold font-mono">02</span>
-						<h3 class="text-sm font-bold tracking-widest text-navy-900 dark:text-navy-100 uppercase">Calculate Real Value</h3>
-					</div>
-					<p class="text-sm text-navy-600 dark:text-navy-300 leading-relaxed">We discount future payouts against inflation (NPV). A ₹10 Lakh payout in 20 years is mathematically worth far less today. We show you the true purchasing power.</p>
-				</div>
-				<!-- Step 3 -->
-				<div class="bg-navy-50 dark:bg-navy-900 rounded-lg p-6 border border-navy-200 dark:border-navy-800">
-					<div class="flex items-center gap-3 mb-4">
-						<span class="px-2.5 py-1 rounded-md bg-navy-200 dark:bg-navy-800 text-navy-900 dark:text-navy-100 text-xs font-bold font-mono">03</span>
-						<h3 class="text-sm font-bold tracking-widest text-navy-900 dark:text-navy-100 uppercase">Unbundle & Replicate</h3>
-					</div>
-					<p class="text-sm text-navy-600 dark:text-navy-300 leading-relaxed">We unbundle the life cover from the investment. We mathematically test if it's cheaper to buy pure term insurance and invest the rest yourself in PPF or Equity.</p>
-				</div>
-			</div>
-		</CardPremium>
+		<!--
+			Layer 1. The answer, before the machinery that produced it.
+			The page used to open with a three-step description of our own engine,
+			which is not the question the reader arrived with (dd-002). That card
+			still exists, moved below the analysis - nothing is deleted to make a
+			screen simpler (dd-001).
+		-->
+		<InsuranceAnswer />
 
 		<!-- Main 2-Column Grid Layout -->
 		<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start max-w-7xl mx-auto">
@@ -212,11 +188,11 @@ import SectionTitle from '../components/SectionTitle.astro';
 							<div id="engineAXIRR" class="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 font-sans tracking-tight mt-1">0.00%</div>
 						</div>
 						<div class="bg-navy-50 dark:bg-navy-900 rounded-lg p-4 border border-navy-200 dark:border-navy-800">
-							<div class="text-xs font-semibold text-navy-500 dark:text-navy-400 uppercase tracking-widest">Nominal Payout</div>
+							<div class="text-xs font-semibold text-navy-500 dark:text-navy-400 uppercase tracking-widest">Total paid out<span class="block font-normal normal-case tracking-normal text-[10px] text-navy-400 dark:text-navy-500">in the rupees of each year</span></div>
 							<div id="engineANominal" class="text-xl font-bold text-navy-900 dark:text-navy-100 font-sans mt-2">₹0</div>
 						</div>
 						<div class="bg-navy-50 dark:bg-navy-900 rounded-lg p-4 border border-navy-200 dark:border-navy-800">
-							<div class="text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-widest">Inflation Real Value</div>
+							<div class="text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-widest">The same money<span class="block font-normal normal-case tracking-normal text-[10px] text-amber-600/70 dark:text-amber-400/70">in today’s prices</span></div>
 							<div id="engineAReal" class="text-xl font-bold text-amber-600 dark:text-amber-400 font-sans mt-2">₹0</div>
 						</div>
 					</div>
@@ -234,10 +210,18 @@ import SectionTitle from '../components/SectionTitle.astro';
 							</div>
 							<div id="engineBBadge" class="px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest rounded bg-navy-100 dark:bg-navy-800 text-navy-600 dark:text-navy-400">--</div>
 						</div>
+						<!--
+							The heading, the figure, the colour and the badge are all written
+							from ONE verdict now. They used to be four independent decisions
+							about one fact, and they disagreed: -₹11.08 lakh printed in
+							emerald green under the word "Surplus" beside a badge saying
+							POLICY WINS.
+						-->
 						<div>
-							<div class="text-xs font-semibold text-navy-500 dark:text-navy-400 uppercase tracking-widest">Surplus Wealth / Deficit</div>
-							<div id="engineBSurplus" class="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">₹0</div>
-							<p id="engineBText" class="text-xs text-navy-600 dark:text-navy-400 mt-3 leading-relaxed">Evaluating risk-free arbitrage...</p>
+							<div id="engineBLabel" class="text-xs font-semibold text-navy-500 dark:text-navy-400 uppercase tracking-widest">Left over at the end</div>
+							<div id="engineBSurplus" class="text-2xl font-extrabold text-navy-900 dark:text-navy-100 mt-1">₹0</div>
+							<div id="engineBSurplusReal" class="text-xs font-semibold text-navy-500 dark:text-navy-400 mt-0.5">&nbsp;</div>
+							<p id="engineBText" class="text-xs text-navy-600 dark:text-navy-400 mt-3 leading-relaxed">Evaluating the bond route…</p>
 						</div>
 						<div class="mt-auto pt-4 border-t border-navy-100 dark:border-navy-800 w-full">
 							<div class="flex items-center justify-between w-full">
@@ -254,11 +238,14 @@ import SectionTitle from '../components/SectionTitle.astro';
 								<h3 class="text-xs font-bold tracking-widest text-navy-900 dark:text-navy-100 uppercase">3. The Growth DIY Route</h3>
 								<p class="text-[10px] uppercase font-bold tracking-widest text-navy-500 dark:text-navy-400 mt-1">Term Life + Index Funds</p>
 							</div>
+							<!-- dd-007: two routes shown as equals. Only one of them used to carry a badge. -->
+							<div id="engineCBadge" class="px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest rounded bg-navy-100 dark:bg-navy-800 text-navy-600 dark:text-navy-400">--</div>
 						</div>
 						<div>
-							<div class="text-xs font-semibold text-navy-500 dark:text-navy-400 uppercase tracking-widest">Surplus Wealth / Deficit</div>
-							<div id="engineCSurplus" class="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400 mt-1">₹0</div>
-							<p id="engineCText" class="text-xs text-navy-600 dark:text-navy-400 mt-3 leading-relaxed">Evaluating equity volatility arbitrage...</p>
+							<div id="engineCLabel" class="text-xs font-semibold text-navy-500 dark:text-navy-400 uppercase tracking-widest">Left over at the end</div>
+							<div id="engineCSurplus" class="text-2xl font-extrabold text-navy-900 dark:text-navy-100 mt-1">₹0</div>
+							<div id="engineCSurplusReal" class="text-xs font-semibold text-navy-500 dark:text-navy-400 mt-0.5">&nbsp;</div>
+							<p id="engineCText" class="text-xs text-navy-600 dark:text-navy-400 mt-3 leading-relaxed">Evaluating the index-fund route…</p>
 						</div>
 						<div class="mt-auto pt-4 border-t border-navy-100 dark:border-navy-800 w-full space-y-2">
 							<div class="flex items-center justify-between w-full">
@@ -290,6 +277,45 @@ import SectionTitle from '../components/SectionTitle.astro';
 
 			</div>
 		</div>
+
+		<!--
+			The machinery, below the answer it produces. Moved rather than removed:
+			a reader who wants to know how the comparison is built still gets the
+			whole of it, one layer down (dd-001).
+		-->
+		<!-- How This Intelligence Engine Works - 3-Step Explainer Guide -->
+		<CardPremium glass={true} class="mb-10 max-w-7xl mx-auto">
+			<div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 border-b border-navy-200 dark:border-navy-800 pb-4">
+				<SectionTitle title="How This Intelligence Engine Works" />
+				<span class="text-[10px] font-bold text-navy-500 dark:text-navy-400 tracking-widest uppercase">3-Step Breakdown</span>
+			</div>
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+				<!-- Step 1 -->
+				<div class="bg-navy-50 dark:bg-navy-900 rounded-lg p-6 border border-navy-200 dark:border-navy-800">
+					<div class="flex items-center gap-3 mb-4">
+						<span class="px-2.5 py-1 rounded-md bg-navy-200 dark:bg-navy-800 text-navy-900 dark:text-navy-100 text-xs font-bold font-mono">01</span>
+						<h3 class="text-sm font-bold tracking-widest text-navy-900 dark:text-navy-100 uppercase">Map the Cash Flow</h3>
+					</div>
+					<p class="text-sm text-navy-600 dark:text-navy-300 leading-relaxed">You input the premiums you pay and the payouts you are promised. We strip away the marketing jargon to build a raw timeline.</p>
+				</div>
+				<!-- Step 2 -->
+				<div class="bg-navy-50 dark:bg-navy-900 rounded-lg p-6 border border-navy-200 dark:border-navy-800">
+					<div class="flex items-center gap-3 mb-4">
+						<span class="px-2.5 py-1 rounded-md bg-navy-200 dark:bg-navy-800 text-navy-900 dark:text-navy-100 text-xs font-bold font-mono">02</span>
+						<h3 class="text-sm font-bold tracking-widest text-navy-900 dark:text-navy-100 uppercase">Calculate Real Value</h3>
+					</div>
+					<p class="text-sm text-navy-600 dark:text-navy-300 leading-relaxed">We discount future payouts against inflation (NPV). A ₹10 Lakh payout in 20 years is mathematically worth far less today. We show you the true purchasing power.</p>
+				</div>
+				<!-- Step 3 -->
+				<div class="bg-navy-50 dark:bg-navy-900 rounded-lg p-6 border border-navy-200 dark:border-navy-800">
+					<div class="flex items-center gap-3 mb-4">
+						<span class="px-2.5 py-1 rounded-md bg-navy-200 dark:bg-navy-800 text-navy-900 dark:text-navy-100 text-xs font-bold font-mono">03</span>
+						<h3 class="text-sm font-bold tracking-widest text-navy-900 dark:text-navy-100 uppercase">Unbundle & Replicate</h3>
+					</div>
+					<p class="text-sm text-navy-600 dark:text-navy-300 leading-relaxed">We unbundle the life cover from the investment. We mathematically test if it's cheaper to buy pure term insurance and invest the rest yourself in PPF or Equity.</p>
+				</div>
+			</div>
+		</CardPremium>
 
 		<!-- Hidden Frictions X-Ray Panel -->
 		<CardPremium glass={true} class="max-w-7xl mx-auto mt-8">
@@ -326,15 +352,15 @@ import SectionTitle from '../components/SectionTitle.astro';
 		<CardPremium glass={true} class="max-w-7xl mx-auto mt-8">
 			<SectionTitle title="Sensitivity Check: Assumption Fragility" />
 			<p class="text-xs text-navy-500 dark:text-navy-400 mt-2 mb-4 leading-relaxed">
-				DIY Equity (Engine C) assumes a 12% CAGR. Here is how your Surplus Wealth changes if equity markets return less than expected over your holding period.
+				The index-fund route above assumes markets deliver their long-run average. They may not. Here is the same comparison at returns either side of it — and note that a lower return does not just leave less over, it can mean the income stops arriving at all.
 			</p>
 			<div class="overflow-x-auto rounded-lg border border-navy-200 dark:border-navy-800">
 				<table class="w-full text-xs text-left whitespace-nowrap">
 					<thead class="bg-navy-100 dark:bg-navy-900 text-navy-600 dark:text-navy-300 font-semibold uppercase tracking-wider text-[10px]">
 						<tr>
 							<th class="px-4 py-2.5">Equity CAGR</th>
-							<th class="px-4 py-2.5 text-right">DIY Surplus Wealth (Engine C)</th>
-							<th class="px-4 py-2.5 text-right">Outcome vs Policy</th>
+							<th class="px-4 py-2.5 text-right">Left over at the end</th>
+							<th class="px-4 py-2.5 text-right">Did it fund the promise?</th>
 						</tr>
 					</thead>
 					<tbody id="insuranceSensitivityBody" class="divide-y divide-navy-100 dark:divide-navy-800 bg-white/50 dark:bg-navy-950/50 font-mono">
@@ -353,7 +379,7 @@ import SectionTitle from '../components/SectionTitle.astro';
 		tableFormatter,
 		setupFormattingField
 	} from '../utils/formatters';
-	import { analyseReplication, type LedgerRow } from '../utils/insuranceReplication';
+	import { analyseReplication, verdictFor, type LedgerRow, type RouteResult } from '../utils/insuranceReplication';
 	import { readPolicyInputs, isUnbundling, syncRiskCostsFromCover } from '../utils/insuranceInputs';
 
 	// This file is a view. The arithmetic lives in insuranceReplication.ts and
@@ -420,6 +446,133 @@ import SectionTitle from '../components/SectionTitle.astro';
 		});
 	}
 
+	/** The one place a verdict becomes words and colours. */
+	function renderRoute(spec: {
+		route: RouteResult;
+		labelEl: string; figureEl: string; realEl: string;
+		badgeEl: string; textEl: string; riskCostEl: string;
+		fundedLine: string; shortLine: string;
+	}) {
+		const v = verdictFor(spec.route);
+		const el = (id: string) => document.getElementById(id);
+
+		const good = 'text-emerald-600 dark:text-emerald-400';
+		const bad = 'text-rose-600 dark:text-rose-400';
+
+		const labelEl = el(spec.labelEl);
+		const figureEl = el(spec.figureEl);
+		const realEl = el(spec.realEl);
+		const badgeEl = el(spec.badgeEl);
+		const textEl = el(spec.textEl);
+		const riskEl = el(spec.riskCostEl);
+
+		if (riskEl) riskEl.innerText = formatShortRupee(spec.route.riskCostPaid);
+
+		if (v.kind === 'shortfall') {
+			if (labelEl) labelEl.innerText = 'Promised income it could not pay';
+			if (figureEl) {
+				figureEl.innerText = formatShortRupee(v.unfunded);
+				figureEl.className = `text-2xl font-extrabold mt-1 ${bad}`;
+			}
+			if (realEl) realEl.innerText = `${formatShortRupee(v.unfundedReal)} in today's prices`;
+			if (badgeEl) {
+				badgeEl.innerText = `RUNS OUT · YEAR ${v.exhaustedInYear}`;
+				badgeEl.className = 'badge-danger';
+			}
+			if (textEl) textEl.innerText = spec.shortLine;
+			return;
+		}
+
+		if (labelEl) labelEl.innerText = 'Left over at the end';
+		if (figureEl) {
+			figureEl.innerText = formatShortRupee(v.kind === 'surplus' ? v.amount : 0);
+			figureEl.className = `text-2xl font-extrabold mt-1 ${good}`;
+		}
+		if (realEl) {
+			realEl.innerText = v.kind === 'surplus'
+				? `${formatShortRupee(v.amountReal)} in today's prices`
+				: 'nothing meaningful left over';
+		}
+		if (badgeEl) {
+			badgeEl.innerText = 'FUNDS THE PROMISE';
+			badgeEl.className = 'badge-safe';
+		}
+		if (textEl) textEl.innerText = spec.fundedLine;
+	}
+
+	/**
+	 * Layer 1. The comparison the whole page reduces to, in one sentence.
+	 *
+	 * The growth route is the one the headline speaks for, because it is the
+	 * route a person unbundling would actually take - the safe route is the
+	 * floor beneath it and keeps its own card.
+	 */
+	function renderAnswer(r: ReturnType<typeof analyseReplication>) {
+		const el = (id: string) => document.getElementById(id);
+		const v = verdictFor(r.growth);
+		const set = (id: string, text: string) => { const e = el(id); if (e) e.innerText = text; };
+
+		const badge = el('answerBadge');
+		const headline = el('answerHeadline');
+		const figureLabel = el('answerFigureLabel');
+		const nominal = el('answerFigureNominal');
+		const real = el('answerFigureReal');
+
+		const good = 'text-emerald-600 dark:text-emerald-400';
+		const bad = 'text-rose-600 dark:text-rose-400';
+		const figureClass = 'text-2xl font-extrabold tracking-tight ';
+
+		if (v.kind === 'shortfall') {
+			if (badge) {
+				badge.innerText = 'KEEP THE POLICY';
+				badge.className = 'badge-warning';
+			}
+			if (headline) {
+				headline.innerHTML = `This policy pays back more than you could replicate on your own. `
+					+ `Buying the cover separately and investing the rest runs out of money in `
+					+ `<strong class="font-bold ${bad}">year ${v.exhaustedInYear}</strong>, `
+					+ `leaving <strong class="font-bold ${bad}">${formatShortRupee(v.unfunded)}</strong> `
+					+ `of the promised income unpaid.`;
+			}
+			set('answerFigureLabel', 'Income the DIY route could not pay');
+			if (nominal) { nominal.innerText = formatShortRupee(v.unfunded); nominal.className = figureClass + bad; }
+			if (real) { real.innerText = formatShortRupee(v.unfundedReal); real.className = figureClass + bad; }
+		} else {
+			const amount = v.kind === 'surplus' ? v.amount : 0;
+			const amountReal = v.kind === 'surplus' ? v.amountReal : 0;
+			if (badge) {
+				badge.innerText = 'UNBUNDLE IT';
+				badge.className = 'badge-safe';
+			}
+			if (headline) {
+				headline.innerHTML = `Buy the cover on its own and invest the difference. `
+					+ `You collect the same income this policy promises, in the same years, and finish with `
+					+ `<strong class="font-bold ${good}">${formatShortRupee(amount)}</strong> more — `
+					+ `<strong class="font-bold ${good}">${formatShortRupee(amountReal)}</strong> in today's prices.`;
+			}
+			set('answerFigureLabel', 'Left over at the end');
+			if (nominal) { nominal.innerText = formatShortRupee(amount); nominal.className = figureClass + good; }
+			if (real) { real.innerText = formatShortRupee(amountReal); real.className = figureClass + good; }
+		}
+
+		set('answerYield', r.policy.xirrPct.toFixed(2) + '%');
+		set('answerYieldNote',
+			`Against ${r.inputs.inflationRate}% inflation, ${r.inputs.safeRate}% on government bonds `
+			+ `and ${r.inputs.equityRate}% assumed on index funds.`);
+
+		const cover = r.riskCostPaid;
+		set('answerCoverCost', formatShortRupee(cover));
+		set('answerCoverNote', cover > 0
+			? `Over ${r.inputs.ppt} years, for the same life and accident cover — bought separately, at market rates.`
+			: 'Nothing. Unbundling is switched off, so this comparison buys no protection at all and is not like for like.');
+
+		set('answerPremiumDecay',
+			`Your premium is fixed at ${formatShortRupee(r.inputs.premium)} a year for ${r.inputs.ppt} years. `
+			+ `The policy never raises it, so the last instalment costs you `
+			+ `${formatShortRupee(r.policy.lastPremiumReal)} in today's prices — the commitment gets lighter every year, `
+			+ `and so does what it buys.`);
+	}
+
 	function updateDashboardUI() {
 		const results = analyseReplication(readPolicyInputs());
 
@@ -450,53 +603,53 @@ import SectionTitle from '../components/SectionTitle.astro';
 			}
 		}
 
-		const engineBSurplusEl = document.getElementById('engineBSurplus');
-		const engineBRiskCostEl = document.getElementById('valRiskCostB');
-		const engineBBadgeEl = document.getElementById('engineBBadge');
-		const engineBTextEl = document.getElementById('engineBText');
-		const safeProfit = results.safe.finalBalance;
+		// ONE verdict per route, rendered everywhere. `verdictFor` decides whether
+		// a route funded the promise; the card's heading, figure, colour, badge and
+		// sentence all follow from that single answer, and the bottom line reads
+		// the same one. Nothing below inspects the sign of a number for itself.
+		renderRoute({
+			route: results.safe,
+			labelEl: 'engineBLabel',
+			figureEl: 'engineBSurplus',
+			realEl: 'engineBSurplusReal',
+			badgeEl: 'engineBBadge',
+			textEl: 'engineBText',
+			riskCostEl: 'valRiskCostB',
+			fundedLine: 'Buying the cover separately and putting the rest in government bonds funds every rupee this policy promises.',
+			shortLine: `Government bonds at ${results.inputs.safeRate}% cannot keep up with this policy — it pays back more than they earn.`,
+		});
 
-		if (engineBSurplusEl) engineBSurplusEl.innerText = formatShortRupee(safeProfit);
-		if (engineBRiskCostEl) engineBRiskCostEl.innerText = formatShortRupee(results.safe.riskCostPaid);
+		renderRoute({
+			route: results.growth,
+			labelEl: 'engineCLabel',
+			figureEl: 'engineCSurplus',
+			realEl: 'engineCSurplusReal',
+			badgeEl: 'engineCBadge',
+			textEl: 'engineCText',
+			riskCostEl: 'valRiskCostC',
+			fundedLine: 'Buying the cover separately and putting the rest in index funds funds every rupee this policy promises.',
+			shortLine: 'The income is demanded faster than the fund can grow into it — the early payouts come out before the compounding has happened.',
+		});
 
-		if (engineBBadgeEl && engineBTextEl) {
-			if (safeProfit > 0) {
-				engineBBadgeEl.innerText = 'DIY WINS';
-				engineBBadgeEl.className = 'badge-safe';
-				engineBTextEl.innerHTML = `By unbundling, you fund the exact same payouts and keep an extra <strong class="font-bold text-emerald-600 dark:text-emerald-400">${formatShortRupee(safeProfit)}</strong> in surplus wealth.`;
-			} else {
-				engineBBadgeEl.innerText = 'POLICY WINS';
-				engineBBadgeEl.className = 'badge-warning';
-				engineBTextEl.innerHTML = `This policy's yield beats the 7.1% safe government rate. DIY replication fails by <strong class="font-bold text-amber-600 dark:text-amber-400">${formatShortRupee(Math.abs(safeProfit))}</strong>.`;
-			}
-		}
-
-		const engineCSurplusEl = document.getElementById('engineCSurplus');
-		const engineCRiskCostEl = document.getElementById('valRiskCostC');
 		const engineCTaxDragEl = document.getElementById('valTaxDragC');
-		const engineCTextEl = document.getElementById('engineCText');
-		const equityProfit = results.growth.finalBalance;
-
-		if (engineCSurplusEl) engineCSurplusEl.innerText = formatShortRupee(equityProfit);
-		if (engineCRiskCostEl) engineCRiskCostEl.innerText = formatShortRupee(results.growth.riskCostPaid);
 		if (engineCTaxDragEl) engineCTaxDragEl.innerText = `-${formatShortRupee(results.growth.taxDrag)}`;
 
-		if (engineCTextEl) {
-			if (equityProfit > 0) {
-				engineCTextEl.innerHTML = `By accepting equity volatility, you fund the exact same payouts and generate <strong class="font-bold text-indigo-600 dark:text-indigo-400">${formatShortRupee(equityProfit)}</strong> in massive surplus wealth.`;
-			} else {
-				engineCTextEl.innerHTML = `The payouts demand too much cash too early. Sequence risk breaks the equity portfolio by <strong class="font-bold text-rose-600 dark:text-rose-400">${formatShortRupee(Math.abs(equityProfit))}</strong>.`;
-			}
-		}
+		renderAnswer(results);
 
 		const takeawayEl = document.getElementById('replicationTakeaway');
-
 		if (takeawayEl) {
-			if (isUnbundling()) {
-				takeawayEl.innerText = `By unbundling insurance from investment, purchasing pure Term Life + Accident cover (${formatShortRupee(results.riskCostPaid)} total risk cost), and investing the rest, DIY Equity leaves you with ${formatShortRupee(equityProfit)} in SURPLUS WEALTH after paying out all requested cash flows!`;
-			} else {
-				takeawayEl.innerText = `Without deducting any insurance cost, investing 100% of your premiums into DIY Equity leaves you with ${formatShortRupee(equityProfit)} in SURPLUS WEALTH after paying out all requested cash flows!`;
-			}
+			const v = verdictFor(results.growth);
+			const premise = isUnbundling()
+				? `Buying the same life and accident cover on the open market costs ${formatShortRupee(results.riskCostPaid)} over ${results.inputs.ppt} years. Put what is left of each premium into index funds and`
+				: `Unbundling is switched off, so this buys no cover at all and is not a like-for-like comparison. On that basis,`;
+
+			const outcome = v.kind === 'shortfall'
+				? `the money still runs out — in year ${v.exhaustedInYear}, leaving ${formatShortRupee(v.unfunded)} of the promised income unpaid.`
+				: v.kind === 'surplus'
+					? `you fund every rupee this policy promises, finishing with ${formatShortRupee(v.amount)} over — ${formatShortRupee(v.amountReal)} in today's prices.`
+					: `you fund every rupee this policy promises, with nothing meaningful left over.`;
+
+			takeawayEl.innerText = `${premise} ${outcome}`;
 		}
 
 		const ledger = results.ledger;
@@ -513,16 +666,28 @@ import SectionTitle from '../components/SectionTitle.astro';
 		const sensBody = document.getElementById('insuranceSensitivityBody');
 		if (sensBody) {
 			let tbodyHtml = '';
+			// Same verdict, same words as the cards above. A row that runs out
+			// reports the YEAR it ran out and what went unpaid - it used to report a
+			// negative balance, which is how the table came to tell the reader that
+			// a higher return left them worse off.
 			results.sensitivity.forEach((row) => {
 				const isBaseline = row.isBaseline;
 				const highlight = isBaseline ? 'bg-gold-50 dark:bg-gold-900/20 font-bold' : '';
-				const isWin = row.surplus > 0;
-				const outcomeClass = isWin ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
-				const outcomeText = isWin ? `DIY Wins by ${formatShortRupee(row.surplus)}` : `Policy Wins by ${formatShortRupee(Math.abs(row.surplus))}`;
-				
+				const v = row.verdict;
+				const good = 'text-emerald-600 dark:text-emerald-400';
+				const bad = 'text-rose-600 dark:text-rose-400';
+
+				const leftOver = v.kind === 'shortfall' ? '—' : formatShortRupee(row.surplus);
+				const outcomeClass = v.tone === 'good' ? good : bad;
+				// The rupee figure lives in the column beside this one; repeating it
+				// here says nothing the reader cannot already see (dd-009).
+				const outcomeText = v.kind === 'shortfall'
+					? `Runs out in year ${v.exhaustedInYear} · ${formatShortRupee(v.unfunded)} unpaid`
+					: 'Funds every rupee promised';
+
 				tbodyHtml += `<tr class="${highlight}">
 					<td class="px-4 py-2.5 ${isBaseline ? 'text-gold-600 dark:text-gold-400' : 'text-navy-700 dark:text-navy-300'}">${row.rate}% ${isBaseline ? '<span class="font-sans text-[10px] ml-1">(Your Input)</span>' : ''}</td>
-					<td class="px-4 py-2.5 text-right ${isBaseline ? 'text-gold-600 dark:text-gold-400' : 'text-navy-900 dark:text-navy-100'}">${formatShortRupee(row.surplus)}</td>
+					<td class="px-4 py-2.5 text-right ${isBaseline ? 'text-gold-600 dark:text-gold-400' : 'text-navy-900 dark:text-navy-100'}">${leftOver}</td>
 					<td class="px-4 py-2.5 text-right ${outcomeClass}">${outcomeText}</td>
 				</tr>`;
 			});

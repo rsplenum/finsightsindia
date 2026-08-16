@@ -1,6 +1,6 @@
 # FinSight — Launch Gate
 
-**Not live. No domain.** 297 tests green · 36 commits on `fix/learning-loop-integrity-and-calculator-correctness`
+**Not live. No domain.** 304 tests green · 37 commits on `fix/learning-loop-integrity-and-calculator-correctness`
 
 This is a list, not a document. Explanations live in commit messages, `design-doctrine.json` and `engineering-solutions.json`. This says what is done and what is next.
 
@@ -16,11 +16,14 @@ engine charged a fund fee · **sol-034** step-up meant opposite things on the tw
 pages · **sol-035** a rung printed NaN · **sol-036** the fee and the return
 series are a pair · **sol-037** rung 3 counted no tax · **sol-038** two rungs,
 one formula, two copies · **sol-039** the insurance engine leaves the page and
-becomes testable · **T3 rungs 5 and 6** built (order-of-returns, and what
-protection costs).
+becomes testable · **sol-040** an exhausted portfolio stops growing a debt, and
+four surfaces stop disagreeing about one number · **sol-041** zero was read as
+empty · **T3 rungs 5 and 6** built · **T5 complete**.
 
-Numbers that moved: the shipped answer ₹43.7 L → ₹89.1 L, and the contribution
-needed for a crore ₹56,500 → ~₹35,500. 204 → 267 tests.
+Numbers that moved: the shipped answer ₹43.7 L → ₹89.1 L, the contribution
+needed for a crore ₹56,500 → ~₹35,500, and the insurance page's safe route from
+"−₹11.08 L surplus" to "runs out in year 30, ₹11.08 L of income unpaid".
+204 → 304 tests.
 
 Detail in `engineering-solutions.json`, `design-doctrine.json` and the commit
 messages. **Rung numbering: the Answer is rung 1.**
@@ -41,10 +44,9 @@ the commit messages — which is where it belongs once it is no longer *next*.
 - [ ] **Rung 2 should own the contribution-mode chooser** — it is the rung about inflation eating money, so it is the right home. Today the entry's "change how your contribution grows" link points at the expert rung, where the control actually is; a compact chooser in rung 1 is the proper end state
 - [ ] **The same grid defect is latent in rung 6** — `protectionCurve` steps roughness by 1 from 8, so a shipped 28.4% assumption uses the 28% point. Hidden today only because the rung prints roughness to zero decimals. Anchor it the same way rung 4 now is
 - [x] ~~**T5 — insurance analyser. THE NEXT SESSION.** Starts with extracting `runReplicationAnalysis()`~~ **Extracted 16 Aug, sol-039.** The rest of T5 is unblocked and cheap; four defects it uncovered are listed below
-- [ ] **The DIY walk compounds an exhausted portfolio into a debt** — a balance that cannot fund a payout goes negative and keeps earning the equity rate, so the sensitivity table reports the deficit as WORST around 11% and better at 8% and 14%. A higher return shown as a worse outcome. Fix is to floor at zero and report the year the money ran out, which is also the only honest deficit figure. sol-039
-- [ ] **The safe DIY route is charged no tax** — the growth route pays 12.5% LTCG, the bond route pays nothing. It flatters the very route used to argue the policy is beatable without risk. sol-039
-- [ ] **The LTCG exemption is applied once to the terminal gain, not annually** — overstates the tax on the DIY route, so it errs against our own argument, but it is still wrong. sol-039
-- [ ] **A typed maturity benefit of 0 becomes ₹10 lakh** — `parseFormattedNumber(...) || 1000000` in the reader, against the field's own tooltip ("Type 0 if there is no final bonus"). sol-039
+- [x] ~~**The DIY walk compounds an exhausted portfolio into a debt**~~ **Fixed, sol-040.** The walk pays what it has and reports the year it ran out
+- [x] ~~**A typed maturity benefit of 0 becomes ₹10 lakh**~~ **Fixed, sol-041**
+- [ ] **The LTCG exemption is applied once to the terminal gain, not annually** — the route sells units every year to fund payouts, so the gains are realised annually and the exemption should be used annually. Overstates the tax on the DIY route, so it errs against our own argument, but it is still wrong. Needs the gain portion of each withdrawal modelled. sol-039
 - [ ] **T1 homepage** — six items, untouched since the audit
 - [ ] Delete `swpDeterministic.ts` — no production caller; 11 tests still use it as a harness *(needs `growth`/`netMonthly` on the MC engine first)*
 - [ ] Rung 6 term selector, 3/6/9/12 months — *needs term-invariant return generation; today it drifts the unhedged baseline 39→42, an artefact*
@@ -55,6 +57,7 @@ the commit messages — which is where it belongs once it is no longer *next*.
 - [ ] **The presets state a CAGR; both engines consume it as an arithmetic average** — so the median path lands a few points below the number on the button. True on the planner too, since 15 Aug. Fixing it moves T2's shipped figures, so it is not a silent change
 - [ ] **T3 rung 5 says our own hedging product does not pay** — at the shipped 28.4% roughness the floor loses money in the bad futures *and* the typical ones; it only earns its price above ~30%. The rung states this plainly. Do we keep offering the toggle, re-price it, or change the default floor? A product decision, not an engineering one
 - [ ] **The fund-fee default is the DEAREST plan — 1.75%, through a distributor** — chosen because most retail money is in regular plans and because sol-028's flattering default is exactly how the last one survived unexamined. It moves the shipped answer from ₹57.8 lakh to ₹47.4 lakh. Costed at all three plans before choosing, not defended after. Your call
+- [ ] **The safe DIY route is charged no tax at all** — the growth route pays 12.5% LTCG; the bond route pays nothing. Interest is taxed at slab, and we have no income input to apply one with. It flatters the very route the page uses to argue the policy is beatable *without risk*, so it is not a neutral omission. Options: assume a slab, ask for one, or say plainly that the bond figure is pre-tax. Your call. sol-039
 - [ ] **Debt 7.1% and gold 8.5% are still typed in** — same fault as sol-028, no series in the repo to derive them from. The page says so in plain words rather than hiding it
 - [x] ~~**The floor depth is three different numbers**~~ **Two now.** Both engines take it as a parameter and both pages ship −10%; only the copy's "−10% or −15%" is still loose
 - [ ] **CLAUDE.md's dev-server instruction is wrong for this harness** — says `astro dev --background`; must use the preview tools. sol-025
@@ -123,14 +126,15 @@ Scope, settled 15 Aug: the SIP page inherits T2 whole — shared engine, `planne
 - [ ] Explain the hedging mechanic plainly
 - [ ] Make the tradeoff explicit: cut lifestyle, or pay to protect it
 
-## T5 — Insurance analyser · 2/5
+## T5 — Insurance analyser · 5/5 ✅
 
 - [x] Audit; identify contradictory verdict labels
-- [x] **Extract `runReplicationAnalysis()` so it can be tested** — `insuranceReplication.ts` (engine, no DOM, no clock) + `insuranceInputs.ts` (the one reader). One walk for both routes and every sensitivity row. sol-039, 30 tests, parity-checked against the original over six input sets before deleting it
-- [ ] Fix surplus/deficit labelling — sign, word and badge must agree. *Now a one-line change with a test behind it: at the defaults the safe route is **−₹11.08 L**, printed in emerald green under the word "Surplus", and the bottom line says "₹ −1.41 Cr in SURPLUS WEALTH"*
-- [ ] Lead with the unbundling verdict
-- [ ] Apply the T8 side-by-side money pattern
-- [ ] The money fields recompute on **blur**, the numeric ones on **input** — two behaviours in one form (`setupFormattingField`)
+- [x] **Extract `runReplicationAnalysis()` so it can be tested** — `insuranceReplication.ts` (engine, no DOM, no clock) + `insuranceInputs.ts` (the one reader). One walk for both routes and every sensitivity row. sol-039, parity-checked against the original over six input sets before deleting it
+- [x] **Fix surplus/deficit labelling** — it was not a wording task. The figure being labelled was an artefact of a portfolio allowed to owe money; **sol-040** floors the walk at zero and reports the year it ran out. One `verdictFor()` now drives the heading, figure, colour, badge and sentence on every surface
+- [x] **Lead with the unbundling verdict** — `InsuranceAnswer`, layer 1: *buy the policy, or buy the cover on its own and invest the difference?* The income is identical by construction and the screen says so, which is what makes the surplus a legitimate headline rather than an accountant's summary
+- [x] **Apply the T8 side-by-side money pattern** — every figure carries its frame permanently: total paid out, surplus, and the shortfall all appear in the rupees of the day beside today's prices. No toggle (dd-006), no footnote (dd-004)
+- [x] **sol-041** — a typed maturity of 0 no longer becomes ₹10 lakh, and `formatShortRupee` stopped printing paise
+- [ ] The money fields recompute on **blur**, the numeric ones on **input** — two behaviours in one form (`setupFormattingField`). Left as found: it is a shared helper and every calculator uses it
 
 ## T6 — Income tax calculator (incl. your T10) · 3/8
 
@@ -152,13 +156,13 @@ Scope, settled 15 Aug: the SIP page inherits T2 whole — shared engine, `planne
 - [ ] Clear the homepage's six occurrences *(with T1)*
 - [ ] Clear the remaining seven across swp-planner, about, faq, terms
 
-## T8 — Real vs nominal · 3/5
+## T8 — Real vs nominal · 4/5
 
 - [x] dd-004 recorded: never use a concept the reader has not been given
 - [x] Teach it inside the two-rates rung, in plain words `b128478`
 - [x] Side-by-side columns, not a toggle (dd-006) `1c26a7b`
 - [x] Applied to SIP — both columns in the flow rung, and both of them close (sol-031)
-- [ ] Apply the pattern to insurance
+- [x] **Applied to insurance** — total paid out, the surplus and the shortfall each carry both moneys, adjacently and permanently. sol-040
 - [ ] Label every currency figure site-wide
 
 ## T9 — Link the writing to the maths · 0/5
@@ -175,7 +179,7 @@ Scope, settled 15 Aug: the SIP page inherits T2 whole — shared engine, `planne
 - [x] dd-000 … dd-011 recorded, verbatim, with tests `fa88e96`
 - [x] Enforced: every calculator needs a `.checks.md`, tested `7bbfe6f`
 - [x] **sol-019 proved twice** — T2 shipped it, T3 inherited it, and the five new checks files were written *before* their components for the first time
-- [ ] Apply it to T5 and T6
+- [ ] **T5 done, T6 outstanding** — the analyser now leads with an answer as a sentence, and `InsuranceAnswer.checks.md` was written before the component. T6, the tax calculator, is untouched
 
 ## T12 — Agentic workflow · 6/8
 
