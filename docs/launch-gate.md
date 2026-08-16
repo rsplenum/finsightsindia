@@ -79,7 +79,7 @@ the commit messages — which is where it belongs once it is no longer *next*.
 - [ ] **Cross-surface agreement is checked pair by pair, by hand** — sol-038's tests are bespoke, one pair at a time, which is the same weakness the duplicated formulas had. A generalised check would fail the suite when any two surfaces disagree about one quantity
 - [ ] **Proposed rung: "what if life happens?"** — a lump-sum shock (marriage, an operation no insurance covers). Liquidity risk, not market risk. Rahul's idea; not yet scoped.
 - [ ] **Two tax rules are INFERRED, not cited — do not state them as fact.** Recorded this way on purpose: sol-042 happened because a confident note was backwards in both direction and magnitude and nobody could check it. (a) Whether old-regime 87A may be set against s.111A STCG — s.112A(6) explicitly bars it for LTCG, and the absence of an equivalent bar for STCG is an inference from silence. The engine does not claim it. (b) Marginal relief at the surcharge thresholds when slab and special-rate income are MIXED — "the bill at the threshold" depends on which income you imagine reducing; the engine reduces the slab part and holds gains constant, labelled in the code as an approximation. Bites only within a few lakh of each threshold
-- [ ] **sol-043: the tax page renders the LOSING regime as the recommended one** — at maxed deductions the badge reads "OLD REGIME SAVES ₹53,300" while the new regime's higher ₹97,500 is the greenest, boldest number on the page. Found live, not by the suite; the engine is right, the view is not. sol-040's shape exactly. Deferred *into* T6's answer layer, a few steps away in this session, because the fix is one `verdictFor()` driving every surface and patching the markup now builds that twice. **If the answer layer slips, fix this on its own** — it is only a deferral because nothing is live
+- [x] ~~**sol-043: the tax page renders the LOSING regime as the recommended one**~~ **Fixed in the answer layer, as the deferral said.** One `verdictFor()` drives card ring, font weight, colour, both column headers and the tag; the DEFAULT/OPTIONAL captions are gone. **Its severity was understated at filing** — recorded against a contrived maxed-deduction case, it fires on a salaried reader with an ordinary ₹2L home loan. A defect's first reproduction is the one you happened to find, not the smallest that triggers it
 
 ---
 
@@ -139,7 +139,7 @@ Scope, settled 15 Aug: the SIP page inherits T2 whole — shared engine, `planne
 - [x] **sol-041** — a typed maturity of 0 no longer becomes ₹10 lakh, and `formatShortRupee` stopped printing paise
 - [x] **The whole form now answers as you type** — `setupFormattingField` takes an opt-in `live` flag, debounced. Opt-in on purpose: its other 13 callers sit on pages where one recompute is a 10,000-path simulation. sol-042
 
-## T6 — Income tax calculator (incl. your T10) · 8/9
+## T6 — Income tax calculator (incl. your T10) · 9/9 ✅
 
 - [x] Double-counted base tax fixed `0dd3950`
 - [x] Test coverage restored — 3 failing → 49 passing `0dd3950`
@@ -149,7 +149,7 @@ Scope, settled 15 Aug: the SIP page inherits T2 whole — shared engine, `planne
 - [x] **STCG/LTCG separated, with the 87A interaction** — four buckets by rate, ₹1.25L exemption, unused basic exemption absorbed dearest-first, Chapter VI-A barred against gains, surcharge on gains capped at 15%. **The 87A rule was researched, not assumed**: under the new regime the rebate never touches special-rate tax, and the ₹12L threshold is tested EXCLUDING special-rate income — so ₹11L salary + ₹2L STCG keeps its rebate. Reading it the intuitive way would deny the rebate to a great many filers. Two sources, worked example, cited in the code
 - [x] **Presumptive taxation: 44AD and 44ADA** `f6171c3` — 6% on banked turnover / 8% on cash, blended; ceilings 2cr→3cr and 50L→75L when cash is ≤5%. **Both bases are always costed** so the page can show the election adjacently rather than behind a dropdown — dd-006/dont-2, since the actual-vs-deemed difference *is* the lesson. An ineligible election falls back to the books rather than deeming zero profit
 - [x] **Loss set-off and carry-forward** — the three rules kept apart: intra-head (s.70), inter-head (s.71), carry-forward (s.72/74/71B). A capital loss can never touch salary and the engine says so explicitly; a business loss can reach rent, interest *and* capital gains but never salary; brought-forward losses meet their own kind only. Set-off order is dearest-first, and LTCL goes to s.112 before s.112A so the ₹1.25L exemption isn't wasted. Conservation asserted: available = used + carried, on every loss
-- [ ] Progressive disclosure — salaried users never see business fields. **Design settled first, in `TaxAnswer.checks.md`** — entry is one field (gross salary); the heads are additive chips, each ≤2 fields, house property and capital gains split rather than crammed; a chip is not a mode because it adds data rather than hiding half a difference; the regime stays two adjacent columns and never a switch; presumptive is shown adjacently because there the difference *is* the lesson. Answer headlines the monthly bite (dd-010) and the break-even deduction total (dd-008)
+- [x] **Progressive disclosure — salaried users never see business fields.** Four chips, closed by default, native `<details>`. **Design settled first, in `TaxAnswer.checks.md`** — entry is one field (gross salary); the heads are additive chips, each ≤2 fields, house property and capital gains split rather than crammed; a chip is not a mode because it adds data rather than hiding half a difference; the regime stays two adjacent columns and never a switch; presumptive is shown adjacently because there the difference *is* the lesson. Answer headlines the monthly bite (dd-010) and the break-even deduction total (dd-008)
 
 ## T7 — Dejargonise · 3/5
 
@@ -177,13 +177,13 @@ Scope, settled 15 Aug: the SIP page inherits T2 whole — shared engine, `planne
 - [ ] Shared cost model: tax, inflation, expense ratio, hedging drag, exit load
 - [ ] Surface the self-sabotage check — low risk appetite, high return expectation
 
-## T11 — Lay person is the default user · 3/4
+## T11 — Lay person is the default user · 4/4 ✅
 
 - [x] sol-019 written: three layers, entry contract, answer as a sentence `175ab75`
 - [x] dd-000 … dd-011 recorded, verbatim, with tests `fa88e96`
 - [x] Enforced: every calculator needs a `.checks.md`, tested `7bbfe6f`
 - [x] **sol-019 proved twice** — T2 shipped it, T3 inherited it, and the five new checks files were written *before* their components for the first time
-- [ ] **T5 done, T6 outstanding** — the analyser now leads with an answer as a sentence, and `InsuranceAnswer.checks.md` was written before the component. T6, the tax calculator, is untouched
+- [x] **T5 and T6 both done** — the tax calculator now leads with an answer as a sentence (the monthly bite, not the annual bill) and `TaxAnswer.checks.md` was written before the component. Five calculators, one pattern
 
 ## T12 — Agentic workflow · 6/8
 

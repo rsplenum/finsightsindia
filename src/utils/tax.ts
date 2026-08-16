@@ -226,6 +226,18 @@ export interface TaxInput {
     sec80c: number;
     sec80d: number;
     sec80ccd1b: number;
+
+    /**
+     * NOT A FORM FIELD. The break-even solver asks "what if this reader could
+     * claim d more?" by bisecting on this, and it does so THROUGH THIS ENGINE
+     * rather than reimplementing the old regime beside it. A second derivation
+     * of the same tax is sol-038's fault exactly, and the break-even would
+     * eventually disagree with the two columns it sits under.
+     *
+     * Uncapped on purpose: it stands for any further relief the reader might
+     * find, not for a particular section with a particular ceiling.
+     */
+    whatIfExtraDeduction?: number;
 }
 
 export interface SlabDetail {
@@ -899,7 +911,8 @@ function computeRegime(input: TaxInput, regime: Regime): TaxRegimeResult {
         ? 0
         : Math.min(150000, Math.max(0, input.sec80c)) +
           Math.min(100000, Math.max(0, input.sec80d)) +
-          Math.min(50000, Math.max(0, input.sec80ccd1b));
+          Math.min(50000, Math.max(0, input.sec80ccd1b)) +
+          Math.max(0, input.whatIfExtraDeduction ?? 0);
 
     // Chapter VI-A comes off the SLAB income only. s.112A(6) and s.111A(2) bar
     // it against gains taxed at special rates, so an 80C investment cannot

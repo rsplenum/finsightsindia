@@ -1,0 +1,98 @@
+---
+/**
+ * Layer 1 for the income tax calculator - sol-019's Answer.
+ *
+ * The page used to open on two columns of a computation and a badge, which
+ * answers *what* and never *so what*. Design settled before the component in
+ * `TaxAnswer.checks.md`.
+ *
+ * Three things it does that the columns could not:
+ *   - headlines the MONTHLY bite, which is what a salaried person lives
+ *     through, rather than the annual total (dd-010);
+ *   - states the BREAK-EVEN, so the reader leaves with a rule they can apply
+ *     next year without us (dd-003, dd-008);
+ *   - renders every emphasis from one computed verdict, so the page can no
+ *     longer recommend the losing regime (sol-043, dd-007/dont-2).
+ *
+ * Every id here is filled by the page's one script from one engine result.
+ */
+---
+
+<section
+  id="taxAnswer"
+  class="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-900/40 p-6 sm:p-8 space-y-6"
+  aria-label="Your income tax, answered"
+>
+  <p class="text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">
+    FY 2025-26 · assessment year 2026-27
+  </p>
+
+  <!--
+    The answer as a sentence, not a statistic. The value slots are fixed so the
+    eye can return to them, and the prose around them stays true at every input
+    (dd-008): it states what the figures ARE, never where the reader currently
+    is.
+  -->
+  <div class="space-y-3">
+    <h2 class="text-xl sm:text-2xl font-bold text-navy-900 dark:text-white leading-snug">
+      You&rsquo;ll pay
+      <span id="ansMonthly" class="text-3xl sm:text-4xl font-black tabular-nums">₹0</span>
+      a month in income tax.
+    </h2>
+    <p class="text-sm text-navy-600 dark:text-navy-300 leading-relaxed">
+      That is <span id="ansAnnual" class="font-bold tabular-nums">₹0</span> for the year on
+      income of <span id="ansGross" class="font-bold tabular-nums">₹0</span> — an effective
+      rate of <span id="ansRate" class="font-bold tabular-nums">0%</span>. Spread evenly over
+      twelve months; a real TDS schedule is not level, so treat the monthly figure as an
+      average rather than a payslip line.
+    </p>
+    <p id="ansReconcile" class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed empty:hidden"></p>
+  </div>
+
+  <!--
+    Both regimes, always, side by side. dd-006: the difference between them IS
+    the lesson on this page, so it may never sit behind a switch. The winner's
+    emphasis is applied by the script from `verdictFor()` - never by a class
+    written here, which is the whole of sol-043.
+  -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div
+      id="ansCardNew"
+      class="rounded-xl border p-4 space-y-1 border-navy-200 dark:border-white/10"
+    >
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">
+          New regime
+        </span>
+        <span id="ansTagNew" class="text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded"></span>
+      </div>
+      <div id="ansTaxNew" class="text-2xl font-bold tabular-nums text-navy-900 dark:text-white">₹0</div>
+      <div id="ansSubNew" class="text-[11px] text-navy-500 dark:text-navy-400"></div>
+    </div>
+
+    <div
+      id="ansCardOld"
+      class="rounded-xl border p-4 space-y-1 border-navy-200 dark:border-white/10"
+    >
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">
+          Old regime
+        </span>
+        <span id="ansTagOld" class="text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded"></span>
+      </div>
+      <div id="ansTaxOld" class="text-2xl font-bold tabular-nums text-navy-900 dark:text-white">₹0</div>
+      <div id="ansSubOld" class="text-[11px] text-navy-500 dark:text-navy-400"></div>
+    </div>
+  </div>
+
+  <!--
+    The boundary, not the current position (dd-008/do-3). This is the idea the
+    reader keeps: the new regime is a bet that their deductions fall short of a
+    computable number.
+  -->
+  <p
+    id="ansBreakEven"
+    class="text-sm text-navy-700 dark:text-navy-200 border-t border-navy-200 dark:border-white/10 pt-4 leading-relaxed"
+  >
+  </p>
+</section>

@@ -60,12 +60,21 @@ that could not were split rather than crammed:**
 
 | chip | opens with | deferred one layer in |
 |---|---|---|
-| A home I live in | loan interest — 1 field | that the new regime allows none of it |
-| A property I rent out | rent, interest — 2 fields | municipal taxes, the ₹2L set-off cap |
-| Business or profession | turnover — 1 field | books-vs-presumptive shown as two answers, below |
-| Capital gains | sold within a year, held over a year — 2 fields | property, gold, debt, unlisted |
-| Other sources | interest and the rest — 1 field | — |
-| Losses carried forward | — | the whole head; last layer |
+| A home, or a property you rent out | which is it, then loan interest — 1 choice + 1 field | rent and municipal taxes appear only for a let-out |
+| Business or professional income | turnover, receipts | both presumptive bases shown adjacently, then the election |
+| Capital gains | equity under a year, equity over a year — 2 fields | property, gold, debt, unlisted |
+| Losses to set off | this year's short-term and long-term | brought-forward, four kinds |
+
+**Revised while building, and recorded rather than diverged silently.** This file
+originally split house property into two chips, "a home I live in" and "a
+property I rent out". Built, that needs the two `<details>` to be mutually
+exclusive — the engine models one property — and mutual exclusion between two
+disclosure widgets is fragile and confusing when both can be open. One chip
+whose first control is the binary choice is honest about the constraint and
+still inside dd-002: one choice plus one field for a home, plus two more that
+appear only for a let-out. Other sources kept its existing field in the main
+form rather than gaining a chip of its own, since it was never a business field
+and hiding it would have been disclosure for its own sake.
 
 **A chip is not a mode, and this is the sharpest rule on the page.** dd-006 bans
 hiding half of a difference behind a control *when the difference is the
@@ -100,10 +109,10 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-006/dont-1 | PASS | The sentence skeleton is fixed; only slotted values move. The verdict clause changes only when the winner genuinely changes, which is a different answer rather than a rewording of the same one. |
 | dd-006/dont-2 | PASS | The regime difference — the lesson — is never behind a control: two adjacent columns, always both. The chips are additive disclosure of income the reader does or does not have, not two views of one difference. Presumptive, the one genuine alternative, is shown adjacently for exactly this reason. |
 | dd-007/dont-1 | PASS | Three sizes, each asserting something: the monthly figure is largest because it is the answer; the two regime bills are equal to each other because they are the same quantity under two rules; the break-even line is smallest. |
-| dd-007/dont-2 | PASS | This is sol-043, found live and fixed here. Today the losing bill renders emerald at weight 900 against the winner's plain white 700, captioned DEFAULT and OPTIONAL. Nothing may assert a preference from a class written in the markup; the winner's styling is rendered from the computed verdict, so the emphasis cannot contradict the badge. |
+| dd-007/dont-2 | PASS | This is sol-043, found live and fixed here. The losing bill used to render emerald at weight 900 against the winner's plain white 700, captioned DEFAULT and OPTIONAL. Every emphasis now comes from `applyVerdict()`: card ring, font weight, colour, both column headers and the tag. Verified live at four states including the two that were broken, and swept in `taxAnswer.test.ts`. |
 | dd-008/dont-1 | PASS | Values live in fixed slots. The prose states the principle — the old regime pays you back for deductions, the new one does not — which is true at every value of every field. |
 | dd-008/dont-2 | PASS | It states the boundary, not the position: the deduction total at which the regimes cross, marked on the deductions themselves. Not "you are currently claiming ₹3.9 lakh". |
-| dd-009/dont-1 | PASS | Every figure in the sentence is traceable to a row in the breakdown below it, and one engine call feeds both. The monthly figure states in the same breath that it is the annual bill divided by twelve, because a real TDS schedule is not level. |
+| dd-009/dont-1 | PASS | The monthly figure states in the same breath that it is the annual bill over twelve and that a real TDS schedule is not level. And the one live instance this rule caught: the effective rate divides by total income, which a loss reduces, so a reader earning ₹15,00,000 was being told "income of ₹13,00,000". A reconciling clause now names the gap — "your ₹15,00,000 of income less ₹2,00,000 of losses" — and vanishes when there is nothing to explain. |
 | dd-009/dont-2 | PASS | Nothing below is deleted to make room. The Answer adds the explanation the page lacked; the breakdown table survives intact as layer 3. |
 | dd-010/dont-1 | PASS | The headline is the monthly bite, which is what a salaried person actually lives through. The annual total and the effective rate sit beside it as context rather than leading. |
 | dd-012/dont-1 | N/A | |
@@ -132,6 +141,15 @@ PASS and RISK need a reason. N/A may stand alone.
 - **Losses are last and deepest.** They are the only genuinely retrospective
   input on the page, and the only one where the reader needs a prior year's
   return in front of them.
+
+## Verified on the live page
+
+Not only in the suite — most of 16 Aug's defects were found by reading the
+screen, and two more were found here the same way: sol-043's true severity (an
+ordinary ₹2 lakh home loan, not a contrived maximum), and the unreconciled
+"income of ₹13,00,000". A third was a plain UX fault — the loan interest field
+stayed on screen under "Neither", so a reader could type a number that silently
+did nothing. It is hidden with its property now.
 
 ## Open — for Rahul
 
