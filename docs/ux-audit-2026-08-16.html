@@ -1,0 +1,1508 @@
+<title>The Packaging Audit</title>
+
+<style>
+  /* ============================================================
+     THE PACKAGING AUDIT — FinSight India
+     Palette: FinSight's own navy + gold, corrected so every
+     foreground clears WCAG AA on its own ground. The report's
+     accent IS the site's accent, fixed. That is F-02, demonstrated.
+     ============================================================ */
+
+  :root {
+    --paper:   #F6F7F9;
+    --surface: #FFFFFF;
+    --sunk:    #EEF1F5;
+    --ink:     #0F172A;   /* 17.85:1 on surface */
+    --ink-2:   #4A5568;   /*  7.53:1 */
+    --ink-3:   #5A6675;   /*  5.85:1 */
+    --accent:  #8A6D14;   /*  4.91:1 — the site ships #B8941F at 2.88:1 */
+    --accent-soft: rgba(138,109,20,0.09);
+    --rule:    #DDE2E8;
+    --rule-2:  #C7D0DA;
+    --crit:    #A8321F;   /*  6.69:1 */
+    --crit-soft: rgba(168,50,31,0.08);
+    --warn:    #9A6B00;   /*  4.69:1 */
+    --warn-soft: rgba(154,107,0,0.10);
+    --ok:      #17694A;   /*  6.65:1 */
+    --ok-soft: rgba(23,105,74,0.09);
+
+    --display: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+    --body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --data: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+    --measure: 68ch;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:   #0F1721;
+      --surface: #16202C;
+      --sunk:    #1B2632;
+      --ink:     #E8EDF2;
+      --ink-2:   #C9D1DB;
+      --ink-3:   #94A3B8;
+      --accent:  #D9B849;
+      --accent-soft: rgba(217,184,73,0.12);
+      --rule:    #2A3644;
+      --rule-2:  #3A4756;
+      --crit:    #F0A88C;
+      --crit-soft: rgba(240,168,140,0.12);
+      --warn:    #E2C264;
+      --warn-soft: rgba(226,194,100,0.12);
+      --ok:      #6FD3A8;
+      --ok-soft: rgba(111,211,168,0.12);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper:   #0F1721;
+    --surface: #16202C;
+    --sunk:    #1B2632;
+    --ink:     #E8EDF2;
+    --ink-2:   #C9D1DB;
+    --ink-3:   #94A3B8;
+    --accent:  #D9B849;
+    --accent-soft: rgba(217,184,73,0.12);
+    --rule:    #2A3644;
+    --rule-2:  #3A4756;
+    --crit:    #F0A88C;
+    --crit-soft: rgba(240,168,140,0.12);
+    --warn:    #E2C264;
+    --warn-soft: rgba(226,194,100,0.12);
+    --ok:      #6FD3A8;
+    --ok-soft: rgba(111,211,168,0.12);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.65;
+    margin: 0;
+    padding: 0 clamp(1rem, 5vw, 3rem) 8rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  .col  { max-width: var(--measure); }
+
+  /* ---------- masthead ---------- */
+
+  .masthead {
+    padding: clamp(3rem, 9vw, 6.5rem) 0 2.5rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  .kicker {
+    font-family: var(--data);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 1.6rem;
+  }
+  h1 {
+    font-family: var(--display);
+    font-size: clamp(2.4rem, 6.5vw, 4.4rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+    margin: 0 0 1.5rem;
+    text-wrap: balance;
+    max-width: 16ch;
+  }
+  .standfirst {
+    font-size: clamp(1.05rem, 2vw, 1.28rem);
+    line-height: 1.55;
+    color: var(--ink-2);
+    max-width: 58ch;
+    margin: 0;
+  }
+  .masthead-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    margin-top: 2.5rem;
+    font-family: var(--data);
+    font-size: 0.75rem;
+    color: var(--ink-3);
+  }
+  .masthead-meta b { color: var(--ink-2); font-weight: 600; }
+
+  /* ---------- section rhythm ---------- */
+
+  .part {
+    padding-top: clamp(3.5rem, 8vw, 6rem);
+  }
+  .part-label {
+    font-family: var(--data);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 0.9rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  h2 {
+    font-family: var(--display);
+    font-size: clamp(1.75rem, 3.6vw, 2.5rem);
+    line-height: 1.14;
+    letter-spacing: -0.015em;
+    font-weight: 400;
+    margin: 0 0 1.1rem;
+    text-wrap: balance;
+    max-width: 22ch;
+  }
+  h3 {
+    font-family: var(--display);
+    font-size: 1.32rem;
+    line-height: 1.28;
+    font-weight: 600;
+    margin: 2.6rem 0 0.7rem;
+    max-width: 34ch;
+    text-wrap: balance;
+  }
+  h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 1.8rem 0 0.5rem;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+  }
+  p { margin: 0 0 1.1rem; max-width: var(--measure); }
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+  strong { font-weight: 660; }
+  em.term { font-style: normal; font-family: var(--data); font-size: 0.88em; color: var(--ink-2); background: var(--sunk); padding: 0.08em 0.35em; border-radius: 3px; }
+
+  ul, ol { max-width: var(--measure); padding-left: 1.3rem; margin: 0 0 1.2rem; }
+  li { margin-bottom: 0.55rem; }
+  li::marker { color: var(--ink-3); }
+
+  /* ---------- findings ---------- */
+
+  .finding {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--sev);
+    border-radius: 3px;
+    padding: 1.4rem 1.5rem 1.5rem;
+    margin: 1.6rem 0;
+    --sev: var(--rule-2);
+  }
+  .finding.blocker { --sev: var(--crit); }
+  .finding.major   { --sev: var(--warn); }
+  .finding.minor   { --sev: var(--ink-3); }
+
+  .finding-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6rem 0.9rem;
+    margin-bottom: 0.7rem;
+  }
+  .fid {
+    font-family: var(--data);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--sev);
+    letter-spacing: 0.02em;
+  }
+  .chip {
+    font-family: var(--data);
+    font-size: 0.63rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+    border: 1px solid;
+  }
+  .chip.blocker { color: var(--crit); background: var(--crit-soft); border-color: var(--crit); }
+  .chip.major   { color: var(--warn); background: var(--warn-soft); border-color: var(--warn); }
+  .chip.minor   { color: var(--ink-3); background: var(--sunk); border-color: var(--rule-2); }
+  .chip.win     { color: var(--ok);   background: var(--ok-soft);  border-color: var(--ok); }
+
+  .finding-title {
+    font-family: var(--display);
+    font-size: 1.18rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0;
+    flex: 1 1 20ch;
+    min-width: 0;
+  }
+  .finding p:last-child { margin-bottom: 0; }
+  .finding p { max-width: 64ch; }
+
+  .evidence {
+    font-family: var(--data);
+    font-size: 0.78rem;
+    line-height: 1.6;
+    background: var(--sunk);
+    border-left: 2px solid var(--rule-2);
+    padding: 0.7rem 0.9rem;
+    margin: 0.9rem 0 1rem;
+    overflow-x: auto;
+    color: var(--ink-2);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .evidence b { color: var(--ink); font-weight: 700; }
+
+  .fix {
+    margin-top: 1rem;
+    padding-top: 0.9rem;
+    border-top: 1px dashed var(--rule-2);
+    font-size: 0.94rem;
+    color: var(--ink-2);
+  }
+  .fix::before {
+    content: "The fix";
+    display: block;
+    font-family: var(--data);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 0.35rem;
+  }
+  .fix p { max-width: 64ch; }
+
+  /* ---------- tables ---------- */
+
+  .table-scroll { overflow-x: auto; margin: 1.5rem 0 2rem; border: 1px solid var(--rule); border-radius: 3px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.88rem; min-width: 540px; }
+  th {
+    font-family: var(--data);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: left;
+    color: var(--ink-3);
+    font-weight: 700;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--rule-2);
+    background: var(--sunk);
+    white-space: nowrap;
+  }
+  td { padding: 0.7rem 1rem; border-bottom: 1px solid var(--rule); color: var(--ink-2); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  td b { color: var(--ink); font-weight: 650; }
+  .num { font-family: var(--data); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td.fail { color: var(--crit); font-weight: 650; }
+  td.pass { color: var(--ok); font-weight: 650; }
+
+  /* ---------- pull / callout ---------- */
+
+  .pull {
+    font-family: var(--display);
+    font-size: clamp(1.2rem, 2.6vw, 1.6rem);
+    line-height: 1.35;
+    color: var(--ink);
+    border-left: 3px solid var(--accent);
+    padding: 0.2rem 0 0.2rem 1.4rem;
+    margin: 2.2rem 0;
+    max-width: 46ch;
+    text-wrap: balance;
+  }
+  .pull span { color: var(--ink-3); display: block; font-family: var(--body); font-size: 0.82rem; margin-top: 0.7rem; letter-spacing: 0.01em; }
+
+  .note {
+    background: var(--accent-soft);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 1.1rem 1.3rem;
+    margin: 1.6rem 0;
+    font-size: 0.95rem;
+    color: var(--ink-2);
+  }
+  .note p:last-child { margin-bottom: 0; }
+  .note strong { color: var(--ink); }
+
+  /* ---------- verdict grid ---------- */
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    margin: 2rem 0;
+  }
+  .grid > div { background: var(--surface); padding: 1.2rem 1.3rem; }
+  .grid dt {
+    font-family: var(--data);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 0.55rem;
+  }
+  .grid dd {
+    margin: 0;
+    font-family: var(--display);
+    font-size: 1.6rem;
+    line-height: 1.15;
+    color: var(--ink);
+  }
+  .grid dd small { display: block; font-family: var(--body); font-size: 0.82rem; line-height: 1.45; color: var(--ink-2); margin-top: 0.5rem; font-weight: 400; }
+
+  /* ---------- steps ---------- */
+
+  .steps { counter-reset: step; list-style: none; padding: 0; max-width: var(--measure); }
+  .steps > li {
+    counter-increment: step;
+    position: relative;
+    padding-left: 2.6rem;
+    margin-bottom: 1.5rem;
+  }
+  .steps > li::before {
+    content: counter(step, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 0.08em;
+    font-family: var(--data);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .steps b { display: block; color: var(--ink); margin-bottom: 0.15rem; }
+
+  /* ---------- details ---------- */
+
+  details {
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--surface);
+    padding: 0.85rem 1.1rem;
+    margin: 1.2rem 0;
+    max-width: var(--measure);
+  }
+  summary { cursor: pointer; font-weight: 650; font-size: 0.95rem; color: var(--ink); }
+  details[open] summary { margin-bottom: 0.8rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+  details p:last-child, details ul:last-child { margin-bottom: 0; }
+
+  hr.rule { border: none; border-top: 1px solid var(--rule); margin: 3rem 0 0; }
+
+  .end {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--ink);
+    font-family: var(--data);
+    font-size: 0.74rem;
+    color: var(--ink-3);
+    letter-spacing: 0.02em;
+  }
+
+  @media (max-width: 620px) {
+    body { font-size: 16px; }
+    .finding { padding: 1.1rem 1.1rem 1.2rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <p class="kicker">FinSight India · Interface &amp; content audit · 16 August 2026</p>
+  <h1>The Packaging Audit</h1>
+  <p class="standfirst">
+    The engines are more honest than almost anything shipping in Indian personal finance.
+    The packaging is not yet worthy of them. This is the gap, measured — twenty findings
+    with file-and-line evidence, then what to build, how to get found, and whether any of
+    it can win.
+  </p>
+  <div class="masthead-meta">
+    <span><b>Scope</b> homepage · 4 calculators · 54 articles · design system · SEO · AdSense</span>
+    <span><b>Method</b> source-read, not screenshot-read</span>
+    <span><b>Branch</b> fix/learning-loop-integrity-and-calculator-correctness</span>
+  </div>
+</header>
+
+<!-- ============================================================ -->
+
+<section class="part">
+  <p class="part-label">The verdict, first</p>
+  <h2>You have solved the hard half and left the easy half undone</h2>
+
+  <div class="col">
+    <p>
+      I read the source rather than the screenshots: <em class="term">global.css</em>, the four
+      calculator pages, the eighteen rung components, all 54 articles' frontmatter, the layout,
+      the content schema, the build output, and the doctrine and solutions files. Every
+      number below is reproducible with a command.
+    </p>
+    <p>
+      What I found is a project with an unusual shape. The correctness work is genuinely
+      exceptional — <em class="term">sol-046</em> caught a page printing <span class="num">19.20%</span>
+      where the truth was <span class="num">4.09%</span>; <em class="term">sol-043</em> caught the tax page
+      recommending the losing regime; <em class="term">dd-013</em> forbids two surfaces disagreeing about
+      one number. I do not know of another Indian personal-finance site with this discipline.
+      Most of them are wrong on purpose, because being wrong sells a product.
+    </p>
+    <p>
+      But the doctrine has been applied almost entirely to <em>what the numbers say</em> and
+      almost not at all to <em>what the screen looks like</em>. The visual layer is running on
+      conventions inherited from an earlier product — one called "SWP Intelligence Engine" —
+      that nobody has audited with the same rigour. The result is that the most honest
+      calculator in the market is wearing the costume of a Bloomberg terminal, and asking a
+      55-year-old to read <span class="num">9px</span> uppercase letterspaced labels to find out
+      whether their retirement works.
+    </p>
+  </div>
+
+  <div class="grid">
+    <div><dt>Correctness &amp; engine design</dt><dd>Excellent<small>376 tests, a solutions ledger, cross-surface agreement rules. Keep doing exactly this.</small></dd></div>
+    <div><dt>Answer-layer writing</dt><dd>Excellent<small>"You would typically finish with ₹1.28 crore left — but this plan is tight." Best-in-market copy.</small></dd></div>
+    <div><dt>Visual system</dt><dd>Weak<small>317 sub-12px labels, 317 all-caps runs, a signature accent that fails WCAG AA.</small></dd></div>
+    <div><dt>Below-the-answer layers</dt><dd>Unreformed<small>Two pages still show the legacy dashboard verbatim, duplicating the answer above it.</small></dd></div>
+    <div><dt>Trust &amp; legal pages</dt><dd>Blocking<small>All four still branded a different company, with a different support email.</small></dd></div>
+    <div><dt>SEO foundation</dt><dd>Half-built<small>Sitemap and OG done; no robots.txt, no author entity, no FAQ schema, internal logs indexed.</small></dd></div>
+  </div>
+
+  <p class="pull">
+    It is so simple to be difficult, but it is so difficult to be simple.
+    <span>Your own meta-principle. The engines have earned it. The interface has not yet been asked to.</span>
+  </p>
+</section>
+
+<hr class="rule">
+
+<!-- ============================================================ -->
+
+<section class="part">
+  <p class="part-label">Part I — The visual system</p>
+  <h2>Eight cross-cutting defects, every one of them global</h2>
+
+  <div class="col">
+    <p>
+      These are not page bugs. Each one is a decision encoded once in
+      <em class="term">src/styles/global.css</em> or repeated by habit across every screen, which
+      means each is also fixable once. They are ordered by how much reading effort they cost.
+    </p>
+  </div>
+
+  <div class="finding blocker">
+    <div class="finding-head">
+      <span class="fid">F-01</span>
+      <span class="chip blocker">Blocker</span>
+      <p class="finding-title">The interface whispers: 317 pieces of type below 12px</p>
+    </div>
+    <p>
+      The pages are built almost entirely out of micro-labels. Every section heading on the
+      tax calculator is <span class="num">10px</span>. Every regime tag is <span class="num">9px</span>.
+      The insurance page's three answer-card labels are <span class="num">10px</span>. These are
+      not captions — they are the primary navigation of the page.
+    </p>
+    <div class="evidence">$ grep -roE "text-\[(9|10|11)px\]" src/ | wc -l
+<b>317</b>
+
+tax-calculator.astro      <b>34</b>      Rung components (18 files)  <b>52</b>
+sip-engine.astro          <b>25</b>      insurance-analyzer.astro    <b>16</b>
+swp-planner.astro         <b>14</b>      index.astro                  <b>3</b></div>
+    <p>
+      The audience is people planning a retirement. Presbyopia begins around 40 and is
+      universal by 55. A <span class="num">9px</span> uppercase letterspaced string is not small
+      text to them — it is an obstacle, and the thing behind it does not get read. You have
+      a doctrine entry, <em class="term">dd-003</em>, that says the user pays in time and attention.
+      This charges them and returns nothing.
+    </p>
+    <div class="fix">
+      <p>
+        Set a floor of <span class="num">13px</span> for any label carrying meaning, and
+        <span class="num">15–16px</span> for anything that is really a heading. The four scale
+        classes already in <em class="term">global.css</em> (<em class="term">.text-hero</em>,
+        <em class="term">.text-section</em>, <em class="term">.text-card-title</em>,
+        <em class="term">.text-caption</em>) are good — the problem is that pages bypass them with
+        arbitrary bracket values 317 times. Add a fifth (<em class="term">.text-micro</em> at
+        <span class="num">13px</span>), then make an arbitrary <em class="term">text-[Npx]</em> a lint
+        failure. This is one sweep and it changes the felt quality of every screen.
+      </p>
+    </div>
+  </div>
+
+  <div class="finding blocker">
+    <div class="finding-head">
+      <span class="fid">F-02</span>
+      <span class="chip blocker">Blocker</span>
+      <p class="finding-title">The signature gold fails WCAG AA — on every page, at every size</p>
+    </div>
+    <p>
+      <em class="term">text-gold-600</em> is <span class="num">#B8941F</span>. On white that is
+      <b>2.88:1</b>. The threshold for normal text is <span class="num">4.5:1</span>. It carries
+      every eyebrow on the site: "Financial decisions, made clear", "Start here", "Income tax",
+      "Retirement income", "Direct tax". It is the brand, and it is unreadable to anyone with
+      moderately reduced contrast sensitivity — which, again, is the retirement audience.
+    </p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Foreground</th><th>Ground</th><th>Ratio</th><th>AA normal</th><th>Uses</th></tr></thead>
+        <tbody>
+          <tr><td class="num">gold-500 #D4AF37</td><td>white</td><td class="num">2.10</td><td class="fail">FAIL</td><td class="num">54</td></tr>
+          <tr><td class="num">navy-400 #94A3B8</td><td>white</td><td class="num">2.56</td><td class="fail">FAIL</td><td class="num">290</td></tr>
+          <tr><td class="num">gold-600 #B8941F</td><td>white</td><td class="num">2.88</td><td class="fail">FAIL</td><td class="num">47</td></tr>
+          <tr><td class="num">emerald #059669</td><td>white</td><td class="num">3.77</td><td class="fail">FAIL</td><td>badges</td></tr>
+          <tr><td class="num">navy-500 #64748B</td><td>navy-950</td><td class="num">3.70</td><td class="fail">FAIL</td><td>footer</td></tr>
+          <tr><td class="num">navy-500 #64748B</td><td>white</td><td class="num">4.76</td><td class="pass">pass</td><td>—</td></tr>
+          <tr><td class="num">navy-400 #94A3B8</td><td>navy-950</td><td class="num">6.87</td><td class="pass">pass</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      Note the asymmetry in the last two rows: <em>the dark theme is fine</em>. The palette was
+      evidently tuned on a dark ground and the light theme inherited the same tokens without
+      being re-checked. Since light is the default for most first-time visitors arriving from
+      Google, the failing theme is the one most people see.
+    </p>
+    <div class="fix">
+      <p>
+        Introduce ink-on-light variants: gold darkens to about <span class="num">#8A6D14</span>
+        (4.91:1) and emerald to <span class="num">#0F6B4A</span>. Retire
+        <em class="term">text-navy-400</em> for text on light grounds entirely — it has 290 uses and
+        every one of them is a contrast failure; <em class="term">navy-500</em> is the correct
+        floor. Keep the bright gold for dark mode and for non-text uses (rules, fills, icons),
+        where the threshold is 3:1. This report's own accent is that corrected gold, so you can
+        see it costs nothing in character.
+      </p>
+    </div>
+  </div>
+
+  <div class="finding major">
+    <div class="finding-head">
+      <span class="fid">F-03</span>
+      <span class="chip major">Major</span>
+      <p class="finding-title">Everything shouts: 317 uppercase letterspaced runs</p>
+    </div>
+    <p>
+      <em class="term">uppercase tracking-widest</em> appears 317 times. On the insurance page, the
+      panel headings are "1. THE INSURANCE POLICY'S PROMISE", "2. THE SAFE DIY ROUTE",
+      "3. THE GROWTH DIY ROUTE", "POLICY &amp; RISK INPUTS", "TRUE YIELD (XIRR)",
+      "TOTAL PAID OUT", "THE SAME MONEY", "MODERATE YIELD", "RUNS OUT · YEAR 30",
+      "FUNDS THE PROMISE" — ten all-caps strings visible in one viewport.
+    </p>
+    <p>
+      All-caps is measurably slower to read: it destroys word-shape, which is what fluent
+      readers actually recognise. It is a device for <em>one</em> thing on a screen — the label
+      that must be found before anything else. Used 317 times it emphasises nothing and
+      merely raises the volume of the whole page. This is <em class="term">dd-007</em> —
+      every visual difference must mean something — inverted.
+    </p>
+    <div class="fix">
+      <p>
+        Cap it at one all-caps element per card and one per section. Everything else becomes
+        sentence case at a real size. The heading "1. The insurance policy's promise" set at
+        <span class="num">15px</span> semibold sentence case reads faster, looks more expensive,
+        and stops competing with the numbers — which are the thing you actually want found.
+      </p>
+    </div>
+  </div>
+
+  <div class="finding major">
+    <div class="finding-head">
+      <span class="fid">F-04</span>
+      <span class="chip major">Major</span>
+      <p class="finding-title">Ten formatters, two rupee conventions, both on one page</p>
+    </div>
+    <p>
+      <em class="term">formatRupee()</em> is defined ten separate times across the codebase, plus
+      <em class="term">formatShortRupee()</em> and <em class="term">formatIndianRupeeLabel()</em> in
+      <em class="term">utils/formatters.ts</em>. The answer layers were hand-written in prose and use
+      a different convention from the shared utility.
+    </p>
+    <div class="evidence">Answer layer (prose):     ₹1.28 crore    ₹89.1 lakh     ₹1.00 crore
+Shared formatShortRupee:  ₹ 1.50 Cr      ₹ 28.85 Lakh   ₹ 2.91 Cr
+
+<b>Both appear on the SWP planner, ~1200px apart, describing the same kinds of money.</b>
+Differences: leading space · abbreviation vs word · capitalisation · 1dp vs 2dp.</div>
+    <p>
+      You have <em class="term">dd-013</em>: two surfaces may never show different numbers for the
+      same input. This is its presentation-layer twin — two surfaces showing the same number in
+      different clothes. A reader cannot tell whether "₹ 1.50 Cr" and "₹1.28 crore" come from
+      the same system, and the doubt is corrosive precisely because the rest of the site works
+      so hard to be trustworthy.
+    </p>
+    <div class="fix">
+      <p>
+        One module, one convention, every surface. My recommendation: the word, not the
+        abbreviation ("₹1.28 crore"), no space after the symbol, one decimal place above a
+        lakh. Delete the ten local copies. Add a test that fails if a
+        <em class="term">formatRupee</em> is declared outside <em class="term">utils/</em> — the same
+        shape of guard you already used for the CAGR literal in <em class="term">sol-047</em>.
+      </p>
+    </div>
+  </div>
+
+  <div class="finding major">
+    <div class="finding-head">
+      <span class="fid">F-05</span>
+      <span class="chip major">Major</span>
+      <p class="finding-title">916 KB of PDF library loads on two pages before anyone asks for a PDF</p>
+    </div>
+    <p>
+      <em class="term">html2pdf.js</em> is a static top-level import on both engine pages. Chart.js
+      is correctly lazy-loaded on the same files, so the pattern is already known and simply
+      was not applied here.
+    </p>
+    <div class="evidence">src/pages/swp-planner.astro:650   <b>import html2pdf from 'html2pdf.js';</b>       ← eager
+src/pages/sip-engine.astro:526    <b>import html2pdf from 'html2pdf.js';</b>       ← eager
+src/pages/insurance-analyzer.astro:396  const { Chart } = await import('chart.js/auto');  ← lazy ✓
+
+dist/_astro/html2pdf.C76KHe0e.js   <b>916 KB</b></div>
+    <p>
+      On a mid-range Android on Indian 4G that is roughly a second of download plus several
+      hundred milliseconds of parse, on the main thread, before the Monte Carlo worker even
+      starts. It will show up directly in Core Web Vitals, which is a ranking input, on the two
+      pages you most want to rank.
+    </p>
+    <div class="fix">
+      <p>
+        Move it inside the click handler: <em class="term">const { default: html2pdf } = await
+        import('html2pdf.js')</em>. Ten minutes of work, and it removes about 60% of the
+        JavaScript on both pages.
+      </p>
+    </div>
+  </div>
+
+  <div class="finding major">
+    <div class="finding-head">
+      <span class="fid">F-06</span>
+      <span class="chip major">Major</span>
+      <p class="finding-title">Six dead elements on the SWP planner, one of them visibly stuck</p>
+    </div>
+    <p>
+      Six ids are declared in the HTML and never referenced again anywhere in
+      <em class="term">src/</em>. One of them ships a visible, permanent loading message beside a
+      gold info icon — it is in your own screenshot.
+    </p>
+    <div class="evidence">swp-planner.astro:390
+  &lt;div id="tier3ActionableFooter"&gt;<b>Calculating actionable financial guidance...</b>&lt;/div&gt;
+  repo-wide references: <b>1</b>  (the declaration itself — no script ever writes to it)
+
+Also dead: sacrificeTitle · sacrificeIcon · sacrificeMetric1 · sacrificeMetric2 · wowMetricBanner</div>
+    <p>
+      A spinner that never resolves is worse than no spinner. It tells the reader the page is
+      broken, on the one screen where you most need them to believe the numbers.
+    </p>
+    <div class="fix"><p>Delete all six. If the guidance line was a real intention, it belongs in the answer layer, which already does that job properly.</p></div>
+  </div>
+
+  <div class="finding minor">
+    <div class="finding-head">
+      <span class="fid">F-07</span>
+      <span class="chip minor">Minor</span>
+      <p class="finding-title">Whitespace is generous between sections and cramped inside them</p>
+    </div>
+    <p>
+      Section padding is <span class="num">py-14 sm:py-20</span> — around 56–80px, well judged.
+      Inside the cards it collapses: <span class="num">space-y-1</span> between a label, a
+      ₹-figure and a sub-caption in the tax answer cards, <span class="num">gap-3</span> in the
+      homepage's numbered trio. So the page breathes at the macro scale and holds its breath at
+      the scale where reading actually happens. The visible effect is the "dense terminal" feel
+      in every screenshot — lots of air around blocks of compressed data.
+    </p>
+    <div class="fix"><p>Raise intra-card rhythm to <span class="num">space-y-2</span>/<span class="num">space-y-3</span> and let cards grow. Vertical space inside a card is cheaper than the reader's parsing effort — that is <em class="term">dd-009</em>: remove work, not information.</p></div>
+  </div>
+
+  <div class="finding minor">
+    <div class="finding-head">
+      <span class="fid">F-08</span>
+      <span class="chip minor">Minor</span>
+      <p class="finding-title">Three font families load; the mono is declared but barely used</p>
+    </div>
+    <p>
+      <em class="term">Layout.astro</em> imports <em class="term">@fontsource/geist-sans</em> and
+      <em class="term">@fontsource/geist-mono</em> at full weight ranges, while
+      <em class="term">global.css</em> imports four Inter weights and sets Inter as the body face —
+      so Geist Sans downloads on every page and is never used. Meanwhile
+      <em class="term">--font-mono</em> is applied only through <em class="term">.stat-value</em> and
+      <em class="term">.input-premium</em>; most ₹-figures on the answer layers are Inter with
+      <em class="term">tabular-nums</em>.
+    </p>
+    <div class="fix"><p>Drop the Geist Sans import. Then decide deliberately: either every rupee figure on the site is mono, or none is. Right now it is arbitrary, which makes some numbers look like data and others like prose with no rule behind the difference — <em class="term">dd-007</em> again.</p></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ============================================================ -->
+
+<section class="part">
+  <p class="part-label">Part II — Screen by screen</p>
+  <h2>The Answer layer landed on four pages; the layers under it landed on two</h2>
+
+  <div class="col">
+    <p>
+      The single most important structural fact about this product: the "Answer + rungs"
+      pattern is genuinely finished on the SWP planner and the SIP engine, and is bolted on
+      top of an untouched legacy dashboard on the tax calculator and the insurance analyser.
+      Everything below follows from that.
+    </p>
+  </div>
+
+  <h3>Homepage — the strongest page on the site</h3>
+  <p>
+    <em class="term">src/pages/index.astro</em> is 157 lines and does its job. "What are you trying
+    to decide?" with five question-shaped cards is exactly right: it addresses the reader's
+    intent rather than your product taxonomy, and "You do not need to learn the vocabulary
+    before you begin" is a promise the rest of the site mostly keeps. The "What you leave with"
+    aside is a good idea — showing the <em>form</em> of the output before the reader commits.
+  </p>
+  <p>Three things hold it back:</p>
+  <ul>
+    <li>
+      <b>The five card glyphs are meaningless.</b> <span class="num">₹ ⌁ ↗ ◇ ⌇</span> — a
+      lightning-ish mark for retirement, a diamond for insurance, a squiggle for options.
+      These are decoration wearing the costume of information (<em class="term">dd-007/dont-1</em>).
+      Either use five real icons that depict the decision, or drop them and let the questions
+      carry the cards. The questions are good enough to.
+    </li>
+    <li>
+      <b>The hero costs a full viewport and adds one sentence of information.</b> Your own
+      <em class="term">T1</em> item said "cut page weight so the first real choice is above the
+      fold" and marked it done, but on a 1080p laptop the five decision cards still begin
+      below the fold. Compress the hero by about 40%.
+    </li>
+    <li>
+      <b>Nothing shows what an answer looks like.</b> The aside <em>describes</em> the output in
+      quotes. A far stronger move is a live one — see <a href="#ideas">Idea 1</a>.
+    </li>
+  </ul>
+
+  <h3>SWP planner — the pilot, and it shows</h3>
+  <p>
+    The top of this page is the best work in the project. <em>"You would typically finish with
+    ₹1.28 crore left — but this plan is tight. About 1 in 3 futures run dry before 30 years are
+    up, which is more risk than most people want to carry into retirement."</em> That is a
+    complete answer, in a sentence, with the uncertainty carried honestly and the frame stated
+    ("in today's prices"). Then three cards that each name a real cost. I would not change a
+    word.
+  </p>
+  <p>
+    The expert rung below it is a different product. "The Survival Score · 70.25% ·
+    LIFESTYLE SACRIFICE ACTIVE · MODERATE RISK · 1.9X LIFETIME PAYOUT · Dynamic Guardrails
+    Active" — six competing status indicators, three of them badges, all caps. Then a table
+    whose headers are <span class="num">10px</span> all-caps: DURATION / TOTAL GROSS / TAXES
+    PAID / NET IN-HAND / BAL REMAINING, with a red error dot next to the tax figure. Then the
+    dead "Calculating actionable financial guidance…" (F-06).
+  </p>
+
+  <div class="finding major">
+    <div class="finding-head">
+      <span class="fid">F-09</span>
+      <span class="chip major">Major</span>
+      <p class="finding-title">"70.25%" is precision the model cannot support</p>
+    </div>
+    <p>
+      A 10,000-path Monte Carlo has a standard error of roughly
+      <span class="num">±0.5</span> percentage points on a survival estimate near 70%. Re-run
+      the same inputs with a different seed and you get 69.8%, or 70.9%. Two decimal places
+      asserts a resolution the simulation does not have, and it invites the reader to treat
+      69.9% and 70.3% as different answers.
+    </p>
+    <div class="fix"><p>Print <b>70%</b>, or better, the sentence the answer layer already uses: "about 1 in 3 futures run dry". You have <em class="term">dd-010</em> — measure the lived experience, not the accountant's summary. The answer layer obeys it; the expert rung does not.</p></div>
+  </div>
+
+  <h3>SIP engine — the same pattern, well executed</h3>
+  <p>
+    "You typically finish with ₹89.1 lakh, not ₹1.00 crore" is a superb line: it names the
+    shortfall as the answer rather than burying it in a projection. "About 42 in 100 futures
+    reach the goal" and the three levers ("Put away ₹3,000 more" / "Give it 3 more years" /
+    "Aim for ₹89.0 lakh instead"), each with its own honest failure count, is the clearest
+    presentation of a savings trade-off I have seen on an Indian site. "Tap one to apply it"
+    is the right affordance.
+  </p>
+  <p>
+    Two frictions. The three levers are visually identical, so the reader must read all three
+    to discover that one of them is a retreat rather than an effort — consider a quiet
+    distinction between "try harder" and "want less". And "Assuming 13.3% growth with 28.4%
+    swings, 6% inflation, and 70% of it in shares" is four numbers in one sentence, three of
+    which the layperson cannot evaluate; "28.4% swings" in particular is an unexplained
+    concept, which is <em class="term">dd-004</em>. Move the roughness figure behind the
+    "Change these" link and keep growth and inflation in the sentence.
+  </p>
+
+  <h3>Tax calculator — the answer is right, and then the page says it all again</h3>
+
+  <div class="finding blocker">
+    <div class="finding-head">
+      <span class="fid">F-10</span>
+      <span class="chip blocker">Blocker</span>
+      <p class="finding-title">The regime comparison is rendered twice, ~400px apart, in two visual languages</p>
+    </div>
+    <p>
+      The answer layer shows New ₹97,500 / Old ₹1,35,720 with a "Cheaper for you" tag. Scroll
+      one screen and the legacy "Interactive Slab Engine" shows New ₹97,500 / Old ₹1,35,720
+      again, in different cards, with "FY 25-26" chips and "NEW REGIME SAVES ₹38,220". Both are
+      visible in a single screenshot in your own capture.
+    </p>
+    <div class="evidence">tax-calculator.astro:23    &lt;TaxAnswer /&gt;              ← ₹97,500 / ₹1,35,720
+tax-calculator.astro:236   #valNewEffectiveRate      ← ₹97,500 / ₹1,35,720 again
+tax-calculator.astro:245   #valOldTax                     "INTERACTIVE SLAB ENGINE"</div>
+    <p>
+      This is <em class="term">dd-006</em> — never make the reader diff two states — committed
+      against your own answer layer. The reader's question is not "do these agree?" but they
+      will ask it anyway, because two boxes showing the same number is what a spreadsheet looks
+      like when something has gone wrong. It also doubles the page's apparent complexity for
+      zero added information, which is precisely the inverse of <em class="term">dd-009</em>.
+    </p>
+    <div class="fix">
+      <p>
+        The legacy dashboard's <em>computation table</em> is worth keeping — it is the ledger,
+        and the doctrine says the full picture stays reachable. Its <em>duplicate summary cards
+        and effective-rate lines</em> are not. Delete the two regime cards and the "NEW REGIME
+        SAVES" chip, collapse what remains into a "See the full computation" rung matching the
+        SWP planner's, and let the answer layer be the only place a total appears.
+      </p>
+    </div>
+  </div>
+
+  <div class="finding major">
+    <div class="finding-head">
+      <span class="fid">F-11</span>
+      <span class="chip major">Major</span>
+      <p class="finding-title">The input form asks 20+ questions before the reader knows which matter</p>
+    </div>
+    <p>
+      The left column runs: Income &amp; Demographics, HRA Exemption (Old Regime), Deductions
+      (Old Regime), "Do you have any of these too?" — every field visible at once, each headed
+      by a <span class="num">10px</span> all-caps label. But the entire old-regime block only
+      matters if the reader's deductions can exceed the break-even the answer layer computes.
+    </p>
+    <div class="fix">
+      <p>
+        Follow the pattern your two best pages already prove: three questions
+        (<em>salary · rent paid · 80C so far</em>), the answer, then "Do you have any of these
+        too?" as a progressive rung. The answer layer already states the break-even
+        ("you would need ₹1.54 lakh more") — use it to <em>gate</em> the form, not just to
+        explain it. Most readers can stop after three fields, and telling them so is the
+        product.
+      </p>
+    </div>
+  </div>
+
+  <h3>Insurance analyser — the best headline, the most confusing body</h3>
+  <p>
+    "Buy the cover on its own and invest the difference. You collect the same income this
+    policy promises, in the same years, and finish with ₹52.52 Lakh more" is the single most
+    valuable sentence on the website. It is the one comparison the whole subject reduces to
+    (<em class="term">dd-005</em>), it protects against the obvious objection ("both routes pay
+    you the same income, in the same years"), and it will genuinely stop people buying bad
+    endowment policies. That paragraph is the product.
+  </p>
+
+  <div class="finding major">
+    <div class="finding-head">
+      <span class="fid">F-12</span>
+      <span class="chip major">Major</span>
+      <p class="finding-title">Two different quantities, both bold, both labelled "in today's prices", 500px apart</p>
+    </div>
+    <p>
+      The answer says the surplus is <b>₹9.14 Lakh</b> in today's prices. The panel below says
+      "THE SAME MONEY / in today's prices: <b>₹9.43 Lakh</b>" — which is the policy's total
+      payout, an entirely different quantity. The phrase "in today's prices" is attached to at
+      least four distinct figures on this one page.
+    </p>
+    <div class="evidence">insurance-analyzer.astro:195  "The same money / in today's prices"   ← total payout   ₹9.43 L
+InsuranceAnswer.astro:84      "in today's prices"                    ← surplus        ₹9.14 L
+insurance-analyzer.astro:478  unfundedReal + "in today's prices"     ← income unpaid
+insurance-analyzer.astro:573  lastPremiumReal + "in today's prices"  ← last premium   ₹59,190</div>
+    <p>
+      Two bold figures, four hundredths apart, on one screen, sharing a label. The reader's
+      first thought is that one is a typo of the other. The frame-carrying discipline from
+      <em class="term">T8</em> was applied correctly — the failure is that it was applied to the
+      <em>unit</em> without also disambiguating the <em>quantity</em>.
+    </p>
+    <div class="fix"><p>Every "in today's prices" figure needs its noun on the same line: "₹9.14 lakh more, in today's prices" vs "₹9.43 lakh paid out, in today's prices". And "THE SAME MONEY" as a heading is genuinely ambiguous — it reads as a claim of equivalence when it means "this sum, re-expressed".</p></div>
+  </div>
+
+  <div class="finding minor">
+    <div class="finding-head">
+      <span class="fid">F-13</span>
+      <span class="chip minor">Minor</span>
+      <p class="finding-title">"TRUE YIELD (XIRR)" is the analyst's vocabulary, not the reader's</p>
+    </div>
+    <p>
+      The answer layer gets this exactly right — "The policy pays you back at 7.22% a year".
+      Then the panel below reintroduces the jargon it just successfully avoided, as a
+      <span class="num">10px</span> all-caps label. The numbered sections ("1. The Insurance
+      Policy's Promise", "2. The Safe DIY Route", "3. The Growth DIY Route") also imply a
+      sequence the reader is meant to walk, when they are really three parallel options.
+    </p>
+    <div class="fix"><p>"What the policy pays you back, a year (XIRR)" — the term in parentheses, for the reader who wants to verify, never as the label. And drop the numbering: these are three routes, not three steps. Numbering that does not encode a real sequence is decoration.</p></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ============================================================ -->
+
+<section class="part">
+  <p class="part-label">Part III — Cognitive load</p>
+  <h2>Five moves that would carry the whole product</h2>
+
+  <div class="col">
+    <p>
+      Your doctrine already contains the right principles. What is missing is their application
+      to pixels rather than to prose. These five are ordered by leverage.
+    </p>
+  </div>
+
+  <ol class="steps">
+    <li>
+      <b>Finish the rung pattern on the two unreformed pages.</b>
+      The tax calculator and insurance analyser have an excellent answer sitting on top of the
+      product you were replacing. Every complaint in Part II about those two pages is really
+      this one complaint. Nothing else in this report returns as much.
+    </li>
+    <li>
+      <b>One idea per card, and let the card be as tall as that takes.</b>
+      Today's cards are stacks of three or four micro-labelled figures. The reader has to work
+      out which one is the point. Give each card a single sentence that says what it means and
+      one figure that carries it; move the rest into the rung. The SIP engine's three lever
+      cards already do this — they are the model.
+    </li>
+    <li>
+      <b>Make every number state its noun and its frame in the same breath.</b>
+      F-04 and F-12 are the same defect at different scales. Adopt one rule:
+      <em>quantity + amount + frame</em>, always in that order, never split across a label and
+      a value. "Left over at the end: ₹52.52 lakh in the rupees of that year" is unambiguous;
+      "THE SAME MONEY / ₹9.43 Lakh / in today's prices" is not.
+    </li>
+    <li>
+      <b>Set a floor on type and a ceiling on emphasis.</b>
+      Nothing meaningful below 13px (F-01); one all-caps element per card (F-03); one accent
+      colour per card. Right now the SWP expert rung has emerald, amber, rose and gold all
+      signalling status within a single viewport, so none of them signals anything.
+    </li>
+    <li>
+      <b>Give the answer somewhere to go.</b>
+      Every calculator currently ends at the answer. A reader who learns their plan is tight
+      has no next step — no way to save it, share it, come back to it, or reach the article
+      that explains it. This is where the product currently leaks its entire audience, and it
+      is the bridge to Part V.
+    </li>
+  </ol>
+</section>
+
+<hr class="rule">
+
+<!-- ============================================================ -->
+
+<section class="part">
+  <p class="part-label">Part IV — Content</p>
+  <h2>Fifty-four articles, no citations, and twelve sharing one photograph</h2>
+
+  <div class="col">
+    <p>
+      The writing is strong. <em>The Loss That Never Happened</em> opens with a concrete
+      ₹10 lakh investor, uses a bonus issue to build the illusion, then resolves it with
+      s.94(8) — real explanatory structure with bespoke components rather than stock diagrams.
+      <em>The Price You Didn't Receive</em> runs 5,949 words with fifteen custom illustrations.
+      This is genuinely better than most of what ranks for these queries today.
+    </p>
+    <p>Four problems, in order of how much they cost you:</p>
+  </div>
+
+  <div class="finding blocker">
+    <div class="finding-head">
+      <span class="fid">F-14</span>
+      <span class="chip blocker">Blocker</span>
+      <p class="finding-title">Zero external citations across all 54 tax articles</p>
+    </div>
+    <div class="evidence">$ grep -c "http" src/content/direct-tax/*.mdx | grep -v ":0"
+<b>(no output — not one article links to anything)</b></div>
+    <p>
+      Fifty-four articles making specific statutory claims — penalty rates, section numbers,
+      thresholds, deadlines — and not one links to <em class="term">incometax.gov.in</em> or
+      <em class="term">indiacode.nic.in</em>. For Google this is the clearest possible signal of
+      unsourced YMYL content. For an AdSense reviewer assessing "low value content" on a
+      finance site it is close to decisive. And for a reader it means your most defensible
+      asset — that you are actually right — is invisible.
+    </p>
+    <p>
+      Your own launch gate already knows this instinct is correct: it records two tax rules as
+      "INFERRED, not cited — do not state them as fact", because <em class="term">sol-042</em>
+      happened when a confident note was backwards and nobody could check it. Extend that
+      discipline to the reader.
+    </p>
+    <div class="fix"><p>Add a <em class="term">sources</em> array to the content schema and render a "Where this comes from" block at the foot of every article. Three to five links each. This is the highest-value content work available and it needs no new writing.</p></div>
+  </div>
+
+  <div class="finding blocker">
+    <div class="finding-head">
+      <span class="fid">F-15</span>
+      <span class="chip blocker">Blocker</span>
+      <p class="finding-title">Twelve articles share one stock image — visibly, on your main index page</p>
+    </div>
+    <div class="evidence">$ grep -h "^coverImage:" src/content/direct-tax/*.mdx | sort | uniq -c | sort -rn
+   <b>12 coverImage: "hero-fallback.jpg"</b>
+    1 coverImage: "tax-regime-decision.jpg"
+    1 coverImage: "sft-audit-relief.jpg"
+    ... (41 others, one each)</div>
+    <p>
+      In your Tax Code Vault screenshot, cards Q53, Q52, Q51, Q50 and Q49 all show the same
+      glowing-book photograph. Five identical thumbnails in one grid is the visual signature of
+      a content farm, on the page a reviewer is most likely to land on. It undercuts 54
+      genuinely researched articles in a single glance.
+    </p>
+    <div class="fix"><p>Twelve images. If generating them is expensive, a typographic cover — the section number set large on a navy field, per category — is cheaper, faster, more distinctive, and cannot look like stock. That would also be a stronger house style than photographs.</p></div>
+  </div>
+
+  <div class="finding major">
+    <div class="finding-head">
+      <span class="fid">F-16</span>
+      <span class="chip major">Major</span>
+      <p class="finding-title">No human author anywhere on the site</p>
+    </div>
+    <p>
+      <em class="term">ArticleLayout.astro:28</em> sets
+      <em class="term">"author": {"@type": "Organization", "name": "FinSight India"}</em>. The content
+      schema has no author field. No byline, no credentials, no photograph, no "who writes
+      this" page.
+    </p>
+    <p>
+      Google's guidance for YMYL content asks who is responsible and what qualifies them.
+      "FinSight India" answers neither. This is also the difference between a site AdSense
+      approves and one it files under mass-produced content — which is now an explicit policy
+      category, and one that AI-assisted publishing pipelines land in by default.
+    </p>
+    <div class="fix"><p>A real named author with a real biography, <em class="term">@type: Person</em> in the schema, a byline on every article, and an author page. If the pipeline is AI-assisted, say so plainly and describe the review process — that reads as integrity, and it matches how the rest of this project already documents itself.</p></div>
+  </div>
+
+  <div class="finding minor">
+    <div class="finding-head">
+      <span class="fid">F-17</span>
+      <span class="chip minor">Minor</span>
+      <p class="finding-title">Dates are strings, so no article has a machine-readable date</p>
+    </div>
+    <div class="evidence">content.config.ts:11   updatedDate: z.string()      →  "August 2026"
+ArticleLayout.astro:23  articleJsonLd — no datePublished, no dateModified</div>
+    <p>
+      Tax content is intensely time-sensitive; "which financial year is this about?" is the
+      reader's first question and Google's too. Rich results for Article require these fields.
+    </p>
+    <div class="fix"><p><em class="term">z.coerce.date()</em>, then emit <em class="term">datePublished</em> and <em class="term">dateModified</em> in the JSON-LD and a visible "Applies to FY 2025-26" badge.</p></div>
+  </div>
+
+  <p>
+    One further note on depth. Thirty-eight of the 54 articles sit between 1,000 and 1,500
+    words; the five best run 2,800 to 6,200. Your launch gate already records that 13 articles
+    fail the R2 screen and 26 fail R7. I would not publish the thin ones at all until they are
+    brought up — 30 excellent articles is a far stronger AdSense application, and a far
+    stronger site, than 54 uneven ones.
+  </p>
+</section>
+
+<hr class="rule">
+
+<!-- ============================================================ -->
+
+<section class="part" id="ideas">
+  <p class="part-label">Part V — What to build</p>
+  <h2>Eight ideas, ordered by what they'd actually do for you</h2>
+
+  <h3>1 · The homepage answers a question before you ask for anything</h3>
+  <p>
+    Replace the static "What you leave with" aside with one live input: <em>"I have saved
+    ₹___ and need ₹___ a month."</em> Two fields, and the sentence completes itself as they
+    type — "your money would typically last 23 years." Then: "See the full plan →".
+  </p>
+  <p>
+    You already have the engine, the copy register, and the worker. This converts the homepage
+    from a description of the product into the product, and it is the single strongest thing
+    you could do for both conversion and time-on-page.
+  </p>
+
+  <h3>2 · "What changed this year" — the annual-update engine</h3>
+  <p>
+    Every February, forty million Indians ask the same question after the Budget and get it
+    answered by news articles that are obsolete in a week. A permanent page — <em>"Budget 2026:
+    what changed for you"</em> — with the reader's own income filled in and last year's tax
+    beside this year's, is a recurring traffic event you can own. It uses the tax engine you
+    already have. Nobody does this well because everyone treats the Budget as news rather than
+    as a calculator input.
+  </p>
+
+  <h3>3 · Save and return, without an account</h3>
+  <p>
+    Encode the inputs in the URL. "Copy my plan link" gives the reader something to keep, mail
+    to their spouse, and come back to in six months. It costs no backend, breaks no privacy
+    promise (the numbers never touch your server — they are in the reader's own clipboard), and
+    it turns every serious user into a distribution channel. This is the fix for Part III's
+    fifth move.
+  </p>
+
+  <h3>4 · The one-page plan, as a real document</h3>
+  <p>
+    You have already paid the 916 KB for <em class="term">html2pdf</em> (F-05). Presently it
+    exports the dashboard. Make it export the <em>answer</em>: one page, the sentence, the three
+    levers, the assumptions, the date. That is a thing a person shows their spouse or their CA
+    — and a CA seeing your assumptions block is the best marketing you could buy.
+  </p>
+
+  <h3>5 · Article to calculator, with the numbers carried across</h3>
+  <p>
+    The insurance article should end with the analyser pre-loaded with that article's example
+    policy. The bonus-stripping piece should end in a workbench with its ₹10 lakh example
+    filled in. You already have workbench components in <em class="term">src/components/mdx/</em> —
+    they are just not wired to carry state. This is the loop that makes the articles worth
+    having: research feeds the tool, the tool proves the research.
+  </p>
+
+  <h3>6 · "What if life happens?" — the shock rung</h3>
+  <p>
+    Already in your launch gate as Rahul's idea, unscoped. It deserves building. A lump-sum
+    shock — a wedding, an operation, a parent's care — is the thing that actually breaks
+    retirement plans, and no Indian calculator models it. It is liquidity risk rather than
+    market risk, it is emotionally concrete in a way volatility never is, and it is a genuine
+    differentiator.
+  </p>
+
+  <h3>7 · A comparison the industry will not publish</h3>
+  <p>
+    "What your bank's ₹1 lakh/year policy actually pays back" — the analyser run across the ten
+    most-sold traditional plans, published as a standing table. Every one of those XIRRs will
+    land between 4% and 6%. This is the highest-link-earning page you could publish, because it
+    is a fact nobody selling those products can afford to state. Handle it carefully: use
+    published benefit illustrations, state the assumptions, describe products rather than
+    accusing companies.
+  </p>
+
+  <h3>8 · Show the failures, not just the score</h3>
+  <p>
+    "In 7,025 out of 10,000 scenarios your money lasted" is abstract. A small chart of 100
+    dots, ~30 of them dark, with "these are the futures where you run out — the earliest at
+    year 14" makes probability into something a person can feel. You have the path data
+    already; you are currently reducing it to a percentage and discarding the rest, which is
+    <em class="term">dd-010</em> pointing straight at an unbuilt feature.
+  </p>
+</section>
+
+<hr class="rule">
+
+<!-- ============================================================ -->
+
+<section class="part">
+  <p class="part-label">Part VI — Search</p>
+  <h2>The foundation is half-built, and the half that's missing is the half that matters</h2>
+
+  <div class="col">
+    <p>
+      Done well already: canonical URLs, Open Graph and Twitter cards, a sitemap integration,
+      RSS, WebSite schema with SearchAction, semantic headings, a skip link, and static Astro
+      output that is fast by construction. That is more than most sites in this category ship.
+    </p>
+    <p>What is missing:</p>
+  </div>
+
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Gap</th><th>Where</th><th>Consequence</th><th>Effort</th></tr></thead>
+      <tbody>
+        <tr><td><b>No robots.txt</b></td><td class="num">public/</td><td>Sitemap undiscoverable except via Search Console</td><td>5 min</td></tr>
+        <tr><td><b>Internal logs indexed</b></td><td class="num">6 Studio pages</td><td>Reels scripts, creator log, engineering solutions submitted to Google as content</td><td>15 min</td></tr>
+        <tr><td><b>No FAQPage schema</b></td><td class="num">faq.astro</td><td>A literal Q&amp;A page earning no rich results</td><td>1 hr</td></tr>
+        <tr><td><b>No Person author</b></td><td class="num">ArticleLayout:28</td><td>YMYL trust signal absent (F-16)</td><td>2 hr</td></tr>
+        <tr><td><b>No dates in schema</b></td><td class="num">ArticleLayout:23</td><td>No Article rich result (F-17)</td><td>1 hr</td></tr>
+        <tr><td><b>No HowTo / SoftwareApplication</b></td><td>calculator pages</td><td>Calculator pages compete as plain text</td><td>2 hr</td></tr>
+        <tr><td><b>916 KB eager JS</b></td><td class="num">2 engine pages</td><td>Core Web Vitals penalty (F-05)</td><td>10 min</td></tr>
+        <tr><td><b>Service worker can pin stale pages</b></td><td class="num">astro.config.mjs</td><td>Already noted in your launch gate as a launch blocker</td><td>1 hr</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <p>
+      <strong>The Studio pages are the one to act on first.</strong> Six of the 73 URLs in your
+      sitemap are internal engineering artefacts — <em class="term">/reels</em> (588 KB, the
+      largest page on the site), <em class="term">/creator-log</em>, <em class="term">/solutions</em>,
+      <em class="term">/standards</em>, <em class="term">/shelved-ideas</em>,
+      <em class="term">/research-ledger</em>. They are fascinating and they are not for readers.
+      An AdSense reviewer sampling your site has a real chance of landing on a raw dump of
+      Instagram reel scripts. Add <em class="term">noindex</em> and exclude them from the sitemap
+      — keep them reachable by link, just not submitted.
+    </p>
+  </div>
+
+  <h3>Where you can realistically rank</h3>
+  <p>
+    Not on "income tax calculator" — ClearTax, Groww and the Income Tax Department own it and
+    you will not outrank them this decade. Your openings are the long-tail questions those
+    pages structurally cannot answer, because answering honestly would hurt the product they
+    sell:
+  </p>
+  <ul>
+    <li><em>"is my LIC policy worth it"</em> · <em>"guaranteed income plan actual return"</em> — nobody selling insurance will publish this</li>
+    <li><em>"will my retirement corpus last"</em> · <em>"how much do I need to retire in India"</em> — everyone answers with a flat-return calculator; you answer with a distribution</li>
+    <li><em>"₹X crore is enough for retirement?"</em> — a whole family of specific queries, each a landing page you can generate honestly</li>
+    <li>The 54 article topics — Section 271A, 270A, 148, bonus stripping. Genuinely underserved, low competition, real intent</li>
+  </ul>
+</section>
+
+<hr class="rule">
+
+<!-- ============================================================ -->
+
+<section class="part">
+  <p class="part-label">Part VII — AdSense</p>
+  <h2>You would be rejected today, and the reason is four pages nobody has looked at</h2>
+
+  <div class="finding blocker">
+    <div class="finding-head">
+      <span class="fid">F-18</span>
+      <span class="chip blocker">Blocker</span>
+      <p class="finding-title">Every trust page is branded a different company</p>
+    </div>
+    <div class="evidence">$ grep -ohE "SWP Intelligence Engine|swpplanner\.com|FinSight India" \
+      src/pages/{privacy,terms,contact,about}.astro | sort | uniq -c
+  <b>13 SWP Intelligence Engine</b>
+   <b>6 swpplanner.com</b>
+   <b>0 FinSight India</b>
+
+privacy.astro:5   title="Privacy Policy — SWP Intelligence Engine"
+about.astro:5     title="About Us — SWP Intelligence Engine"
+about.astro       "About SWP Intelligence Engine"
+privacy.astro     support@swpplanner.com          ← domain is finsightindia.in</div>
+    <p>
+      An AdSense reviewer opens About, Privacy, Terms and Contact. On <em>finsightindia.in</em>
+      all four describe a company called SWP Intelligence Engine and give a support address at
+      <em>swpplanner.com</em>. That reads as a scraped or resold template — one of the most
+      common rejection causes there is. It also fails Google's publisher-identity requirement
+      outright.
+    </p>
+    <p>
+      The privacy policy is otherwise well written: it declares AdSense cookies, third-party
+      vendors and opt-out routes, and the client-side processing claim is true and verifiable.
+      All of that value is negated by the wrong name on it. These four pages also use
+      <em class="term">text-indigo-600</em> for links — a colour that exists nowhere in your
+      design system — which is a second tell that they were never revisited.
+    </p>
+    <div class="fix"><p>An afternoon's work: rename throughout, real contact address on the domain, GDPR/DPDP language, an editorial-policy section, a "not financial advice" disclaimer given proper prominence, and the design system's own link colour. Do this before anything else in this part.</p></div>
+  </div>
+
+  <div class="finding major">
+    <div class="finding-head">
+      <span class="fid">F-19</span>
+      <span class="chip major">Major</span>
+      <p class="finding-title">No consent mechanism, which is mandatory for AdSense in India</p>
+    </div>
+    <p>
+      Google requires a certified Consent Management Platform for EEA/UK traffic, and India's
+      DPDP Act 2023 imposes its own consent duties. There is no banner, no CMP, no cookie
+      controls anywhere in <em class="term">src/</em>.
+    </p>
+    <div class="fix"><p>A Google-certified CMP before applying. Choose the most privacy-preserving defaults — it fits the "private by design" promise you already make on the homepage, and that promise is a real asset worth not undermining.</p></div>
+  </div>
+
+  <div class="finding major">
+    <div class="finding-head">
+      <span class="fid">F-20</span>
+      <span class="chip major">Major</span>
+      <p class="finding-title">The site is not live, so nothing else can start</p>
+    </div>
+    <p>
+      <em class="term">docs/launch-gate.md</em> line 3: "Not live. No domain." AdSense needs a live
+      site on its own domain with real traffic history. Everything in this part is blocked on
+      that one act, and every week it waits is a week of indexing and age you do not accrue.
+    </p>
+    <div class="fix"><p>Ship to <em class="term">finsightindia.in</em> now, with the thin articles unpublished. A 30-article site that is live and indexing beats a 54-article site that is perfect and invisible.</p></div>
+  </div>
+
+  <h3>The AdSense checklist, in order</h3>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Requirement</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td>Live site on own domain</td><td class="fail">Not met</td><td>Deploy to finsightindia.in</td></tr>
+        <tr><td>Privacy policy naming the site</td><td class="fail">Wrong entity</td><td>F-18</td></tr>
+        <tr><td>About with real identity</td><td class="fail">Wrong entity</td><td>F-18 + F-16</td></tr>
+        <tr><td>Working contact method</td><td class="fail">Dead domain</td><td>F-18</td></tr>
+        <tr><td>Terms of service</td><td class="fail">Wrong entity</td><td>F-18</td></tr>
+        <tr><td>Consent management</td><td class="fail">Absent</td><td>F-19</td></tr>
+        <tr><td>Substantial original content</td><td class="pass">Met</td><td>Strong — once thin articles are held back</td></tr>
+        <tr><td>No duplicate/mass-produced signals</td><td class="fail">At risk</td><td>F-15 images, F-14 citations, F-16 authorship</td></tr>
+        <tr><td>Clear navigation</td><td class="pass">Met</td><td>Trim Studio from public nav</td></tr>
+        <tr><td>Mobile-friendly</td><td class="pass">Met</td><td>Fix F-01/F-02 for genuine usability</td></tr>
+        <tr><td>Sufficient traffic history</td><td class="fail">None</td><td>Apply after ~2 months live</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <p>
+      <strong>A word on the economics.</strong> Indian finance traffic yields roughly $1–4 per
+      thousand pageviews on AdSense. At 50,000 monthly pageviews — a genuinely good result for
+      a first year — that is about ₹5,000–15,000 a month. AdSense is worth having as validation
+      and as a floor, but it will not fund this project. Plan for it as a milestone, not as the
+      business model. Part IX takes that up.
+    </p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ============================================================ -->
+
+<section class="part">
+  <p class="part-label">Part VIII — Sequence</p>
+  <h2>The order matters more than the list</h2>
+
+  <h4>Week 1 — unblock everything else</h4>
+  <ol class="steps">
+    <li><b>Rewrite the four trust pages (F-18).</b> Half a day. Blocks AdSense entirely and is currently a live credibility hole.</li>
+    <li><b>Ship it.</b> Deploy to finsightindia.in with the thin articles held back. Search Console, robots.txt, noindex the Studio pages. Indexing age starts accruing the day you deploy and never retroactively.</li>
+    <li><b>Lazy-load html2pdf (F-05) and delete the six dead elements (F-06).</b> Twenty minutes for a visibly better and materially faster product.</li>
+  </ol>
+
+  <h4>Weeks 2–3 — the visual sweep</h4>
+  <ol class="steps" start="4">
+    <li><b>Contrast tokens (F-02).</b> Darken gold and emerald for light grounds, retire navy-400 as a text colour. One file.</li>
+    <li><b>Type floor (F-01) and emphasis ceiling (F-03).</b> The largest perceived-quality change available, and the one that most changes who can actually use the site.</li>
+    <li><b>One rupee formatter (F-04),</b> with a test that forbids new ones — the guard shape you already used in sol-047.</li>
+  </ol>
+
+  <h4>Weeks 4–6 — finish the pattern</h4>
+  <ol class="steps" start="7">
+    <li><b>Tax calculator: delete the duplicate summary, progressive-disclose the form (F-10, F-11).</b></li>
+    <li><b>Insurance analyser: quantity + amount + frame on every figure, drop the false numbering (F-12, F-13).</b></li>
+    <li><b>Citations across all articles (F-14),</b> then twelve cover images (F-15), then a named author (F-16) and real dates (F-17).</li>
+  </ol>
+
+  <h4>Weeks 7–10 — grow</h4>
+  <ol class="steps" start="10">
+    <li><b>The live homepage calculator (Idea 1)</b> and <b>shareable plan links (Idea 3)</b>.</li>
+    <li><b>The traditional-plan XIRR table (Idea 7)</b> — your best shot at earning links.</li>
+    <li><b>Apply to AdSense</b> once two months of traffic history exist and every blocker above is closed.</li>
+  </ol>
+
+  <div class="note">
+    <p>
+      Weeks 1–3 are almost entirely deletion and token edits — no new features, no new copy.
+      That is deliberate: the highest-return work available to you right now is removing things,
+      which is also the cheapest to verify and the hardest to get wrong.
+    </p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ============================================================ -->
+
+<section class="part">
+  <p class="part-label">Part IX — The world</p>
+  <h2>Can this win? Honestly: not as a calculator site. Possibly as something else.</h2>
+
+  <div class="col">
+    <h3>What you are up against</h3>
+    <p>
+      The Indian personal-finance web has three tiers, and all three are hostile to a new
+      entrant on the terms you are currently competing.
+    </p>
+    <p>
+      <b>The distribution platforms</b> — Groww, Zerodha, ET Money, INDmoney, Angel One — give
+      calculators away free because the calculator is a customer-acquisition cost, not a
+      product. They have domain authority you cannot approach, app installs in the tens of
+      millions, and no need for the calculator itself to earn anything.
+      <b>The tax-filing platforms</b> — ClearTax, Quicko, TaxBuddy — own every tax-calculator
+      SERP for the same reason. <b>The publishers</b> — Moneycontrol, Economic Times,
+      Value Research, Freefincal — own the informational queries with twenty years of accrued
+      authority.
+    </p>
+    <p>
+      Against that, "a better SWP calculator" is not a business. There are hundreds of SWP
+      calculators. The marginal reader cannot tell that yours is correct and theirs is not,
+      because the wrong ones look confident and load faster.
+    </p>
+
+    <h3>What you actually have that they do not</h3>
+    <p>
+      Three things, and they are not the things the site currently leads with.
+    </p>
+    <p>
+      <b>First: you can afford to be right.</b> Every one of those competitors is funded by
+      selling a product the calculator evaluates. That is why every retirement calculator in
+      India shows a flat 12% return and a comfortable outcome — not through incompetence but
+      because the honest answer ("about 1 in 3 futures run dry") does not sell a SIP. Your
+      insurance analyser telling someone their bank's guaranteed plan pays 7.22% is a sentence
+      no funded competitor can publish. <b>That constraint is your moat, and it is the only one
+      you have.</b>
+    </p>
+    <p>
+      <b>Second: the correctness discipline is real and it is unusual.</b> A solutions ledger,
+      cross-surface agreement tests, a doctrine with stable ids, and a habit of recording the
+      defect that flatters you rather than quietly fixing it. Nobody in this market works this
+      way. It is currently invisible to readers — <em class="term">/solutions</em> and
+      <em class="term">/standards</em> exist but read as engineering logs. Turned outward, in
+      plain language, "here is every mistake we found in our own calculator and what it changed"
+      is a trust asset no competitor can copy without admitting their own.
+    </p>
+    <p>
+      <b>Third: the writing register.</b> "You would typically finish with ₹1.28 crore left —
+      but this plan is tight" is a voice, and it is a better one than anything in the category.
+    </p>
+
+    <h3>My honest assessment of the odds</h3>
+    <p>
+      <b>As an AdSense-funded calculator site: low, maybe 10–15%.</b> The economics need roughly
+      500,000 monthly pageviews to produce a modest income, against competitors with structural
+      advantages you cannot buy. The main risk is not that the product is bad — it is better
+      than most — but that the effort is going into being more correct in a market that does not
+      reward correctness at the margin, and that the packaging costs you the readers the
+      correctness was for.
+    </p>
+    <p>
+      <b>As a trusted independent voice with a narrow, sharp position: considerably better,
+      perhaps 35–40%.</b> "The site that tells you what your insurance policy actually pays"
+      is a position nobody occupies, it is defensible precisely because it is unfundable by
+      the incumbents, and it has natural distribution — people forward that answer to their
+      family. The calculators then serve the position rather than being the product.
+    </p>
+    <p>
+      <b>The strongest asset may not be the website at all.</b> Your own memory notes record
+      that the articles are the substrate and the autonomous production system is the actual
+      project. That is probably right. A pipeline that reliably produces correct, well-designed,
+      well-written financial explainers — with a doctrine, a solutions ledger and a gate — is a
+      more valuable and more defensible thing than any one site it produces. If that is the
+      real bet, then FinSight's job is to be the proof it works, and this report's Part I–IV
+      are about making that proof presentable.
+    </p>
+
+    <h3>The one thing I would change about the strategy</h3>
+    <p>
+      You are building five calculators broadly. I would build one narrowly and completely: the
+      insurance analyser. It has the sharpest question, the most surprising answer, the most
+      emotional stakes, the least competition, the clearest sharing behaviour, and it is the one
+      where being unfunded is an unfair advantage rather than a handicap. Take that one to
+      genuinely finished — the answer, the article, the XIRR comparison table, the shareable
+      link — and let the other four be good supporting evidence.
+    </p>
+    <p>
+      Depth over breadth is already your stated doctrine. It applies to the product surface as
+      well as to the prose.
+    </p>
+  </div>
+
+  <p class="pull">
+    The difficulty of packaging is ours to absorb, never theirs.
+    <span>You have absorbed the difficulty of being correct. The packaging is the half that is left.</span>
+  </p>
+</section>
+
+<p class="end">
+  Twenty findings · F-01 to F-20 · every claim reproducible from the branch at
+  <b>07e6484</b> · audit performed by source-read on 16 August 2026
+</p>
+
+</div>

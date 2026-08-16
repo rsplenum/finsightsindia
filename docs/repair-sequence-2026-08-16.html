@@ -1,0 +1,1056 @@
+<title>The Repair Sequence</title>
+
+<style>
+  /* ============================================================
+     THE REPAIR SEQUENCE — implementation plan for the findings in
+     The Packaging Audit (docs/ux-audit-2026-08-16.html).
+     Same token system as the audit: these two read as a pair.
+     ============================================================ */
+
+  :root {
+    --paper:   #F6F7F9;
+    --surface: #FFFFFF;
+    --sunk:    #EEF1F5;
+    --ink:     #0F172A;
+    --ink-2:   #4A5568;
+    --ink-3:   #5A6675;
+    --accent:  #8A6D14;
+    --accent-soft: rgba(138,109,20,0.09);
+    --rule:    #DDE2E8;
+    --rule-2:  #C7D0DA;
+    --crit:    #A8321F;
+    --crit-soft: rgba(168,50,31,0.08);
+    --warn:    #9A6B00;
+    --warn-soft: rgba(154,107,0,0.10);
+    --ok:      #17694A;
+    --ok-soft: rgba(23,105,74,0.09);
+
+    --display: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+    --body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --data: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+    --measure: 68ch;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #0F1721; --surface: #16202C; --sunk: #1B2632;
+      --ink: #E8EDF2; --ink-2: #C9D1DB; --ink-3: #94A3B8;
+      --accent: #D9B849; --accent-soft: rgba(217,184,73,0.12);
+      --rule: #2A3644; --rule-2: #3A4756;
+      --crit: #F0A88C; --crit-soft: rgba(240,168,140,0.12);
+      --warn: #E2C264; --warn-soft: rgba(226,194,100,0.12);
+      --ok: #6FD3A8; --ok-soft: rgba(111,211,168,0.12);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #0F1721; --surface: #16202C; --sunk: #1B2632;
+    --ink: #E8EDF2; --ink-2: #C9D1DB; --ink-3: #94A3B8;
+    --accent: #D9B849; --accent-soft: rgba(217,184,73,0.12);
+    --rule: #2A3644; --rule-2: #3A4756;
+    --crit: #F0A88C; --crit-soft: rgba(240,168,140,0.12);
+    --warn: #E2C264; --warn-soft: rgba(226,194,100,0.12);
+    --ok: #6FD3A8; --ok-soft: rgba(111,211,168,0.12);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.65;
+    margin: 0;
+    padding: 0 clamp(1rem, 5vw, 3rem) 8rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  .col  { max-width: var(--measure); }
+
+  .masthead { padding: clamp(3rem, 9vw, 6rem) 0 2.2rem; border-bottom: 2px solid var(--ink); }
+  .kicker {
+    font-family: var(--data); font-size: 0.72rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--accent); margin: 0 0 1.5rem;
+  }
+  h1 {
+    font-family: var(--display); font-size: clamp(2.3rem, 6.2vw, 4.2rem);
+    line-height: 1.03; letter-spacing: -0.02em; font-weight: 400;
+    margin: 0 0 1.4rem; text-wrap: balance; max-width: 15ch;
+  }
+  .standfirst {
+    font-size: clamp(1.05rem, 2vw, 1.26rem); line-height: 1.55;
+    color: var(--ink-2); max-width: 58ch; margin: 0;
+  }
+  .masthead-meta {
+    display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; margin-top: 2.3rem;
+    font-family: var(--data); font-size: 0.75rem; color: var(--ink-3);
+  }
+  .masthead-meta b { color: var(--ink-2); font-weight: 600; }
+
+  .part { padding-top: clamp(3.2rem, 7vw, 5.2rem); }
+  .part-label {
+    font-family: var(--data); font-size: 0.72rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink-3); margin: 0 0 0.9rem;
+    padding-bottom: 0.9rem; border-bottom: 1px solid var(--rule);
+  }
+  h2 {
+    font-family: var(--display); font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+    line-height: 1.14; letter-spacing: -0.015em; font-weight: 400;
+    margin: 0 0 1.1rem; text-wrap: balance; max-width: 24ch;
+  }
+  h3 {
+    font-family: var(--display); font-size: 1.3rem; line-height: 1.28;
+    font-weight: 600; margin: 2.4rem 0 0.7rem; max-width: 36ch; text-wrap: balance;
+  }
+  h4 { font-size: 0.95rem; font-weight: 700; margin: 1.7rem 0 0.5rem; color: var(--ink); }
+  p { margin: 0 0 1.1rem; max-width: var(--measure); }
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+  strong { font-weight: 660; }
+  em.term {
+    font-style: normal; font-family: var(--data); font-size: 0.88em;
+    color: var(--ink-2); background: var(--sunk); padding: 0.08em 0.35em; border-radius: 3px;
+  }
+  ul, ol { max-width: var(--measure); padding-left: 1.3rem; margin: 0 0 1.2rem; }
+  li { margin-bottom: 0.5rem; }
+  li::marker { color: var(--ink-3); }
+
+  /* ---------- phase blocks ---------- */
+
+  .phase {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--accent);
+    border-radius: 3px;
+    padding: 1.5rem 1.6rem 1.7rem;
+    margin: 1.8rem 0;
+  }
+  .phase-head {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1rem;
+    margin-bottom: 0.4rem;
+  }
+  .phase-no {
+    font-family: var(--data); font-size: 0.75rem; font-weight: 700;
+    color: var(--accent); letter-spacing: 0.06em;
+  }
+  .phase-title {
+    font-family: var(--display); font-size: 1.45rem; font-weight: 600;
+    line-height: 1.2; margin: 0; flex: 1 1 18ch; min-width: 0;
+  }
+  .phase-when {
+    font-family: var(--data); font-size: 0.7rem; color: var(--ink-3);
+    letter-spacing: 0.05em; white-space: nowrap;
+  }
+  .phase-goal {
+    font-size: 0.97rem; color: var(--ink-2); margin: 0 0 1.2rem;
+    max-width: 62ch; padding-bottom: 1.1rem; border-bottom: 1px solid var(--rule);
+  }
+  .phase-goal b { color: var(--ink); }
+
+  /* ---------- work items ---------- */
+
+  .item { padding: 1.1rem 0; border-bottom: 1px solid var(--rule); }
+  .item:last-of-type { border-bottom: none; padding-bottom: 0; }
+  .item-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 0.8rem; margin-bottom: 0.5rem; }
+  .sid {
+    font-family: var(--data); font-size: 0.76rem; font-weight: 700;
+    color: var(--ink); letter-spacing: 0.02em;
+  }
+  .item-title { font-weight: 650; font-size: 1rem; flex: 1 1 20ch; min-width: 0; line-height: 1.35; }
+  .item p { font-size: 0.94rem; color: var(--ink-2); max-width: 62ch; margin-bottom: 0.7rem; }
+
+  .chip {
+    font-family: var(--data); font-size: 0.62rem; letter-spacing: 0.1em;
+    text-transform: uppercase; font-weight: 700; padding: 0.18rem 0.45rem;
+    border-radius: 2px; border: 1px solid; white-space: nowrap;
+  }
+  .chip.blocker { color: var(--crit); background: var(--crit-soft); border-color: var(--crit); }
+  .chip.major   { color: var(--warn); background: var(--warn-soft); border-color: var(--warn); }
+  .chip.minor   { color: var(--ink-3); background: var(--sunk); border-color: var(--rule-2); }
+  .chip.rahul   { color: var(--accent); background: var(--accent-soft); border-color: var(--accent); }
+  .chip.time    { color: var(--ink-3); background: transparent; border-color: var(--rule-2); }
+
+  .meta {
+    font-family: var(--data); font-size: 0.75rem; line-height: 1.7;
+    color: var(--ink-2); background: var(--sunk);
+    border-left: 2px solid var(--rule-2); padding: 0.6rem 0.8rem;
+    overflow-x: auto; white-space: pre-wrap; word-break: break-word; margin: 0.6rem 0 0;
+  }
+  .meta b { color: var(--ink); font-weight: 700; }
+  .meta .k { color: var(--ink-3); }
+
+  /* ---------- tables ---------- */
+
+  .table-scroll { overflow-x: auto; margin: 1.4rem 0 2rem; border: 1px solid var(--rule); border-radius: 3px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.87rem; min-width: 560px; }
+  th {
+    font-family: var(--data); font-size: 0.65rem; letter-spacing: 0.1em;
+    text-transform: uppercase; text-align: left; color: var(--ink-3); font-weight: 700;
+    padding: 0.72rem 1rem; border-bottom: 1px solid var(--rule-2);
+    background: var(--sunk); white-space: nowrap;
+  }
+  td { padding: 0.68rem 1rem; border-bottom: 1px solid var(--rule); color: var(--ink-2); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  td b { color: var(--ink); font-weight: 650; }
+  .num { font-family: var(--data); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td.risk-hi { color: var(--crit); font-weight: 650; }
+  td.risk-lo { color: var(--ok); font-weight: 650; }
+  td.risk-md { color: var(--warn); font-weight: 650; }
+
+  /* ---------- decisions ---------- */
+
+  .decision {
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    border-radius: 3px;
+    background: var(--surface);
+    padding: 1.2rem 1.4rem;
+    margin: 1.3rem 0;
+  }
+  .decision h4 { margin: 0 0 0.5rem; font-family: var(--display); font-size: 1.13rem; font-weight: 600; }
+  .decision p { font-size: 0.95rem; margin-bottom: 0.6rem; }
+  .decision p:last-child { margin-bottom: 0; }
+  .rec {
+    font-size: 0.9rem; color: var(--ink-2); border-top: 1px dashed var(--rule-2);
+    padding-top: 0.7rem; margin-top: 0.9rem;
+  }
+  .rec::before {
+    content: "My recommendation"; display: block; font-family: var(--data);
+    font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-3); margin-bottom: 0.3rem;
+  }
+
+  .note {
+    background: var(--accent-soft); border: 1px solid var(--rule); border-radius: 3px;
+    padding: 1.1rem 1.3rem; margin: 1.5rem 0; font-size: 0.95rem; color: var(--ink-2);
+  }
+  .note p:last-child { margin-bottom: 0; }
+  .note strong { color: var(--ink); }
+
+  .pull {
+    font-family: var(--display); font-size: clamp(1.15rem, 2.4vw, 1.5rem); line-height: 1.35;
+    color: var(--ink); border-left: 3px solid var(--accent); padding: 0.2rem 0 0.2rem 1.3rem;
+    margin: 2rem 0; max-width: 46ch; text-wrap: balance;
+  }
+  .pull span { color: var(--ink-3); display: block; font-family: var(--body); font-size: 0.82rem; margin-top: 0.6rem; }
+
+  .steps { counter-reset: step; list-style: none; padding: 0; max-width: var(--measure); }
+  .steps > li { counter-increment: step; position: relative; padding-left: 2.5rem; margin-bottom: 1.3rem; }
+  .steps > li::before {
+    content: counter(step, decimal-leading-zero); position: absolute; left: 0; top: 0.08em;
+    font-family: var(--data); font-size: 0.77rem; font-weight: 700; color: var(--accent);
+  }
+  .steps b { display: block; color: var(--ink); margin-bottom: 0.12rem; }
+
+  details {
+    border: 1px solid var(--rule); border-radius: 3px; background: var(--surface);
+    padding: 0.85rem 1.1rem; margin: 1.1rem 0; max-width: var(--measure);
+  }
+  summary { cursor: pointer; font-weight: 650; font-size: 0.95rem; color: var(--ink); }
+  details[open] summary { margin-bottom: 0.8rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+  details p:last-child, details ul:last-child { margin-bottom: 0; }
+
+  hr.rule { border: none; border-top: 1px solid var(--rule); margin: 2.8rem 0 0; }
+
+  .end {
+    margin-top: 3.5rem; padding-top: 1.4rem; border-top: 2px solid var(--ink);
+    font-family: var(--data); font-size: 0.74rem; color: var(--ink-3);
+  }
+
+  @media (max-width: 620px) {
+    body { font-size: 16px; }
+    .phase { padding: 1.1rem 1.1rem 1.3rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <p class="kicker">FinSight India · Implementation plan · 16 August 2026</p>
+  <h1>The Repair Sequence</h1>
+  <p class="standfirst">
+    Twenty findings turned into sixteen units of work, ordered so that nothing
+    is built on something that is about to change. Six of them are not mine to
+    decide — those are first, because three of them change the plan.
+  </p>
+  <div class="masthead-meta">
+    <span><b>Companion to</b> The Packaging Audit (F-01 … F-20)</span>
+    <span><b>New ids</b> sol-048 … sol-060</span>
+    <span><b>Span</b> ~10 weeks, front-loaded</span>
+  </div>
+</header>
+
+<!-- ============================================================ -->
+
+<section class="part">
+  <p class="part-label">How this plan is wired in</p>
+  <h2>The findings go into your stores, not into a document beside them</h2>
+
+  <div class="col">
+    <p>
+      Your protocol says nothing important lives only in chat, and it names four
+      homes. This plan uses them rather than competing with them. Three points
+      matter before any code is written.
+    </p>
+    <p>
+      <b>The fixes become solutions.</b> Each work item below carries a
+      <em class="term">sol-</em> id continuing from <em class="term">sol-047</em>, and gets an
+      entry in <em class="term">engineering-solutions.json</em> with the schema already in use:
+      <em class="term">problem · diagnosis · solution · verification · lesson</em>. That is
+      where "what broke and how it was fixed" belongs.
+    </p>
+    <p>
+      <b>The design rules cannot become doctrine on my say-so.</b> I checked every entry
+      from <em class="term">dd-000</em> to <em class="term">dd-018</em>: all nineteen carry
+      Rahul's actual words in the <em class="term">verbatim</em> field. The doctrine is his
+      judgement, recorded. My audit findings are evidence, not judgement. So the four
+      general visual rules the audit implies are listed under <b>Decisions</b> below as
+      proposals awaiting a ruling — if Rahul rules on them, they become
+      <em class="term">dd-019</em> … <em class="term">dd-022</em> in his phrasing, with
+      <em class="term">do</em>/<em class="term">dont</em> arrays and
+      <em class="term">npm run doctrine</em>, per <em class="term">dd-016</em>. Until then they
+      are engineering conventions enforced by tests, which is weaker but honest.
+    </p>
+    <p>
+      <b>New components need their checks written first.</b>
+      <em class="term">doctrineChecks.test.ts</em> requires every
+      <em class="term">.astro</em> in <em class="term">src/components/Calculators/</em> to have
+      a sibling <em class="term">.checks.md</em>, with only two grandfathered exemptions.
+      Phase 4 creates new rung components, so
+      <em class="term">npm run doctrine:checks &lt;Name&gt;</em> runs <em>before</em> the
+      component, and every rule is answered <em class="term">PASS</em> /
+      <em class="term">N/A</em> / <em class="term">RISK</em> with a reason. A plan that skipped
+      this would fail your own suite.
+    </p>
+  </div>
+
+  <div class="note">
+    <p>
+      <strong>One thing I have already done.</strong> I added the six open decisions below
+      to <em class="term">docs/launch-gate.md</em> under "Waiting on Rahul", plus one line
+      under "Next" pointing at this plan. Protocol rule 4 says open decisions must be
+      visible rather than carried in an agent's head, and these were about to be carried in
+      mine. I did <em>not</em> add the sixteen work items — they are not agreed yet, and a
+      tracker that lists unapproved work misinforms with authority. Run
+      <em class="term">npm run gate:sync</em> after reviewing.
+    </p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ============================================================ -->
+
+<section class="part">
+  <p class="part-label">Decisions — before Phase 1</p>
+  <h2>Six rulings, three of which change what gets built</h2>
+
+  <div class="decision">
+    <h4>D-1 · Ship now, or close the blockers first?</h4>
+    <p>
+      The gate says "Not live. No domain." Indexing age and traffic history only accrue
+      once the site is live, and AdSense needs roughly two months of both. Against that,
+      shipping today means shipping F-01, F-02 and F-18 — small type, failing contrast,
+      and four pages branded a different company.
+    </p>
+    <p class="rec">
+      Ship in week 1, but only after F-18. The trust pages are half a day and they are the
+      one defect that actively damages you while live. Everything else improves a site that
+      is already accruing age. Waiting three weeks to launch perfectly costs three weeks of
+      indexing and buys very little.
+    </p>
+  </div>
+
+  <div class="decision">
+    <h4>D-2 · Do the four visual rules become doctrine?</h4>
+    <p>
+      Proposed, in my words, for you to accept, reject or rephrase:
+    </p>
+    <ul>
+      <li><b>Type has a floor.</b> A label below the floor is not a label — it is a thing the reader's eye skips. <span class="num">13px</span> minimum for meaning, <span class="num">15px</span> for headings. <em>(F-01)</em></li>
+      <li><b>Contrast is a property of the pair, and the light theme is the one strangers see.</b> Every foreground is checked against its own ground, in both themes, before it ships. <em>(F-02)</em></li>
+      <li><b>Emphasis is a budget.</b> One all-caps element per card, one accent colour per card. Emphasis spent everywhere is emphasis nowhere. <em>(F-03)</em></li>
+      <li><b>A number is a quantity, an amount and a frame — and the three are never split apart.</b> "₹9.14 lakh more, in today's prices", never "THE SAME MONEY / ₹9.43 Lakh / in today's prices". <em>(F-04, F-12)</em></li>
+    </ul>
+    <p class="rec">
+      Take the fourth one at minimum. It generalises the <em class="term">T8</em> frame work
+      you already did, it is the direct cause of two separate findings, and it is the kind
+      of rule that prevents defects rather than describing them. The other three can live as
+      lint rules without ceremony.
+    </p>
+  </div>
+
+  <div class="decision">
+    <h4>D-3 · Which rupee convention wins?</h4>
+    <p>
+      Ten <em class="term">formatRupee()</em> definitions and two live conventions:
+      the answer layers' prose (<em class="term">₹1.28 crore</em>) and the shared utility
+      (<em class="term">₹ 1.50 Cr</em>). Both appear on the SWP planner. Whichever you pick,
+      the other gets deleted — so this blocks Phase 3.
+    </p>
+    <p class="rec">
+      The word, not the abbreviation. No space after the symbol. One decimal above a lakh:
+      <b>₹1.28 crore</b>, <b>₹89.1 lakh</b>, <b>₹59,190</b>. The answer layers already read
+      as a person talking, and "Cr" is a trading-desk abbreviation that pulls the whole page
+      back towards the terminal aesthetic we are trying to leave.
+    </p>
+  </div>
+
+  <div class="decision">
+    <h4>D-4 · Publish 54 articles, or hold the thin ones?</h4>
+    <p>
+      Thirty-eight sit between 1,000 and 1,500 words. Your gate already records 13 failing
+      the R2 screen and 26 failing R7. AdSense assesses the site, not the best of it.
+    </p>
+    <p class="rec">
+      Hold everything failing R2 until it is rewritten. Thirty strong articles is a better
+      application and a better site than 54 uneven ones — and the held ones lose nothing,
+      since they are not indexed yet.
+    </p>
+  </div>
+
+  <div class="decision">
+    <h4>D-5 · Who is the author?</h4>
+    <p>
+      F-16 needs a real person: name, credentials, photograph, biography,
+      <em class="term">@type: Person</em>. This is yours to answer because it is your name
+      and your exposure. It also settles whether the AI-assisted pipeline is disclosed.
+    </p>
+    <p class="rec">
+      A named person with a stated background, and disclose the pipeline plainly — "drafted
+      with AI assistance, verified against primary sources by a named human, corrections
+      logged publicly". Given you already publish a solutions ledger, that reads as
+      integrity rather than apology, and it is far more durable than hoping nobody asks.
+    </p>
+  </div>
+
+  <div class="decision">
+    <h4>D-6 · Five calculators broad, or the insurance analyser deep?</h4>
+    <p>
+      The audit argued for narrowing. If you accept it, Phase 6 changes shape: the growth
+      work concentrates on one page and the XIRR comparison table becomes the priority
+      instead of the homepage calculator.
+    </p>
+    <p class="rec">
+      Narrow. But not before Phase 4 — the tax calculator is half-migrated today, and
+      leaving it half-migrated is worse than either finishing or reverting it.
+    </p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ============================================================ -->
+
+<section class="part">
+  <p class="part-label">The sequence</p>
+  <h2>Six phases, ordered by dependency and by risk</h2>
+
+  <div class="col">
+    <p>
+      The ordering rule: <b>deletion before correction, correction before construction.</b>
+      Phases 1 and 2 remove things and edit tokens — near-zero risk to the engines, and they
+      shrink the surface everything later has to work against. Phase 3 changes what numbers
+      look like, so it needs a new test first. Phase 4 builds, and only after the ground has
+      stopped moving.
+    </p>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="phase">
+    <div class="phase-head">
+      <span class="phase-no">Phase 1</span>
+      <p class="phase-title">Unblock</p>
+      <span class="phase-when">Week 1 · ~1.5 days</span>
+    </div>
+    <p class="phase-goal">
+      <b>Goal:</b> stop actively losing, and start the clock. Nothing here touches an engine
+      or a calculation. Every item is a deletion, a rename, or a one-line import change.
+    </p>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="sid">sol-048</span>
+        <span class="chip blocker">F-18</span>
+        <span class="item-title">Rebrand the four trust pages to FinSight India</span>
+        <span class="chip time">4 hr</span>
+      </div>
+      <p>
+        Thirteen occurrences of "SWP Intelligence Engine" and six of
+        <em class="term">swpplanner.com</em> across About, Privacy, Terms and Contact; zero
+        occurrences of "FinSight India". Rename throughout, put a working contact address on
+        the real domain, add DPDP/GDPR language and an editorial-policy section, and replace
+        <em class="term">text-indigo-600</em> — a colour that exists nowhere in the design
+        system — with the site's own link colour.
+      </p>
+      <div class="meta"><span class="k">files</span>   src/pages/{about,privacy,terms,contact}.astro
+<span class="k">verify</span>  grep -c "SWP Intelligence Engine\|swpplanner" src/pages/*.astro  →  <b>0</b>
+<span class="k">gate</span>    unblocks the entire AdSense track</div>
+    </div>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="sid">sol-049</span>
+        <span class="chip blocker">F-20</span>
+        <span class="item-title">Deploy to finsightindia.in, with robots.txt and the Studio pages de-indexed</span>
+        <span class="chip time">4 hr</span>
+      </div>
+      <p>
+        Add <em class="term">public/robots.txt</em> pointing at the sitemap. Add
+        <em class="term">noindex</em> to the six internal Studio pages and exclude them from
+        the sitemap via the integration's <em class="term">filter</em> — they stay reachable
+        by link, they just stop being submitted to Google as content. Register Search Console.
+      </p>
+      <div class="meta"><span class="k">files</span>   public/robots.txt · astro.config.mjs (sitemap filter) · Layout.astro (noindex prop)
+<span class="k">pages</span>   /reels /creator-log /solutions /standards /shelved-ideas /research-ledger
+<span class="k">verify</span>  sitemap drops 73 → ~67 URLs; npm run verify green
+<span class="k">note</span>    also resolves the PWA stale-page blocker already in the gate — set
+        registerType to prompt, or ship a version-aware update flow, before real traffic</div>
+    </div>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="sid">sol-050</span>
+        <span class="chip major">F-05</span>
+        <span class="item-title">Lazy-load html2pdf on both engine pages</span>
+        <span class="chip time">15 min</span>
+      </div>
+      <p>
+        Move the static import inside the click handler, matching the
+        <em class="term">await import('chart.js/auto')</em> pattern already used correctly on
+        the same files. Removes ~916 KB from initial load on the two pages you most want to
+        rank.
+      </p>
+      <div class="meta"><span class="k">files</span>   src/pages/swp-planner.astro:650 · src/pages/sip-engine.astro:526
+<span class="k">verify</span>  npm run build; html2pdf chunk no longer in either page's entry graph</div>
+    </div>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="sid">sol-051</span>
+        <span class="chip major">F-06</span>
+        <span class="item-title">Delete six dead elements, one of them a permanent spinner</span>
+        <span class="chip time">30 min</span>
+      </div>
+      <p>
+        <em class="term">tier3ActionableFooter</em> ships "Calculating actionable financial
+        guidance…" forever — no script ever writes to it. Five more ids are declared and
+        never referenced repo-wide. Delete all six, then add a build-time assertion so the
+        class cannot recur.
+      </p>
+      <div class="meta"><span class="k">files</span>   src/pages/swp-planner.astro
+<span class="k">dead</span>    tier3ActionableFooter · sacrificeTitle · sacrificeIcon
+        sacrificeMetric1 · sacrificeMetric2 · wowMetricBanner
+<span class="k">test</span>    extend inputContract.test.ts — every id in a page's markup is either
+        written by that page's script or absent</div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase">
+    <div class="phase-head">
+      <span class="phase-no">Phase 2</span>
+      <p class="phase-title">The token sweep</p>
+      <span class="phase-when">Week 2 · ~3 days</span>
+    </div>
+    <p class="phase-goal">
+      <b>Goal:</b> make the site readable by the people it is for. Two of these three items
+      are edits to one CSS file plus a mechanical codemod; the third is a judgement pass
+      over 317 call sites. Nothing changes a number.
+    </p>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="sid">sol-052</span>
+        <span class="chip blocker">F-02</span>
+        <span class="item-title">Contrast tokens for the light theme</span>
+        <span class="chip time">4 hr</span>
+      </div>
+      <p>
+        The dark theme passes; the light theme — which is what strangers arriving from Google
+        see — fails on the site's signature colour. Add ink-on-light variants, retire
+        <em class="term">text-navy-400</em> as a text colour on light grounds entirely, and
+        keep the bright gold for dark mode and for non-text uses where the threshold is 3:1.
+      </p>
+      <div class="meta"><span class="k">files</span>   src/styles/global.css · codemod across src/pages, src/components
+<span class="k">change</span>  gold-600 #B8941F 2.88:1 → <b>#8A6D14 4.91:1</b>   (47 uses)
+        navy-400 #94A3B8 2.56:1 → <b>navy-500 #64748B 4.76:1</b>  (290 uses)
+        emerald  #059669 3.77:1 → <b>#0F6B4A</b>                  (badges)
+<span class="k">test</span>    new contrast.test.ts — parse the token file, assert every
+        documented foreground/ground pair clears 4.5:1 (3:1 for non-text)</div>
+    </div>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="sid">sol-053</span>
+        <span class="chip blocker">F-01</span>
+        <span class="item-title">A type floor, and a ban on arbitrary sizes</span>
+        <span class="chip time">1 day</span>
+      </div>
+      <p>
+        The four scale classes in <em class="term">global.css</em> are good; the problem is
+        that pages bypass them with bracket values 317 times. Add
+        <em class="term">.text-micro</em> at <span class="num">13px</span>, map every
+        <em class="term">text-[9px]</em> and <em class="term">text-[10px]</em> onto the scale,
+        then make a new arbitrary size a test failure.
+      </p>
+      <div class="meta"><span class="k">files</span>   src/styles/global.css · 317 call sites across pages + 18 rungs
+<span class="k">split</span>   tax-calculator 34 · rungs 52 · sip-engine 25 · insurance 16 · swp 14 · index 3
+<span class="k">test</span>    new typeScale.test.ts — grep src for text-\[\d+px\]; assert 0,
+        with the same ratchet shape as doctrineJargon.baseline.json if a
+        staged migration is preferred</div>
+    </div>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="sid">sol-054</span>
+        <span class="chip major">F-03</span>
+        <span class="item-title">An emphasis budget: one all-caps element per card</span>
+        <span class="chip time">1 day</span>
+      </div>
+      <p>
+        317 uppercase letterspaced runs. Ten visible in one viewport on the insurance page.
+        Convert to sentence case at real sizes, keeping all-caps only where a label must be
+        found before anything else. Same pass handles the four-status-colour problem on the
+        SWP expert rung, and F-09's false precision — <span class="num">70.25%</span> becomes
+        <span class="num">70%</span>, since a 10,000-path run has roughly
+        <span class="num">±0.5pp</span> of standard error at that level.
+      </p>
+      <div class="meta"><span class="k">files</span>   all four calculator pages + 18 rung components
+<span class="k">also</span>    F-09 survival precision · F-07 intra-card spacing (space-y-1 → space-y-3)
+        F-08 drop the unused @fontsource/geist-sans import from Layout.astro
+<span class="k">verify</span>  visual pass in both themes at 375px and 1280px</div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase">
+    <div class="phase-head">
+      <span class="phase-no">Phase 3</span>
+      <p class="phase-title">One formatter</p>
+      <span class="phase-when">Week 3 · ~1 day</span>
+    </div>
+    <p class="phase-goal">
+      <b>Goal:</b> close <em class="term">dd-013</em>'s presentation-layer gap. Blocked on
+      <b>D-3</b>. This is the riskiest small change in the plan, because it alters what every
+      number on the site looks like — so the test comes first.
+    </p>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="sid">sol-055</span>
+        <span class="chip major">F-04</span>
+        <span class="item-title">Delete ten formatters; one module, one convention, a test that forbids the eleventh</span>
+        <span class="chip time">1 day</span>
+      </div>
+      <p>
+        <em class="term">formatRupee()</em> is defined ten times — nine in
+        <em class="term">src/components/mdx/</em> and once in
+        <em class="term">tax-calculator.astro</em> — alongside
+        <em class="term">formatShortRupee</em> and <em class="term">formatIndianRupeeLabel</em>
+        in the shared utility. Consolidate to one exported function in
+        <em class="term">utils/formatters.ts</em>, in the convention D-3 settles.
+      </p>
+      <p>
+        <b>Write the test first.</b> I checked <em class="term">surfaceParity.test.ts</em>: it
+        asserts on numeric values, never on rendered strings — which is exactly why this
+        defect survived 376 green tests. The new test asserts that one magnitude renders
+        identically wherever it appears, which is also the generalised cross-surface check
+        your gate has been asking for.
+      </p>
+      <div class="meta"><span class="k">files</span>   src/utils/formatters.ts · 9 × src/components/mdx/*Workbench.astro
+        src/pages/tax-calculator.astro:370
+<span class="k">test</span>    new formatParity.test.ts — (a) no formatRupee declared outside utils/
+        (b) a table of magnitudes → exactly one expected string each
+<span class="k">guard</span>   same shape as sol-047's "no numeric literal for DEFAULT_REGIME"
+<span class="k">risk</span>    shipped figures change appearance, not value — screenshot the four
+        answer layers before and after and diff them deliberately</div>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase">
+    <div class="phase-head">
+      <span class="phase-no">Phase 4</span>
+      <p class="phase-title">Finish the pattern</p>
+      <span class="phase-when">Weeks 4–6 · ~8 days</span>
+    </div>
+    <p class="phase-goal">
+      <b>Goal:</b> the tax calculator and insurance analyser stop being an excellent answer
+      bolted to the product it replaced. This is the largest block of work and the one that
+      most changes how the site feels. Every new component gets its
+      <em class="term">.checks.md</em> written <em>first</em>.
+    </p>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="sid">sol-056</span>
+        <span class="chip blocker">F-10</span>
+        <span class="item-title">Tax calculator: delete the duplicate regime summary</span>
+        <span class="chip time">1 day</span>
+      </div>
+      <p>
+        The answer layer and the legacy "Interactive Slab Engine" both render New ₹97,500 /
+        Old ₹1,35,720, roughly 400px apart, in two visual languages — both visible in one
+        screenshot. Delete the two legacy regime cards, the duplicate effective-rate lines
+        and the "NEW REGIME SAVES" chip. Keep the computation table: it is the ledger, and
+        the doctrine says the full picture stays reachable — but move it into a
+        <em class="term">RungTaxLedger</em> matching the SWP planner's rung pattern.
+      </p>
+      <div class="meta"><span class="k">files</span>   src/pages/tax-calculator.astro:236–290 (delete)
+        new src/components/Calculators/RungTaxLedger.astro
+<span class="k">first</span>   npm run doctrine:checks RungTaxLedger  → answer every rule, then build
+<span class="k">safe</span>    no test references valOldTax / cardOldRegime / colHeadOld — verified
+<span class="k">verify</span>  taxAnswer.test.ts stays green; npm run verify</div>
+    </div>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="sid">sol-057</span>
+        <span class="chip major">F-11</span>
+        <span class="item-title">Tax calculator: three questions, then the answer, then the rest</span>
+        <span class="chip time">3 days</span>
+      </div>
+      <p>
+        Twenty-plus fields are visible before the reader knows which matter. Reduce the entry
+        to <em>salary · rent paid · 80C so far</em>, then let the answer layer's own break-even
+        gate the rest: "You would need ₹1.54 lakh more in deductions for the old regime to
+        win — do you have any of these?" The old-regime block becomes a rung that opens only
+        when it can change the answer.
+      </p>
+      <div class="meta"><span class="k">files</span>   src/pages/tax-calculator.astro · new RungTaxDeductions.astro
+<span class="k">first</span>   npm run doctrine:checks RungTaxDeductions
+<span class="k">pattern</span> mirrors swp-planner and sip-engine, which are already correct
+<span class="k">watch</span>   dd-008 — a control changes what you SEE, never what you must RE-READ:
+        opening the rung must not restate the answer in different words</div>
+    </div>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="sid">sol-058</span>
+        <span class="chip major">F-12 · F-13</span>
+        <span class="item-title">Insurance analyser: every figure carries its noun; drop the false numbering</span>
+        <span class="chip time">3 days</span>
+      </div>
+      <p>
+        "In today's prices" is attached to at least four distinct quantities on one page, two
+        of which — ₹9.14 lakh and ₹9.43 lakh — sit within one screen, both bold, meaning
+        entirely different things. Apply <em>quantity + amount + frame</em> on one line, every
+        time. Rename "THE SAME MONEY", which reads as a claim of equivalence when it means
+        "this sum, re-expressed". Move XIRR into parentheses behind plain words, and drop the
+        1/2/3 numbering — these are three parallel routes, not three steps.
+      </p>
+      <div class="meta"><span class="k">files</span>   src/pages/insurance-analyzer.astro:195,478,494,552,573,650
+        src/components/Calculators/InsuranceAnswer.astro:80,84
+<span class="k">test</span>    extend insuranceReplication.test.ts — every rendered "in today's prices"
+        string is preceded by a distinct noun
+<span class="k">depends</span> on D-2's fourth rule, if it is accepted as doctrine</div>
+    </div>
+  </div>
+
+  <!-- PHASE 5 -->
+  <div class="phase">
+    <div class="phase-head">
+      <span class="phase-no">Phase 5</span>
+      <p class="phase-title">Content credibility</p>
+      <span class="phase-when">Weeks 5–7 · runs parallel to Phase 4</span>
+    </div>
+    <p class="phase-goal">
+      <b>Goal:</b> make the thing you are best at — being right — visible to readers, to
+      Google and to an AdSense reviewer. This is a different workstream and a different
+      person's day; it does not contend with Phase 4 for the same files.
+    </p>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="sid">sol-059</span>
+        <span class="chip blocker">F-14</span>
+        <span class="item-title">Citations on all 54 articles</span>
+        <span class="chip time">4 days</span>
+      </div>
+      <p>
+        Not one article links to <em class="term">incometax.gov.in</em> or
+        <em class="term">indiacode.nic.in</em>. Add a <em class="term">sources</em> array to the
+        content schema, render a "Where this comes from" block at the foot of every article,
+        and require three to five links each. Highest-value content work available, and it
+        needs no new prose.
+      </p>
+      <div class="meta"><span class="k">files</span>   src/content.config.ts (schema) · ArticleLayout.astro · 54 × .mdx frontmatter
+<span class="k">test</span>    schema requires sources.length >= 3 — a build failure, not a lint warning
+<span class="k">note</span>    the gate already records two rules as INFERRED, not cited. Those two get
+        an explicit "we could not source this" line rather than a silent gap</div>
+    </div>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="sid">sol-060</span>
+        <span class="chip blocker">F-15 · F-16 · F-17</span>
+        <span class="item-title">Twelve cover images, a named author, and real dates</span>
+        <span class="chip time">3 days</span>
+      </div>
+      <p>
+        Twelve articles share <em class="term">hero-fallback.jpg</em> — five identical
+        thumbnails appear in one row of the Tax Code Vault, which is the visual signature of
+        a content farm on your most-landed-on index page. Replace with typographic covers:
+        the section number set large on a navy field, per category. Cheaper than photographs,
+        faster, more distinctive, and impossible to mistake for stock.
+      </p>
+      <p>
+        Then <b>D-5</b>'s author: <em class="term">@type: Person</em> in the JSON-LD, a byline
+        on every article, an author page. And <em class="term">z.coerce.date()</em> in the
+        schema so <em class="term">datePublished</em> and <em class="term">dateModified</em>
+        become real, with a visible "Applies to FY 2025-26" badge.
+      </p>
+      <div class="meta"><span class="k">files</span>   src/content.config.ts · ArticleLayout.astro:23–31 · 12 covers · new /author page
+<span class="k">verify</span>  Rich Results Test passes for Article on three sample URLs
+<span class="k">blocked</span> D-4 (which articles ship) and D-5 (who the author is)</div>
+    </div>
+  </div>
+
+  <!-- PHASE 6 -->
+  <div class="phase">
+    <div class="phase-head">
+      <span class="phase-no">Phase 6</span>
+      <p class="phase-title">Grow, then apply</p>
+      <span class="phase-when">Weeks 7–12</span>
+    </div>
+    <p class="phase-goal">
+      <b>Goal:</b> the first things worth building once the foundation stops moving. Shape
+      depends on <b>D-6</b>: if you narrow to the insurance analyser, item two comes first and
+      item one may not happen at all.
+    </p>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="sid">—</span>
+        <span class="chip minor">Idea 1 · 3</span>
+        <span class="item-title">A live homepage answer, and shareable plan links</span>
+        <span class="chip time">1 week</span>
+      </div>
+      <p>
+        Two fields on the homepage that complete a sentence as the reader types — converting
+        the page from a description of the product into the product. Then encode inputs in the
+        URL so "copy my plan link" gives readers something to keep and forward, with no
+        backend and no breach of the privacy promise.
+      </p>
+    </div>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="sid">—</span>
+        <span class="chip minor">Idea 7</span>
+        <span class="item-title">The traditional-plan XIRR table</span>
+        <span class="chip time">1 week</span>
+      </div>
+      <p>
+        The analyser run across the ten most-sold traditional plans, published as a standing
+        table. Your best shot at earning links, because it is a fact nobody selling those
+        products can afford to state. Use published benefit illustrations, state every
+        assumption, describe products rather than accusing companies.
+      </p>
+    </div>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="sid">—</span>
+        <span class="chip blocker">F-19</span>
+        <span class="item-title">Consent platform, then apply to AdSense</span>
+        <span class="chip time">1 day + wait</span>
+      </div>
+      <p>
+        A Google-certified CMP with privacy-preserving defaults — which fits the "private by
+        design" promise the homepage already makes. Apply only once every blocker above is
+        closed and roughly two months of traffic history exists.
+      </p>
+      <div class="meta"><span class="k">gate</span>    do not apply early. A rejection costs weeks and the reasons are rarely specific</div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ============================================================ -->
+
+<section class="part">
+  <p class="part-label">Risk</p>
+  <h2>What could break, and what protects it</h2>
+
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Change</th><th>Risk</th><th>Why</th><th>Protection</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>sol-055</b> one formatter</td>
+          <td class="risk-hi">High</td>
+          <td>Alters every number's appearance; no existing test covers rendered strings</td>
+          <td>Write formatParity.test.ts first; before/after screenshots of all four answer layers</td>
+        </tr>
+        <tr>
+          <td><b>sol-057</b> tax form reduction</td>
+          <td class="risk-md">Medium</td>
+          <td>Touches the input contract that sol-035/044/046 all came through</td>
+          <td>The untyped CustomEvent boundary is already the gate's highest-value item — do it here</td>
+        </tr>
+        <tr>
+          <td><b>sol-053</b> type floor</td>
+          <td class="risk-md">Medium</td>
+          <td>317 call sites; layout can reflow badly at 375px</td>
+          <td>Mechanical codemod, then a visual pass in both themes at two widths</td>
+        </tr>
+        <tr>
+          <td><b>sol-056</b> delete legacy cards</td>
+          <td class="risk-lo">Low</td>
+          <td>Confirmed: no test references those DOM ids</td>
+          <td>npm run verify</td>
+        </tr>
+        <tr>
+          <td><b>sol-052</b> contrast tokens</td>
+          <td class="risk-lo">Low</td>
+          <td>Colour only; no layout, no logic</td>
+          <td>contrast.test.ts asserts the pairs</td>
+        </tr>
+        <tr>
+          <td><b>sol-050/051</b> lazy import, dead code</td>
+          <td class="risk-lo">Low</td>
+          <td>Pure deletion and a proven pattern</td>
+          <td>npm run build</td>
+        </tr>
+        <tr>
+          <td><b>sol-049</b> noindex Studio</td>
+          <td class="risk-lo">Low</td>
+          <td>Reversible; pages stay reachable</td>
+          <td>buildOutput.test.ts asserts the sitemap's URL count</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <p>
+      <strong>The one structural risk worth naming.</strong> Your gate already calls the
+      typed boundary between the compute host and the rungs "the highest-value item on this
+      list" — rungs receive <em class="term">any</em> across a CustomEvent, so a renamed field
+      is <em class="term">undefined</em> at runtime and the build stays green. Three
+      correctness defects came through it. Phase 4 renames fields on two pages. <b>Either
+      install <em class="term">@astrojs/check</em> before sol-057, or accept that Phase 4 is
+      the most likely place to introduce a fourth instance.</b> Installing it will surface an
+      unknown backlog of pre-existing type errors — which is a session's work, and the reason
+      it was deliberately deferred. It is now on the critical path rather than beside it.
+    </p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ============================================================ -->
+
+<section class="part">
+  <p class="part-label">Working rhythm</p>
+  <h2>How each item lands</h2>
+
+  <ol class="steps">
+    <li>
+      <b>Record before acting.</b> If the item started as Rahul's feedback, the verbatim
+      words go into <em class="term">design-doctrine.json</em> first, with
+      <em class="term">do</em>/<em class="term">dont</em> arrays, then
+      <em class="term">npm run doctrine</em>. Protocol rule 1, and the one most easily skipped
+      under momentum.
+    </li>
+    <li>
+      <b>Checks before component.</b> Any new <em class="term">.astro</em> in
+      <em class="term">Calculators/</em>: <em class="term">npm run doctrine:checks &lt;Name&gt;</em>,
+      every rule answered with a reason, before a line of markup.
+    </li>
+    <li>
+      <b>Test before fix, where the fix changes output.</b> sol-055 and sol-052 both get their
+      test written first — that is what makes them verifiable rather than merely done.
+    </li>
+    <li>
+      <b>One sol- id per commit, message written long.</b> The commit carries the reasoning;
+      the diff carries only the change. Matches the existing log.
+    </li>
+    <li>
+      <b>Solutions entry at the same time,</b> not at the end of the session — including for
+      anything deliberately deferred, with its reason.
+    </li>
+    <li>
+      <b>Gate updated in the same turn,</b> then <em class="term">npm run gate:sync</em>.
+      It is a list: one line per item, tick and move on. Cap is 400 lines; it currently sits
+      at 240.
+    </li>
+    <li>
+      <b><em class="term">npm run verify</em> green before moving to the next item.</b> Build
+      plus the full suite. A phase is not done because its items are written.
+    </li>
+  </ol>
+
+  <h3>Definition of done, per phase</h3>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Phase</th><th>Done when</th></tr></thead>
+      <tbody>
+        <tr><td><b>1 · Unblock</b></td><td>Site live on finsightindia.in · zero "SWP Intelligence Engine" in src · Search Console verified · Studio pages absent from sitemap</td></tr>
+        <tr><td><b>2 · Tokens</b></td><td><span class="num">contrast.test.ts</span> and <span class="num">typeScale.test.ts</span> green · zero <span class="num">text-[Npx]</span> in src · visual pass at 375px and 1280px in both themes</td></tr>
+        <tr><td><b>3 · Formatter</b></td><td>One exported formatter · <span class="num">formatParity.test.ts</span> green · before/after screenshots reviewed and accepted</td></tr>
+        <tr><td><b>4 · Pattern</b></td><td>No number appears twice on any page · every new component has an answered <span class="num">.checks.md</span> · all four calculators follow one structure</td></tr>
+        <tr><td><b>5 · Content</b></td><td>Every published article has ≥3 sources, a unique cover, a named author and a machine-readable date · Rich Results Test passes</td></tr>
+        <tr><td><b>6 · Growth</b></td><td>CMP live · two months of traffic history · AdSense submitted</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ============================================================ -->
+
+<section class="part">
+  <p class="part-label">If you only do three things</p>
+  <h2>The plan, compressed</h2>
+
+  <div class="col">
+    <p>
+      Ten weeks is the honest estimate and most of it is worth doing. But the returns are
+      steeply front-loaded, and if the next month is short, these three carry most of the
+      value:
+    </p>
+    <ol>
+      <li>
+        <b>sol-048 — rebrand the trust pages.</b> Half a day. Unblocks AdSense entirely, and
+        it is the one defect that gets worse the longer the site is live.
+      </li>
+      <li>
+        <b>sol-052 + sol-053 — contrast and type floor.</b> Three days. This is the difference
+        between a site your audience can read and one they cannot, and it is nearly all
+        mechanical.
+      </li>
+      <li>
+        <b>sol-059 — citations.</b> Four days. It makes the thing you are uniquely good at
+        visible to the only three audiences that matter: readers, Google, and a reviewer.
+      </li>
+    </ol>
+    <p>
+      That is roughly eight working days for the great majority of the risk retired. Phase 4
+      is the largest block and the one that most changes how the product feels — but it
+      improves something already good, whereas those three stop active harm.
+    </p>
+  </div>
+
+  <p class="pull">
+    Deletion before correction, correction before construction.
+    <span>Phases 1 and 2 are almost entirely removal. That is not a compromise — it is where the return is.</span>
+  </p>
+</section>
+
+<p class="end">
+  Sixteen work items · sol-048 … sol-060 · six decisions pending · companion to
+  <b>The Packaging Audit</b> · 16 August 2026
+</p>
+
+</div>
