@@ -144,7 +144,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 									</span>
 									<span class="text-[10px] text-navy-400 dark:text-navy-500">Nifty 50, to {REGIME_PRESETS[0].span.split('\u2013')[1]}</span>
 								</div>
-								<div id="regimePresets" role="radiogroup" aria-label="Take growth and roughness from a real period"
+								<div role="radiogroup" aria-label="Take growth and roughness from a real period"
 									 class="grid grid-cols-3 gap-1.5">
 									{REGIME_PRESETS.map((p) => (
 										<button type="button" role="radio" data-regime={p.id}
@@ -293,14 +293,14 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 							<!-- Lifestyle Alert Box -->
 							<div id="lifestyleSacrificeAlertBox" class="hidden mt-4 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/30 rounded-lg space-y-2.5 transition-colors duration-200">
 								<div class="flex items-center gap-2">
-									<svg id="sacrificeIcon" class="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<svg class="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
 									</svg>
-									<h4 id="sacrificeTitle" class="text-xs font-bold text-amber-900 dark:text-amber-200 uppercase tracking-wider">Lifestyle Degradation Alert</h4>
+									<h4 class="text-xs font-bold text-amber-900 dark:text-amber-200 uppercase tracking-wider">Lifestyle Degradation Alert</h4>
 								</div>
 								<div class="space-y-2 text-xs text-amber-800 dark:text-amber-300 leading-relaxed font-sans">
-									<p id="sacrificeMetric1">To force your portfolio to survive, the system withheld <strong id="valSacrificeTotalCash" class="font-bold stat-value text-amber-950 dark:text-amber-100">--</strong> in planned lifetime income.</p>
-									<p id="sacrificeMetric2">At its lowest point, your income dropped to the equivalent purchasing power of just <strong id="valSacrificeRockBottom" class="font-bold stat-value text-amber-950 dark:text-amber-100">--</strong> in today's money.</p>
+									<p>To force your portfolio to survive, the system withheld <strong id="valSacrificeTotalCash" class="font-bold stat-value text-amber-950 dark:text-amber-100">--</strong> in planned lifetime income.</p>
+									<p>At its lowest point, your income dropped to the equivalent purchasing power of just <strong id="valSacrificeRockBottom" class="font-bold stat-value text-amber-950 dark:text-amber-100">--</strong> in today's money.</p>
 								</div>
 							</div>
 
@@ -319,7 +319,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 						</div>
 
 						<!-- CONSOLIDATED 3-TIER DASHBOARD BANNER -->
-						<div id="wowMetricBanner" class="relative overflow-hidden rounded-xl bg-white dark:bg-navy-950 border border-navy-200 dark:border-navy-800 p-6 sm:p-7 space-y-5">
+						<div class="relative overflow-hidden rounded-xl bg-white dark:bg-navy-950 border border-navy-200 dark:border-navy-800 p-6 sm:p-7 space-y-5">
 							<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-navy-200 dark:border-navy-800">
 								<div>
 									<span class="text-xs font-semibold uppercase tracking-wider text-navy-900 dark:text-navy-100">Total Lifetime After-Tax Cash Flow</span>
@@ -385,10 +385,10 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 								</div>
 							</div>
 
-							<div class="bg-navy-50 dark:bg-navy-900 border-t border-navy-200 dark:border-navy-800 rounded-b-lg -mx-6 -mb-6 sm:-mx-7 sm:-mb-7 p-4 text-xs flex items-start gap-3">
-								<svg class="w-4 h-4 text-gold-500 dark:text-gold-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-								<div id="tier3ActionableFooter" class="leading-relaxed font-sans text-navy-600 dark:text-navy-400">Calculating actionable financial guidance...</div>
-							</div>
+							<!-- sol-051: a footer strip lived here promising "Calculating actionable
+							     financial guidance..." No script ever wrote to it, so it said that
+							     forever, under a finished answer. The icon went with it - an info
+							     glyph beside nothing is not a smaller version of the same thing. -->
 						</div>
 
 						<!-- INTERACTIVE MICRO-CHART -->
@@ -647,9 +647,13 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 		requestRecompute,
 	} from '../utils/plannerInputs';
 	
-	import html2pdf from 'html2pdf.js';
-	
-	import { 
+	// sol-050: html2pdf is ~916 KB and is needed only if someone clicks Download.
+	// A static import here put it in this page's entry graph, so every reader paid
+	// for it before the first number appeared. It is imported inside the handler
+	// instead, matching the `await import('chart.js/auto')` pattern already used
+	// correctly in chart-helpers.ts.
+
+	import {
 		createLineChart, 
 		createMicroCashflowChart 
 	} from '../utils/chart-helpers';
@@ -1381,10 +1385,10 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 		initWorker();
 		triggerSimulation();
 
-		document.getElementById('downloadPdfBtn')?.addEventListener('click', () => {
+		document.getElementById('downloadPdfBtn')?.addEventListener('click', async () => {
 			const element = document.querySelector('main');
 			if (!element) return;
-			
+
 			const opt = {
 				margin:       10,
 				filename:     'swp_planner_report.pdf',
@@ -1392,13 +1396,21 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 				html2canvas:  { scale: 2, useCORS: true },
 				jsPDF:        { unit: 'mm', format: 'a3', orientation: 'portrait' }
 			};
-			
+
 			const btn = document.getElementById('downloadPdfBtn');
 			if(btn) btn.innerText = "Generating PDF...";
-			
-			html2pdf().set(opt).from(element).save().then(() => {
+
+			// try/finally, not .then(): the label is now set before an await that
+			// can reject (a failed chunk fetch on a bad connection). Without the
+			// finally, the button would sit on "Generating PDF..." for the rest of
+			// the session - the same permanently-stuck message sol-051 deletes
+			// from this very page.
+			try {
+				const { default: html2pdf } = await import('html2pdf.js');
+				await html2pdf().set(opt).from(element).save();
+			} finally {
 				if(btn) btn.innerText = "↓ Download PDF Report";
-			});
+			}
 		});
 	}
 

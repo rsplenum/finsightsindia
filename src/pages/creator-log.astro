@@ -30,7 +30,7 @@ const reversedLogs = [...logs].reverse();
 				</div>
 			</div>
 
-			<div class="relative border-l-2 border-slate-200 dark:border-navy-700 ml-4 md:ml-0 md:pl-0 pl-6 space-y-12" id="logs-list">
+			<div class="relative border-l-2 border-slate-200 dark:border-navy-700 ml-4 md:ml-0 md:pl-0 pl-6 space-y-12">
 				{reversedLogs.map((log) => {
 					// Format the date nicely
 					const dateObj = new Date(log.timestamp);

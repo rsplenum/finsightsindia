@@ -52,7 +52,7 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 					<p class="text-xs text-navy-500 dark:text-navy-400 mt-0.5">What you invest, what you are aiming at, and what you assume the market does.</p>
 				</div>
 
-				<form id="sipForm" onsubmit="event.preventDefault();" class="space-y-6">
+				<form onsubmit="event.preventDefault();" class="space-y-6">
 
 					<!-- Section 1: What you are putting in, and what for -->
 					<div class="space-y-4">
@@ -215,7 +215,7 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 									</span>
 									<span class="text-[10px] text-navy-400 dark:text-navy-500">Nifty 50, to {REGIME_PRESETS[0].span.split('–')[1]}</span>
 								</div>
-								<div id="sipRegimePresets" role="radiogroup" aria-label="Take growth and roughness from a real period"
+								<div role="radiogroup" aria-label="Take growth and roughness from a real period"
 									 class="grid grid-cols-3 gap-1.5">
 									{REGIME_PRESETS.map((p) => (
 										<button type="button" role="radio" data-regime={p.id}
@@ -523,7 +523,8 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 	// is the same function the engine is parameterised from, so the instalment
 	// this page discounts and the instalment the simulation invests cannot drift.
 	import { instalmentInYear } from '../utils/sipAdvice';
-	import html2pdf from 'html2pdf.js';
+	// sol-050: imported inside the click handler instead - see the note on the
+	// same handler in swp-planner.astro. ~916 KB that only a downloader needs.
 	import { debounce } from '../utils/debounce';
 
 	// sol-026 / dd-013: this page no longer computes anything. It reads the one
@@ -1134,7 +1135,7 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 			if (lastInputs && lastSimulation) renderChart(lastInputs, lastSimulation);
 		});
 
-		document.getElementById('downloadPdfBtn')?.addEventListener('click', () => {
+		document.getElementById('downloadPdfBtn')?.addEventListener('click', async () => {
 			const element = document.querySelector('main');
 			if (!element) return;
 			const opt = {
@@ -1146,9 +1147,12 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 			};
 			const btn = document.getElementById('downloadPdfBtn');
 			if (btn) btn.innerText = 'Generating PDF...';
-			html2pdf().set(opt).from(element).save().then(() => {
+			try {
+				const { default: html2pdf } = await import('html2pdf.js');
+				await html2pdf().set(opt).from(element).save();
+			} finally {
 				if (btn) btn.innerText = '↓ Download PDF Report';
-			});
+			}
 		});
 
 		// The Answer's own worker fires the first run; this page only listens.

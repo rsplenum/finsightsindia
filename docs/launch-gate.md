@@ -20,6 +20,16 @@ verifying sol-044's fix, and sol-046 by pointing sol-044's new detector at a
 second page nobody had complained about. The worst of the three was the last:
 `19.20% a year, after inflation` where the truth is `4.09%`.
 
+**sol-050 · sol-051 — the audit's two decision-free items, done.** Phase 1's
+other two are blocked on D-1. html2pdf now loads on the click instead of the
+page load: **960 KB → 46 KB** on the planner and **956 KB → 42 KB** on SIP,
+measured down the static import graph, since counting the scripts named in the
+page HTML says 35 KB both before and after and is the wrong measurement. The
+permanently-stuck "Calculating actionable financial guidance…" is gone, with 13
+more dead ids across 7 pages, and a test now fails on any id in `src/pages` that
+nothing references. **Six of the seven on the planner had to be kept** — the
+plan said delete and `wowMetricBanner` is the whole cash-flow dashboard. 390 tests.
+
 **sol-047 — Rahul spotted the two pages assuming different worlds.** The visible
 defaults already matched (both render 13.3% from the Nifty file); the *fallbacks*
 did not. The planner fell back to sol-028's retired 12%/15% pair and SIP to a
@@ -57,7 +67,8 @@ the commit messages — which is where it belongs once it is no longer *next*.
 
 ## Next — in order
 
-- [ ] **Interface + content audit, 16 Aug — 20 findings, F-01…F-20.** Report: [`ux-audit-2026-08-16.html`](ux-audit-2026-08-16.html). Plan: [`repair-sequence-2026-08-16.html`](repair-sequence-2026-08-16.html) — 16 items, sol-048…sol-060, six phases. **Not started and not agreed**; the six decisions it turns on are under *Waiting on Rahul* below. Headline blockers: all four trust pages still branded "SWP Intelligence Engine" (0 occurrences of "FinSight India"), `text-gold-600` fails WCAG AA at 2.88:1, 317 pieces of type below 12px, zero external citations across 54 articles, the tax page renders the regime comparison twice
+- [ ] **Interface + content audit, 16 Aug — 20 findings, F-01…F-20.** Report: [`ux-audit-2026-08-16.html`](ux-audit-2026-08-16.html). Plan: [`repair-sequence-2026-08-16.html`](repair-sequence-2026-08-16.html) — 16 items, sol-048…sol-060, six phases. **Not started and not agreed**; the six decisions it turns on are under *Waiting on Rahul* below. Headline blockers: all four trust pages still branded "SWP Intelligence Engine" (0 occurrences of "FinSight India"), `text-gold-600` fails WCAG AA at 2.88:1, 317 pieces of type below 12px, zero external citations across 54 articles, the tax page renders the regime comparison twice. **sol-050 and sol-051 are done** (16 Aug); the other 14 items still wait on D-1…D-6
+- [ ] **The plan's `sol-048` id is already taken** — the ledger's sol-048 is the content workstream's markdown hero-image entry, committed the same day. The plan's Phase 1 rebrand item needs a free id before it is written up; sol-052 is the next one. Only that one item collides — sol-049 and sol-052…sol-060 are clear. Catch it before writing, not after
 - [x] ~~**T2 last item** — the door is gone; the expert panel is rung 6, three doors named by question~~
 - [x] ~~**T3 rungs 4 and 5** — order-of-returns and what protection costs~~ **Both shipped 16 Aug.** The mirror holds: 2 months at the start, 4.8 years at the end
 - [ ] **sol-033 second instance: the planner still assumes a free fund** — `swpWorker` has no expense ratio. Needs the same required-parameter treatment, a control, a row on its money-flow rung, and three test bases updated. Deferred rather than rushed at the end of a long session; until it lands the two pages assume different worlds
@@ -101,6 +112,7 @@ the commit messages — which is where it belongs once it is no longer *next*.
 - [ ] **Property-based testing (`fast-check`)** → sol-022, the real answer to "correct across all inputs". Needs boundary behaviour defined first.
 - [ ] **19 loose python scripts at repo root** → never triaged; some may be live tooling.
 - [ ] **Two banned terms remain in article copy** — "decision intelligence" on `/tax-code/the-price-you-didnt-receive` and "paradigm shift" on `/tax-code/the-section-270a-200-penalty-trap`. Both are the content workstream's files and one is mid-rewrite, so they were left alone rather than edited across a workstream boundary. They are the whole of the jargon baseline now
+- [ ] **21 unreferenced ids remain in components** — sol-051's wall covers `src/pages` only, which is now at zero. Most of the rest are section anchors (`rungFlow`, `taxAnswer`, `sipAnswerLayer`) that read as deliberate landmarks for T9's deep-linking rather than debris, so sorting them is a navigation decision, not a deletion. Widen the test to components when T9 settles what the anchors are for
 - [ ] **12 checks files predate dd-016** — they cite entries but answer no rules by id. Ratcheted so the count can only fall; retrofit them as each component is next touched, not in one sweep.
 - [ ] **T4 goal engine — condition met, and Rahul has now ruled on the order: T7/T8 first, then the spike.** The deferral was never about a blocker; the spike ("can SIP and SWP share one core?") is worth more with more pages on the pattern, and T5 then T6 supplied the third and fourth. Asked again 16 Aug and the answer was to close the two tracks that are each one item from done before opening an architectural question. Unblocked, not started
 - [ ] **A PWA service worker can serve a stale page** — `@vite-pwa/astro` kept a fixed rung out of Rahul's browser through a normal reload on 16 Aug. Harmless while nothing is live; a launch blocker once it is, because a reader can be pinned to an old build

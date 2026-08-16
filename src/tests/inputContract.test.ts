@@ -215,3 +215,149 @@ describe('sol-047 - no typed copy of a computed market assumption', () => {
     expect(roughOf(planner)).toBe(roughOf(sip));
   });
 });
+
+/**
+ * sol-051: the markup declared handles that nothing anywhere holds.
+ *
+ * The same contract as the rest of this file, read in the other direction. The
+ * checks above ask whether every field the page READS is one the reader
+ * produces. This one asks whether every handle the page OFFERS is one somebody
+ * takes. Both failures are invisible for the same reason: Astro does not
+ * typecheck the client `<script>`, so a `getElementById` that was renamed,
+ * or never written at all, leaves the markup behind and the build stays green.
+ *
+ * The one that mattered was `tier3ActionableFooter`. It shipped the sentence
+ * "Calculating actionable financial guidance..." and no script ever wrote to
+ * it, so it said that permanently, sitting under a finished answer. A reader
+ * cannot tell a promise that is still loading from one that was never kept;
+ * they wait for it. That is the reader's time spent on nothing, which is the
+ * one currency CLAUDE.md says we are paid in.
+ *
+ * TWO REMEDIES, AND PICKING THE WRONG ONE BREAKS THE PAGE. An unreferenced id
+ * means the HANDLE is dead, not necessarily the ELEMENT:
+ *
+ *   - the element is dead too       -> delete the element (tier3ActionableFooter)
+ *   - the element is alive, id unused -> delete ONLY the id attribute
+ *
+ * Six of the seven found on the planner were the second kind. `wowMetricBanner`
+ * is the entire lifetime-cash-flow dashboard and `sacrificeMetric1` wraps
+ * `valSacrificeTotalCash`, which the script writes on every run. Deleting those
+ * elements because their ids were unreferenced would have removed working
+ * output from the page. The failure message below says this, because the next
+ * person to see it will be reading it in a hurry.
+ *
+ * Scoped to `src/pages`, which is where the audit found the class and where the
+ * tree is now at zero. Components carry ~21 more, most of them section anchors
+ * (`rungFlow`, `taxAnswer`) that look like deliberate landmarks for T9's
+ * deep-linking rather than debris. Sorting those is a navigation judgement, not
+ * a deletion, so it is recorded in the launch gate instead of guessed at here.
+ */
+describe('sol-051 - no page declares an id that nothing references', () => {
+  const REF_ATTRS = [
+    'for', 'href', 'aria-labelledby', 'aria-controls', 'aria-describedby',
+    'aria-activedescendant', 'form', 'list', 'headers', 'data-target', 'popovertarget',
+  ];
+
+  const walk = (dir: string, out: string[] = []): string[] => {
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      const p = `${dir}/${e.name}`;
+      if (e.isDirectory()) walk(p, out);
+      else if (/\.(astro|ts|js|tsx|jsx|css|mdx|md|html)$/.test(e.name)) out.push(p);
+    }
+    return out;
+  };
+
+  // src/tests is excluded on purpose, and this file is the reason. Its prose and
+  // its own assertions name the very ids it is checking, so leaving it in would
+  // let the test vouch for the thing it is testing. The principle is wider than
+  // the accident: a test naming an id is not a page USING one, so a handle whose
+  // only holder is a test is still a handle nothing on screen holds.
+  const files = [...walk('src'), ...(fs.existsSync('public') ? walk('public') : [])]
+    .filter((f) => !f.startsWith('src/tests/'));
+
+  /**
+   * Every token in the tree that could be holding a handle. Built once over the
+   * whole corpus rather than per-id, so this stays a single pass.
+   *
+   * `id="..."` is stripped before harvesting quoted strings. Without that, a
+   * declaration would be indistinguishable from a reference and every id would
+   * vouch for itself - the test would pass for all inputs, which is dd-011's
+   * store with no failure mode.
+   */
+  const referenced = new Set<string>();
+  for (const f of files) {
+    // Comments are stripped for the reason given at the top of this file: a name
+    // that appears only in prose must not vouch for itself. An HTML comment
+    // counts too - the commit that deletes a dead element usually leaves a note
+    // where it stood, and that note must not resurrect the id it describes.
+    const raw = fs
+      .readFileSync(f, 'utf-8')
+      .replace(/<!--[\s\S]*?-->/g, ' ')
+      .replace(/\/\*[\s\S]*?\*\//g, ' ')
+      .replace(/(^|[^:])\/\/[^\n]*/g, '$1');
+
+    const body = raw.replace(/\bid="[^"]*"/g, ' ');
+
+    // getElementById('x'), querySelector-by-string, and the ['a','b'].forEach
+    // shape the SIP page uses to bind its inputs.
+    for (const m of body.matchAll(/(['"`])([A-Za-z][\w-]*)\1/g)) referenced.add(m[2]);
+
+    // '#x' as a CSS rule, a selector string, or an anchor target.
+    for (const m of body.matchAll(/#([A-Za-z][\w-]*)/g)) referenced.add(m[1]);
+
+    // Attributes that point at an id by name; several take a space-separated list.
+    for (const attr of REF_ATTRS) {
+      for (const m of raw.matchAll(new RegExp(`\\b${attr}="([^"]*)"`, 'g'))) {
+        for (const tok of m[1].trim().split(/\s+/)) {
+          referenced.add(tok.startsWith('#') ? tok.slice(1) : tok);
+        }
+      }
+    }
+  }
+
+  const pages = files.filter((f) => f.startsWith('src/pages/') && f.endsWith('.astro'));
+  const idsIn = (src: string) =>
+    [...new Set([...src.matchAll(/\bid="([A-Za-z][\w-]*)"/g)].map((m) => m[1]))];
+
+  it('the harvest is real (guards the guard)', () => {
+    // Three ways this test could pass while checking nothing: no pages found,
+    // no ids found, or a `referenced` set so permissive that it contains
+    // everything. One assertion each.
+    expect(pages.length).toBeGreaterThan(10);
+    expect(idsIn(fs.readFileSync('src/pages/swp-planner.astro', 'utf-8')).length)
+      .toBeGreaterThan(40);
+    expect(referenced.has('downloadPdfBtn')).toBe(true);
+    expect(referenced.has('tier3ActionableFooter')).toBe(false);
+    expect(referenced.has('sacrificeMetric1')).toBe(false);
+  });
+
+  for (const page of ['src/pages/swp-planner.astro', 'src/pages/sip-engine.astro']) {
+    it(`${page} declares no id that nothing holds`, () => {
+      const dead = idsIn(fs.readFileSync(page, 'utf-8')).filter((id) => !referenced.has(id));
+      expect(dead, deadIdMessage(page, dead)).toEqual([]);
+    });
+  }
+
+  it('no other page declares an id that nothing holds', () => {
+    const offenders: string[] = [];
+    for (const page of pages) {
+      for (const id of idsIn(fs.readFileSync(page, 'utf-8'))) {
+        if (!referenced.has(id)) offenders.push(`${page}  ${id}`);
+      }
+    }
+    expect(offenders, deadIdMessage('src/pages', offenders)).toEqual([]);
+  });
+
+  function deadIdMessage(where: string, dead: string[]): string {
+    return (
+      `${where} declares ${dead.length} id(s) that nothing in src/ or public/ ` +
+      `references - no getElementById, no selector, no label, no anchor:\n` +
+      dead.map((d) => `  - ${d}`).join('\n') +
+      `\n\nDo NOT reflexively delete the element. Check which kind it is:\n` +
+      `  - nothing on screen depends on it  -> delete the element\n` +
+      `  - it renders or wraps live output  -> delete ONLY the id="" attribute\n` +
+      `sol-051 found six of the second kind and one of the first. Deleting the ` +
+      `six would have taken the planner's whole cash-flow dashboard with them.`
+    );
+  }
+});
