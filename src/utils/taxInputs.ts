@@ -47,6 +47,15 @@ const F = {
 
   // Head 3 - business or profession.
   businessProfit: 'inBusinessProfit',
+
+  // Head 4 - capital gains, split by the RATE that applies rather than by the
+  // asset, because the rate is all the arithmetic cares about. The chip opens
+  // with the first two; the other two are one layer deeper (see
+  // TaxAnswer.checks.md).
+  cgStcg111A: 'inCgStcgEquity',
+  cgLtcg112A: 'inCgLtcgEquity',
+  cgLtcg112: 'inCgLtcgOther',
+  cgStcgSlab: 'inCgStcgOther',
 } as const;
 
 /**
@@ -70,6 +79,10 @@ export const MONEY_FIELD_IDS: readonly string[] = [
   F.hpRent,
   F.hpMunicipalTaxes,
   F.businessProfit,
+  F.cgStcg111A,
+  F.cgLtcg112A,
+  F.cgLtcg112,
+  F.cgStcgSlab,
 ];
 
 /** The non-money controls, which fire `change` rather than blur. */
@@ -162,6 +175,13 @@ export function readTaxInputs(): TaxInput {
     },
 
     business: { netProfit: money(F.businessProfit) },
+
+    capitalGains: {
+      stcg111A: money(F.cgStcg111A),
+      ltcg112A: money(F.cgLtcg112A),
+      ltcg112: money(F.cgLtcg112),
+      stcgSlab: money(F.cgStcgSlab),
+    },
 
     // The statutory caps are the engine's business, not the form's. It already
     // applies them, and applying them here as well would be sol-038's shape:

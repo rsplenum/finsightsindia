@@ -78,6 +78,7 @@ the commit messages — which is where it belongs once it is no longer *next*.
 - [ ] **A PWA service worker can serve a stale page** — `@vite-pwa/astro` kept a fixed rung out of Rahul's browser through a normal reload on 16 Aug. Harmless while nothing is live; a launch blocker once it is, because a reader can be pinned to an old build
 - [ ] **Cross-surface agreement is checked pair by pair, by hand** — sol-038's tests are bespoke, one pair at a time, which is the same weakness the duplicated formulas had. A generalised check would fail the suite when any two surfaces disagree about one quantity
 - [ ] **Proposed rung: "what if life happens?"** — a lump-sum shock (marriage, an operation no insurance covers). Liquidity risk, not market risk. Rahul's idea; not yet scoped.
+- [ ] **Two tax rules are INFERRED, not cited — do not state them as fact.** Recorded this way on purpose: sol-042 happened because a confident note was backwards in both direction and magnitude and nobody could check it. (a) Whether old-regime 87A may be set against s.111A STCG — s.112A(6) explicitly bars it for LTCG, and the absence of an equivalent bar for STCG is an inference from silence. The engine does not claim it. (b) Marginal relief at the surcharge thresholds when slab and special-rate income are MIXED — "the bill at the threshold" depends on which income you imagine reducing; the engine reduces the slab part and holds gains constant, labelled in the code as an approximation. Bites only within a few lakh of each threshold
 - [ ] **sol-043: the tax page renders the LOSING regime as the recommended one** — at maxed deductions the badge reads "OLD REGIME SAVES ₹53,300" while the new regime's higher ₹97,500 is the greenest, boldest number on the page. Found live, not by the suite; the engine is right, the view is not. sol-040's shape exactly. Deferred *into* T6's answer layer, a few steps away in this session, because the fix is one `verdictFor()` driving every surface and patching the markup now builds that twice. **If the answer layer slips, fix this on its own** — it is only a deferral because nothing is live
 
 ---
@@ -138,14 +139,14 @@ Scope, settled 15 Aug: the SIP page inherits T2 whole — shared engine, `planne
 - [x] **sol-041** — a typed maturity of 0 no longer becomes ₹10 lakh, and `formatShortRupee` stopped printing paise
 - [x] **The whole form now answers as you type** — `setupFormattingField` takes an opt-in `live` flag, debounced. Opt-in on purpose: its other 13 callers sit on pages where one recompute is a 10,000-path simulation. sol-042
 
-## T6 — Income tax calculator (incl. your T10) · 4/9
+## T6 — Income tax calculator (incl. your T10) · 6/9
 
 - [x] Double-counted base tax fixed `0dd3950`
 - [x] Test coverage restored — 3 failing → 49 passing `0dd3950`
 - [x] Doubled rupee fixed across 8 call sites, 7 files `f91a873`
 - [x] **One input reader — `taxInputs.ts`** `f598870`. Added to this list, not previously on it: the page read eleven fields inline, the sol-026/sol-039 shape, latent only because there is one surface. Every remaining item adds one. No live sol-041 bug here — all fallbacks were 0, so zero and empty genuinely coincided — but the distinction is built in, and it is the rule for every money field rather than opt-in
-- [ ] Multiple income heads: salary, house property, business, capital gains, other
-- [ ] STCG/LTCG separated, with the 87A interaction
+- [x] **Multiple income heads** `8c3ed1a` — `tax.ts` is structured by s.14. Found on the way: the home loan field was a *house property* item (s.24(b)) being deducted like a Chapter VI-A one. Same rupees for the simple case, which is why it never showed; it would have double-counted the moment the head existed. Self-occupied interest is old-regime only — s.115BAC withdraws it entirely, which is the biggest single reason a homeowner stays on the old regime. Losses that the caps disallow are *reported*, not swallowed
+- [x] **STCG/LTCG separated, with the 87A interaction** — four buckets by rate, ₹1.25L exemption, unused basic exemption absorbed dearest-first, Chapter VI-A barred against gains, surcharge on gains capped at 15%. **The 87A rule was researched, not assumed**: under the new regime the rebate never touches special-rate tax, and the ₹12L threshold is tested EXCLUDING special-rate income — so ₹11L salary + ₹2L STCG keeps its rebate. Reading it the intuitive way would deny the rebate to a great many filers. Two sources, worked example, cited in the code
 - [ ] Presumptive taxation: 44AD and 44ADA
 - [ ] Loss set-off and carry-forward
 - [ ] Progressive disclosure — salaried users never see business fields. **Design settled first, in `TaxAnswer.checks.md`** — entry is one field (gross salary); the heads are additive chips, each ≤2 fields, house property and capital gains split rather than crammed; a chip is not a mode because it adds data rather than hiding half a difference; the regime stays two adjacent columns and never a switch; presumptive is shown adjacently because there the difference *is* the lesson. Answer headlines the monthly bite (dd-010) and the break-even deduction total (dd-008)

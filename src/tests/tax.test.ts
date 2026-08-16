@@ -88,18 +88,161 @@ describe('India Tax Engine - the breakdown must reconcile', () => {
       });
     }
 
-    it(`newRegime slabs sum to baseTax: ${label}`, () => {
-      const r = calculateIndiaTaxEngine({ ...base, ...over }).newRegime;
-      const slabSum = r.slabs.reduce((a, s) => a + s.tax, 0);
-      expect(Math.round(slabSum)).toBe(Math.round(r.baseTax));
-    });
+    for (const regime of ['newRegime', 'oldRegime'] as const) {
+      it(`${regime} slabs sum to the SLAB tax: ${label}`, () => {
+        const r = calculateIndiaTaxEngine({ ...base, ...over })[regime];
+        const slabSum = r.slabs.reduce((a, s) => a + s.tax, 0);
+        // Against slabTax, not baseTax. Capital gains are taxed outside the
+        // slabs, so once they exist the slab rows cannot add up to the whole
+        // bill and asserting that they do would have forced the wrong fix.
+        expect(Math.round(slabSum)).toBe(Math.round(r.slabTax));
+      });
 
-    it(`oldRegime slabs sum to baseTax: ${label}`, () => {
-      const r = calculateIndiaTaxEngine({ ...base, ...over }).oldRegime;
-      const slabSum = r.slabs.reduce((a, s) => a + s.tax, 0);
-      expect(Math.round(slabSum)).toBe(Math.round(r.baseTax));
-    });
+      it(`${regime} baseTax is exactly slab + special: ${label}`, () => {
+        const r = calculateIndiaTaxEngine({ ...base, ...over })[regime];
+        expect(Math.round(r.baseTax)).toBe(Math.round(r.slabTax + r.specialRateTax));
+      });
+    }
   }
+});
+
+describe('India Tax Engine - capital gains and the 87A interaction', () => {
+  const cg = (over: Partial<TaxInput['capitalGains']>): Partial<TaxInput> => ({
+    capitalGains: { stcg111A: 0, ltcg112A: 0, ltcg112: 0, stcgSlab: 0, ...over },
+  });
+
+  it('STCG on listed equity is 20%, outside the slabs', () => {
+    // 15% until 23 July 2024, 20% since. A reader who last checked in 2023 has
+    // the wrong number, so this is worth pinning.
+    const r = calculateIndiaTaxEngine(salary(1500000, cg({ stcg111A: 500000 })));
+    expect(r.newRegime.capitalGains.stcg111A.rate).toBe(0.2);
+    expect(r.newRegime.capitalGains.stcg111A.tax).toBe(100000);
+    expect(r.newRegime.slabIncome).toBe(1425000); // gains are NOT in here
+    expect(r.newRegime.taxableIncome).toBe(1925000); // but they ARE in total income
+  });
+
+  it('the first 1.25L of listed equity LTCG is free, the rest is 12.5%', () => {
+    const r = calculateIndiaTaxEngine(salary(1500000, cg({ ltcg112A: 325000 })));
+    const d = r.newRegime.capitalGains.ltcg112A;
+    expect(d.ownExemption).toBe(125000);
+    expect(d.taxed).toBe(200000);
+    expect(d.tax).toBe(25000);
+  });
+
+  it('short-term gains that are NOT 111A go through the slabs', () => {
+    // Property, gold, unlisted shares, post-2023 debt funds. The commonest
+    // reader mistake is assuming every "STCG" gets the 20% rate.
+    const r = calculateIndiaTaxEngine(salary(1000000, cg({ stcgSlab: 500000 })));
+    expect(r.newRegime.slabIncome).toBe(1425000); // 10L - 75k + 5L
+    expect(r.newRegime.specialRateTax).toBe(0);
+  });
+
+  // --- THE 87A INTERACTION. Verified against two sources, not assumed. ---
+
+  it('the 12L threshold EXCLUDES special-rate income, so the rebate survives', () => {
+    // 11L of salary beside 2L of STCG. Total income is 13L. Reading the
+    // threshold against TOTAL income would deny the rebate outright; the
+    // Finance Act 2025 position is that it is tested on slab income alone, so
+    // the salary keeps its rebate and only the gain is taxed.
+    const r = calculateIndiaTaxEngine(salary(1175000, cg({ stcg111A: 200000 })));
+    const n = r.newRegime;
+    expect(n.slabIncome).toBe(1100000);
+    expect(n.taxableIncome).toBe(1300000);
+    expect(n.slabTax).toBe(50000);
+    expect(n.rebate87A).toBe(50000); // the salary is wiped out
+    expect(n.specialRateTax).toBe(40000); // the gain is not
+    expect(n.totalTax).toBe(41600); // 40,000 + 4% cess, and nothing else
+  });
+
+  it('an unused rebate does NOT spill onto the gains', () => {
+    // 4L of slab income owes no tax at all, so the whole rebate is unused.
+    // None of it may be set against the 20% on the STCG.
+    const r = calculateIndiaTaxEngine(salary(475000, cg({ stcg111A: 200000 })));
+    const n = r.newRegime;
+    expect(n.slabIncome).toBe(400000);
+    expect(n.slabTax).toBe(0);
+    expect(n.specialRateTax).toBe(40000);
+    expect(n.totalTax).toBe(41600);
+  });
+
+  // --- The basic exemption limit, borrowed against gains ---
+
+  it('unused basic exemption is absorbed by the gains', () => {
+    // A retiree with no salary and a year of realised gains - exactly the
+    // reader least likely to know this rule exists.
+    const r = calculateIndiaTaxEngine({ ...base, ...cg({ ltcg112A: 600000 }) });
+    const d = r.newRegime.capitalGains;
+    expect(d.ltcg112A.ownExemption).toBe(125000);
+    expect(d.basicExemptionAbsorbed).toBe(400000);
+    expect(d.ltcg112A.taxed).toBe(75000);
+    expect(r.newRegime.totalTax).toBe(9750); // 9,375 + 4% cess
+  });
+
+  it('the exemption is absorbed by the DEAREST gain first', () => {
+    // 3L of 20% STCG and 3L of 12.5% LTCG against 4L of unused exemption. Spent
+    // on the STCG first it leaves 2L of LTCG taxed at 12.5% = 25,000. Spent the
+    // other way round it would leave 2L of STCG at 20% = 40,000. The Act lets
+    // the assessee choose, so choosing the dearer bucket is not optional for us.
+    const r = calculateIndiaTaxEngine({ ...base, ...cg({ stcg111A: 300000, ltcg112: 300000 }) });
+    const d = r.newRegime.capitalGains;
+    expect(d.stcg111A.basicExemptionUsed).toBe(300000);
+    expect(d.stcg111A.taxed).toBe(0);
+    expect(d.ltcg112.taxed).toBe(200000);
+    expect(r.newRegime.specialRateTax).toBe(25000);
+    expect(r.newRegime.totalTax).toBe(26000);
+  });
+
+  it('Chapter VI-A cannot shelter a capital gain', () => {
+    // s.112A(6) and s.111A(2). An 80C investment reduces slab income and can
+    // wipe out the slab tax entirely, and the gain is untouched by all of it.
+    const r = calculateIndiaTaxEngine(
+      salary(550000, { sec80c: 150000, ...cg({ ltcg112A: 500000 }) })
+    );
+    const o = r.oldRegime;
+    expect(o.slabIncome).toBe(350000);
+    expect(o.rebate87A).toBe(5000); // slab tax gone
+    expect(o.specialRateTax).toBe(46875); // (5L - 1.25L) at 12.5%, untouched
+    expect(o.totalTax).toBe(48750);
+  });
+
+  it('surcharge on capital gains is capped at 15% while the slab part is not', () => {
+    // 3 crore of salary and 3 crore of equity LTCG: total income 6 crore, so
+    // the new regime's top surcharge of 25% applies - but only to the slab
+    // part. Without the cap the gains would carry 25% too.
+    const r = calculateIndiaTaxEngine(salary(30075000, cg({ ltcg112A: 30000000 })));
+    const n = r.newRegime;
+    expect(n.slabIncome).toBe(30000000);
+    // Asserted relationally against the engine's own components, so this stays
+    // true if the slab arithmetic ever changes and fails loudly if the cap goes.
+    expect(n.surcharge).toBeCloseTo(n.slabTax * 0.25 + n.specialRateTax * 0.15, 2);
+    expect(n.surcharge).not.toBeCloseTo((n.slabTax + n.specialRateTax) * 0.25, 2);
+  });
+
+  it('the two derived totals move together across a sweep', () => {
+    // The pair worth asserting together: total tax and the components it is
+    // built from. A jagged one beside a smooth one is how two of 16 Aug's
+    // defects gave themselves away.
+    const sweep = [0, 100000, 125000, 200000, 1000000, 5000000];
+    for (const g of sweep) {
+      for (const salaryAmt of [0, 500000, 1275000, 3000000]) {
+        const r = calculateIndiaTaxEngine(salary(salaryAmt, cg({ ltcg112A: g })));
+        for (const regime of [r.newRegime, r.oldRegime]) {
+          const reconciled =
+            regime.baseTax -
+            regime.rebate87A -
+            regime.marginalRelief +
+            regime.surcharge +
+            regime.cess;
+          expect(Math.abs(reconciled - regime.totalTax)).toBeLessThanOrEqual(5);
+          expect(Math.round(regime.baseTax)).toBe(
+            Math.round(regime.slabTax + regime.specialRateTax)
+          );
+        }
+        // and the badge can never disagree with the two columns
+        expect(r.savingsAmount).toBe(Math.abs(r.newRegime.totalTax - r.oldRegime.totalTax));
+      }
+    }
+  });
 });
 
 describe('India Tax Engine - HRA', () => {

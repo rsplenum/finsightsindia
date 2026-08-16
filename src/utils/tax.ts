@@ -35,6 +35,69 @@ export interface BusinessInput {
     netProfit: number;
 }
 
+/**
+ * Head 4 - capital gains, split by the RATE that applies rather than by the
+ * asset, because the rate is the only thing the arithmetic cares about.
+ *
+ * Three of these four are taxed at their own flat rate and sit OUTSIDE the
+ * slabs entirely. That is what makes this head different from every other one
+ * and is the reason it gets its own item on the gate.
+ */
+export interface CapitalGainsInput {
+    /** Listed equity and equity MF, STT paid, held <= 12 months. s.111A. */
+    stcg111A: number;
+    /** Listed equity and equity MF held > 12 months. s.112A. */
+    ltcg112A: number;
+    /** Other long-term gains - property, gold, unlisted, debt. s.112. */
+    ltcg112: number;
+    /**
+     * Short-term gains that are NOT s.111A - property, gold, unlisted shares,
+     * and post-April-2023 debt funds. These are ordinary income at slab rates,
+     * and the commonest reader mistake is assuming all "short term capital
+     * gains" mean the 20% rate.
+     */
+    stcgSlab: number;
+}
+
+/** s.111A - listed equity STCG. 15% until 23 July 2024; 20% since. */
+export const STCG_111A_RATE = 0.2;
+/** s.112A - listed equity LTCG, and s.112 for everything else long-term. */
+export const LTCG_RATE = 0.125;
+/** s.112A(1) - the first Rs 1.25 lakh of listed equity LTCG each year. */
+export const LTCG_112A_EXEMPTION = 125000;
+/**
+ * Surcharge on income taxed under s.111A, s.112A and s.112 is capped at 15%,
+ * however high the total income goes. Without this a reader at 6 crore would
+ * be shown 25% or 37% surcharge on their capital gains.
+ */
+export const CG_SURCHARGE_CAP = 0.15;
+
+/** What each bucket of gain did: what was exempt, what was taxed, at what. */
+export interface GainDetail {
+    gain: number;
+    /** Exempt under s.112A's own Rs 1.25 lakh allowance. Zero for the others. */
+    ownExemption: number;
+    /** Unused basic exemption limit soaked up by this bucket. */
+    basicExemptionUsed: number;
+    taxed: number;
+    rate: number;
+    tax: number;
+}
+
+export interface CapitalGainsDetail {
+    /** Short-term gains that are ordinary income; already inside the slabs. */
+    slabTaxed: number;
+    stcg111A: GainDetail;
+    ltcg112A: GainDetail;
+    ltcg112: GainDetail;
+    /** Total gain taxed outside the slabs. */
+    specialRateIncome: number;
+    /** Tax on it, before surcharge and cess. */
+    specialRateTax: number;
+    /** Unused basic exemption absorbed against gains, across all buckets. */
+    basicExemptionAbsorbed: number;
+}
+
 export interface TaxInput {
     // --- Head 1: Salaries ---
     grossSalary: number;
@@ -48,6 +111,9 @@ export interface TaxInput {
 
     // --- Head 3: Business or profession ---
     business: BusinessInput;
+
+    // --- Head 4: Capital gains ---
+    capitalGains: CapitalGainsInput;
 
     // --- Head 5: Other sources ---
     otherIncome: number;
@@ -102,9 +168,18 @@ export interface TaxRegimeResult {
     exemptions: number;
     deductions: number;
     standardDeduction: number;
+    /** Total income - the slab part plus the special-rate part. */
     taxableIncome: number;
+    /** The part of total income that goes through the slabs. */
+    slabIncome: number;
+    capitalGains: CapitalGainsDetail;
 
     slabs: SlabDetail[];
+    /** Tax from the slabs alone. */
+    slabTax: number;
+    /** Tax on capital gains at their own flat rates. */
+    specialRateTax: number;
+    /** slabTax + specialRateTax. */
     baseTax: number;
     rebate87A: number;
     surcharge: number;
@@ -177,50 +252,68 @@ export function computeHousePropertyIncome(hp: HousePropertyInput, regime: Regim
     return nav - standard - Math.max(0, hp.interest);
 }
 
-function computeSurchargeAndRelief(
-    taxableIncome: number,
-    baseTax: number,
+/** The surcharge tier for a total income, and the tier below it. */
+function surchargeTier(
+    totalIncome: number,
     isNewRegime: boolean
+): { threshold: number; rate: number; previousRate: number } {
+    if (totalIncome > 50000000)
+        return { threshold: 50000000, rate: isNewRegime ? 0.25 : 0.37, previousRate: 0.25 };
+    if (totalIncome > 20000000) return { threshold: 20000000, rate: 0.25, previousRate: 0.15 };
+    if (totalIncome > 10000000) return { threshold: 10000000, rate: 0.15, previousRate: 0.1 };
+    if (totalIncome > 5000000) return { threshold: 5000000, rate: 0.1, previousRate: 0 };
+    return { threshold: 0, rate: 0, previousRate: 0 };
+}
+
+/**
+ * Surcharge, with capital gains capped at 15%, and marginal relief.
+ *
+ * The cap is the reason this takes the two taxes separately rather than one
+ * total: surcharge on income under s.111A, s.112A and s.112 never exceeds 15%
+ * however high the total income goes, so at the 25% and 37% tiers the two parts
+ * of the same bill carry different surcharge rates.
+ *
+ * MARGINAL RELIEF WITH MIXED INCOME IS AN APPROXIMATION AND IS LABELLED ONE.
+ * Relief compares the bill against the bill at the threshold plus the income
+ * above it. With slab and special-rate income mixed, "the bill at the
+ * threshold" depends on which income you imagine reducing. This reduces the
+ * SLAB income and holds the gains constant, which is the common reading, but it
+ * is an inference rather than a citation. It only bites within a few lakh of
+ * each threshold. On the gate as needing verification - sol-042 is what
+ * happens when an untested expectation is written down as a finding.
+ */
+function computeSurchargeAndRelief(
+    totalIncome: number,
+    slabIncome: number,
+    slabTax: number,
+    specialTax: number,
+    isNewRegime: boolean,
+    ageBracket: AgeBracket
 ): { surcharge: number; relief: number } {
-    let threshold = 0;
-    let surchargeRate = 0;
+    const { threshold, rate, previousRate } = surchargeTier(totalIncome, isNewRegime);
+    if (rate === 0) return { surcharge: 0, relief: 0 };
 
-    if (taxableIncome > 50000000) {
-        threshold = 50000000;
-        surchargeRate = isNewRegime ? 0.25 : 0.37;
-    } else if (taxableIncome > 20000000) {
-        threshold = 20000000;
-        surchargeRate = 0.25;
-    } else if (taxableIncome > 10000000) {
-        threshold = 10000000;
-        surchargeRate = 0.15;
-    } else if (taxableIncome > 5000000) {
-        threshold = 5000000;
-        surchargeRate = 0.10;
-    }
-
-    if (surchargeRate === 0) return { surcharge: 0, relief: 0 };
-
-    const rawSurcharge = baseTax * surchargeRate;
+    const cgRate = Math.min(rate, CG_SURCHARGE_CAP);
+    const rawSurcharge = slabTax * rate + specialTax * cgRate;
+    const baseTax = slabTax + specialTax;
     const taxWithSurcharge = baseTax + rawSurcharge;
 
-    // Marginal relief: crossing a surcharge threshold must never cost more than
-    // the income that took you over it.
-    let taxAtThreshold = 0;
-    if (isNewRegime) {
-        taxAtThreshold = computeNewRegimeBaseTax(threshold).baseTax;
-    } else {
-        // Every surcharge threshold is far above the 30% slab, so the base tax
-        // at the threshold is just this year's tax less 30% of the excess.
-        taxAtThreshold = baseTax - (taxableIncome - threshold) * 0.30;
-    }
+    // The bill had total income been exactly the threshold: take the excess out
+    // of the slab income, leave the gains where they are.
+    const excess = totalIncome - threshold;
+    const slabAtThreshold = Math.max(0, slabIncome - excess);
+    const slabTaxAtThreshold = isNewRegime
+        ? computeNewRegimeBaseTax(slabAtThreshold).baseTax
+        : computeOldRegimeBaseTax(slabAtThreshold, ageBracket).baseTax;
 
-    let surchargeAtThreshold = 0;
-    if (threshold === 50000000) surchargeAtThreshold = taxAtThreshold * 0.25;
-    else if (threshold === 20000000) surchargeAtThreshold = taxAtThreshold * 0.15;
-    else if (threshold === 10000000) surchargeAtThreshold = taxAtThreshold * 0.10;
+    const prevCgRate = Math.min(previousRate, CG_SURCHARGE_CAP);
+    const taxAtThreshold =
+        slabTaxAtThreshold +
+        specialTax +
+        slabTaxAtThreshold * previousRate +
+        specialTax * prevCgRate;
 
-    const maxTaxAllowed = taxAtThreshold + surchargeAtThreshold + (taxableIncome - threshold);
+    const maxTaxAllowed = taxAtThreshold + excess;
 
     if (taxWithSurcharge > maxTaxAllowed) {
         return { surcharge: rawSurcharge, relief: taxWithSurcharge - maxTaxAllowed };
@@ -340,7 +433,11 @@ function aggregateHeads(
     const otherSources = input.otherIncome;
     const hpIncome = computeHousePropertyIncome(input.houseProperty, regime);
 
-    const otherHeads = salary + business + otherSources;
+    // Short-term gains that are not s.111A are ordinary income, so they belong
+    // in the slab pot with everything else rather than in the special-rate one.
+    const slabTaxedGains = Math.max(0, input.capitalGains.stcgSlab);
+
+    const otherHeads = salary + business + otherSources + slabTaxedGains;
 
     let setOff = 0;
     let carriedForward = 0;
@@ -371,8 +468,103 @@ function aggregateHeads(
         gti: Math.max(0, gti),
         // What the reader earned, from the same components the aggregation
         // used - so the effective rate's denominator can never drift from the
-        // income that was actually taxed.
-        grossIncome: input.grossSalary + hpIncome + business + otherSources,
+        // income that was actually taxed. Every gain counts here, including the
+        // ones taxed outside the slabs: they are income the reader received.
+        grossIncome:
+            input.grossSalary +
+            hpIncome +
+            business +
+            otherSources +
+            slabTaxedGains +
+            Math.max(0, input.capitalGains.stcg111A) +
+            Math.max(0, input.capitalGains.ltcg112A) +
+            Math.max(0, input.capitalGains.ltcg112),
+    };
+}
+
+/** The slab at which tax starts - and the allowance gains can borrow from. */
+function basicExemptionLimit(regime: Regime, age: AgeBracket): number {
+    if (regime === 'new') return 400000;
+    if (age === '60_80') return 300000;
+    if (age === 'above80') return 500000;
+    return 250000;
+}
+
+/**
+ * Tax the three special-rate buckets, after letting them soak up whatever is
+ * left of the basic exemption limit.
+ *
+ * A resident individual whose ordinary income falls short of the basic
+ * exemption may set the shortfall against capital gains. This matters most to
+ * exactly the people least likely to know it - a retiree with almost no salary
+ * and a year of realised gains.
+ *
+ * The shortfall is applied to the DEAREST bucket first: 20% STCG before 12.5%
+ * LTCG. The Act lets the assessee choose, and choosing anything else would hand
+ * the reader a larger bill than the law requires.
+ */
+function taxCapitalGains(
+    cg: CapitalGainsInput,
+    unusedBasicExemption: number
+): CapitalGainsDetail {
+    let remaining = Math.max(0, unusedBasicExemption);
+
+    const absorb = (amount: number): number => {
+        const used = Math.min(amount, remaining);
+        remaining -= used;
+        return used;
+    };
+
+    const stcgGain = Math.max(0, cg.stcg111A);
+    const stcgAbsorbed = absorb(stcgGain);
+    const stcgTaxed = stcgGain - stcgAbsorbed;
+
+    // s.112A's own Rs 1.25 lakh comes off BEFORE the basic exemption is
+    // borrowed against, so the allowance is not spent sheltering income that
+    // was already exempt.
+    const ltcgAGain = Math.max(0, cg.ltcg112A);
+    const ownExemption = Math.min(ltcgAGain, LTCG_112A_EXEMPTION);
+    const ltcgAAfterOwn = ltcgAGain - ownExemption;
+    const ltcgAAbsorbed = absorb(ltcgAAfterOwn);
+    const ltcgATaxed = ltcgAAfterOwn - ltcgAAbsorbed;
+
+    const ltcg112Gain = Math.max(0, cg.ltcg112);
+    const ltcg112Absorbed = absorb(ltcg112Gain);
+    const ltcg112Taxed = ltcg112Gain - ltcg112Absorbed;
+
+    const stcg111A: GainDetail = {
+        gain: stcgGain,
+        ownExemption: 0,
+        basicExemptionUsed: stcgAbsorbed,
+        taxed: stcgTaxed,
+        rate: STCG_111A_RATE,
+        tax: stcgTaxed * STCG_111A_RATE,
+    };
+    const ltcg112A: GainDetail = {
+        gain: ltcgAGain,
+        ownExemption,
+        basicExemptionUsed: ltcgAAbsorbed,
+        taxed: ltcgATaxed,
+        rate: LTCG_RATE,
+        tax: ltcgATaxed * LTCG_RATE,
+    };
+    const ltcg112Detail: GainDetail = {
+        gain: ltcg112Gain,
+        ownExemption: 0,
+        basicExemptionUsed: ltcg112Absorbed,
+        taxed: ltcg112Taxed,
+        rate: LTCG_RATE,
+        tax: ltcg112Taxed * LTCG_RATE,
+    };
+
+    return {
+        slabTaxed: Math.max(0, cg.stcgSlab),
+        stcg111A,
+        ltcg112A,
+        ltcg112: ltcg112Detail,
+        specialRateIncome: stcgGain + ltcgAGain + ltcg112Gain,
+        specialRateTax: stcg111A.tax + ltcg112A.tax + ltcg112Detail.tax,
+        basicExemptionAbsorbed: stcgAbsorbed + ltcgAAbsorbed + ltcg112Absorbed,
     };
 }
 
@@ -393,36 +585,68 @@ function computeRegime(input: TaxInput, regime: Regime): TaxRegimeResult {
           Math.min(100000, Math.max(0, input.sec80d)) +
           Math.min(50000, Math.max(0, input.sec80ccd1b));
 
-    const taxableIncome = round10(Math.max(0, gti - chapterVIA));
+    // Chapter VI-A comes off the SLAB income only. s.112A(6) and s.111A(2) bar
+    // it against gains taxed at special rates, so an 80C investment cannot
+    // shelter an equity gain however much of it is unused.
+    const slabIncome = round10(Math.max(0, gti - chapterVIA));
+
+    const cg = taxCapitalGains(
+        input.capitalGains,
+        basicExemptionLimit(regime, input.ageBracket) - slabIncome
+    );
+
+    const taxableIncome = slabIncome + cg.specialRateIncome;
 
     const base = isNew
-        ? computeNewRegimeBaseTax(taxableIncome)
-        : computeOldRegimeBaseTax(taxableIncome, input.ageBracket);
+        ? computeNewRegimeBaseTax(slabIncome)
+        : computeOldRegimeBaseTax(slabIncome, input.ageBracket);
 
-    let payable = base.baseTax;
+    let slabPayable = base.baseTax;
     let rebate87A = 0;
     let relief87A = 0;
 
+    // THE 87A INTERACTION - verified against two sources rather than assumed,
+    // because it is the rule on this page most easily asserted backwards.
+    //
+    // Finance Act 2025 put it beyond doubt for AY 2026-27: under the new regime
+    // the rebate is available ONLY against tax on slab income. It cannot touch
+    // tax on s.111A or s.112A gains, and there is no spill-over of an unused
+    // rebate onto them.
+    //
+    // And the threshold is tested EXCLUDING special-rate income - the opposite
+    // of the intuitive "total income" reading. Rs 11 lakh of salary beside
+    // Rs 2 lakh of STCG still gets the rebate on the salary. Reading it the
+    // other way would deny the rebate to a great many ordinary filers.
     if (isNew) {
-        if (taxableIncome <= 1200000) {
-            rebate87A = payable;
-            payable = 0;
+        if (slabIncome <= 1200000) {
+            rebate87A = slabPayable;
+            slabPayable = 0;
         } else {
-            // Marginal relief: the tax cannot exceed the income above Rs 12 lakh.
-            const excess = taxableIncome - 1200000;
-            if (payable > excess) {
-                relief87A = payable - excess;
-                payable = excess;
+            const excess = slabIncome - 1200000;
+            if (slabPayable > excess) {
+                relief87A = slabPayable - excess;
+                slabPayable = excess;
             }
         }
-    } else if (taxableIncome <= 500000) {
-        // Old regime s.87A: capped at Rs 12,500, and no marginal relief by law.
-        rebate87A = Math.min(payable, 12500);
-        payable -= rebate87A;
+    } else if (slabIncome <= 500000) {
+        // Old regime: capped at Rs 12,500, no marginal relief by law, and
+        // likewise only against slab tax - s.112A(6) is explicit for LTCG.
+        // Whether it may be set against old-regime s.111A STCG is an inference
+        // from the ABSENCE of a bar rather than a citation, so it is not
+        // claimed here. On the gate.
+        rebate87A = Math.min(slabPayable, 12500);
+        slabPayable -= rebate87A;
     }
 
-    const sur = computeSurchargeAndRelief(taxableIncome, payable, isNew);
-    const withSurcharge = payable + sur.surcharge - sur.relief;
+    const sur = computeSurchargeAndRelief(
+        taxableIncome,
+        slabIncome,
+        slabPayable,
+        cg.specialRateTax,
+        isNew,
+        input.ageBracket
+    );
+    const withSurcharge = slabPayable + cg.specialRateTax + sur.surcharge - sur.relief;
     const cess = withSurcharge * 0.04;
     const totalTax = round10(withSurcharge + cess);
 
@@ -433,11 +657,15 @@ function computeRegime(input: TaxInput, regime: Regime): TaxRegimeResult {
         deductions: chapterVIA,
         standardDeduction: stdDeduction,
         taxableIncome,
+        slabIncome,
+        capitalGains: cg,
         slabs: base.slabs,
-        // Pre-rebate slab tax. The rebate and the reliefs are separate line
-        // items, so adding them back here would count them twice and the
-        // on-screen breakdown would stop reconciling to totalTax.
-        baseTax: base.baseTax,
+        slabTax: base.baseTax,
+        specialRateTax: cg.specialRateTax,
+        // Pre-rebate. The rebate and the reliefs are separate line items, so
+        // adding them back here would count them twice and the on-screen
+        // breakdown would stop reconciling to totalTax.
+        baseTax: base.baseTax + cg.specialRateTax,
         rebate87A,
         surcharge: sur.surcharge,
         marginalRelief: relief87A + sur.relief,
@@ -469,6 +697,7 @@ export const EMPTY_TAX_INPUT: TaxInput = {
     isMetro: false,
     houseProperty: { kind: 'none', annualRent: 0, municipalTaxes: 0, interest: 0 },
     business: { netProfit: 0 },
+    capitalGains: { stcg111A: 0, ltcg112A: 0, ltcg112: 0, stcgSlab: 0 },
     otherIncome: 0,
     ageBracket: 'below60',
     sec80c: 0,

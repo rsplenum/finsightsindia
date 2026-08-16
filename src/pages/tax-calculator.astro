@@ -192,6 +192,16 @@ import SectionTitle from '../components/SectionTitle.astro';
 										<td class="py-2 text-right font-mono" id="brNewBase">0</td>
 										<td class="py-2 text-right font-mono" id="brOldBase">0</td>
 									</tr>
+									<!--
+										Capital gains at special rates never touch the slabs, so they
+										cannot be folded into the row above without making it a figure
+										that no longer follows from the slab table (dd-009/do-1).
+									-->
+									<tr id="brCgRow" class="hidden">
+										<td class="py-2">Tax on Capital Gains (own rates)</td>
+										<td class="py-2 text-right font-mono" id="brNewCg">0</td>
+										<td class="py-2 text-right font-mono" id="brOldCg">0</td>
+									</tr>
 									<tr>
 										<td class="py-2">Sec 87A Rebate</td>
 										<td class="py-2 text-right font-mono text-emerald-600" id="brNewRebate">0</td>
@@ -302,8 +312,16 @@ import SectionTitle from '../components/SectionTitle.astro';
         setHtml('brNewTaxable', formatRupee(result.newRegime.taxableIncome));
         setHtml('brOldTaxable', formatRupee(result.oldRegime.taxableIncome));
         
-        setHtml('brNewBase', formatRupee(result.newRegime.baseTax - result.newRegime.rebate87A));
-        setHtml('brOldBase', formatRupee(result.oldRegime.baseTax - result.oldRegime.rebate87A));
+        // The slab tax alone, so the row still follows from the slab table
+        // above it. `baseTax` now also carries the special-rate tax, which gets
+        // its own row rather than being hidden inside this one.
+        setHtml('brNewBase', formatRupee(result.newRegime.slabTax - result.newRegime.rebate87A));
+        setHtml('brOldBase', formatRupee(result.oldRegime.slabTax - result.oldRegime.rebate87A));
+
+        const anyCg = result.newRegime.specialRateTax > 0 || result.oldRegime.specialRateTax > 0;
+        document.getElementById('brCgRow')?.classList.toggle('hidden', !anyCg);
+        setHtml('brNewCg', formatRupee(result.newRegime.specialRateTax));
+        setHtml('brOldCg', formatRupee(result.oldRegime.specialRateTax));
         
         setHtml('brNewRebate', formatNegative(result.newRegime.rebate87A));
         setHtml('brOldRebate', formatNegative(result.oldRegime.rebate87A));
