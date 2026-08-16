@@ -2,6 +2,7 @@
   {
     "id": "dd-000",
     "date": "2026-08-15",
+    "scope": "process",
     "title": "Why this file exists",
     "trigger": "Rahul, after reviewing the first redesigned calculator screen: feedback about spirit was being acted on but not recorded, so it survived only as long as the conversation did.",
     "verbatim": "i hope every feed back i give is recorded in spirit so that it remains material and effective for everything we do. because we are designing a system and most of my feedback will be about the spirit we should follow and i may not be able to reproduce a good feedback everytime, but we must move forward not run on a treadmill... we are running towards a goal and the most important part is to make sure that our list of failure has no repetitions and once we learn a lesson it becomes our guide for the future and the lesson may come out of a small thing but the spirit underneath it may apply to everything",
@@ -13,6 +14,19 @@
       "The lesson may arrive attached to something small. Its scope is not the size of its trigger.",
       "Run the tests BEFORE designing, not after building. Every entry's `test` is a question to be answered on paper while the thing is still cheap to change. Recording a lesson and then designing without consulting it is the same failure as never recording it, and it is how a doctrine becomes an archive.",
       "Promises do not survive. Every rule here that has been broken twice must be given a mechanism that makes breaking it visible - a test, a required artefact, a gate - not a firmer intention. Two rules reached that threshold on 15 Aug: running the doctrine checks before designing, and updating the Launch Gate in the same turn as a change of plan."
+    ],
+    "do": [
+      "Record the spirit in this file BEFORE acting on the feedback.",
+      "Keep the verbatim words exactly, spelling and punctuation included.",
+      "Give every entry a test that can be answered on paper.",
+      "Answer the relevant tests before designing, while the design is still cheap to change.",
+      "Treat a small trigger as evidence of a principle that may govern everything."
+    ],
+    "dont": [
+      "Don't paraphrase, tidy or shorten the verbatim quote.",
+      "Don't act first and record afterwards.",
+      "Don't answer a twice-broken rule with a firmer intention instead of a mechanism.",
+      "Don't treat a recorded lesson as a filed one; an unconsulted doctrine is an archive."
     ],
     "test": "Before any design or UX decision this file is read, and each relevant entry's test is answered explicitly for the thing being designed. Any principle here violated twice is a process failure, not a mistake."
   },
@@ -30,6 +44,14 @@
       "homepage",
       "illustrations"
     ],
+    "do": [
+      "Move complexity to a deeper layer and keep it reachable.",
+      "Absorb the difficulty of packaging into our work, never the reader's."
+    ],
+    "dont": [
+      "Don't delete a capability in order to make a screen simpler.",
+      "Don't read 'three inputs' as the offering; it is the entry only."
+    ],
     "test": "For any simplification, ask: did the complexity move, or did it disappear? If a capability is no longer reachable by a determined user, this has been violated."
   },
   {
@@ -44,6 +66,14 @@
       "calculators",
       "interactive components",
       "workbenches"
+    ],
+    "do": [
+      "Open each layer on one question the reader is actually having, in the order they have it.",
+      "Expose one control and one consequence per step, then hand off to the next question."
+    ],
+    "dont": [
+      "Don't measure layering by the volume of content revealed.",
+      "Don't reveal more than about two new controls or concepts in a single step."
     ],
     "test": "Count the controls and new concepts revealed by a single disclosure step. More than about two means the step is a cliff. Every step must be answerable: which question of the user's does this answer?"
   },
@@ -60,6 +90,14 @@
       "articles",
       "homepage",
       "the whole product"
+    ],
+    "do": [
+      "Give every screen one transferable idea the reader could use without us.",
+      "Treat correct maths and full features as the price of admission."
+    ],
+    "dont": [
+      "Don't let a screen's only takeaway be a number.",
+      "Don't mistake capability for achievement."
     ],
     "test": "For every screen: what idea does the user leave with that they did not arrive with, and could they now use it without us? If the honest answer is 'a number', that screen has taken payment without delivering."
   },
@@ -81,6 +119,15 @@
       "illustrations",
       "any figure projected forward"
     ],
+    "do": [
+      "Carry each figure's frame on the figure itself, visibly and permanently.",
+      "Default to today's money; make future rupees the thing the reader opts into.",
+      "Teach a distinction on its own step, in the reader's words, before relying on it."
+    ],
+    "dont": [
+      "Don't reconcile two number systems in a footnote, caption or parenthetical.",
+      "Don't use the words real and nominal as if the reader already holds them."
+    ],
     "test": "Point at any number on any screen. Can the reader say which money it is in, without scrolling and without knowing the words real or nominal? If not, this is violated."
   },
   {
@@ -94,6 +141,13 @@
     "applies_to": [
       "calculators",
       "articles"
+    ],
+    "do": [
+      "Name the single comparison the whole subject reduces to, and put it on screen.",
+      "Introduce every other factor as a push on one side of that comparison."
+    ],
+    "dont": [
+      "Don't hand the reader a list of things to worry about and call it completeness."
     ],
     "test": "For any calculator, name the single comparison it reduces to. If there isn't one, the model has not been found yet and the screen is still a list."
   },
@@ -110,6 +164,14 @@
       "interactive components",
       "any toggle, tab or mode"
     ],
+    "do": [
+      "Show both views adjacently when both of them matter.",
+      "Reserve a toggle for genuine alternatives the reader is choosing between."
+    ],
+    "dont": [
+      "Don't swap one body of text for a nearly identical one.",
+      "Don't hide half of a difference behind a control when the difference is the lesson."
+    ],
     "test": "Flip the control and watch your own eyes. If you have to hunt for what changed, the reader will fail where you merely struggled. Prefer adjacency to alternation."
   },
   {
@@ -124,6 +186,14 @@
       "articles",
       "illustrations",
       "every screen"
+    ],
+    "do": [
+      "State what each difference in size, weight or colour asserts.",
+      "Make equal things look equal; isolate the one thing that matters more."
+    ],
+    "dont": [
+      "Don't cascade font sizes because it looks better.",
+      "Don't render a hierarchy that does not exist."
     ],
     "test": "For each difference in size, weight or colour on a screen, state what it asserts. If the answer is 'it looked better', remove it and make the elements equal."
   },
@@ -146,6 +216,16 @@
       "interactive components",
       "any slider, stepper or dial"
     ],
+    "do": [
+      "Put live values in fixed slots the eye can return to.",
+      "Write prose as principles that stay true at every position of every control.",
+      "State the boundary — where the plan breaks — instead of the current state.",
+      "Mark that boundary on the control's own track."
+    ],
+    "dont": [
+      "Don't rewrite a sentence as a control moves.",
+      "Don't describe where the reader currently is."
+    ],
     "test": "Drag the control from one end to the other. Does any sentence change? If yes, that sentence was describing a state rather than a principle or a boundary, and it belongs in a fixed slot as a value instead."
   },
   {
@@ -166,6 +246,15 @@
       "illustrations",
       "every screen"
     ],
+    "do": [
+      "Make every number traceable from what is already on the screen.",
+      "Name a thing, and how often it happens, before using it.",
+      "Do the arithmetic for the reader; the tool processes, the reader absorbs."
+    ],
+    "dont": [
+      "Don't show a figure that differs from a stated assumption without saying why, in the same breath.",
+      "Don't shorten a screen by deleting an explanation."
+    ],
     "test": "Read the screen as someone who knows nothing. Count the questions it raises that it does not answer. That count is the real cognitive load, and it is not reduced by having fewer words.",
     "verbatim_note": "Recorded exactly as written, spelling included. An earlier version silently corrected 'comprehand' and 'abosrb'. Tidying a record is editing it, and the point of keeping the words is that they are his and not mine.",
     "relationship": "Not a new principle. This is dd-001 - complexity is packaged, never reduced - applied at the scale of a single screen. dd-001 was read as being about features; explanations are complexity too. Recorded as a restatement rather than a discovery, because pretending it is new hides that an existing principle was available and went unapplied."
@@ -182,11 +271,19 @@
       "calculators",
       "articles"
     ],
+    "do": [
+      "Headline the quantity a person actually lives through, month to month.",
+      "Let the summary figure sit beside it as context."
+    ],
+    "dont": [
+      "Don't headline a terminal balance, or any other accountant's summary."
+    ],
     "test": "Ask what the person would actually feel, month to month, living inside this projection. If the headline figure is not something they would ever experience, it is the wrong headline."
   },
   {
     "id": "dd-011",
     "date": "2026-08-15",
+    "scope": "process",
     "title": "A record with no failure mode will drift, and an expensive record will be skipped",
     "trigger": "The Launch Gate fell two commits behind within two hours of a protocol saying it must be updated in the same turn - and I had written that protocol.",
     "verbatim": "why did this happen and how to prevent, you from breaking your own rule, from happening again?\n\n[on being told the gate was expensive to maintain] \"I dont want to spend more tokens that i have to to update the launch gate? you should have told me before. I need it to track progress but it has to be low cost and frugal i.e. the launchgate, it is just a dynamic task list.\"",
@@ -205,6 +302,16 @@
       "design-doctrine.json",
       "engineering-solutions.json",
       "any record we intend to keep current"
+    ],
+    "do": [
+      "Give every durable store a detector that names what is missing and what to do.",
+      "Keep the record inside the repository, where the tooling can see it.",
+      "Reduce the cost of compliance; laboriousness is itself a cause of drift.",
+      "Say what an artefact will cost to maintain before building it."
+    ],
+    "dont": [
+      "Don't answer a broken rule by restating it more firmly.",
+      "Don't build a designed document when a list was asked for."
     ],
     "test": "For each store we rely on: what breaks, visibly, if it is neglected for a week? If the answer is 'nothing', it is already drifting and we simply cannot see it yet."
   },
@@ -227,6 +334,15 @@
       "articles",
       "any feature that exists for the tail"
     ],
+    "do": [
+      "Show the feature in the situation it exists for — for protection, the bad futures.",
+      "State as plainly what a protection does not cover as what it does."
+    ],
+    "dont": [
+      "Don't headline an average taken over situations the feature was never meant to affect.",
+      "Don't make a difference of two averages the verdict line.",
+      "Don't ship a screen that leaves the reader confused, however correct its figures."
+    ],
     "test": "Name the situation the feature exists for. Is that situation on the screen? If the headline is an average taken over all situations, including the many the feature was never meant to affect, the wrong measure is being reported. And point at the verdict line: can the reader picture a single concrete instance of that quantity? If not, replace it."
   },
   {
@@ -246,6 +362,132 @@
       "calculators",
       "any page with more than one view of the same computation"
     ],
+    "do": [
+      "Compute once per set of inputs and distribute that one result to every surface.",
+      "Build the simple view as a projection of the expert one.",
+      "Assert in a test that the two surfaces agree on every shared number."
+    ],
+    "dont": [
+      "Don't give a new surface its own inputs, worker, seed or simulation count.",
+      "Don't let one quantity appear twice on a page with two values."
+    ],
     "test": "Change one input and read every figure on the page. Does any quantity appear twice with two values? If two surfaces can be made to disagree by any input, they are two engines and the page is lying to somebody."
+  },
+  {
+    "id": "dd-014",
+    "date": "2026-08-16",
+    "title": "Use native HTML/CSS for bespoke infographics, not SVGs",
+    "trigger": "The article 'The Loss That Never Happened' was drafted with [SVG_PROPOSAL] tags instead of actual HTML/CSS components, breaking a previously stated preference.",
+    "verbatim": "this article neither has hero illustration nor other artifacts and i want html css artifacts not svg, i thought i made this clear a while ago.",
+    "spirit": "SVGs (or text placeholders for SVGs) are not the FinSight way. The product demands premium, bespoke, responsive infographics built natively with HTML, CSS (Tailwind), and Astro components. A placeholder is a deferred decision; an SVG is often an inflexible asset. We build the interfaces directly in the DOM.",
+    "rules": [
+      "Do not propose or use SVG for infographics. Build them natively as Astro components with HTML/CSS.",
+      "Never leave placeholders (like [SVG_PROPOSAL]) in a published or 'finished' article. A draft is not done until the actual visual artifacts are built and wired in."
+    ],
+    "applies_to": [
+      "articles",
+      "illustrations",
+      "artifacts",
+      "infographics"
+    ],
+    "do": [
+      "Build infographics natively as Astro components in HTML and Tailwind.",
+      "Ship the actual visual artifacts before calling a draft finished."
+    ],
+    "dont": [
+      "Don't propose or ship an SVG asset for a bespoke infographic.",
+      "Don't leave a placeholder such as [SVG_PROPOSAL] in a finished article."
+    ],
+    "test": "Scan the article for SVGs or placeholders. If the visual explanation relies on an external SVG file or a text placeholder rather than a native HTML/CSS component, this rule has been violated."
+  },
+  {
+    "id": "dd-015",
+    "date": "2026-08-16",
+    "title": "The Template is the Floor, not the Prose (Bespoke Subheadings and Stealth Learning)",
+    "trigger": "The content factory generated literal headers like 'TL;DR' and 'First Principles' instead of bespoke narrative propositions.",
+    "verbatim": "the hook, tldr, origin story, first principles explanation, coverage, mechanism, rupee spine, traps, recourse, key takeaways, disclaimer: this is suppossed to be the minimum floor, we never use these specific sub headings rather we use the idea behind them and use bespoke sub-headings... When i made a rule never to use a few phrases like 'First Principles' we use this as a concept instead . Still this is being used even after i explicitely forbid it.",
+    "spirit": "Required architectural elements (like a Rupee Spine or a Recourse section) are conceptual checklists, not literal UI headers. The heading must advance the argument (e.g. 'When a Tax Loss Became an Asset') instead of just labeling the section. Explicit meta-language like 'This guide deconstructs...' or 'First Principles' breaks immersion. We teach abstractions layer by layer, by stealth, without announcing the lesson.",
+    "rules": [
+      "Never use internal dossier labels (Hook, Mechanism, Rupee Spine, etc.) as actual MDX headers.",
+      "Never use banned phrases like 'First Principles' or 'This guide'. Teach the concept without using the cliché.",
+      "Every header must be an editorial proposition that a reader can skim to get the intellectual narrative."
+    ],
+    "applies_to": [
+      "articles",
+      "headers"
+    ],
+    "do": [
+      "Write every header as an editorial proposition that advances the argument.",
+      "Treat the dossier sections as a conceptual checklist, a floor to clear.",
+      "Teach the abstraction by stealth, layer by layer, without announcing the lesson."
+    ],
+    "dont": [
+      "Don't use internal dossier labels (TL;DR, Hook, Mechanism, Rupee Spine) as MDX headers.",
+      "Don't use banned meta-language such as 'First Principles' or 'This guide'."
+    ],
+    "test": "Skim only the headers. Do they read like an essay outline (PASS) or a bureaucratic form (FAIL)? Search the text for explicitly banned meta-language; if present, it fails."
+  },
+  {
+    "id": "dd-016",
+    "date": "2026-08-16",
+    "scope": "process",
+    "title": "A lesson is not followable until it has been reduced to do's and don'ts",
+    "trigger": "Rahul, on being told where his feedback is recorded, immediately proposed the missing half of the mechanism: recording is only the first move, extraction is the second.",
+    "verbatim": "first: what is the name and path of the file in which my feedback is recorded, i propose a rule after my feedback goes to record and the do and don'ts  and extracted from it and religiously followed. can you do it and setup the mechanics right now",
+    "spirit": "This file was built to stop lessons dying in conversation, and it succeeded at that. But it stores them as prose - a trigger, a verbatim quote, a paragraph of reasoning, a test. Prose carries the WHY, which is why it must be kept, and it is exactly the wrong shape for the moment of use. At the moment of designing, what is needed is an instruction: one line, imperative, checkable by someone who has not read the paragraph it came from. A principle that has to be re-derived from an essay each time will be re-derived differently each time, or not at all.\n\ndd-012 is the proof that this gap is real and not theoretical. dd-009 and dd-010 were both recorded, both cited by id in the rung's own checks file, and both violated in that same rung. The citation was honest; it simply was not an instruction. Nothing in 'dd-010' as written told the builder do not headline a difference of two averages - that had to be extracted from a paragraph, and under pressure it was not.\n\nSo extraction is not a summary of the doctrine. It is the doctrine in the form that can actually be obeyed, and per dd-011 it needs a mechanism rather than a promise: the entry is invalid without it, the flat list is generated rather than maintained, and the checks files answer don'ts instead of naming entries.",
+    "do": [
+      "Extract the do's and don'ts into the entry itself, in the same turn it is recorded.",
+      "Write each line as one imperative that can be checked without reading the entry it came from.",
+      "Read the generated docs/doctrine-rules.md before designing anything.",
+      "Answer the don'ts that apply, by id, in the component's .checks.md."
+    ],
+    "dont": [
+      "Don't record an entry without its do's and don'ts - extraction is part of recording, not a follow-up.",
+      "Don't hand-edit docs/doctrine-rules.md; it is a projection of the JSON and dd-013 governs it.",
+      "Don't cite an entry in a checks file and leave its don'ts unanswered. That is the dd-012 failure exactly.",
+      "Don't write a do or a don't that needs its own paragraph to be understood. If it cannot be a line, it is not yet extracted."
+    ],
+    "mechanism": "src/tests/doctrineRules.test.ts: every entry must carry non-empty do and dont arrays; docs/doctrine-rules.md must be byte-identical to a regeneration (npm run doctrine); every new .checks.md must answer each applicable don't by id with PASS, N/A or RISK; the count of legacy-format checks files is ratcheted and may only fall.",
+    "cost": "Per new doctrine entry: two to six short lines, written while the lesson is fresh. Per new calculator component: the skeleton is generated by `npm run doctrine:checks <Component>` with every applicable rule pre-filled, so the cost is answering, not typing. The flat list costs nothing - it is generated.",
+    "applies_to": [
+      "design-doctrine.json",
+      "every calculator screen",
+      "every design, UX or copy decision"
+    ],
+    "test": "Open docs/doctrine-rules.md. Could a reviewer who has never read the doctrine check a screen against it, line by line? Every entry must appear there with at least one do and one don't, and every checks file must answer the don'ts that apply to it by id."
+  },
+  {
+    "id": "dd-017",
+    "date": "2026-08-16",
+    "title": "Ask for an input in the same money you report the answer in",
+    "trigger": "Rahul, on the SIP page's entry contract, after the fund fee had been made visible: the page asks for the goal in today's money and asks for the contribution in plain rupees, and nothing on the page admits the two are different kinds of number.",
+    "verbatim": "how about this: and this should have been the first question.\n\nlets give the user answer whether he wants to put a fix sum of money every month\nor\na fix percentage of his monthly salary (for salaried)\nor\na fixed amount of purchasing power every month (this applies to all)\n\nbecause their income grows with inflation and more due to their hard work.\n\nwhat do you think ? i mean the same person after retiring is asking for 50000 per month of purchasing power or real value every month not 50000 rupees every month, its only fair that he invests in the same way.",
+    "spirit": "dd-004 was applied to everything the product PRINTS and to nothing it ASKS FOR. The goal is taken in today's money - the field says so, and the tooltip insists a goal in future rupees is not a goal. The retiree's withdrawal is taken in today's money and inflated every year so the purchasing power holds. And then the contribution, which is the input that runs the longest and matters most, is taken as a bare rupee figure that silently decays for the whole horizon.\n\nThe asymmetry is not a cosmetic one. A plan that holds the contribution flat in nominal terms is modelling a saver whose real saving falls by about two thirds over twenty years at 6% inflation - somebody getting steadily poorer, aiming at a target defined in money that does not move. Nobody behaves that way and nobody would choose it if asked plainly, and we never asked.\n\nThe cause is that the question was put in the unit convenient to the ENGINE - a constant it can multiply twelve times a year - rather than the unit the person thinks in. Rahul's test is symmetry, and it is the right one: the same human being, on the other side of the same product, is asking us for fifty thousand a month of purchasing power. He is not a different person while he is saving.\n\nThe wider rule is that an input persisting over time is a rate in disguise, and it carries a frame exactly as an output does. Asking for it without stating the frame does not avoid the assumption; it hides one.",
+    "do": [
+      "Ask for a lasting input in the same money the answer is reported in.",
+      "Interpret a monthly contribution as real by default, and say plainly that this is what is being run.",
+      "Make a step-up an optional REAL increment for career progression, on top of a base that already holds purchasing power.",
+      "Give the salaried a share-of-income framing and the self-employed an inflation-linked one - same arithmetic, two vocabularies.",
+      "Show what a real-terms contribution becomes in cash later, so the reader can check they could keep it up.",
+      "Treat symmetry with the other side of the product as a design test: would the same person, drawing down, be asked this way?"
+    ],
+    "dont": [
+      "Don't take a multi-year input as a bare number and let it decay in silence.",
+      "Don't put a question in the unit the engine finds convenient rather than the one the reader thinks in.",
+      "Don't turn the fix into a mode question at the entry; state the interpretation instead of asking for it.",
+      "Don't let a step-up of zero mean the reader's real saving falls every year.",
+      "Don't state a goal in today's money beside a contribution in tomorrow's without saying they differ."
+    ],
+    "relationship": "dd-004 applied to the input side. That entry said every figure carries its frame visibly and defaults to the reader's native units, and it was read as being about figures we PRINT. This is the same rule pointed at the fields we ASK. Recorded as an extension rather than a discovery, because pretending it is new would hide that dd-004 was already sufficient and went unapplied for a day.",
+    "applies_to": [
+      "calculators",
+      "any input that persists over more than a year",
+      "entry contracts"
+    ],
+    "test": "Read the entry fields and the headline together. Are they in the same money? If the answer is in today's prices and any input is not, name which. And count the questions the entry asks: stating an interpretation is allowed, asking the reader to choose one at step one is not.",
+    "refinement_verbatim": "fixed purchasing power but frame it so that a salaried person and a self employed or professional (CA, Advocate Doctor) can also connect. I mean the salaried is easy is picture, just a fix percentage of monthly income (this captures inflation) and a stepup is optional but then it won't capture career progression. but for others we have to frame it intelligently and start with sensible defaults like they have to grow their contribution by inflation rate per year and. stepup is optional for them as well. It is best to just think that if the user says 25000 per month they mean 25000 in real terms not nominal terms and just tell them that this is what we are running with. this works for everybody and doesn't introduce cognitive load at the very first step. we can add because you'd want atleast fixed purchasing power post retirement so you have got to invest fixed purchasing power if not a growing purchasing power.",
+    "refinement": [
+      "Rahul's answer corrected the shape of the fix, not just its default, and the correction is the more important half.\n\nI had proposed the three modes as a QUESTION at the entry - pick how you contribute, then answer the three inputs. He rejected that without naming it: 'this works for everybody and doesn't introduce cognitive load at the very first step'. The entry contract stays three questions (sol-019). What changes is that we INTERPRET the number correctly and say so - if someone types 25,000 a month they mean 25,000 in real terms, and we tell them that is what we are running with. An interpretation stated is not a question asked.\n\nThe second correction is structural. A step-up is no longer the nominal growth of the contribution; it is an OPTIONAL REAL increment on top of a base that already holds purchasing power. That separates two things which had been collapsed into one field and were therefore both invisible: keeping pace with prices, which nearly everybody does without thinking, and career progression, which is a genuine extra. At zero step-up the plan now means 'I hold my saving level', not 'I get poorer every year'.\n\nThe third is about who the reader is. A fixed percentage of a salary captures inflation by itself, so for the salaried the natural framing is a share of income. A professional in practice - his examples are a CA, an advocate, a doctor - has no payslip, so the same idea has to arrive as growing the contribution with inflation. Same arithmetic, two vocabularies, and picking one for everybody would lose half the audience.\n\nHis justification is the sentence to put on the screen, because it is the whole argument in one line: you will want at least fixed purchasing power after you retire, so you have to invest in fixed purchasing power."
+    ]
   }
 ]

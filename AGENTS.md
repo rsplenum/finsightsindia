@@ -1,11 +1,14 @@
 ## Start Here (read in this order)
 
 1. **`docs/launch-gate.md`** — what is done, what is next, what is blocked and why. Start every session here.
-2. **`src/data/design-doctrine.json`** — dd-000 … dd-011. Rahul's judgement about how things should feel, in his own words, each with a test. **Answer the relevant tests before designing anything.**
-3. **`src/data/engineering-solutions.json`** — sol-001 … sol-020. What broke and how it was fixed.
-4. **`git log`** — commit messages are written long on purpose; they carry the reasoning, not just the diff.
+2. **`docs/doctrine-rules.md`** — the doctrine as a flat list of do's and don'ts, one checkable line each, with stable ids like `dd-012/dont-2`. **Generated** by `npm run doctrine`; never hand-edited. This is the page you read *before* designing. dd-016.
+3. **`src/data/design-doctrine.json`** — dd-000 … dd-016. The same lessons in full: Rahul's judgement about how things should feel, in his own words, with the reasoning and a test. The `do`/`dont` arrays in each entry are the source of the page above.
+4. **`src/data/engineering-solutions.json`** — sol-001 … sol-032. What broke and how it was fixed.
+5. **`git log`** — commit messages are written long on purpose; they carry the reasoning, not just the diff.
 
-Then: `npm run verify` (125 tests + build + output smoke test) to confirm the tree is healthy before changing anything.
+Then: `npm run verify` (build + the full suite) to confirm the tree is healthy before changing anything.
+
+**Before building any calculator screen:** `npm run doctrine:checks <ComponentName>` writes a `.checks.md` skeleton with every applicable don't pre-filled. Answer each one `PASS` / `N/A` / `RISK` **before** writing the component. The suite fails on a leftover `TODO`, an unanswered rule, or a bare `PASS` with no reason.
 
 The working branch is `fix/learning-loop-integrity-and-calculator-correctness`. `main` is untouched.
 
@@ -61,13 +64,14 @@ somewhere that outlives the session.
 
 | What arrives | Where it goes | When |
 |---|---|---|
-| Feedback about spirit, feel, or how something should read | `src/data/design-doctrine.json` — verbatim words, the principle, and a test | **Before** acting on it |
+| Feedback about spirit, feel, or how something should read | `src/data/design-doctrine.json` — verbatim words, the principle, a test, **and the extracted `do`/`dont` lines**, then `npm run doctrine` | **Before** acting on it |
 | A technical fault and its fix | `src/data/engineering-solutions.json` | When fixed, or when deliberately deferred |
 | A decision and its reasoning | The commit message, written long | At commit |
 | State of play, plan changes, deferrals, open decisions | `docs/launch-gate.md` — a plain list, one line per item | **At every checkpoint**, then `npm run gate:sync` |
 
 ### The rules
 
+0. **Recording is only half of it. Extract the do's and don'ts in the same turn** (dd-016). An entry with no `do`/`dont` arrays fails `doctrineRules.test.ts`. A principle stored as a paragraph has to be re-derived at the moment of building, and dd-012 is the proof that it will be re-derived wrongly or not at all — dd-009 and dd-010 were cited by id in the very rung that broke them.
 1. **Record Rahul's feedback before acting on it.** Capture the verbatim words — his phrasing carries nuance a paraphrase loses, and he has said he may not reproduce good feedback as well a second time. Acting first and recording later means it never gets recorded.
 2. **A change of plan updates `docs/launch-gate.md` in the same turn**, then `npm run gate:sync`. An out-of-date tracker is worse than none: it misinforms with authority. `launchGateFreshness.test.ts` fails and names the commits if it falls behind, because an intention was tried first and did not hold (dd-011).
    **Keep it a list.** It is a yellow legal pad: tick items, add items, one line each. It was once 600 lines of hand-patched HTML, and the cost of updating it was itself a cause of the drift. A test caps its length.

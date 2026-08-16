@@ -1,0 +1,70 @@
+# Design checks — RungSipProtection (rung 6)
+
+**Written before the component.**
+
+**Question:** *Can I buy protection from that — and is it worth it?*
+
+Rung 4 ends on a saver's worst case: bad years arriving late, when the pot is
+biggest. This rung answers the question that follows immediately, and answers it
+honestly, which on the shipped assumptions means answering *no*.
+
+**One control:** how rough the market turns out to be — the one thing on this
+screen neither we nor the reader chooses.
+
+## Doctrine rules — answered
+
+PASS and RISK need a reason. N/A may stand alone.
+
+| rule | verdict | why |
+|---|---|---|
+| dd-001/dont-1 | PASS | The premium, the fair value, the markup, the binding frequency and the full track are all present. Nothing is withheld to make the verdict cleaner. |
+| dd-001/dont-2 | PASS | Layer three again. The hedging toggle and floor depth remain in the expert rung for anyone who wants to drive them. |
+| dd-002/dont-1 | PASS | One question, one control, one consequence, then the hand-off to the expert rung. |
+| dd-002/dont-2 | PASS | One new concept — a floor you pay for whether or not it pays out — and one control. |
+| dd-003/dont-1 | PASS | The idea carried away: insurance is priced on the roughness assumed when you buy, so it only pays if the world turns out rougher than the price implied. That is transferable to every insurance decision. |
+| dd-003/dont-2 | PASS | Black-Scholes pricing is the floor, not the point. The point is that the reader can now judge a quote instead of accepting one. |
+| dd-004/dont-1 | PASS | Every rupee figure is ending wealth in today's money, stated in the column head. The premium is a percentage a year and labelled as one. |
+| dd-004/dont-2 | PASS | Neither word appears anywhere on the rung. |
+| dd-005/dont-1 | PASS | The whole subject reduced to one comparison: a certain price against an uncertain payout. Every other figure is a push on one side of it. |
+| dd-006/dont-1 | PASS | Prose is invariant to the control. Only figures in fixed slots move. |
+| dd-006/dont-2 | PASS | Protected and unprotected sit adjacent in two columns, never behind a toggle. The gap between them is the entire lesson, so it can never be a mode. |
+| dd-007/dont-1 | PASS | One size for the two verdict figures, one for everything else. No cascade. |
+| dd-007/dont-2 | PASS | Colour asserts exactly one thing: whether protection left the reader better or worse off. It is applied to nothing else. |
+| dd-008/dont-1 | PASS | The roughness control moves numbers in fixed slots and a marker on the track. No sentence is rewritten. |
+| dd-008/dont-2 | PASS | The dynamic sentence names the boundary — the roughness from which protection starts earning its price — which is true for the whole track and only moves when another input does. The reader's own assumption is marked on the track. |
+| dd-009/dont-1 | PASS | The premium is quoted beside its fair value and the resulting multiple, in the same breath, so 1.85% against 0.88% is explained where it appears rather than left as a discrepancy. |
+| dd-009/dont-2 | PASS | What the floor does NOT cover is stated on screen: it resets annually, so three floored years compound to −27%, not −10%; and contributions arriving mid-term bought no protection that term. |
+| dd-010/dont-1 | PASS | The headline is what you are left with in the worst one-in-ten futures — money in a bad future, not a mean over all of them. |
+| dd-012/dont-1 | PASS | The verdict is taken in the situation a floor exists for: the worst decile. The all-futures average payout is shown as supporting arithmetic and never as the verdict. |
+| dd-012/dont-2 | PASS | Two figures side by side, both pickable up as rupees. No difference of averages appears anywhere, which is the exact defect that sank the planner's first rung 5. |
+| dd-012/dont-3 | PASS | Three candidate measures disagreed; one was chosen and the other two kept off the screen rather than shipped as a contradiction. |
+| dd-013/dont-1 | PASS | Both columns come from the same engine, the same inputs and the same seed, so every difference between them is the floor and nothing else. |
+| dd-013/dont-2 | PASS | The unprotected column at the reader's own roughness is the same quantity the Answer reports, from the same engine and inputs. |
+| dd-017/dont-1 | N/A | No input is taken here. |
+| dd-017/dont-2 | PASS | The control is how rough the market turns out to be, as the spread of annual returns rather than as a sigma. |
+| dd-017/dont-3 | N/A | Not the entry. |
+| dd-017/dont-4 | N/A | No step-up control on this rung. |
+| dd-017/dont-5 | PASS | Both columns are ending wealth in today's money, labelled on the row; the premium is a rate a year and labelled as one. |
+
+## Deliberate choices
+
+- **The honest answer here is no, and it is not softened.** At the roughness the
+  page ships with, this contract leaves the reader worse off in the bad futures
+  *and* in the typical ones. The screen says so. Selling a floor that does not
+  pay would be the reduction dd-001 forbids, pointed at the reader's wallet.
+
+- **A saver is a net buyer of units.** That is the mirror of rung 4 and the
+  deepest thing on the screen: a floor pays you for exactly the low prices that,
+  for the next twenty years, are working in your favour. Protection while you
+  are still buying is not the same trade as protection while you are selling.
+
+- **The premium is priced, never chosen.** It is quoted once at the reader's own
+  roughness and held fixed across the whole track. Re-pricing at every position
+  was tried on the planner and destroyed the screen — cost rose in step with
+  benefit and the comparison stopped saying anything.
+
+- **Three measures computed, one shipped.** The average payout, the count of
+  savers left short, and the worst decile disagree with each other and all three
+  are correct. The worst decile is the one the reader can picture a single
+  instance of, so it carries the verdict and the other two stay in the data
+  layer where they belong.
