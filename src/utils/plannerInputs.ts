@@ -1,6 +1,7 @@
 import { parseFormattedNumber } from './formatters';
 import type { AdviceInputs } from './swpAdvice';
 import { pricePut } from './putPricing';
+import { DEFAULT_REGIME } from './regimePresets';
 
 /**
  * One set of inputs, one simulation, for every surface on the SWP planner.
@@ -80,13 +81,19 @@ const HEDGE_TERM_MONTHS = 12;
 
 /** Read the one true input set. Every surface calls this and nothing else. */
 export function readPlannerInputs(): PlannerInputs {
-  const roughness = num(F.vol, 15);
+  // sol-047: these fallbacks were 12 and 15 - sol-028's original pair, the one
+  // that solution was opened to delete. It replaced the VISIBLE default with
+  // DEFAULT_REGIME and left the fallback behind, so clearing the CAGR box moved
+  // the world from 13.3% to 12% and the headline from Rs 1.28 crore to Rs 59.5
+  // lakh with nothing on screen saying why. Derived, never typed: a regime is a
+  // pair, and the fallback has to be the same pair as the field it stands in for.
+  const roughness = num(F.vol, DEFAULT_REGIME.roughness);
   const floorPct = num(F.floor, -10);
   return {
     initialCorpus: money(F.corpus, 0),
     monthlyWithdrawal: money(F.monthly, 0),
     annualStepUp: num(F.stepUp, 0),
-    expectedReturn: num(F.ret, 12),
+    expectedReturn: num(F.ret, DEFAULT_REGIME.growth),
     annualVolatility: roughness,
     expectedInflation: num(F.inflation, 6),
     ltcgTax: num(F.tax, 12.5),

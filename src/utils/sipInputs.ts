@@ -1,6 +1,7 @@
 import { parseFormattedNumber } from './formatters';
 import { pricePut } from './putPricing';
 import { fundCostById, DEFAULT_FUND_COST } from './fundCosts';
+import { DEFAULT_REGIME } from './regimePresets';
 import type { SipInputs } from './sipAdvice';
 
 /**
@@ -83,7 +84,11 @@ const HEDGE_TERM_MONTHS = 12;
 
 /** Read the one true input set. Every surface calls this and nothing else. */
 export function readSipInputs(): SipInputs {
-  const roughness = num(F.vol, 28.4);
+  // sol-047: 28.4 and 13.4 were typed in here as copies of the 30-year regime.
+  // The growth copy had ALREADY drifted - the computed figure is 13.3 - which is
+  // exactly the "fabricated figure wearing a factual label" that regimePresets.ts
+  // was written to prevent, reintroduced one file away from the thing preventing it.
+  const roughness = num(F.vol, DEFAULT_REGIME.roughness);
   const floorPct = num(F.floor, -10);
 
   // The allocation sliders keep themselves at 100 between them; normalising
@@ -108,7 +113,7 @@ export function readSipInputs(): SipInputs {
     savingsRatePct: num(F.savingsRate, 20),
     horizonYears: Math.max(1, Math.min(60, Math.round(num(F.years, 20)))),
     expectedInflation: num(F.inflation, 6),
-    expectedReturn: num(F.ret, 13.4),
+    expectedReturn: num(F.ret, DEFAULT_REGIME.growth),
     annualVolatility: roughness,
     ltcgTax: num(F.tax, 12.5),
     isPostTax: pressed(F.postTax),

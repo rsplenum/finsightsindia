@@ -20,6 +20,13 @@ verifying sol-044's fix, and sol-046 by pointing sol-044's new detector at a
 second page nobody had complained about. The worst of the three was the last:
 `19.20% a year, after inflation` where the truth is `4.09%`.
 
+**sol-047 — Rahul spotted the two pages assuming different worlds.** The visible
+defaults already matched (both render 13.3% from the Nifty file); the *fallbacks*
+did not. The planner fell back to sol-028's retired 12%/15% pair and SIP to a
+typed 13.4% that had already drifted from the computed 13.3%. Reachable by
+clearing the CAGR box, which silently moved the shipped answer ₹1.28 cr → ₹59.5
+lakh. Both now derive from `DEFAULT_REGIME`; a test forbids a numeric literal there.
+
 ## Done today · 16 Aug
 
 **dd-016** the doctrine as do's and don'ts, generated + gated · **dd-017** the

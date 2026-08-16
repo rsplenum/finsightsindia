@@ -156,3 +156,62 @@ describe('sol-046 - every field the SIP page reads is a field its reader returns
     });
   }
 });
+
+/**
+ * sol-047: the two engine pages must assume the same world, and neither may
+ * carry a typed copy of a figure the repo computes.
+ *
+ * Both pages already RENDERED `DEFAULT_REGIME.growth` into their CAGR field, so
+ * they looked consistent. Their readers did not: the planner fell back to 12%
+ * and 15% - sol-028's original pair, the numbers that solution existed to
+ * delete - and the SIP page fell back to a hand-typed 13.4% against a computed
+ * 13.3%. A fallback is reachable by clearing the field, and on the planner that
+ * silently moved the shipped answer from Rs 1.28 crore to Rs 59.5 lakh.
+ *
+ * regimePresets.ts opens by saying a preset must be computed and never typed,
+ * "a fabricated figure wearing a factual label". This is that check, applied to
+ * the readers standing one import away from it.
+ */
+describe('sol-047 - no typed copy of a computed market assumption', () => {
+  const readers = ['src/utils/plannerInputs.ts', 'src/utils/sipInputs.ts'];
+
+  it('both readers import the regime rather than restating it', () => {
+    for (const f of readers) {
+      expect(fs.readFileSync(f, 'utf-8'), `${f} must derive its market fallback`)
+        .toContain('DEFAULT_REGIME');
+    }
+  });
+
+  for (const file of readers) {
+    it(`${file} falls back to no hardcoded growth or roughness`, () => {
+      const src = fs
+        .readFileSync(file, 'utf-8')
+        .replace(/\/\/[^\n]*/g, '')
+        .replace(/\/\*[\s\S]*?\*\//g, '');
+
+      // The market assumption is read through these two field keys. Whatever
+      // stands in when the box is empty must be derived, not a literal.
+      const offenders: string[] = [];
+      for (const m of src.matchAll(/num\(\s*F\.(ret|vol)\s*,\s*([^)]+)\)/g)) {
+        if (/^-?\d/.test(m[2].trim())) offenders.push(`F.${m[1]} falls back to ${m[2].trim()}`);
+      }
+      expect(
+        offenders,
+        `A market assumption is typed in here instead of computed from ` +
+        `nifty50-annual-returns.json. sol-028 is the reason this matters and ` +
+        `sol-047 is the reason it is checked:\n` +
+        offenders.map((o) => `  - ${o}`).join('\n')
+      ).toEqual([]);
+    });
+  }
+
+  it('the two pages assume one world', () => {
+    // Not a string check: the point is that both resolve to the same regime.
+    const planner = fs.readFileSync('src/utils/plannerInputs.ts', 'utf-8');
+    const sip = fs.readFileSync('src/utils/sipInputs.ts', 'utf-8');
+    const growthOf = (s: string) => s.match(/num\(\s*F\.ret\s*,\s*([^)]+)\)/)?.[1].trim();
+    const roughOf = (s: string) => s.match(/num\(\s*F\.vol\s*,\s*([^)]+)\)/)?.[1].trim();
+    expect(growthOf(planner)).toBe(growthOf(sip));
+    expect(roughOf(planner)).toBe(roughOf(sip));
+  });
+});
