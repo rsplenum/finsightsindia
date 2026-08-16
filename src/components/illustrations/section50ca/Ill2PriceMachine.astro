@@ -1,0 +1,87 @@
+---
+// Ill2PriceMachine.astro
+// Visual brief: Illustration 2 — The Price-Manipulation Machine
+// A flowchart showing how parties can suppress the tax base by choosing a low transfer price,
+// demonstrating the information asymmetry problem.
+---
+
+<div class="my-12 bg-navy-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl max-w-2xl mx-auto not-prose">
+  
+  <div class="px-6 py-5 border-b border-slate-800 bg-slate-900/50 text-center">
+    <div class="text-[10px] uppercase tracking-widest text-indigo-400 font-semibold mb-1">Illustration 2</div>
+    <h3 class="text-lg text-white font-medium m-0">The Price-Manipulation Machine</h3>
+    <p class="text-xs text-slate-400 mt-2">Without a valuation-substitution rule</p>
+  </div>
+
+  <div class="p-8 flex flex-col items-center relative">
+    
+    <!-- Step 1: Valuable Asset -->
+    <div class="bg-indigo-950/20 border border-indigo-900/50 rounded-lg p-4 w-64 text-center z-10 shadow-lg relative">
+      <div class="text-xs text-slate-400 uppercase tracking-widest mb-1">Valuable Private Asset</div>
+      <div class="text-2xl font-bold text-indigo-300">₹1 Crore</div>
+      
+      <!-- Hidden truth indicator -->
+      <div class="absolute -right-3 -top-3 bg-slate-800 border border-slate-700 w-8 h-8 rounded-full flex items-center justify-center shadow-lg" title="True Value">
+        <svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Arrow -->
+    <div class="h-10 w-[2px] bg-gradient-to-b from-indigo-900/50 to-slate-700 relative">
+      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 border-b-2 border-r-2 border-slate-600 transform rotate-45 mb-[-4px]"></div>
+    </div>
+
+    <!-- Step 2: Parties choose price -->
+    <div class="bg-slate-800/80 border border-slate-700 rounded-lg p-4 w-64 text-center z-10 shadow-lg relative">
+      <div class="text-sm font-medium text-slate-200">Parties choose transfer price</div>
+      
+      <!-- Information asymmetry icon -->
+      <div class="absolute -left-3 -top-3 bg-slate-800 border border-slate-700 w-8 h-8 rounded-full flex items-center justify-center shadow-lg">
+        <svg class="w-4 h-4 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Arrow -->
+    <div class="h-10 w-[2px] bg-gradient-to-b from-slate-700 to-rose-900/50 relative">
+      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 border-b-2 border-r-2 border-rose-700 transform rotate-45 mb-[-4px]"></div>
+    </div>
+
+    <!-- Step 3: Artificial Price -->
+    <div class="bg-rose-950/20 border border-rose-900/50 rounded-lg p-4 w-64 text-center z-10 shadow-lg">
+      <div class="text-xs text-rose-400/80 uppercase tracking-widest mb-1">Declared Price</div>
+      <div class="text-2xl font-bold text-rose-400">₹1 Lakh</div>
+    </div>
+
+    <!-- Arrow -->
+    <div class="h-10 w-[2px] bg-slate-700 relative">
+      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 border-b-2 border-r-2 border-slate-600 transform rotate-45 mb-[-4px]"></div>
+    </div>
+
+    <!-- Step 4: Tax System Accepts -->
+    <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4 w-64 text-center z-10 shadow-lg border-dashed">
+      <div class="text-sm font-medium text-slate-300">Tax system accepts ₹1 Lakh</div>
+    </div>
+
+    <!-- Arrow -->
+    <div class="h-10 w-[2px] bg-gradient-to-b from-slate-700 to-emerald-900/50 relative">
+      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 border-b-2 border-r-2 border-emerald-700 transform rotate-45 mb-[-4px]"></div>
+    </div>
+
+    <!-- Step 5: Result -->
+    <div class="bg-emerald-950/20 border border-emerald-900/50 rounded-lg p-4 w-72 text-center z-10 shadow-lg relative overflow-hidden">
+      <!-- Glow effect -->
+      <div class="absolute inset-0 bg-emerald-500/5 animate-pulse"></div>
+      <div class="text-sm font-medium text-emerald-400 relative z-10">
+        Taxable gain collapses
+        <span class="text-slate-500 mx-2">/</span>
+        Tax loss appears
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -101,6 +101,7 @@ const currentPath = Astro.url.pathname;
 		</script>
 	</head>
 	<body class="bg-navy-50 text-navy-900 dark:bg-navy-950 dark:text-navy-100 min-h-screen font-sans flex flex-col selection:bg-navy-900 selection:text-white dark:selection:bg-gold-500 dark:selection:text-navy-950 antialiased transition-colors duration-300">
+		<a class="skip-link" href="#main-content">Skip to main content</a>
 		
 		<!-- ====================================================
 		     PREMIUM GLASSMORPHISM HEADER
@@ -288,9 +289,9 @@ const currentPath = Astro.url.pathname;
 		</nav>
 
 		<!-- Main Content Slot -->
-		<div class="flex-grow">
+		<main id="main-content" class="flex-grow">
 			<slot />
-		</div>
+		</main>
 
 		<!-- ====================================================
 		     PREMIUM FOOTER

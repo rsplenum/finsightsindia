@@ -1,0 +1,88 @@
+---
+// Ill8TwoWays.astro
+---
+<div class="my-12 bg-navy-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl max-w-2xl mx-auto not-prose">
+  <div class="px-6 py-5 border-b border-slate-800 bg-slate-900/50 text-center">
+    <div class="text-[10px] uppercase tracking-widest text-indigo-400 font-semibold mb-1">Illustration 8</div>
+    <h3 class="text-lg text-white font-medium m-0">Two Ways of Looking at the Same Startup</h3>
+    <p class="text-xs text-slate-400 mt-2">The balance sheet records what happened. The investor pays for what might happen next.</p>
+  </div>
+
+  <div class="p-8 flex flex-col md:flex-row gap-8 items-stretch justify-center">
+    
+    <!-- Balance Sheet View -->
+    <div class="flex-1 border border-slate-700 rounded-lg bg-slate-800/30 p-6 flex flex-col items-center relative overflow-hidden">
+      <!-- Muted grid background -->
+      <div class="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:12px_12px]"></div>
+      
+      <div class="text-xs text-slate-400 uppercase tracking-widest mb-6 font-medium text-center relative z-10">What the Balance Sheet Sees</div>
+      
+      <div class="bg-slate-800 border border-slate-600 rounded px-4 py-3 text-center mb-8 z-10 w-32 shadow-lg">
+        <div class="text-xl font-mono text-white font-semibold">₹4 Crore</div>
+      </div>
+      
+      <div class="relative w-full h-8 flex justify-center mb-4 z-10">
+        <div class="absolute top-0 w-3/4 h-[1px] bg-slate-600"></div>
+        <div class="absolute top-0 left-[12.5%] w-[1px] h-8 bg-slate-600"></div>
+        <div class="absolute top-0 right-[12.5%] w-[1px] h-8 bg-slate-600"></div>
+        <div class="absolute top-0 left-1/2 w-[1px] h-4 bg-slate-600 -translate-x-1/2 -mt-4"></div>
+      </div>
+
+      <div class="flex w-full justify-between z-10">
+        <div class="bg-slate-800/80 border border-slate-700 rounded px-3 py-2 text-center w-[45%]">
+          <div class="text-[10px] uppercase text-slate-400">Recorded</div>
+          <div class="text-xs font-semibold text-slate-300">Assets</div>
+        </div>
+        <div class="bg-slate-800/80 border border-slate-700 rounded px-3 py-2 text-center w-[45%]">
+          <div class="text-[10px] uppercase text-slate-400">Recorded</div>
+          <div class="text-xs font-semibold text-slate-300">Liabilities</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Investor View -->
+    <div class="flex-1 border border-emerald-900/50 rounded-lg bg-emerald-950/10 p-6 flex flex-col items-center relative overflow-hidden shadow-[inset_0_0_20px_rgba(16,185,129,0.05)]">
+      
+      <div class="text-xs text-emerald-400/80 uppercase tracking-widest mb-6 font-medium text-center relative z-10">What the Investor Sees</div>
+      
+      <div class="bg-emerald-950/40 border border-emerald-700/50 rounded px-4 py-3 text-center mb-8 z-10 w-36 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
+        <div class="text-2xl font-mono text-emerald-400 font-bold">₹300 Crore</div>
+      </div>
+      
+      <div class="relative w-full h-8 flex justify-center mb-4 z-10">
+        <div class="absolute top-0 w-[85%] h-[1px] bg-emerald-700/50"></div>
+        <div class="absolute top-0 left-[7.5%] w-[1px] h-8 bg-emerald-700/50"></div>
+        <div class="absolute top-0 left-1/2 w-[1px] h-8 bg-emerald-700/50 -translate-x-1/2"></div>
+        <div class="absolute top-0 right-[7.5%] w-[1px] h-8 bg-emerald-700/50"></div>
+        <div class="absolute top-0 left-1/2 w-[1px] h-4 bg-emerald-700/50 -translate-x-1/2 -mt-4"></div>
+      </div>
+
+      <div class="flex w-full justify-between z-10 mb-6 gap-2">
+        <div class="bg-emerald-900/20 border border-emerald-800/40 rounded px-2 py-2 text-center w-1/3 flex items-center justify-center">
+          <div class="text-[10px] font-semibold text-emerald-300/80 leading-tight">Growth</div>
+        </div>
+        <div class="bg-emerald-900/20 border border-emerald-800/40 rounded px-2 py-2 text-center w-1/3 flex items-center justify-center">
+          <div class="text-[10px] font-semibold text-emerald-300/80 leading-tight">Network Effects</div>
+        </div>
+        <div class="bg-emerald-900/20 border border-emerald-800/40 rounded px-2 py-2 text-center w-1/3 flex items-center justify-center">
+          <div class="text-[10px] font-semibold text-emerald-300/80 leading-tight">Future Cash</div>
+        </div>
+      </div>
+
+      <div class="relative w-full h-8 flex justify-center mb-2 z-10">
+        <div class="absolute bottom-0 w-[85%] h-[1px] bg-emerald-700/30 border-dashed border-t"></div>
+        <div class="absolute bottom-0 left-[7.5%] w-[1px] h-8 bg-emerald-700/30 border-dashed border-l"></div>
+        <div class="absolute bottom-0 left-1/2 w-[1px] h-8 bg-emerald-700/30 border-dashed border-l -translate-x-1/2"></div>
+        <div class="absolute bottom-0 right-[7.5%] w-[1px] h-8 bg-emerald-700/30 border-dashed border-l"></div>
+        <div class="absolute bottom-0 left-1/2 w-[1px] h-4 bg-emerald-700/50 border-solid border-l -translate-x-1/2 mt-8"></div>
+        <div class="absolute bottom-[-16px] left-1/2 w-2 h-2 border-b border-r border-emerald-500 transform rotate-45 -translate-x-1/2"></div>
+      </div>
+
+      <div class="mt-4 bg-emerald-950/60 border border-emerald-600/40 rounded-full px-6 py-2 z-10 text-center">
+        <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">Future Optionality</span>
+      </div>
+
+    </div>
+
+  </div>
+</div>

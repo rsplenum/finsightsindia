@@ -26,7 +26,7 @@ This skill defines the autonomous orchestration loop for generating FinSight IND
 4b. **Ranking (The Ceiling):** If two variants cleared the Floor, dispatch `content_ranker` to produce a comparative judgment, then present BOTH variants and the ranker's reasoning to the user. **The user's choice is what counts**; the ranker's job is to make the choice easier to make, not to make it. Record it with `ceiling.py::log_preference(...)`, including the user's one-line `why`.
    - If only one variant cleared the Floor, skip ranking and log nothing. A comparison against a floor-failing draft is not evidence about quality.
 5. **User Hard-Stops:** Orchestrator must pause and ask the user to explicitly approve the final staged MDX text AND the image prompts.
-6. **Generate Assets:** Upon approval, use `generate_image` tool.
+6. **Generate Assets:** The Orchestrator MUST NEVER use the `generate_image` tool proactively without explicit user approval, and it should ONLY be used for the Hero (`coverImage`). For inline article infographics, you MUST NOT use images; you must strictly write bespoke, magazine-style contextual HTML/CSS/Tailwind components natively.
 7. **Frontmatter Lint & Publish:** Orchestrator runs a pre-publish check (see Part G). If the lint passes, physically move/copy the winning `draft.*.mdx` from the staging folder to the live `src/content/direct-tax/[topic-name].mdx` location.
    - **Pre-write asset check (see Part H):** before writing any file, verify you are not overwriting an untracked, human-approved asset.
 8. **Side-Task:** Dispatch `content_scriptwriter` to draft a standalone markdown script in `src/content_packages/[topic-name]/youtube_script.md`. It MUST NEVER live inside the `.mdx`.
@@ -64,7 +64,9 @@ When starting a new article pipeline, you (the Orchestrator) must use the `defin
   **The Mandate (Invariant):** You must move the reader from an initial state of uncertainty to a materially better mental model and decision capability.
   **The Floor (Non-negotiable):** Legal accuracy, current law, source integrity, conceptual clarity, no hallucinated numbers, no fake citations.
   
-  Rules: NO SUMMARIZATION. Follow the 'No Haste' doctrine. Prefer clear, plain English headers (Bespoke only, no generic templates). **CRITICAL:** Do NOT use internal dossier labels as actual MDX headers. **ILLUSTRATIONS:** You MUST identify 2-3 key mechanical concepts that need visual aid. Insert EXACTLY this format: `[SVG_PROPOSAL: description of the visual logic]`. Do not write HTML or SVG code. Do NOT append YouTube scripts. Metaphors must be structural. End with a concrete next action. You MUST adhere to the Shared Ban List."
+  **The Gold Standard:** The benchmark for structure, tone, and pacing is `src/content/direct-tax/the-loss-that-never-happened.mdx`. Emulate its 'Chess Grandmaster' tone, bespoke narrative subheadings, and stealth learning.
+
+  Rules: NO SUMMARIZATION. Follow the 'No Haste' doctrine. Prefer clear, plain English headers (Bespoke only, no generic templates). **CRITICAL:** Do NOT use internal dossier labels as actual MDX headers. **ILLUSTRATIONS:** You MUST mandate the use of contextual HTML/CSS illustrations. Do not use generic SVGs or `[SVG_PROPOSAL]` tags. Build bespoke, magazine-style editorial infographics natively using Astro/React/Tailwind. Do NOT append YouTube scripts. Metaphors must be structural. End with a concrete next action. You MUST adhere to the Shared Ban List."
 
 ### 3. `content_evaluator`
 - **Role:** Editor-in-Chief. **Guards the Floor. Does not judge the ceiling.**
@@ -95,9 +97,9 @@ When starting a new article pipeline, you (the Orchestrator) must use the `defin
   - **Layer A (The Floor - Binary PASS/FAIL):** 
     M1(MDX structure publishable), 
     M2(NO banned filler/melodrama/scripts), 
-    M3(NO generic headers - all must be bespoke), 
+    M3(NO generic headers - all must be bespoke, rejecting explicit dossier labels as headers), 
     M4(Statutory Currency Preserved), 
-    M5(Contains 2-3 [SVG_PROPOSAL: ...] tags).
+    M5(Contains bespoke HTML/CSS illustrations, NOT SVGs or `[SVG_PROPOSAL]` tags).
 
   M4 (was M13), new: if the approved dossier identified a 2025 Act equivalent section
   under R2, the draft MUST state it in reader-friendly language (e.g., "as of
@@ -110,7 +112,7 @@ When starting a new article pipeline, you (the Orchestrator) must use the `defin
     S2(Causal Completeness - untangles the mess), 
     S3(Evidence Density - grounded claims), 
     S4(Reader Comprehension - from uncertainty to certainty), 
-    S5(Originality / Bhumika - sets the stage by stealth without intellectual cosplay).
+    S5(Originality / Bhumika - sets the stage by stealth without intellectual cosplay, avoiding meta-language like 'first principles').
     Each is worth 1 point (PASS/FAIL). Total score = number of PASSes (0–5). PASS only if Layer A passes AND Layer B total score is >= 4. DO NOT use vague holistic judgments or evaluate word counts.
 
     **Layer B is a minimum, not a target.** A score of 5/5 means the draft
@@ -191,7 +193,7 @@ When starting a new article pipeline, you (the Orchestrator) must use the `defin
 ## PART F: THE SHARED BAN LIST (MUST BE ENFORCED BY DRAFTER & EVALUATOR)
 
 Both the Drafter and Evaluator must ruthlessly eradicate these phrases:
-`delve, foster, landscape, tapestry, realm, unlocking potential, it is important to note, in conclusion, game changer, ever-evolving, navigate the complexities, AI matrix, paradigm shift, teleology, ransom, highway robbery, weaponized, nightmare (as hype), sweating taxpayer imagery in prose, Case File, Resolution Status, reel timestamps like 0:00 0:45`
+`delve, foster, landscape, tapestry, realm, unlocking potential, it is important to note, in conclusion, game changer, ever-evolving, navigate the complexities, AI matrix, paradigm shift, teleology, ransom, highway robbery, weaponized, nightmare (as hype), sweating taxpayer imagery in prose, Case File, Resolution Status, reel timestamps like 0:00 0:45, first principles, this guide, the ultimate first-principles conclusion`
 
 ## PART G: FRONTMATTER AND PUBLISH LINT (ORCHESTRATOR PRE-FLIGHT)
 

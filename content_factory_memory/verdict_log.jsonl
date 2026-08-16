@@ -1,0 +1,2 @@
+{"id": "3a49e7b5", "timestamp": "2026-08-15T19:21:02.523547+00:00", "rubric_version": "floor_mandate_form", "article_slug": "bonus-stripping-trap", "gate": "gate1_research", "iteration": 1, "verdict": "FAIL", "layer_b_score": null, "failed_rule_ids": ["R7"], "residual_risk": null}
+{"id": "e5d89e64", "timestamp": "2026-08-15T19:22:25.642970+00:00", "rubric_version": "floor_mandate_form", "article_slug": "bonus-stripping-trap", "gate": "gate1_research", "iteration": 2, "verdict": "PASS", "layer_b_score": null, "failed_rule_ids": [], "residual_risk": null}

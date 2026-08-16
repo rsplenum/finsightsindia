@@ -1,0 +1,43 @@
+---
+// TaxLoopDiagram.astro
+---
+<div class="pt-24 pb-14 px-4 sm:px-12 max-w-2xl mx-auto">
+  <div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-full p-12 relative aspect-square flex items-center justify-center shadow-inner">
+    
+    <!-- Central Label -->
+    <div class="text-center z-10 bg-white dark:bg-navy-950 rounded-full w-32 h-32 flex items-center justify-center border-4 border-navy-50 dark:border-navy-900 shadow-xl relative">
+      <div>
+        <h4 class="font-bold text-navy-900 dark:text-white text-lg">The Cat & Mouse Game</h4>
+      </div>
+    </div>
+
+    <!-- Cycle Arrows (SVG) -->
+    <div class="absolute inset-4 text-navy-300 dark:text-navy-700 pointer-events-none animate-[spin_40s_linear_infinite]">
+      <svg viewBox="0 0 100 100" class="w-full h-full fill-none stroke-current" stroke-width="0.5" stroke-dasharray="2 4">
+        <circle cx="50" cy="50" r="48" />
+      </svg>
+    </div>
+
+    <!-- Node 1: Loophole Discovered -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-navy-800 border border-gold-500 rounded-xl p-4 w-48 text-center shadow-lg group hover:scale-105 transition-transform">
+      <div class="w-8 h-8 rounded-full bg-gold-500/20 text-gold-600 dark:text-gold-400 mx-auto flex items-center justify-center mb-2">1</div>
+      <div class="text-xs uppercase tracking-widest text-gold-500 font-bold mb-1">Arbitrage</div>
+      <div class="text-sm font-semibold text-navy-900 dark:text-white">Taxpayers find a structural blind spot</div>
+    </div>
+
+    <!-- Node 2: Exploitation -->
+    <div class="absolute bottom-8 right-0 translate-x-1/4 bg-white dark:bg-navy-800 border border-red-500 rounded-xl p-4 w-48 text-center shadow-lg group hover:scale-105 transition-transform">
+      <div class="w-8 h-8 rounded-full bg-red-500/20 text-red-600 dark:text-red-400 mx-auto flex items-center justify-center mb-2">2</div>
+      <div class="text-xs uppercase tracking-widest text-red-500 font-bold mb-1">Exploitation</div>
+      <div class="text-sm font-semibold text-navy-900 dark:text-white">Industry scales the loophole (e.g. Bonus Stripping)</div>
+    </div>
+
+    <!-- Node 3: Legislation -->
+    <div class="absolute bottom-8 left-0 -translate-x-1/4 bg-white dark:bg-navy-800 border border-emerald-500 rounded-xl p-4 w-48 text-center shadow-lg group hover:scale-105 transition-transform">
+      <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 mx-auto flex items-center justify-center mb-2">3</div>
+      <div class="text-xs uppercase tracking-widest text-emerald-500 font-bold mb-1">Legislation</div>
+      <div class="text-sm font-semibold text-navy-900 dark:text-white">Govt patches the code (e.g. Section 94(8))</div>
+    </div>
+
+  </div>
+</div>

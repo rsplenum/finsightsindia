@@ -1,0 +1,61 @@
+---
+// InternationalTaxComparison.astro
+---
+<div class="my-10 bg-navy-950 border border-navy-800 rounded-2xl overflow-hidden shadow-2xl">
+  <div class="bg-navy-900 border-b border-navy-800 p-6 text-center">
+    <h3 class="text-lg font-bold text-white tracking-tight">The Global Fight Against Artificial Losses</h3>
+    <p class="text-sm text-navy-400 mt-1">Different jurisdictions, same underlying logic.</p>
+  </div>
+  
+  <div class="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-navy-800">
+    
+    <!-- United States -->
+    <div class="p-6 sm:p-8 hover:bg-navy-900/50 transition-colors">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="text-2xl">🇺🇸</div>
+        <h4 class="font-bold text-white text-lg">United States</h4>
+      </div>
+      <div class="text-xs uppercase tracking-widest text-emerald-500 font-bold mb-2">The Wash-Sale Rule</div>
+      <p class="text-sm text-navy-300 leading-relaxed mb-6">
+        If you sell a stock at a loss and buy a "substantially identical" stock within 30 days before or after, the loss is disallowed and added to the cost basis of the new stock.
+      </p>
+      <div class="bg-navy-900 border border-navy-700 rounded-lg p-3 text-xs text-navy-400 font-mono">
+        IRS Publication 550
+      </div>
+    </div>
+
+    <!-- United Kingdom -->
+    <div class="p-6 sm:p-8 hover:bg-navy-900/50 transition-colors">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="text-2xl">🇬🇧</div>
+        <h4 class="font-bold text-white text-lg">United Kingdom</h4>
+      </div>
+      <div class="text-xs uppercase tracking-widest text-gold-500 font-bold mb-2">Bed and Breakfasting</div>
+      <p class="text-sm text-navy-300 leading-relaxed mb-6">
+        If you sell shares and buy the same class of shares back within 30 days, the disposal is matched with the new acquisition rather than the original pool, killing the loss.
+      </p>
+      <div class="bg-navy-900 border border-navy-700 rounded-lg p-3 text-xs text-navy-400 font-mono">
+        TCGA 1992, Section 106A
+      </div>
+    </div>
+
+    <!-- India -->
+    <div class="p-6 sm:p-8 hover:bg-navy-900/50 transition-colors relative overflow-hidden group">
+      <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent z-0 pointer-events-none"></div>
+      <div class="relative z-10">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="text-2xl">🇮🇳</div>
+          <h4 class="font-bold text-white text-lg">India</h4>
+        </div>
+        <div class="text-xs uppercase tracking-widest text-emerald-500 font-bold mb-2">Section 94(7) & 94(8)</div>
+        <p class="text-sm text-navy-300 leading-relaxed mb-6">
+          Targets corporate actions (dividends/bonuses) rather than market buys. Losses from selling original units are ignored and pushed to the cost basis of the retained units.
+        </p>
+        <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-3 text-xs text-emerald-400 font-mono">
+          Income Tax Act, 1961
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,82 @@
+---
+// Ill9TwoSpreadsheets.astro
+---
+<div class="my-12 bg-navy-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl max-w-2xl mx-auto not-prose">
+  <div class="px-6 py-5 border-b border-slate-800 bg-slate-900/50 text-center">
+    <div class="text-[10px] uppercase tracking-widest text-indigo-400 font-semibold mb-1">The Aster File &mdash; Illustration 9</div>
+    <h3 class="text-lg text-white font-medium m-0">Two Perfect Spreadsheets, Two Different Companies</h3>
+    <p class="text-xs text-slate-400 mt-2">The disagreement lies upstream of the math.</p>
+  </div>
+
+  <div class="p-8">
+    
+    <!-- Tree Diagram -->
+    <div class="flex flex-col items-center mb-10">
+      <div class="bg-slate-800 border border-slate-700 rounded-full px-6 py-2 mb-6 shadow z-10">
+        <span class="text-sm font-semibold text-slate-200 tracking-widest uppercase">Same Company</span>
+      </div>
+
+      <div class="relative w-full max-w-md">
+        <!-- Lines -->
+        <div class="absolute top-[-24px] left-1/2 w-[1px] h-6 bg-slate-600 -translate-x-1/2"></div>
+        <div class="absolute top-0 left-[25%] w-[50%] h-[1px] bg-slate-600"></div>
+        <div class="absolute top-0 left-[25%] w-[1px] h-6 bg-slate-600"></div>
+        <div class="absolute top-0 right-[25%] w-[1px] h-6 bg-slate-600"></div>
+
+        <div class="flex justify-between w-full pt-6 relative z-10">
+          <!-- Valuer A Path -->
+          <div class="flex flex-col items-center w-1/2 px-2">
+            <div class="text-[10px] text-emerald-400/80 uppercase tracking-widest mb-3 font-semibold bg-emerald-950/30 border border-emerald-900/50 rounded-full px-3 py-1">Optimistic Future</div>
+            <div class="bg-emerald-900/20 border border-emerald-800/40 rounded px-4 py-2 text-center w-full shadow-lg">
+              <span class="font-mono text-emerald-400 font-bold text-lg">₹300 Cr</span>
+            </div>
+          </div>
+          
+          <!-- Valuer B Path -->
+          <div class="flex flex-col items-center w-1/2 px-2">
+            <div class="text-[10px] text-amber-400/80 uppercase tracking-widest mb-3 font-semibold bg-amber-950/30 border border-amber-900/50 rounded-full px-3 py-1">Cautious Future</div>
+            <div class="bg-amber-900/20 border border-amber-800/40 rounded px-4 py-2 text-center w-full shadow-lg">
+              <span class="font-mono text-amber-400 font-bold text-lg">₹120 Cr</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="rounded-lg border border-slate-700 overflow-hidden">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-slate-800/80">
+            <th class="px-4 py-3 text-xs uppercase tracking-wider text-slate-300 font-semibold border-b border-slate-700">Assumption</th>
+            <th class="px-4 py-3 text-xs uppercase tracking-wider text-emerald-400 font-semibold border-b border-slate-700 text-right">Valuer A</th>
+            <th class="px-4 py-3 text-xs uppercase tracking-wider text-amber-400 font-semibold border-b border-slate-700 text-right">Valuer B</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-800/50">
+          <tr class="bg-slate-900/40 hover:bg-slate-800/40 transition-colors">
+            <td class="px-4 py-3 text-sm text-slate-300">Revenue CAGR</td>
+            <td class="px-4 py-3 text-sm font-mono text-emerald-300 text-right">60%</td>
+            <td class="px-4 py-3 text-sm font-mono text-amber-300 text-right">35%</td>
+          </tr>
+          <tr class="bg-slate-900/20 hover:bg-slate-800/40 transition-colors">
+            <td class="px-4 py-3 text-sm text-slate-300">Discount rate</td>
+            <td class="px-4 py-3 text-sm font-mono text-emerald-300 text-right">20%</td>
+            <td class="px-4 py-3 text-sm font-mono text-amber-300 text-right">30%</td>
+          </tr>
+          <tr class="bg-slate-900/40 hover:bg-slate-800/40 transition-colors">
+            <td class="px-4 py-3 text-sm text-slate-300">Terminal growth</td>
+            <td class="px-4 py-3 text-sm font-mono text-emerald-300 text-right">5%</td>
+            <td class="px-4 py-3 text-sm font-mono text-amber-300 text-right">3%</td>
+          </tr>
+          <tr class="bg-slate-800/50 border-t-2 border-slate-600">
+            <td class="px-4 py-4 text-sm font-semibold text-white">Illustrative Valuation</td>
+            <td class="px-4 py-4 text-sm font-mono font-bold text-emerald-400 text-right">₹300 crore</td>
+            <td class="px-4 py-4 text-sm font-mono font-bold text-amber-400 text-right">₹120 crore</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
+</div>

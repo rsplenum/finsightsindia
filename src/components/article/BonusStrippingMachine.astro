@@ -1,0 +1,66 @@
+---
+// BonusStrippingMachine.astro
+---
+<div class="my-12 bg-navy-950 border border-navy-800 rounded-2xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+  
+  <!-- Circuit board / grid background subtle -->
+  <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:20px_20px]"></div>
+
+  <h3 class="relative text-xl font-bold text-white text-center mb-10 tracking-tight">
+    The Bonus-Stripping Machine
+    <span class="block text-sm font-normal text-navy-400 mt-1">Capital flow through the Section 94(8) loophole</span>
+  </h3>
+
+  <div class="relative flex flex-col items-center">
+    
+    <!-- Step 1: Input -->
+    <div class="relative z-10 bg-navy-900 border border-emerald-500/30 p-4 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.15)] w-64 text-center">
+      <div class="text-xs uppercase tracking-widest text-emerald-500 font-bold mb-1">Input</div>
+      <div class="text-white font-semibold">Buy 10,000 Units</div>
+      <div class="text-navy-300 text-sm">at ₹100 NAV (Cost: ₹10L)</div>
+    </div>
+
+    <!-- Vertical Line -->
+    <div class="w-0.5 h-8 bg-gradient-to-b from-emerald-500/50 to-gold-500/50 my-2"></div>
+
+    <!-- Step 2: Processing (Bonus) -->
+    <div class="relative z-10 bg-navy-900 border border-gold-500/30 p-4 rounded-xl shadow-[0_0_20px_rgba(245,158,11,0.15)] w-64 text-center group">
+      <div class="absolute -right-3 -top-3 bg-gold-500 text-navy-950 text-[10px] font-bold px-2 py-1 rounded shadow-lg animate-pulse">RECORD DATE</div>
+      <div class="text-xs uppercase tracking-widest text-gold-500 font-bold mb-1">Corporate Action</div>
+      <div class="text-white font-semibold">1:1 Bonus Issued</div>
+      <div class="text-navy-300 text-sm">Total Units: 20,000</div>
+      <div class="text-red-400 text-sm mt-1 border-t border-navy-700 pt-1">NAV drops to ₹50</div>
+    </div>
+
+    <!-- Split Lines -->
+    <div class="relative w-full max-w-[280px] h-12 my-2">
+      <div class="absolute left-1/2 top-0 w-0.5 h-6 bg-gold-500/50 -translate-x-1/2"></div>
+      <div class="absolute left-0 right-0 top-6 h-0.5 bg-gradient-to-r from-red-500/50 via-gold-500/50 to-emerald-500/50"></div>
+      <div class="absolute left-0 top-6 w-0.5 h-6 bg-red-500/50"></div>
+      <div class="absolute right-0 top-6 w-0.5 h-6 bg-emerald-500/50"></div>
+    </div>
+
+    <div class="flex w-full max-w-md justify-between relative z-10 gap-4">
+      <!-- Output 1: Sell -->
+      <div class="bg-navy-900 border border-red-500/30 p-4 rounded-xl shadow-[0_0_20px_rgba(239,68,68,0.15)] flex-1 text-center">
+        <div class="text-xs uppercase tracking-widest text-red-500 font-bold mb-1">Output 1</div>
+        <div class="text-white font-semibold">Sell Original 10k</div>
+        <div class="text-navy-300 text-sm mb-2">at ₹50 NAV</div>
+        <div class="bg-red-500/10 border border-red-500/20 rounded p-2 text-sm text-red-400 font-bold">
+          Paper Loss: ₹5L
+        </div>
+      </div>
+
+      <!-- Output 2: Retain -->
+      <div class="bg-navy-900 border border-emerald-500/30 p-4 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.15)] flex-1 text-center">
+        <div class="text-xs uppercase tracking-widest text-emerald-500 font-bold mb-1">Output 2</div>
+        <div class="text-white font-semibold">Keep Bonus 10k</div>
+        <div class="text-navy-300 text-sm mb-2">at ₹50 NAV</div>
+        <div class="bg-emerald-500/10 border border-emerald-500/20 rounded p-2 text-sm text-emerald-400 font-bold">
+          Value: ₹5L (Zero Cost)
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

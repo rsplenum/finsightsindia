@@ -1,0 +1,68 @@
+---
+// TaxVsRealitySplit.astro
+---
+<div class="my-10 grid md:grid-cols-2 gap-0 rounded-2xl overflow-hidden border border-navy-200 dark:border-navy-800 shadow-xl max-w-4xl mx-auto">
+  
+  <!-- Left Side: Tax Transaction -->
+  <div class="bg-white dark:bg-navy-900 p-8 flex flex-col justify-center border-b md:border-b-0 md:border-r border-navy-200 dark:border-navy-800">
+    <div class="text-[10px] font-bold text-red-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+      <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+      The Tax Transaction
+    </div>
+    
+    <div class="space-y-4">
+      <div class="flex justify-between items-center pb-3 border-b border-navy-100 dark:border-navy-800">
+        <span class="text-sm text-navy-600 dark:text-navy-400 font-medium">Buy Original Units</span>
+        <span class="font-mono text-navy-900 dark:text-white">- ₹10,00,000</span>
+      </div>
+      <div class="flex justify-between items-center pb-3 border-b border-navy-100 dark:border-navy-800">
+        <span class="text-sm text-navy-600 dark:text-navy-400 font-medium">Sell Original Units</span>
+        <span class="font-mono text-emerald-600 dark:text-emerald-400">+ ₹5,00,000</span>
+      </div>
+      <div class="flex justify-between items-center pt-2">
+        <span class="text-sm font-bold text-navy-900 dark:text-white">Tax Ledger Result</span>
+        <span class="font-mono font-bold text-red-500 text-lg">Loss: ₹5,00,000</span>
+      </div>
+    </div>
+    
+    <div class="mt-8 p-4 bg-red-50 dark:bg-red-950/30 rounded-lg border border-red-100 dark:border-red-900/50">
+      <p class="text-xs text-red-800 dark:text-red-300 leading-relaxed">
+        The tax code isolates the purchase and sale of the <em>original units</em>. Because the bonus units are assigned zero cost, they don't offset the loss on paper until they are sold.
+      </p>
+    </div>
+  </div>
+
+  <!-- Right Side: Economic Reality -->
+  <div class="bg-navy-50 dark:bg-navy-950 p-8 flex flex-col justify-center">
+    <div class="text-[10px] font-bold text-emerald-600 dark:text-emerald-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+      <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+      The Economic Reality
+    </div>
+    
+    <div class="space-y-4">
+      <div class="flex justify-between items-center pb-3 border-b border-navy-200 dark:border-navy-800">
+        <span class="text-sm text-navy-600 dark:text-navy-400 font-medium">Initial Wealth</span>
+        <span class="font-mono text-navy-900 dark:text-white">₹10,00,000</span>
+      </div>
+      <div class="flex justify-between items-center pb-3 border-b border-navy-200 dark:border-navy-800">
+        <span class="text-sm text-navy-600 dark:text-navy-400 font-medium">Cash from Sale</span>
+        <span class="font-mono text-navy-900 dark:text-white">₹5,00,000</span>
+      </div>
+      <div class="flex justify-between items-center pb-3 border-b border-navy-200 dark:border-navy-800">
+        <span class="text-sm text-navy-600 dark:text-navy-400 font-medium">Value of Retained Bonus</span>
+        <span class="font-mono text-navy-900 dark:text-white">₹5,00,000</span>
+      </div>
+      <div class="flex justify-between items-center pt-2">
+        <span class="text-sm font-bold text-navy-900 dark:text-white">Final Wealth</span>
+        <span class="font-mono font-bold text-emerald-600 dark:text-emerald-400 text-lg">₹10,00,000</span>
+      </div>
+    </div>
+
+    <div class="mt-8 p-4 bg-emerald-50 dark:bg-emerald-950/30 rounded-lg border border-emerald-100 dark:border-emerald-900/50">
+      <p class="text-xs text-emerald-800 dark:text-emerald-300 leading-relaxed">
+        The investor hasn't lost a single rupee. They merely swapped half their mutual fund exposure for cash. The ₹5 lakh loss is a complete optical illusion.
+      </p>
+    </div>
+  </div>
+
+</div>
