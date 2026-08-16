@@ -156,6 +156,21 @@ describe('India Tax Engine - house property', () => {
     expect(computeHousePropertyIncome(hp, 'new')).toBe(6000);
   });
 
+  it('a house property with nothing in it returns positive zero, not -0', () => {
+    // Found on the live page as "-Rs 0" in the House Property row of a return
+    // with no home loan. `-Math.min(0, cap)` is negative zero; `-0 >= 0` is
+    // true, so it passed every sign check and reached Intl, which printed the
+    // sign faithfully. Object.is is the only assertion that can see this.
+    for (const regime of ['new', 'old'] as const) {
+      const v = computeHousePropertyIncome(
+        { kind: 'selfOccupied', annualRent: 0, municipalTaxes: 0, interest: 0 },
+        regime
+      );
+      expect(Object.is(v, -0)).toBe(false);
+      expect(v).toBe(0);
+    }
+  });
+
   it('municipal taxes are deducted before the 30%, not after', () => {
     // The order matters and is easy to get backwards: taxes come off the gross
     // annual value FIRST, and the 30% is then taken on what is left. Deducting

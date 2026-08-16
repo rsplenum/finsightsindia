@@ -161,7 +161,12 @@ export function computeHousePropertyIncome(hp: HousePropertyInput, regime: Regim
         // Annual value of a self-occupied house is nil, so the head can only
         // ever be zero or a loss.
         if (regime === 'new') return 0;
-        return -Math.min(Math.max(0, hp.interest), SOP_INTEREST_CAP);
+        const loss = Math.min(Math.max(0, hp.interest), SOP_INTEREST_CAP);
+        // `-loss` on a loss of zero is NEGATIVE ZERO, and -0 >= 0 is true, so
+        // it slipped through every sign check and reached Intl, which printed
+        // it honestly as "-Rs 0" on a page with no home loan at all. Found by
+        // reading the screen; no test would have asked.
+        return loss === 0 ? 0 : -loss;
     }
 
     // Let out. Gross annual value, less municipal taxes actually paid, gives the
