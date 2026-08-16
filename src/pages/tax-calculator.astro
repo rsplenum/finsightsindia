@@ -214,8 +214,9 @@ import SectionTitle from '../components/SectionTitle.astro';
 </Layout>
 
 <script>
-	import { calculateIndiaTaxEngine, type TaxInput } from '../utils/tax';
-	import { parseFormattedNumber, tableFormatter, setupFormattingField } from '../utils/formatters';
+	import { calculateIndiaTaxEngine } from '../utils/tax';
+	import { readTaxInputs, MONEY_FIELD_IDS, CHOICE_FIELD_IDS } from '../utils/taxInputs';
+	import { tableFormatter, setupFormattingField } from '../utils/formatters';
 
 	function formatRupee(val: number): string {
 		if (isNaN(val)) return '₹0';
@@ -228,23 +229,10 @@ import SectionTitle from '../components/SectionTitle.astro';
     }
 
 	function calculateIndiaTax() {
-        const input: TaxInput = {
-            grossSalary: parseFormattedNumber((document.getElementById('inGrossSalary') as HTMLInputElement)?.value || '0'),
-            otherIncome: parseFormattedNumber((document.getElementById('inOtherIncome') as HTMLInputElement)?.value || '0'),
-            ageBracket: (document.getElementById('inAgeBracket') as HTMLSelectElement)?.value as any || 'below60',
-            
-            basicSalary: parseFormattedNumber((document.getElementById('inBasicSalary') as HTMLInputElement)?.value || '0'),
-            hraReceived: parseFormattedNumber((document.getElementById('inHraReceived') as HTMLInputElement)?.value || '0'),
-            rentPaid: parseFormattedNumber((document.getElementById('inRentPaid') as HTMLInputElement)?.value || '0'),
-            isMetro: (document.getElementById('inIsMetro') as HTMLSelectElement)?.value === 'true',
-            
-            sec80c: parseFormattedNumber((document.getElementById('inSec80c') as HTMLInputElement)?.value || '0'),
-            sec80d: parseFormattedNumber((document.getElementById('inSec80d') as HTMLInputElement)?.value || '0'),
-            sec80ccd1b: parseFormattedNumber((document.getElementById('inSec80ccd') as HTMLInputElement)?.value || '0'),
-            homeLoanInterest: parseFormattedNumber((document.getElementById('inHomeLoan') as HTMLInputElement)?.value || '0'),
-        };
-
-		const result = calculateIndiaTaxEngine(input);
+		// The page is a view: read, compute, render. Every field on it is read by
+		// `readTaxInputs()` and by nothing else - see taxInputs.ts for why that
+		// matters before the second surface exists rather than after.
+		const result = calculateIndiaTaxEngine(readTaxInputs());
 
 		// Update UI DOM - Top level
 		const newTaxEl = document.getElementById('valNewTax');
@@ -310,22 +298,17 @@ import SectionTitle from '../components/SectionTitle.astro';
 	}
 
 	document.addEventListener('DOMContentLoaded', () => {
-		const inputIds = [
-            'inGrossSalary', 'inOtherIncome', 'inBasicSalary', 'inHraReceived', 'inRentPaid', 
-            'inSec80c', 'inSec80d', 'inSec80ccd', 'inHomeLoan'
-        ];
-        
-        inputIds.forEach(id => {
+		// The field lists come from the reader too. A page that keeps its own
+		// copy is a page where a field can be added to the form and to the
+		// input set and still never trigger a recompute.
+		MONEY_FIELD_IDS.forEach(id => {
 			const el = document.getElementById(id);
 			if (el) setupFormattingField(el as HTMLInputElement, calculateIndiaTax);
 		});
 
-        ['inAgeBracket', 'inIsMetro'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                el.addEventListener('change', calculateIndiaTax);
-            }
-        });
+		CHOICE_FIELD_IDS.forEach(id => {
+			document.getElementById(id)?.addEventListener('change', calculateIndiaTax);
+		});
 
 		calculateIndiaTax();
 	});
