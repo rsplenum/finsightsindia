@@ -1,6 +1,6 @@
 # FinSight — Launch Gate
 
-**Not live. No domain.** 267 tests green · 34 commits on `fix/learning-loop-integrity-and-calculator-correctness`
+**Not live. No domain.** 297 tests green · 36 commits on `fix/learning-loop-integrity-and-calculator-correctness`
 
 This is a list, not a document. Explanations live in commit messages, `design-doctrine.json` and `engineering-solutions.json`. This says what is done and what is next.
 
@@ -15,7 +15,8 @@ contribution is asked for in today's money, three modes · **sol-033** neither
 engine charged a fund fee · **sol-034** step-up meant opposite things on the two
 pages · **sol-035** a rung printed NaN · **sol-036** the fee and the return
 series are a pair · **sol-037** rung 3 counted no tax · **sol-038** two rungs,
-one formula, two copies · **T3 rungs 5 and 6** built (order-of-returns, and what
+one formula, two copies · **sol-039** the insurance engine leaves the page and
+becomes testable · **T3 rungs 5 and 6** built (order-of-returns, and what
 protection costs).
 
 Numbers that moved: the shipped answer ₹43.7 L → ₹89.1 L, and the contribution
@@ -39,7 +40,11 @@ the commit messages — which is where it belongs once it is no longer *next*.
 - [ ] **A typed boundary between the compute host and the rungs** — sol-035's real cause. Rungs receive `any` across a CustomEvent, so a renamed field fails silently at runtime. Every rung is exposed to this, not just the one that broke
 - [ ] **Rung 2 should own the contribution-mode chooser** — it is the rung about inflation eating money, so it is the right home. Today the entry's "change how your contribution grows" link points at the expert rung, where the control actually is; a compact chooser in rung 1 is the proper end state
 - [ ] **The same grid defect is latent in rung 6** — `protectionCurve` steps roughness by 1 from 8, so a shipped 28.4% assumption uses the 28% point. Hidden today only because the rung prints roughness to zero decimals. Anchor it the same way rung 4 now is
-- [ ] **T5 — insurance analyser. THE NEXT SESSION.** Starts with extracting `runReplicationAnalysis()` from the 35KB page so it can be tested at all; everything else in T5 is blocked behind that
+- [x] ~~**T5 — insurance analyser. THE NEXT SESSION.** Starts with extracting `runReplicationAnalysis()`~~ **Extracted 16 Aug, sol-039.** The rest of T5 is unblocked and cheap; four defects it uncovered are listed below
+- [ ] **The DIY walk compounds an exhausted portfolio into a debt** — a balance that cannot fund a payout goes negative and keeps earning the equity rate, so the sensitivity table reports the deficit as WORST around 11% and better at 8% and 14%. A higher return shown as a worse outcome. Fix is to floor at zero and report the year the money ran out, which is also the only honest deficit figure. sol-039
+- [ ] **The safe DIY route is charged no tax** — the growth route pays 12.5% LTCG, the bond route pays nothing. It flatters the very route used to argue the policy is beatable without risk. sol-039
+- [ ] **The LTCG exemption is applied once to the terminal gain, not annually** — overstates the tax on the DIY route, so it errs against our own argument, but it is still wrong. sol-039
+- [ ] **A typed maturity benefit of 0 becomes ₹10 lakh** — `parseFormattedNumber(...) || 1000000` in the reader, against the field's own tooltip ("Type 0 if there is no final bonus"). sol-039
 - [ ] **T1 homepage** — six items, untouched since the audit
 - [ ] Delete `swpDeterministic.ts` — no production caller; 11 tests still use it as a harness *(needs `growth`/`netMonthly` on the MC engine first)*
 - [ ] Rung 6 term selector, 3/6/9/12 months — *needs term-invariant return generation; today it drifts the unhedged baseline 39→42, an artefact*
@@ -57,7 +62,7 @@ the commit messages — which is where it belongs once it is no longer *next*.
 
 ## Blocked / deferred — with the reason
 
-- [ ] **Insurance `runReplicationAnalysis()` is untestable** → T5 starts with extracting it from the 35KB page.
+- [x] ~~**Insurance `runReplicationAnalysis()` is untestable**~~ **Done 16 Aug, sol-039.**
 - [ ] **Rule retirements in the content factory** → needs logging coverage above 30% (now 5.9%). The operator self-blocks until then.
 - [ ] **Three silent reversals: M2, M4, M9** → needs Rahul's judgement. `ceiling.py relax` lists them.
 - [ ] **Regression set is only 4 cases** → grow it before leaning harder. Two were passing for the wrong reason until 15 Aug.
@@ -118,13 +123,14 @@ Scope, settled 15 Aug: the SIP page inherits T2 whole — shared engine, `planne
 - [ ] Explain the hedging mechanic plainly
 - [ ] Make the tradeoff explicit: cut lifestyle, or pay to protect it
 
-## T5 — Insurance analyser · 1/5
+## T5 — Insurance analyser · 2/5
 
 - [x] Audit; identify contradictory verdict labels
-- [ ] Extract `runReplicationAnalysis()` so it can be tested
-- [ ] Fix surplus/deficit labelling — sign, word and badge must agree
+- [x] **Extract `runReplicationAnalysis()` so it can be tested** — `insuranceReplication.ts` (engine, no DOM, no clock) + `insuranceInputs.ts` (the one reader). One walk for both routes and every sensitivity row. sol-039, 30 tests, parity-checked against the original over six input sets before deleting it
+- [ ] Fix surplus/deficit labelling — sign, word and badge must agree. *Now a one-line change with a test behind it: at the defaults the safe route is **−₹11.08 L**, printed in emerald green under the word "Surplus", and the bottom line says "₹ −1.41 Cr in SURPLUS WEALTH"*
 - [ ] Lead with the unbundling verdict
 - [ ] Apply the T8 side-by-side money pattern
+- [ ] The money fields recompute on **blur**, the numeric ones on **input** — two behaviours in one form (`setupFormattingField`)
 
 ## T6 — Income tax calculator (incl. your T10) · 3/8
 

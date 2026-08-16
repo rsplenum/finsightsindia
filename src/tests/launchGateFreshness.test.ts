@@ -72,10 +72,19 @@ describe.skipIf(!hasGit || !fs.existsSync(STATE))('the Launch Gate must not sile
     // hand-patched HTML and every update was a tax, which is a cause of the
     // drift this file exists to catch. Markdown, one line per item, so an
     // update is a single edit.
+    //
+    // The cap was 220 and T5 took it to 211, which meant the next session
+    // would have had to archive before it could record. Rahul raised it to
+    // 400 on 16 Aug so the pressure to prune never competes with the pressure
+    // to write something down - a gate that is full stops being written to,
+    // and a store nobody writes to is the failure this whole file guards
+    // against. The cap is still here, and it is still the same rule: this is a
+    // list. Format is what enforces that, not length - the `- [ ]` assertion
+    // below is the part that cannot be relaxed.
     const body = fs.readFileSync(state.gateFile, 'utf-8');
     expect(state.gateFile.endsWith('.md')).toBe(true);
     const lines = body.split('\n').length;
-    expect(lines, `${lines} lines - if it needs this much, it has stopped being a list`).toBeLessThan(220);
+    expect(lines, `${lines} lines - if it needs this much, it has stopped being a list`).toBeLessThan(400);
     expect(body).toMatch(/- \[[ x]\]/);
   });
 });

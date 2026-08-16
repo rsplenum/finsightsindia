@@ -348,17 +348,21 @@ import SectionTitle from '../components/SectionTitle.astro';
 </Layout>
 
 <script>
-	import { calculateXIRR } from '../utils/xirr';
-	import { 
-		parseFormattedNumber, 
-		formatShortRupee, 
-		tableFormatter, 
-		setupFormattingField 
+	import {
+		formatShortRupee,
+		tableFormatter,
+		setupFormattingField
 	} from '../utils/formatters';
+	import { analyseReplication, type LedgerRow } from '../utils/insuranceReplication';
+	import { readPolicyInputs, isUnbundling, syncRiskCostsFromCover } from '../utils/insuranceInputs';
+
+	// This file is a view. The arithmetic lives in insuranceReplication.ts and
+	// the form is read only by insuranceInputs.ts; nothing below computes a
+	// figure of its own. sol-039.
 
 	let cashflowChartInstance: any = null;
 
-	async function renderCashflowChart(ledger: any[]) {
+	async function renderCashflowChart(ledger: LedgerRow[]) {
 		const canvas = document.getElementById('cashflowChart') as HTMLCanvasElement;
 		if (!canvas) return;
 
@@ -416,168 +420,23 @@ import SectionTitle from '../components/SectionTitle.astro';
 		});
 	}
 
-	function syncRiskCostsFromCover() {
-		const termCover = parseFormattedNumber((document.getElementById('inTermCover') as HTMLInputElement)?.value || '0');
-		const accidentCover = parseFormattedNumber((document.getElementById('inAccidentCover') as HTMLInputElement)?.value || '0');
-
-		const termCostEl = document.getElementById('inTermCostOverride') as HTMLInputElement;
-		const accidentCostEl = document.getElementById('inAccidentCostOverride') as HTMLInputElement;
-
-		if (termCostEl) termCostEl.value = Math.round((termCover / 1000000) * 1200).toLocaleString('en-IN');
-		if (accidentCostEl) accidentCostEl.value = Math.round((accidentCover / 1000000) * 1000).toLocaleString('en-IN');
-	}
-
-	function runReplicationAnalysis() {
-		const toggleUnbundle = ((document.getElementById('unbundleToggle')) as HTMLInputElement)?.checked ?? true;
-
-		const inputs = {
-			premium: parseFormattedNumber((document.getElementById('inPremium') as HTMLInputElement)?.value) || 100000,
-			ppt: parseInt((document.getElementById('inPPT') as HTMLInputElement)?.value) || 10,
-			payoutStartYear: parseInt((document.getElementById('inPayoutStart') as HTMLInputElement)?.value) || 11,
-			payoutYears: parseInt((document.getElementById('inPayoutYears') as HTMLInputElement)?.value) || 20,
-			payoutAmount: parseFormattedNumber((document.getElementById('inPayout') as HTMLInputElement)?.value) || 120000,
-			maturityBenefit: parseFormattedNumber((document.getElementById('inMaturity') as HTMLInputElement)?.value) || 1000000,
-			inflationRate: parseFloat((document.getElementById('inInflation') as HTMLInputElement)?.value) || 6.0,
-			safeRate: 7.1,
-			equityRate: 12.0
-		};
-
-		let termCost = 0;
-		let accidentCost = 0;
-
-		if (toggleUnbundle) {
-			termCost = parseFormattedNumber((document.getElementById('inTermCostOverride') as HTMLInputElement)?.value) || 0;
-			accidentCost = parseFormattedNumber((document.getElementById('inAccidentCostOverride') as HTMLInputElement)?.value) || 0;
-		}
-
-		const totalRiskCost = termCost + accidentCost;
-		const investableCapital = Math.max(0, inputs.premium - totalRiskCost);
-
-		const payoutStartYear = inputs.payoutStartYear;
-		const payoutEndYear = payoutStartYear + inputs.payoutYears - 1;
-		const totalYears = Math.max(inputs.ppt, payoutEndYear);
-		
-		let ledger: any[] = [];
-		let totalNominalPayout = 0;
-		let totalRealPayout = 0;
-		let cashFlowsForXirr: { amount: number; date: Date }[] = [];
-
-		const startDate = new Date();
-
-		for (let yr = 1; yr <= totalYears; yr++) {
-			let yearPremium = (yr <= inputs.ppt) ? inputs.premium : 0;
-			let yearPayout = (yr >= payoutStartYear && yr <= payoutEndYear) ? inputs.payoutAmount : 0;
-			
-			if (yr === payoutEndYear) yearPayout += inputs.maturityBenefit;
-
-			let netCash = yearPayout - yearPremium;
-            
-			// Premium is paid at start of year (yr - 1), Payout is received at end of year (yr)
-			let premiumDiscountFactor = Math.pow(1 + (inputs.inflationRate / 100), yr - 1);
-			let payoutDiscountFactor = Math.pow(1 + (inputs.inflationRate / 100), yr);
-            
-			let realPremiumValue = yearPremium / premiumDiscountFactor;
-			let realPayoutValue = yearPayout / payoutDiscountFactor;
-
-			totalNominalPayout += yearPayout;
-			totalRealPayout += realPayoutValue;
-
-			ledger.push({
-				year: yr, premiumOut: yearPremium, payoutIn: yearPayout, net: netCash, realValue: realPayoutValue, realPremium: realPremiumValue
-			});
-
-			let cfDatePremium = new Date(startDate);
-			cfDatePremium.setFullYear(startDate.getFullYear() + (yr - 1));
-            
-			let cfDatePayout = new Date(startDate);
-			cfDatePayout.setFullYear(startDate.getFullYear() + yr);
-
-            if (yearPremium !== 0) cashFlowsForXirr.push({ amount: -yearPremium, date: cfDatePremium });
-            if (yearPayout !== 0) cashFlowsForXirr.push({ amount: yearPayout, date: cfDatePayout });
-		}
-
-		const bundledXirrRaw = calculateXIRR(cashFlowsForXirr);
-		const bundledXirr = bundledXirrRaw !== null ? bundledXirrRaw : 0; 
-
-		let balanceSafe = 0;
-		let balanceEquity = 0;
-
-		let totalEquityCapitalInvested = 0;
-		for (let yr = 1; yr <= totalYears; yr++) {
-			let investableThisYear = (yr <= inputs.ppt) ? investableCapital : 0;
-			let payoutDemandedThisYear = ledger[yr-1].payoutIn;
-            totalEquityCapitalInvested += investableThisYear;
-
-			// Add premium at start of year, then compound everything
-			balanceSafe = balanceSafe + investableThisYear;
-			balanceEquity = balanceEquity + investableThisYear;
-
-			balanceSafe = balanceSafe * (1 + (inputs.safeRate / 100));
-			balanceEquity = balanceEquity * (1 + (inputs.equityRate / 100));
-
-			// Payouts are received at the end of the year
-			balanceSafe = balanceSafe - payoutDemandedThisYear;
-			balanceEquity = balanceEquity - payoutDemandedThisYear;
-		}
-
-        // Apply 12.5% LTCG Tax Drag on Equity DIY
-        let equityTaxDrag = 0;
-        if (balanceEquity > 0) {
-            let taxableGain = Math.max(0, balanceEquity - totalEquityCapitalInvested - 125000);
-            equityTaxDrag = taxableGain * 0.125;
-            balanceEquity -= equityTaxDrag;
-        }
-
-		// Function for sensitivity tests
-		function getEquitySurplus(equityRate: number) {
-			let balEquity = 0;
-			let totalEqInvested = 0;
-			for (let yr = 1; yr <= totalYears; yr++) {
-				let investableThisYear = (yr <= inputs.ppt) ? investableCapital : 0;
-				let yearPayout = (yr >= payoutStartYear && yr <= payoutEndYear) ? inputs.payoutAmount : 0;
-				if (yr === payoutEndYear) yearPayout += inputs.maturityBenefit;
-
-				totalEqInvested += investableThisYear;
-				balEquity += investableThisYear;
-				balEquity *= (1 + (equityRate / 100));
-				balEquity -= yearPayout;
-			}
-			let taxDrag = 0;
-			if (balEquity > 0) {
-				let taxableGain = Math.max(0, balEquity - totalEqInvested - 125000);
-				taxDrag = taxableGain * 0.125;
-				balEquity -= taxDrag;
-			}
-			return balEquity;
-		}
-
-		let sensitivity = [8, 10, 12, 14].map(rate => ({
-			rate,
-			surplus: getEquitySurplus(rate)
-		}));
-
-		return {
-			engineA: { xirr: bundledXirr.toFixed(2) + '%', totalNominalPayout, totalRealPayout },
-			engineB: { finalArbitrageProfit: balanceSafe, riskCostPaid: totalRiskCost * inputs.ppt },
-			engineC: { finalArbitrageProfit: balanceEquity, riskCostPaid: totalRiskCost * inputs.ppt, taxDrag: equityTaxDrag },
-			ledger,
-			sensitivity
-		};
-	}
-
 	function updateDashboardUI() {
-		const results = runReplicationAnalysis();
+		const results = analyseReplication(readPolicyInputs());
 
 		const engineAXirrEl = document.getElementById('engineAXIRR');
 		const engineANominalEl = document.getElementById('engineANominal');
 		const engineARealEl = document.getElementById('engineAReal');
 		const xirrBadgeEl = document.getElementById('xirrHealthBadge');
 
-		if (engineAXirrEl) engineAXirrEl.innerText = results.engineA.xirr;
-		if (engineANominalEl) engineANominalEl.innerText = formatShortRupee(results.engineA.totalNominalPayout);
-		if (engineARealEl) engineARealEl.innerText = formatShortRupee(results.engineA.totalRealPayout);
+		// The badge judges the number the reader can actually see, not a fuller
+		// precision one behind it. dd-013: one quantity, one value.
+		const xirrShown = results.policy.xirrPct.toFixed(2);
+		const xirrNum = parseFloat(xirrShown);
 
-		const xirrNum = parseFloat(results.engineA.xirr);
+		if (engineAXirrEl) engineAXirrEl.innerText = xirrShown + '%';
+		if (engineANominalEl) engineANominalEl.innerText = formatShortRupee(results.policy.totalNominalPayout);
+		if (engineARealEl) engineARealEl.innerText = formatShortRupee(results.policy.totalRealPayout);
+
 		if (xirrBadgeEl) {
 			if (xirrNum < 6.0) {
 				xirrBadgeEl.innerText = 'LAGGING INFLATION';
@@ -595,10 +454,10 @@ import SectionTitle from '../components/SectionTitle.astro';
 		const engineBRiskCostEl = document.getElementById('valRiskCostB');
 		const engineBBadgeEl = document.getElementById('engineBBadge');
 		const engineBTextEl = document.getElementById('engineBText');
-		const safeProfit = results.engineB.finalArbitrageProfit;
+		const safeProfit = results.safe.finalBalance;
 
 		if (engineBSurplusEl) engineBSurplusEl.innerText = formatShortRupee(safeProfit);
-		if (engineBRiskCostEl) engineBRiskCostEl.innerText = formatShortRupee(results.engineB.riskCostPaid);
+		if (engineBRiskCostEl) engineBRiskCostEl.innerText = formatShortRupee(results.safe.riskCostPaid);
 
 		if (engineBBadgeEl && engineBTextEl) {
 			if (safeProfit > 0) {
@@ -616,11 +475,11 @@ import SectionTitle from '../components/SectionTitle.astro';
 		const engineCRiskCostEl = document.getElementById('valRiskCostC');
 		const engineCTaxDragEl = document.getElementById('valTaxDragC');
 		const engineCTextEl = document.getElementById('engineCText');
-		const equityProfit = results.engineC.finalArbitrageProfit;
+		const equityProfit = results.growth.finalBalance;
 
 		if (engineCSurplusEl) engineCSurplusEl.innerText = formatShortRupee(equityProfit);
-		if (engineCRiskCostEl) engineCRiskCostEl.innerText = formatShortRupee(results.engineC.riskCostPaid);
-		if (engineCTaxDragEl) engineCTaxDragEl.innerText = `-${formatShortRupee(results.engineC.taxDrag)}`;
+		if (engineCRiskCostEl) engineCRiskCostEl.innerText = formatShortRupee(results.growth.riskCostPaid);
+		if (engineCTaxDragEl) engineCTaxDragEl.innerText = `-${formatShortRupee(results.growth.taxDrag)}`;
 
 		if (engineCTextEl) {
 			if (equityProfit > 0) {
@@ -631,46 +490,31 @@ import SectionTitle from '../components/SectionTitle.astro';
 		}
 
 		const takeawayEl = document.getElementById('replicationTakeaway');
-		const toggleUnbundle = (document.getElementById('unbundleToggle') as HTMLInputElement)?.checked ?? true;
 
 		if (takeawayEl) {
-			if (toggleUnbundle) {
-				takeawayEl.innerText = `By unbundling insurance from investment, purchasing pure Term Life + Accident cover (${formatShortRupee(results.engineB.riskCostPaid)} total risk cost), and investing the rest, DIY Equity leaves you with ${formatShortRupee(results.engineC.finalArbitrageProfit)} in SURPLUS WEALTH after paying out all requested cash flows!`;
+			if (isUnbundling()) {
+				takeawayEl.innerText = `By unbundling insurance from investment, purchasing pure Term Life + Accident cover (${formatShortRupee(results.riskCostPaid)} total risk cost), and investing the rest, DIY Equity leaves you with ${formatShortRupee(equityProfit)} in SURPLUS WEALTH after paying out all requested cash flows!`;
 			} else {
-				takeawayEl.innerText = `Without deducting any insurance cost, investing 100% of your premiums into DIY Equity leaves you with ${formatShortRupee(results.engineC.finalArbitrageProfit)} in SURPLUS WEALTH after paying out all requested cash flows!`;
+				takeawayEl.innerText = `Without deducting any insurance cost, investing 100% of your premiums into DIY Equity leaves you with ${formatShortRupee(equityProfit)} in SURPLUS WEALTH after paying out all requested cash flows!`;
 			}
 		}
 
-		const inputPremium = parseFormattedNumber((document.getElementById('inPremium') as HTMLInputElement)?.value) || 100000;
-		const inputPPT = parseInt((document.getElementById('inPPT') as HTMLInputElement)?.value) || 10;
-		let totalGstPaid = 0;
-		for (let yr = 1; yr <= inputPPT; yr++) {
-			let gstRate = (yr === 1) ? 0.045 : 0.0225;
-			totalGstPaid += inputPremium * gstRate;
-		}
-		let estCommission = inputPremium * 0.20;
-		
-		let breakEvenYear = "Never / Term";
-		let cumulativeReal = 0;
-		const ledger = results.ledger || [];
-		for (let i = 0; i < ledger.length; i++) {
-			cumulativeReal += ledger[i].realValue - ledger[i].realPremium;
-			if (cumulativeReal > 0) { breakEvenYear = `Year ${ledger[i].year}`; break; }
-		}
+		const ledger = results.ledger;
+		const breakEvenYear = results.policy.breakEvenYear;
 
 		const frictionalGstEl = document.getElementById('frictionalGst');
 		const frictionalCommissionEl = document.getElementById('frictionalCommission');
 		const frictionalBreakEvenEl = document.getElementById('frictionalBreakEven');
 
-		if (frictionalGstEl) frictionalGstEl.innerText = tableFormatter.format(Math.round(totalGstPaid));
-		if (frictionalCommissionEl) frictionalCommissionEl.innerText = tableFormatter.format(Math.round(estCommission));
-		if (frictionalBreakEvenEl) frictionalBreakEvenEl.innerText = breakEvenYear;
+		if (frictionalGstEl) frictionalGstEl.innerText = tableFormatter.format(Math.round(results.frictions.gstPaid));
+		if (frictionalCommissionEl) frictionalCommissionEl.innerText = tableFormatter.format(Math.round(results.frictions.estCommission));
+		if (frictionalBreakEvenEl) frictionalBreakEvenEl.innerText = breakEvenYear === null ? 'Never / Term' : `Year ${breakEvenYear}`;
 
 		const sensBody = document.getElementById('insuranceSensitivityBody');
-		if (sensBody && results.sensitivity) {
+		if (sensBody) {
 			let tbodyHtml = '';
-			results.sensitivity.forEach((row: any) => {
-				const isBaseline = row.rate === 12;
+			results.sensitivity.forEach((row) => {
+				const isBaseline = row.isBaseline;
 				const highlight = isBaseline ? 'bg-gold-50 dark:bg-gold-900/20 font-bold' : '';
 				const isWin = row.surplus > 0;
 				const outcomeClass = isWin ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
