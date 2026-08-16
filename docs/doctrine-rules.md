@@ -4,7 +4,7 @@
 
 The reasoning, the trigger and Rahul's verbatim words live in the JSON and are the part worth reading twice. This page is the other half: the same lessons reduced to lines you can check a screen against without re-reading an essay. dd-016 exists because a cited principle is not an instruction.
 
-20 entries · 113 rules · 14 entries bind any calculator screen
+21 entries · 120 rules · 15 entries bind any calculator screen
 
 ---
 
@@ -45,6 +45,9 @@ Generate the skeleton with `npm run doctrine:checks <ComponentName>`.
 - `dd-019/dont-2` Don't attach the same frame phrase to more than one quantity on a screen without naming each one.
 - `dd-019/dont-3` Don't treat a correct frame as sufficient disambiguation; T8 was applied correctly here and the screen was still ambiguous.
 - `dd-019/dont-4` Don't use a heading that reads as a claim of equivalence ('THE SAME MONEY') when it means 'this sum, re-expressed'.
+- `dd-020/dont-1` Don't hide an option because it is unlikely - unlikely is not inapplicable, and the reader it fits never learns it was there.
+- `dd-020/dont-2` Don't ask a question that does not go on to remove something - a question that buys no simplification is pure cost.
+- `dd-020/dont-3` Don't let a category filter change a computed answer; it removes what cannot apply, never what is inconvenient to support.
 
 ---
 
@@ -406,3 +409,22 @@ Generate the skeleton with `npm run doctrine:checks <ComponentName>`.
 A row header naming the quantity and a column header naming the frame BOTH COUNT: that is T8's adjacent-columns pattern, it is the shape dd-006 requires, and it passes. The first draft of this test said 'the line it sits on', which would have condemned every real/nominal table we deliberately built - the wording was the agent's, not Rahul's, and it was wrong.
 
 What fails is a figure whose noun sits in a separate block above it while its frame floats as a caption beside it - and above all, the same frame phrase doing that job for more than one quantity on the same page. That is F-12: two bold figures 500px apart, both labelled 'in today's prices', counting different things.
+
+### dd-020 — Ask a cheap question to remove what cannot apply - never what is merely unlikely
+
+*calculators · entry forms · answer layers · rungs · progressive disclosure*
+
+**Do**
+
+- `dd-020/do-1` Filter an option list by what the reader is ELIGIBLE for, and let everything lawful remain reachable.
+- `dd-020/do-2` Ask a small number of cheap questions early - category, age, status - and spend the answers on removing irrelevance later.
+- `dd-020/do-3` Keep an option that is uncommon but lawful, such as futures and options income for a salaried filer.
+- `dd-020/do-4` Remove an option the reader cannot lawfully choose, such as 44AD or 44ADA for a salaried filer, along with the deductions that depend on it.
+
+**Don't**
+
+- `dd-020/dont-1` Don't hide an option because it is unlikely - unlikely is not inapplicable, and the reader it fits never learns it was there.
+- `dd-020/dont-2` Don't ask a question that does not go on to remove something - a question that buys no simplification is pure cost.
+- `dd-020/dont-3` Don't let a category filter change a computed answer; it removes what cannot apply, never what is inconvenient to support.
+
+> **Test.** Take any option the category has removed and ask: is this removed because the statute forbids it, or because we guessed the reader probably will not need it? Only the first survives. If a salaried reader with F&O income, or a professional with capital gains, would be unable to enter something true about their year, the filter is wrong.

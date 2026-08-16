@@ -548,5 +548,32 @@
       "Don't use a heading that reads as a claim of equivalence ('THE SAME MONEY') when it means 'this sum, re-expressed'."
     ],
     "test": "Cover the whole screen except the figure and whatever names it. Can the reader say what it counts, how much it is, and in whose money?\n\nA row header naming the quantity and a column header naming the frame BOTH COUNT: that is T8's adjacent-columns pattern, it is the shape dd-006 requires, and it passes. The first draft of this test said 'the line it sits on', which would have condemned every real/nominal table we deliberately built - the wording was the agent's, not Rahul's, and it was wrong.\n\nWhat fails is a figure whose noun sits in a separate block above it while its frame floats as a caption beside it - and above all, the same frame phrase doing that job for more than one quantity on the same page. That is F-12: two bold figures 500px apart, both labelled 'in today's prices', counting different things."
+  },
+  {
+    "id": "dd-020",
+    "date": "2026-08-16",
+    "title": "Ask a cheap question to remove what cannot apply - never what is merely unlikely",
+    "trigger": "Rahul explaining what the Category selector at the top of his tax-calculator sketch is FOR, when asked whether it filters the two dropdowns.",
+    "verbatim": "Picking a category will not show irrelevant options but the options that are commn across categories should be shown, like picking salaried will not show that they can file return under 44ad or 44ada and claim corresponding under deductions but it will show futures and options as income similar. ctegories use is to remove inapplicable options only so to reduce the cognitive load. a few questions answers from the user can go a long way to reduce cognitive load for the user.",
+    "spirit": "The line that carries the whole rule is 'to remove INAPPLICABLE options only'. The filter is eligibility, not likelihood, and the two are constantly confused. A salaried filer cannot elect 44AD or 44ADA - the statute does not permit it - so offering it is pure noise and hiding it costs the reader nothing. A salaried filer absolutely can have futures and options income, and it is not even rare; hiding it because it is uncommon would silently amputate a real user's return and they would never learn what was missing.\n\nSo the test on any option is not 'will most people in this category use it?' but 'can a person in this category lawfully use it?' Only the second is a safe reason to remove something. The first is how a form quietly becomes wrong for everyone it did not picture.\n\nThe second sentence generalises past the tax page: 'a few questions answers from the user can go a long way to reduce cognitive load'. A small number of cheap questions, asked early, earns the right to remove a large amount of irrelevance later. That is the same bargain as CLAUDE.md's - the difficulty of packaging is ours to absorb, never the reader's - and it is the mechanism by which a page can offer the whole of the complexity (dd-001) without putting all of it on screen at once.",
+    "applies_to": [
+      "calculators",
+      "entry forms",
+      "answer layers",
+      "rungs",
+      "progressive disclosure"
+    ],
+    "do": [
+      "Filter an option list by what the reader is ELIGIBLE for, and let everything lawful remain reachable.",
+      "Ask a small number of cheap questions early - category, age, status - and spend the answers on removing irrelevance later.",
+      "Keep an option that is uncommon but lawful, such as futures and options income for a salaried filer.",
+      "Remove an option the reader cannot lawfully choose, such as 44AD or 44ADA for a salaried filer, along with the deductions that depend on it."
+    ],
+    "dont": [
+      "Don't hide an option because it is unlikely - unlikely is not inapplicable, and the reader it fits never learns it was there.",
+      "Don't ask a question that does not go on to remove something - a question that buys no simplification is pure cost.",
+      "Don't let a category filter change a computed answer; it removes what cannot apply, never what is inconvenient to support."
+    ],
+    "test": "Take any option the category has removed and ask: is this removed because the statute forbids it, or because we guessed the reader probably will not need it? Only the first survives. If a salaried reader with F&O income, or a professional with capital gains, would be unable to enter something true about their year, the filter is wrong."
   }
 ]

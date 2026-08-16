@@ -46,6 +46,9 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-019/dont-2 | PASS | The phrase attaches only to the instalment's real value, and the insight sentence names that quantity explicitly every time it prints it. |
 | dd-019/dont-3 | PASS | The instalment is named in words wherever its real value is printed in prose; only the label row leans on the pronoun, which is recorded above. |
 | dd-019/dont-4 | PASS | This is the honest form of the shape dont-4 forbids. "the same amount, in today's money" states plainly that the figure is the previous row re-expressed, in lowercase prose adjacent to its referent - not an all-caps heading claiming two different quantities are equal. |
+| dd-020/dont-1 | N/A | This rung presents computed results and carries no option list that any category filters, so there is nothing here that eligibility could remove. |
+| dd-020/dont-2 | N/A | The rung asks no qualifying question of its own; the SIP page's inputs live in the entry and the expert rung. |
+| dd-020/dont-3 | N/A | No category filter reaches this rung, so none can move a figure it prints. |
 
 ## Deliberate choices
 

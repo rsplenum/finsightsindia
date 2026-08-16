@@ -52,6 +52,9 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-019/dont-2 | PASS | "in today's money" appears once, on the target. No second quantity on this rung wears it. |
 | dd-019/dont-3 | PASS | Every figure is named by its row label, so the frame is never the only thing identifying it. |
 | dd-019/dont-4 | N/A | No equivalence heading. The rung already warns that the three figures compound rather than subtract, which is the opposite failure and is handled. |
+| dd-020/dont-1 | N/A | This rung presents computed results and carries no option list that any category filters, so there is nothing here that eligibility could remove. |
+| dd-020/dont-2 | N/A | The rung asks no qualifying question of its own; the SIP page's inputs live in the entry and the expert rung. |
+| dd-020/dont-3 | N/A | No category filter reaches this rung, so none can move a figure it prints. |
 
 ## The original answers, kept
 

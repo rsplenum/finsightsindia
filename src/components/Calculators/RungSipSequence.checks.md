@@ -49,6 +49,9 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-019/dont-2 | N/A | No frame phrase is used more than once here; the rung prints no repeated "in today's money" label. |
 | dd-019/dont-3 | RISK | The trio is incomplete rather than split. Both money figures in the end-labels are real values (endReal, smoothEndReal) but carry no frame word at all, so the reader is not told whose money they are in. Small, and it belongs to the same repair pass as the insurance figures. |
 | dd-019/dont-4 | N/A | No equivalence heading on this rung. |
+| dd-020/dont-1 | N/A | This rung presents computed results and carries no option list that any category filters, so there is nothing here that eligibility could remove. |
+| dd-020/dont-2 | N/A | The rung asks no qualifying question of its own; the SIP page's inputs live in the entry and the expert rung. |
+| dd-020/dont-3 | N/A | No category filter reaches this rung, so none can move a figure it prints. |
 
 ## Deliberate choices
 

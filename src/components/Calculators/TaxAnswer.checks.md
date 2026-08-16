@@ -129,6 +129,9 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-019/dont-2 | N/A | No frame phrase is used on this page at all, for the reason already recorded at dd-004/dont-2: a single assessment year, so there is no second money system to name. |
 | dd-019/dont-3 | N/A | No frames in play, so none can be mistaken for sufficient disambiguation. |
 | dd-019/dont-4 | N/A | No equivalence heading; the regimes are presented as two adjacent columns, each named. |
+| dd-020/dont-1 | PASS | Nothing is hidden by guesswork today. All four heads are present for every reader as chips that are closed rather than absent, so an unusual-but-lawful case is always reachable. This is the entry that Rahul's revamp will replace with a real category filter, and the rule now exists BEFORE that is built rather than after - F&O stays visible to a salaried filer, 44AD and 44ADA do not. |
+| dd-020/dont-2 | N/A | The page asks no qualifying question yet - entry is one field, gross salary. The Category selector that would make this rule bite is in the sketch, not in the code. |
+| dd-020/dont-3 | N/A | No category filter exists here yet, so nothing can silently move a computed figure. This is the row to re-answer when the revamp lands. |
 
 ## Deliberate choices
 

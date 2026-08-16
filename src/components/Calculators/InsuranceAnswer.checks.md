@@ -63,6 +63,9 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-019/dont-2 | RISK | F-12. This component's "in today's prices" is one of at least four on the insurance page wearing that phrase for different quantities - the surplus here, the total payout under "THE SAME MONEY" at insurance-analyzer.astro:195, the unpaid income, and the last premium. Two bold figures 500px apart share a label while counting different things, so the reader's first thought is that one is a typo. Fix is the noun on the same line as each figure; scheduled, not yet done. |
 | dd-019/dont-3 | RISK | The same instance, and it is the reason this rule exists beyond T8. The frame here is CORRECT - T8 was applied properly - and the screen is still ambiguous, because the frame disambiguated the unit and left the quantity to be inferred from position. |
 | dd-019/dont-4 | N/A | The "THE SAME MONEY" heading itself lives in insurance-analyzer.astro, which carries no checks file; tracked under F-12. |
+| dd-020/dont-1 | N/A | The inputs are properties of one policy - premium, term, sum assured - not a menu filtered by who the reader is. There is no eligibility list to prune. |
+| dd-020/dont-2 | N/A | No category or status question is asked, so none is being asked without buying a simplification. |
+| dd-020/dont-3 | N/A | No category filter exists on this surface, so none can change the surplus or the year the money runs out. |
 
 ## Deliberate choices
 

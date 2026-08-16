@@ -46,6 +46,9 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-019/dont-2 | PASS | One frame phrase governs one column, and every quantity beneath it is named by its own row header. The phrase is never reused for a second, unnamed quantity. |
 | dd-019/dont-3 | PASS | The quantity is carried by the row and never inferred from the frame; the column header only says which money the column is counted in. |
 | dd-019/dont-4 | N/A | No heading here claims equivalence - the two columns are labelled as the two different things they are. |
+| dd-020/dont-1 | N/A | This rung presents computed results and carries no option list that any category filters, so there is nothing here that eligibility could remove. |
+| dd-020/dont-2 | N/A | The rung asks no qualifying question of its own; the SIP page's inputs live in the entry and the expert rung. |
+| dd-020/dont-3 | N/A | No category filter reaches this rung, so none can move a figure it prints. |
 
 ## The original answers, kept
 

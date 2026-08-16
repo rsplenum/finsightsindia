@@ -49,6 +49,9 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-019/dont-2 | PASS | The phrase repeats across two rows, but each row names a different and explicit quantity - the worst 1-in-10 future against the typical one. That is the naming this rule requires, not the collision it forbids. |
 | dd-019/dont-3 | PASS | What distinguishes the figures is the row's noun and the column's header, not the frame. |
 | dd-019/dont-4 | N/A | No heading here asserts that two amounts are the same. |
+| dd-020/dont-1 | N/A | This rung presents computed results and carries no option list that any category filters, so there is nothing here that eligibility could remove. |
+| dd-020/dont-2 | N/A | The rung asks no qualifying question of its own; the SIP page's inputs live in the entry and the expert rung. |
+| dd-020/dont-3 | N/A | No category filter reaches this rung, so none can move a figure it prints. |
 
 ## Deliberate choices
 
