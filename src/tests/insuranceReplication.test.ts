@@ -7,6 +7,7 @@ import {
   investableCapitalOf,
   frictionsOf,
   verdictFor,
+  grossUpForTax,
   LTCG_RATE_PCT,
   LTCG_EXEMPTION,
   type PolicyInputs,
@@ -203,6 +204,13 @@ describe('replication - one walk, at any rate', () => {
     expect(ranOut(8)).toBeLessThanOrEqual(ranOut(10));
     expect(ranOut(10)).toBeLessThanOrEqual(ranOut(12));
     expect(ranOut(12)).toBeLessThan(ranOut(14));
+
+    // The exact years, pinned - because this is where a floating-point residue
+    // in the gross-up once put a false year on the page. The engine reported a
+    // policy running out in year 12 when it ran out in year 15, and only the
+    // jaggedness across rates gave it away: 14, 12, 15, 16, 14, 18. A shortfall
+    // of 1e-9 was being counted as a missed instalment.
+    expect([8, 9, 10, 11, 12, 14].map(ranOut)).toEqual([14, 15, 15, 16, 16, 18]);
   });
 
   it('never lets a portfolio go below zero', () => {
@@ -264,20 +272,47 @@ describe('unbundling - what the cover costs', () => {
 });
 
 describe('tax on the growth route', () => {
-  it('charges 12.5% above the exemption on the terminal gain', () => {
+  it('taxes the gain in every sale, not just what is left at the end', () => {
+    // The old model taxed ONE number: the terminal balance above total capital
+    // invested. It therefore ignored the gain realised in twenty years of
+    // withdrawals - about ₹34 lakh of payouts, funded by selling units, every
+    // sale of which realises gain. Applying a single ₹1.25 lakh exemption
+    // instead of thirty overstated the tax by roughly ₹4.5 lakh; ignoring the
+    // realised gains understated it by considerably more. The net was that the
+    // page UNDERTAXED the DIY route - flattering the case it was making.
+    //
+    // ₹6.42 lakh -> ₹8.38 lakh, and the surplus ₹54.48 L -> ₹52.52 L.
     const r = analyseReplication(shipped);
-    const gross = r.growth.finalBalance + r.growth.taxDrag;
-    const expected = Math.max(0, gross - r.growth.capitalInvested - LTCG_EXEMPTION) * 0.125;
+    expect(r.growth.taxDrag).toBeCloseTo(838088.97, 2);
 
-    expect(r.growth.taxDrag).toBeCloseTo(expected, 6);
-    expect(r.growth.taxDrag).toBeGreaterThan(0);
+    const terminalOnly =
+      Math.max(0, r.growth.finalBalance + r.growth.taxDrag - r.growth.capitalInvested - LTCG_EXEMPTION) *
+      0.125;
+    expect(r.growth.taxDrag).toBeGreaterThan(terminalOnly * 0.9);
   });
 
-  it('charges nothing when the route ran out of money', () => {
+  it('uses the exemption every year, not once', () => {
+    // Run the same policy with the exemption and without it. If the exemption
+    // were granted once, the whole difference could not exceed one year's worth
+    // of it - ₹125,000 × 12.5% = ₹15,625. It is many times that, because the
+    // fund sells units in each of twenty payout years and each of those years
+    // brings its own exemption.
+    const withExemption = analyseReplication(shipped).growth.taxDrag;
+    const withoutExemption = analyseReplication(at({ ltcgExemption: 0 })).growth.taxDrag;
+
+    const oneYearOfExemption = LTCG_EXEMPTION * (LTCG_RATE_PCT / 100);
+    expect(withoutExemption - withExemption).toBeGreaterThan(oneYearOfExemption * 10);
+  });
+
+
+  it('charges tax on the sales it managed to make before running out', () => {
+    // It used to charge nothing here, because there was no terminal balance to
+    // tax. But the fund did sell units for four years of income before it
+    // emptied, and those sales realised gains.
     const r = analyseReplication(at({ payoutAmount: 400000, maturityBenefit: 5000000 }));
     expect(r.growth.finalBalance).toBe(0);
     expect(r.growth.unfundedPayout).toBeGreaterThan(0);
-    expect(r.growth.taxDrag).toBe(0);
+    expect(r.growth.taxDrag).toBeGreaterThan(0);
   });
 
   it('leaves the safe route untaxed - which is a defect, recorded here rather than defended', () => {
@@ -321,8 +356,8 @@ describe('the verdict - sign, word and badge cannot disagree', () => {
 
     expect(v.kind).toBe('surplus');
     expect(v.tone).toBe('good');
-    expect(r.growth.finalBalance).toBeCloseTo(5448123.42, 2);
-    expect(r.growth.taxDrag).toBeCloseTo(641874.77, 2);
+    expect(r.growth.finalBalance).toBeCloseTo(5251909.23, 2);
+    expect(r.growth.taxDrag).toBeCloseTo(838088.97, 2);
     expect(r.growth.unfundedPayout).toBe(0);
   });
 
@@ -425,5 +460,36 @@ describe('real break-even, on its own', () => {
     ];
     expect(realBreakEvenYear(rows)).toBe(3);
     expect(realBreakEvenYear(rows.slice(0, 2))).toBeNull();
+  });
+});
+
+describe('grossing up a withdrawal for tax', () => {
+  it('delivers exactly what was promised', () => {
+    // The property the payout comparison rests on: both routes pay the SAME
+    // income. If the fund netted the tax out of the payout instead of selling
+    // enough to cover it, the DIY reader would quietly receive less than the
+    // policyholder and the page would still call the two comparable.
+    for (const want of [40000, 120000, 400000, 1500000]) {
+      for (const g of [0, 0.1, 0.5, 0.9, 1]) {
+        for (const exemption of [0, 125000]) {
+          const sold = grossUpForTax(want, g, 0.125, exemption);
+          const taxable = Math.max(0, sold * g - exemption);
+          const delivered = sold - taxable * 0.125;
+          expect(delivered).toBeCloseTo(want, 6);
+        }
+      }
+    }
+  });
+
+  it('sells nothing extra when there is no gain, no tax, or nothing wanted', () => {
+    expect(grossUpForTax(100000, 0, 0.125, 0)).toBe(100000);
+    expect(grossUpForTax(100000, 0.5, 0, 0)).toBe(100000);
+    expect(grossUpForTax(0, 0.5, 0.125, 0)).toBe(0);
+  });
+
+  it('sells exactly the payout while the gain stays inside the exemption', () => {
+    // ₹40,000 of payout at a 50% gain ratio realises ₹20,000 - well under the
+    // exemption, so nothing is sold to cover a tax that is not owed.
+    expect(grossUpForTax(40000, 0.5, 0.125, 125000)).toBe(40000);
   });
 });

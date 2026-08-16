@@ -1,6 +1,6 @@
 # FinSight — Launch Gate
 
-**Not live. No domain.** 304 tests green · 37 commits on `fix/learning-loop-integrity-and-calculator-correctness`
+**Not live. No domain.** 308 tests green · 38 commits on `fix/learning-loop-integrity-and-calculator-correctness`
 
 This is a list, not a document. Explanations live in commit messages, `design-doctrine.json` and `engineering-solutions.json`. This says what is done and what is next.
 
@@ -18,12 +18,13 @@ series are a pair · **sol-037** rung 3 counted no tax · **sol-038** two rungs,
 one formula, two copies · **sol-039** the insurance engine leaves the page and
 becomes testable · **sol-040** an exhausted portfolio stops growing a debt, and
 four surfaces stop disagreeing about one number · **sol-041** zero was read as
-empty · **T3 rungs 5 and 6** built · **T5 complete**.
+empty · **sol-042** the DIY route was undertaxed, not overtaxed · **T3 rungs 5
+and 6** built · **T5 complete**.
 
 Numbers that moved: the shipped answer ₹43.7 L → ₹89.1 L, the contribution
 needed for a crore ₹56,500 → ~₹35,500, and the insurance page's safe route from
 "−₹11.08 L surplus" to "runs out in year 30, ₹11.08 L of income unpaid".
-204 → 304 tests.
+204 → 308 tests.
 
 Detail in `engineering-solutions.json`, `design-doctrine.json` and the commit
 messages. **Rung numbering: the Answer is rung 1.**
@@ -46,7 +47,7 @@ the commit messages — which is where it belongs once it is no longer *next*.
 - [x] ~~**T5 — insurance analyser. THE NEXT SESSION.** Starts with extracting `runReplicationAnalysis()`~~ **Extracted 16 Aug, sol-039.** The rest of T5 is unblocked and cheap; four defects it uncovered are listed below
 - [x] ~~**The DIY walk compounds an exhausted portfolio into a debt**~~ **Fixed, sol-040.** The walk pays what it has and reports the year it ran out
 - [x] ~~**A typed maturity benefit of 0 becomes ₹10 lakh**~~ **Fixed, sol-041**
-- [ ] **The LTCG exemption is applied once to the terminal gain, not annually** — the route sells units every year to fund payouts, so the gains are realised annually and the exemption should be used annually. Overstates the tax on the DIY route, so it errs against our own argument, but it is still wrong. Needs the gain portion of each withdrawal modelled. sol-039
+- [x] ~~**The LTCG exemption is applied once to the terminal gain, not annually**~~ **Fixed, sol-042** — and the note above it was wrong: it said this *overstated* the tax. It did not. Ignoring the gain realised in twenty years of withdrawals understated it by more than one missing exemption overstated it, so the page had been **undertaxing the route it argues for**. Tax ₹6.42 L → ₹8.38 L, surplus ₹54.48 L → ₹52.52 L
 - [ ] **T1 homepage** — six items, untouched since the audit
 - [ ] Delete `swpDeterministic.ts` — no production caller; 11 tests still use it as a harness *(needs `growth`/`netMonthly` on the MC engine first)*
 - [ ] Rung 6 term selector, 3/6/9/12 months — *needs term-invariant return generation; today it drifts the unhedged baseline 39→42, an artefact*
@@ -134,7 +135,7 @@ Scope, settled 15 Aug: the SIP page inherits T2 whole — shared engine, `planne
 - [x] **Lead with the unbundling verdict** — `InsuranceAnswer`, layer 1: *buy the policy, or buy the cover on its own and invest the difference?* The income is identical by construction and the screen says so, which is what makes the surplus a legitimate headline rather than an accountant's summary
 - [x] **Apply the T8 side-by-side money pattern** — every figure carries its frame permanently: total paid out, surplus, and the shortfall all appear in the rupees of the day beside today's prices. No toggle (dd-006), no footnote (dd-004)
 - [x] **sol-041** — a typed maturity of 0 no longer becomes ₹10 lakh, and `formatShortRupee` stopped printing paise
-- [ ] The money fields recompute on **blur**, the numeric ones on **input** — two behaviours in one form (`setupFormattingField`). Left as found: it is a shared helper and every calculator uses it
+- [x] **The whole form now answers as you type** — `setupFormattingField` takes an opt-in `live` flag, debounced. Opt-in on purpose: its other 13 callers sit on pages where one recompute is a 10,000-path simulation. sol-042
 
 ## T6 — Income tax calculator (incl. your T10) · 3/8
 

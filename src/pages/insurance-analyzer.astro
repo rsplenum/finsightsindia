@@ -381,6 +381,7 @@ import InsuranceAnswer from '../components/Calculators/InsuranceAnswer.astro';
 	} from '../utils/formatters';
 	import { analyseReplication, verdictFor, type LedgerRow, type RouteResult } from '../utils/insuranceReplication';
 	import { readPolicyInputs, isUnbundling, syncRiskCostsFromCover } from '../utils/insuranceInputs';
+	import { debounce } from '../utils/debounce';
 
 	// This file is a view. The arithmetic lives in insuranceReplication.ts and
 	// the form is read only by insuranceInputs.ts; nothing below computes a
@@ -699,9 +700,21 @@ import InsuranceAnswer from '../components/Calculators/InsuranceAnswer.astro';
 	}
 
 	document.addEventListener('DOMContentLoaded', () => {
-		['inPremium', 'inPayout', 'inMaturity', 'inTermCover', 'inAccidentCover', 'inTermCostOverride', 'inAccidentCostOverride'].forEach(id => {
+		// `live` on purpose: this page's recompute is a thirty-year deterministic
+		// walk, not a simulation, so it can afford to keep up with the reader.
+		// Without it the form had two behaviours - the term and inflation fields
+		// answered as you typed, the money fields sat still until you clicked
+		// away, and half the page looked broken.
+		['inPremium', 'inPayout', 'inMaturity', 'inTermCostOverride', 'inAccidentCostOverride'].forEach(id => {
 			const el = document.getElementById(id);
-			if (el) setupFormattingField(el as HTMLInputElement, updateDashboardUI);
+			if (el) setupFormattingField(el as HTMLInputElement, updateDashboardUI, { live: true });
+		});
+
+		// The two cover fields reprice the premium overrides first, so they get
+		// their own handler below rather than this one.
+		['inTermCover', 'inAccidentCover'].forEach(id => {
+			const el = document.getElementById(id);
+			if (el) setupFormattingField(el as HTMLInputElement, () => { syncRiskCostsFromCover(); updateDashboardUI(); });
 		});
 
 		const toggleUnbundleEl = document.getElementById('unbundleToggle') as HTMLInputElement;
@@ -722,12 +735,16 @@ import InsuranceAnswer from '../components/Calculators/InsuranceAnswer.astro';
 		}
 
 		['inTermCover', 'inAccidentCover'].forEach(id => {
-			document.getElementById(id)?.addEventListener('input', () => { syncRiskCostsFromCover(); updateDashboardUI(); });
+			const el = document.getElementById(id);
+			const run = debounce(() => { syncRiskCostsFromCover(); updateDashboardUI(); }, 250);
+			el?.addEventListener('input', run);
 		});
 
 		['inPPT', 'inPayoutStart', 'inPayoutYears', 'inInflation'].forEach(id => {
 			const el = document.getElementById(id);
-			if (el) { el.addEventListener('input', updateDashboardUI); el.addEventListener('change', updateDashboardUI); }
+			if (!el) return;
+			el.addEventListener('input', debounce(updateDashboardUI, 250));
+			el.addEventListener('change', updateDashboardUI);
 		});
 
 		syncRiskCostsFromCover();

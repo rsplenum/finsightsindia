@@ -35,12 +35,9 @@ export const SENSITIVITY_RATES = [8, 10, 12, 14] as const;
 /**
  * LTCG on equity: 12.5% above ₹1.25 lakh of gains, post-July-2024.
  *
- * Applied once, to the terminal gain. That is what the page has always done and
- * it is not what the law does - the exemption is annual, and a real investor
- * selling to fund twenty years of payouts would use it twenty times. It
- * therefore OVERSTATES the tax on the DIY route, which is the conservative
- * direction for a page arguing that DIY wins, but it is still wrong. Left as
- * shipped by the extraction, on purpose: this is the refactor, not the fix.
+ * The exemption is ANNUAL, and this route sells units every year to fund the
+ * payouts, so it is used every year. The page used to apply it once, to the
+ * terminal gain, which overstated the tax across twenty years of withdrawals.
  */
 export const LTCG_RATE_PCT = 12.5;
 export const LTCG_EXEMPTION = 125000;
@@ -211,6 +208,19 @@ export interface ReplicationResult {
   };
 }
 
+/**
+ * A shortfall smaller than this is not a missed payment.
+ *
+ * The gross-up is exact in algebra and not in floating point, so `delivered`
+ * lands a fraction of a paisa either side of the promised payout. Without a
+ * tolerance, a residue of 1e-9 counted as a missed instalment and stamped a
+ * year on it: the engine reported a policy running out in year 12 when it
+ * really ran out in year 15, and the reported year jumped around with the
+ * return rate while the total unpaid stayed perfectly monotone - which is what
+ * gave it away. One rupee, because rupees are the resolution the page prints.
+ */
+const MISSED_PAYMENT_TOLERANCE = 1;
+
 /** The last year in which money moves either way. */
 export function horizonOf(inputs: PolicyInputs): { payoutEndYear: number; totalYears: number } {
   const payoutEndYear = inputs.payoutStartYear + inputs.payoutYears - 1;
@@ -285,36 +295,86 @@ export function replicate(
   const infl = inputs.inflationRate / 100;
 
   let balance = 0;
+  /**
+   * What has been paid in and not yet sold. Tracked separately from
+   * `capitalInvested` because every withdrawal consumes some of it: the SWP
+   * engine's convention (swpWorker), where the gain in a sale is proportional
+   * to the unrealised gain in the fund at the time of it.
+   */
+  let costBasis = 0;
   let capitalInvested = 0;
   let exhaustedInYear: number | null = null;
   let unfundedPayout = 0;
   let unfundedPayoutReal = 0;
+  let taxDrag = 0;
+
+  const rate = inputs.ltcgRatePct / 100;
 
   for (const row of ledger) {
     const investedThisYear = row.year <= inputs.ppt ? investableCapital : 0;
     capitalInvested += investedThisYear;
+    costBasis += investedThisYear;
 
     balance += investedThisYear;
     balance *= 1 + annualRatePct / 100;
 
-    // Pay what there is. A later premium can refill the pot and the payments
-    // resume, which is why this tracks a total rather than stopping the walk.
-    const paid = Math.min(balance, row.payoutIn);
-    const missed = row.payoutIn - paid;
-    balance -= paid;
+    // A fresh exemption every year. That is the whole of the fix: the page used
+    // to apply one ₹1.25 lakh exemption to a single terminal gain, while a real
+    // investor funding twenty years of income out of a fund uses it twenty
+    // times.
+    let exemptionLeft = taxGains ? inputs.ltcgExemption : Infinity;
 
-    if (missed > 0) {
+    if (row.payoutIn > 0 && balance > 0) {
+      const gainRatio = Math.max(0, balance - costBasis) / balance;
+
+      // THE WITHDRAWAL IS GROSSED UP, not netted down.
+      //
+      // The SWP engine takes the tax OUT of the paycheck, because there the
+      // paycheck is what the retiree chose to draw. Here the payout is a
+      // PROMISE - the whole page rests on both routes paying the identical
+      // income - so the fund must sell enough to hand over the promised figure
+      // AFTER tax. Netting down would quietly pay the reader less than the
+      // policy did and still call the two comparable.
+      const want = grossUpForTax(row.payoutIn, gainRatio, rate, exemptionLeft);
+      const sold = Math.min(want, balance);
+
+      const realisedGain = sold * gainRatio;
+      const taxable = Math.max(0, realisedGain - exemptionLeft);
+      const tax = taxable * rate;
+      exemptionLeft = Math.max(0, exemptionLeft - realisedGain);
+
+      const delivered = sold - tax;
+      const paid = Math.min(delivered, row.payoutIn);
+      const missed = row.payoutIn - paid;
+
+      taxDrag += tax;
+      balance -= sold;
+      costBasis = Math.max(0, costBasis - sold * (1 - gainRatio));
+
+      if (missed > MISSED_PAYMENT_TOLERANCE) {
+        if (exhaustedInYear === null) exhaustedInYear = row.year;
+        unfundedPayout += missed;
+        unfundedPayoutReal += missed / Math.pow(1 + infl, row.year);
+      }
+    } else if (row.payoutIn > 0) {
+      // Nothing left to sell.
       if (exhaustedInYear === null) exhaustedInYear = row.year;
-      unfundedPayout += missed;
-      unfundedPayoutReal += missed / Math.pow(1 + infl, row.year);
+      unfundedPayout += row.payoutIn;
+      unfundedPayoutReal += row.payoutIn / Math.pow(1 + infl, row.year);
     }
-  }
 
-  let taxDrag = 0;
-  if (taxGains && balance > 0) {
-    const taxableGain = Math.max(0, balance - capitalInvested - inputs.ltcgExemption);
-    taxDrag = taxableGain * (inputs.ltcgRatePct / 100);
-    balance -= taxDrag;
+    // The last year: whatever is left is sold, because the comparison is
+    // against a maturity benefit the policy hands over in cash. Comparing a
+    // pre-tax fund balance with a post-tax policy payout would flatter DIY.
+    // Any exemption the year's withdrawals did not use is still available.
+    if (taxGains && row.year === ledger[ledger.length - 1].year && balance > 0) {
+      const terminalGain = Math.max(0, balance - costBasis);
+      const taxable = Math.max(0, terminalGain - exemptionLeft);
+      const tax = taxable * rate;
+      taxDrag += tax;
+      balance -= tax;
+      costBasis = Math.max(0, balance);
+    }
   }
 
   const { totalYears } = horizonOf(inputs);
@@ -357,6 +417,38 @@ export function verdictFor(route: RouteResult): RouteVerdict {
     amount: route.finalBalance,
     amountReal: route.finalBalanceReal,
   };
+}
+
+/**
+ * How much must be SOLD to hand over `want` rupees after capital gains tax.
+ *
+ * Selling W realises W×g of gain, of which everything above the remaining
+ * exemption E is taxed at r. So the reader receives W − max(0, W·g − E)·r, and
+ * we need that to equal `want`:
+ *
+ *   below the exemption:  W = want
+ *   above it:             W = (want − E·r) / (1 − g·r)
+ *
+ * The first branch is tried first and kept if the sale really does stay inside
+ * the exemption; otherwise the second is exact. `1 − g·r` cannot reach zero at
+ * any real rate — g ≤ 1 and r is 0.125 — but it is guarded anyway, because a
+ * hand-entered tax rate is a number a reader can type.
+ */
+export function grossUpForTax(
+  want: number,
+  gainRatio: number,
+  rate: number,
+  exemptionLeft: number
+): number {
+  if (want <= 0) return 0;
+  if (rate <= 0 || gainRatio <= 0) return want;
+
+  if (want * gainRatio <= exemptionLeft) return want;
+
+  const denominator = 1 - gainRatio * rate;
+  if (denominator <= 0) return Number.POSITIVE_INFINITY;
+
+  return Math.max(want, (want - exemptionLeft * rate) / denominator);
 }
 
 /** What is left of the premium once the replacement cover is paid for. Never negative. */
