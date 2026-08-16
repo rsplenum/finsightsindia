@@ -1,5 +1,5 @@
 import { parseFormattedNumber } from './formatters';
-import type { TaxInput } from './tax';
+import type { HousePropertyInput, TaxInput } from './tax';
 
 /**
  * The tax calculator's one DOM reader.
@@ -35,7 +35,18 @@ const F = {
   sec80c: 'inSec80c',
   sec80d: 'inSec80d',
   sec80ccd1b: 'inSec80ccd',
-  homeLoanInterest: 'inHomeLoan',
+
+  // Head 2 - house property. `inHomeLoan` keeps its id because it is the same
+  // question the reader was always being asked; what changed is where the
+  // answer goes. It used to be deducted from gross total income like a
+  // Chapter VI-A item. It is s.24(b) interest, and it belongs to a head.
+  hpKind: 'inHpKind',
+  hpRent: 'inHpRent',
+  hpMunicipalTaxes: 'inHpMunicipalTaxes',
+  hpInterest: 'inHomeLoan',
+
+  // Head 3 - business or profession.
+  businessProfit: 'inBusinessProfit',
 } as const;
 
 /**
@@ -55,11 +66,14 @@ export const MONEY_FIELD_IDS: readonly string[] = [
   F.sec80c,
   F.sec80d,
   F.sec80ccd1b,
-  F.homeLoanInterest,
+  F.hpInterest,
+  F.hpRent,
+  F.hpMunicipalTaxes,
+  F.businessProfit,
 ];
 
 /** The non-money controls, which fire `change` rather than blur. */
-export const CHOICE_FIELD_IDS: readonly string[] = [F.ageBracket, F.isMetro];
+export const CHOICE_FIELD_IDS: readonly string[] = [F.ageBracket, F.isMetro, F.hpKind];
 
 const el = (id: string) => document.getElementById(id) as HTMLInputElement | null;
 
@@ -113,6 +127,21 @@ const ageBracket = (): AgeBracket => {
 const isMetro = (): boolean =>
   (document.getElementById(F.isMetro) as HTMLSelectElement | null)?.value === 'true';
 
+const HP_KINDS = ['none', 'selfOccupied', 'letOut'] as const;
+
+/**
+ * Which house property chip is open, if any.
+ *
+ * Defaults to `selfOccupied` rather than `none` so that the interest field the
+ * page has always had keeps working when the chip UI is not yet on the page.
+ * The moment the chips ship this reads whatever the reader chose.
+ */
+const housePropertyKind = (): HousePropertyInput['kind'] => {
+  const v = (document.getElementById(F.hpKind) as HTMLSelectElement | null)?.value;
+  if ((HP_KINDS as readonly string[]).includes(v ?? '')) return v as HousePropertyInput['kind'];
+  return 'selfOccupied';
+};
+
 /** Read the one true input set. Every surface on the page goes through this. */
 export function readTaxInputs(): TaxInput {
   return {
@@ -125,12 +154,20 @@ export function readTaxInputs(): TaxInput {
     rentPaid: money(F.rentPaid),
     isMetro: isMetro(),
 
+    houseProperty: {
+      kind: housePropertyKind(),
+      annualRent: money(F.hpRent),
+      municipalTaxes: money(F.hpMunicipalTaxes),
+      interest: money(F.hpInterest),
+    },
+
+    business: { netProfit: money(F.businessProfit) },
+
     // The statutory caps are the engine's business, not the form's. It already
     // applies them, and applying them here as well would be sol-038's shape:
     // one rule, two places, and a cap that changes in one Budget and one file.
     sec80c: money(F.sec80c),
     sec80d: money(F.sec80d),
     sec80ccd1b: money(F.sec80ccd1b),
-    homeLoanInterest: money(F.homeLoanInterest),
   };
 }

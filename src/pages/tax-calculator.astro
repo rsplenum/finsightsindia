@@ -160,6 +160,23 @@ import SectionTitle from '../components/SectionTitle.astro';
 										<td class="py-2 text-right font-mono text-navy-400">-</td>
 										<td class="py-2 text-right font-mono" id="brOldDed">0</td>
 									</tr>
+									<!--
+										House property is a HEAD, not a deduction. It carries its own
+										row because the loan interest used to be netted off inside
+										"Itemized Deductions", and once it moved head the table would
+										have stopped adding up - the taxable income no longer followed
+										from the rows on screen (dd-009/do-1).
+									-->
+									<tr>
+										<td class="py-2">Income from House Property</td>
+										<td class="py-2 text-right font-mono" id="brNewHp">0</td>
+										<td class="py-2 text-right font-mono" id="brOldHp">0</td>
+									</tr>
+									<tr id="brHpCarryRow" class="hidden">
+										<td class="py-2 pl-4 text-navy-500 dark:text-navy-400">↳ loss carried forward, not used this year</td>
+										<td class="py-2 text-right font-mono text-navy-500" id="brNewHpCarry">0</td>
+										<td class="py-2 text-right font-mono text-navy-500" id="brOldHpCarry">0</td>
+									</tr>
 									<tr>
 										<td class="py-2">Standard Deduction</td>
 										<td class="py-2 text-right font-mono" id="brNewStd">0</td>
@@ -258,6 +275,26 @@ import SectionTitle from '../components/SectionTitle.astro';
         
         setHtml('brOldExempt', formatNegative(result.oldRegime.exemptions));
         setHtml('brOldDed', formatNegative(result.oldRegime.deductions));
+
+        // What the head actually contributed: its income if positive, or only
+        // the part of its loss the set-off rules allowed. Showing the full loss
+        // here would be a figure that never reached the taxable income.
+        const hpContribution = (h: typeof result.newRegime.heads) =>
+            h.housePropertyIncome >= 0 ? formatRupee(h.housePropertyIncome) : formatNegative(h.housePropertySetOff);
+        setHtml('brNewHp', hpContribution(result.newRegime.heads));
+        setHtml('brOldHp', hpContribution(result.oldRegime.heads));
+
+        // The unused part of a loss is stated rather than dropped. Under the new
+        // regime that is the WHOLE loss - s.115BAC allows none of it against
+        // other heads - and a reader comparing the columns deserves to see why
+        // the two differ by more than the deductions explain.
+        const carry = Math.max(
+            result.newRegime.heads.housePropertyCarriedForward,
+            result.oldRegime.heads.housePropertyCarriedForward
+        );
+        document.getElementById('brHpCarryRow')?.classList.toggle('hidden', carry <= 0);
+        setHtml('brNewHpCarry', formatRupee(result.newRegime.heads.housePropertyCarriedForward));
+        setHtml('brOldHpCarry', formatRupee(result.oldRegime.heads.housePropertyCarriedForward));
         
         setHtml('brNewStd', formatNegative(result.newRegime.standardDeduction));
         setHtml('brOldStd', formatNegative(result.oldRegime.standardDeduction));
