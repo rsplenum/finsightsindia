@@ -106,6 +106,167 @@ describe('India Tax Engine - the breakdown must reconcile', () => {
   }
 });
 
+describe('India Tax Engine - loss set-off and carry-forward', () => {
+  const losses = (over: Partial<TaxInput['losses']>): Partial<TaxInput> => ({
+    losses: { ...base.losses, ...over },
+  });
+  const gains = (over: Partial<TaxInput['capitalGains']>): Partial<TaxInput> => ({
+    capitalGains: { ...base.capitalGains, ...over },
+  });
+
+  it('a capital loss can NEVER touch salary, however large', () => {
+    // The rule readers most often get wrong. A 10 lakh capital loss beside a
+    // 15 lakh salary moves the bill by nothing at all, and the engine says so
+    // explicitly rather than leaving the reader to notice the absence.
+    const plain = calculateIndiaTaxEngine(salary(1500000));
+    const withLoss = calculateIndiaTaxEngine(salary(1500000, losses({ longTermLoss: 1000000 })));
+    expect(withLoss.newRegime.totalTax).toBe(plain.newRegime.totalTax);
+    expect(withLoss.newRegime.losses.capitalLossBarredFromOtherHeads).toBe(true);
+    expect(withLoss.newRegime.losses.longTerm.carriedForward).toBe(1000000);
+  });
+
+  it('a long-term loss goes to s.112 gains BEFORE s.112A, to spare the exemption', () => {
+    // Both are taxed at 12.5%, so the ORDER only matters because 112A gains
+    // carry their own Rs 1.25 lakh exemption. Spending the loss there first
+    // would waste it on income that was going to be exempt anyway.
+    const r = calculateIndiaTaxEngine({
+      ...base,
+      ...gains({ ltcg112: 300000, ltcg112A: 300000 }),
+      ...losses({ longTermLoss: 300000 }),
+    });
+    const d = r.newRegime.capitalGains;
+    expect(d.ltcg112.gain).toBe(0); // the loss landed here
+    expect(d.ltcg112A.gain).toBe(300000); // and left this alone
+    expect(d.ltcg112A.ownExemption).toBe(125000); // so the exemption still works
+  });
+
+  it('a short-term loss goes to the dearest gain first', () => {
+    // Short-term losses may meet either kind, so they go to the 20% bucket
+    // before the 12.5% ones.
+    const r = calculateIndiaTaxEngine({
+      ...base,
+      ...gains({ stcg111A: 200000, ltcg112: 200000 }),
+      ...losses({ shortTermLoss: 200000 }),
+    });
+    const d = r.newRegime.capitalGains;
+    expect(d.stcg111A.gain).toBe(0);
+    expect(d.ltcg112.gain).toBe(200000);
+  });
+
+  it('a long-term loss may NOT be set against a short-term gain', () => {
+    // The asymmetry: short-term losses are flexible, long-term ones are not.
+    const r = calculateIndiaTaxEngine({
+      ...base,
+      ...gains({ stcg111A: 500000 }),
+      ...losses({ longTermLoss: 500000 }),
+    });
+    expect(r.newRegime.capitalGains.stcg111A.gain).toBe(500000);
+    expect(r.newRegime.losses.longTerm.carriedForward).toBe(500000);
+  });
+
+  it('a business loss may be set against rent and interest, but NOT salary', () => {
+    // s.71. 5L of business loss against 12L of salary and 3L of interest: the
+    // interest goes, the salary does not, and 2L is carried forward.
+    const r = calculateIndiaTaxEngine(
+      salary(1275000, {
+        otherIncome: 300000,
+        business: { ...base.business, netProfit: -500000 },
+      })
+    );
+    const n = r.newRegime;
+    expect(n.heads.salary).toBe(1200000);
+    expect(n.slabIncome).toBe(1200000); // the 3L of interest was absorbed
+    expect(n.losses.business.used).toBe(300000);
+    expect(n.losses.business.carriedForward).toBe(200000);
+  });
+
+  it('a business loss CAN reach capital gains when the slab heads run out', () => {
+    // s.71 excludes salary and nothing else, so gains are fair game - and the
+    // dearest bucket goes first, as everywhere else.
+    const r = calculateIndiaTaxEngine({
+      ...base,
+      ...gains({ stcg111A: 400000 }),
+      business: { ...base.business, netProfit: -300000 },
+    });
+    expect(r.newRegime.capitalGains.stcg111A.gain).toBe(100000);
+    expect(r.newRegime.losses.business.used).toBe(300000);
+    expect(r.newRegime.losses.business.carriedForward).toBe(0);
+  });
+
+  it('a brought-forward business loss meets business income ONLY', () => {
+    // s.72 is stricter than s.71: once carried forward, a business loss can no
+    // longer reach the other heads at all.
+    const r = calculateIndiaTaxEngine(
+      salary(1275000, {
+        otherIncome: 500000,
+        ...losses({ broughtForwardBusiness: 400000 }),
+      })
+    );
+    // No business income this year, so none of it can be used.
+    expect(r.newRegime.losses.business.used).toBe(0);
+    expect(r.newRegime.losses.business.carriedForward).toBe(400000);
+    expect(r.newRegime.slabIncome).toBe(1700000); // interest untouched
+
+    const withBusiness = calculateIndiaTaxEngine({
+      ...base,
+      business: { ...base.business, netProfit: 1000000 },
+      ...losses({ broughtForwardBusiness: 400000 }),
+    });
+    expect(withBusiness.newRegime.losses.business.used).toBe(400000);
+    expect(withBusiness.newRegime.slabIncome).toBe(600000);
+  });
+
+  it('a brought-forward house property loss meets house property income ONLY', () => {
+    const r = calculateIndiaTaxEngine(
+      salary(1275000, {
+        houseProperty: { kind: 'letOut', annualRent: 500000, municipalTaxes: 0, interest: 0 },
+        ...losses({ broughtForwardHouseProperty: 200000 }),
+      })
+    );
+    // Rent 5L less 30% = 3.5L of house property income; 2L of it absorbed.
+    expect(r.oldRegime.losses.houseProperty.used).toBe(200000);
+    expect(r.oldRegime.losses.houseProperty.carriedForward).toBe(0);
+  });
+
+  it('what cannot be used this year is carried forward, not destroyed', () => {
+    // The invariant that matters across every loss: available = used + carried.
+    const r = calculateIndiaTaxEngine(
+      salary(800000, {
+        ...gains({ stcg111A: 100000, ltcg112A: 50000 }),
+        business: { ...base.business, netProfit: -900000 },
+        ...losses({
+          shortTermLoss: 400000,
+          longTermLoss: 300000,
+          broughtForwardBusiness: 250000,
+          broughtForwardShortTerm: 150000,
+        }),
+      })
+    );
+    for (const regime of [r.newRegime, r.oldRegime]) {
+      for (const k of ['shortTerm', 'longTerm', 'business', 'houseProperty'] as const) {
+        const u = regime.losses[k];
+        expect(u.used + u.carriedForward).toBe(u.available);
+        expect(u.used).toBeGreaterThanOrEqual(0);
+        expect(u.carriedForward).toBeGreaterThanOrEqual(0);
+      }
+    }
+  });
+
+  it('a loss never turns tax negative, and never manufactures a refund', () => {
+    const r = calculateIndiaTaxEngine(
+      salary(400000, {
+        business: { ...base.business, netProfit: -5000000 },
+        ...losses({ shortTermLoss: 5000000, broughtForwardHouseProperty: 5000000 }),
+      })
+    );
+    for (const regime of [r.newRegime, r.oldRegime]) {
+      expect(regime.totalTax).toBeGreaterThanOrEqual(0);
+      expect(regime.slabIncome).toBeGreaterThanOrEqual(0);
+      expect(regime.taxableIncome).toBeGreaterThanOrEqual(0);
+    }
+  });
+});
+
 describe('India Tax Engine - presumptive taxation, 44AD and 44ADA', () => {
   const biz = (over: Partial<TaxInput['business']>): Partial<TaxInput> => ({
     business: {

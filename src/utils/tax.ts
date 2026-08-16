@@ -156,6 +156,48 @@ export interface CapitalGainsDetail {
     basicExemptionAbsorbed: number;
 }
 
+/**
+ * Losses - this year's, and the ones brought forward from earlier years.
+ *
+ * The Act keeps three rules apart and readers routinely merge them:
+ *   INTRA-HEAD (s.70)  a loss against income of its own kind.
+ *   INTER-HEAD (s.71)  what is left, against other heads - with a business loss
+ *                      barred from salary, and a capital loss barred from
+ *                      everything outside capital gains.
+ *   CARRY-FORWARD      what still remains, for up to eight years, and only
+ *                      against its own kind from then on.
+ */
+export interface LossesInput {
+    /** This year's capital losses. */
+    shortTermLoss: number;
+    longTermLoss: number;
+    /** Brought forward from earlier years - s.72, s.74, s.71B. */
+    broughtForwardBusiness: number;
+    broughtForwardHouseProperty: number;
+    broughtForwardShortTerm: number;
+    broughtForwardLongTerm: number;
+}
+
+/** One loss: what came in, what was used, what goes to next year. */
+export interface LossUse {
+    available: number;
+    used: number;
+    carriedForward: number;
+}
+
+export interface LossDetail {
+    shortTerm: LossUse;
+    longTerm: LossUse;
+    business: LossUse;
+    houseProperty: LossUse;
+    /**
+     * A capital loss can NEVER be set against salary, rent or interest - only
+     * against capital gains. Surfaced so the screen can say so, because a
+     * reader watching a large loss fail to move their bill deserves the reason.
+     */
+    capitalLossBarredFromOtherHeads: boolean;
+}
+
 export interface TaxInput {
     // --- Head 1: Salaries ---
     grossSalary: number;
@@ -175,6 +217,8 @@ export interface TaxInput {
 
     // --- Head 5: Other sources ---
     otherIncome: number;
+
+    losses: LossesInput;
 
     ageBracket: AgeBracket;
 
@@ -233,6 +277,7 @@ export interface TaxRegimeResult {
     /** The part of total income that goes through the slabs. */
     slabIncome: number;
     capitalGains: CapitalGainsDetail;
+    losses: LossDetail;
 
     slabs: SlabDetail[];
     /** Tax from the slabs alone. */
@@ -476,8 +521,17 @@ function computeOldRegimeBaseTax(
  */
 function aggregateHeads(
     input: TaxInput,
-    regime: Regime
-): { heads: HeadDetail; gti: number; grossIncome: number } {
+    regime: Regime,
+    netGains: CapitalGainsInput
+): {
+    heads: HeadDetail;
+    gti: number;
+    grossIncome: number;
+    /** Business loss with nowhere left to go among the slab heads. */
+    businessLossRemaining: number;
+    businessUse: LossUse;
+    housePropertyUse: LossUse;
+} {
     const stdDeduction =
         input.grossSalary > 0
             ? Math.min(input.grossSalary, regime === 'new' ? STD_DEDUCTION_NEW : STD_DEDUCTION_OLD)
@@ -489,42 +543,55 @@ function aggregateHeads(
     const salary = Math.max(0, input.grossSalary - stdDeduction - hra);
 
     const businessDetail = businessProfitFor(input.business);
-    const business = Math.max(0, businessDetail.taxedProfit);
-    const businessLossNotSetOff = Math.max(0, -businessDetail.taxedProfit);
     const otherSources = input.otherIncome;
     const hpIncome = computeHousePropertyIncome(input.houseProperty, regime);
-
     // Short-term gains that are not s.111A are ordinary income, so they belong
     // in the slab pot with everything else rather than in the special-rate one.
-    const slabTaxedGains = Math.max(0, input.capitalGains.stcgSlab);
+    const slabTaxedGains = Math.max(0, netGains.stcgSlab);
 
-    const otherHeads = salary + business + otherSources + slabTaxedGains;
+    // --- INTRA-HEAD (s.70). A brought-forward loss may only ever meet income
+    // of its own kind, so these happen before anything crosses a head. ---
+    const bfHp = Math.max(0, input.losses.broughtForwardHouseProperty);
+    const bfHpUsed = hpIncome > 0 ? Math.min(bfHp, hpIncome) : 0;
+    const hpAfterBf = hpIncome - bfHpUsed;
 
-    let setOff = 0;
-    let carriedForward = 0;
-    let gti: number;
+    const bfBiz = Math.max(0, input.losses.broughtForwardBusiness);
+    const bizRaw = businessDetail.taxedProfit;
+    const bfBizUsed = bizRaw > 0 ? Math.min(bfBiz, bizRaw) : 0;
+    const bizAfterBf = bizRaw - bfBizUsed;
 
-    if (hpIncome < 0) {
-        const loss = -hpIncome;
-        const cap = regime === 'new' ? 0 : HP_LOSS_SETOFF_CAP;
-        // The set-off cannot exceed the cap, and cannot exceed the income there
-        // is to absorb it either.
-        setOff = Math.max(0, Math.min(loss, cap, otherHeads));
-        carriedForward = loss - setOff;
-        gti = otherHeads - setOff;
-    } else {
-        gti = otherHeads + hpIncome;
-    }
+    const bizPositive = Math.max(0, bizAfterBf);
+    const bizLoss = Math.max(0, -bizAfterBf);
+    const hpPositive = Math.max(0, hpAfterBf);
+    const hpLoss = Math.max(0, -hpAfterBf);
+
+    // --- INTER-HEAD (s.71) ---
+
+    // A business loss may go against any head EXCEPT salary. That bar is the
+    // whole reason this is computed separately from the house property one,
+    // which has no such restriction.
+    let nonSalaryIncome = hpPositive + otherSources + slabTaxedGains;
+    const bizLossUsedHere = Math.min(bizLoss, nonSalaryIncome);
+    nonSalaryIncome -= bizLossUsedHere;
+    const businessLossRemaining = bizLoss - bizLossUsedHere;
+
+    // A house property loss may go against ANY head including salary, but only
+    // up to Rs 2 lakh a year (s.71(3A)) - and under s.115BAC, not at all.
+    const cap = regime === 'new' ? 0 : HP_LOSS_SETOFF_CAP;
+    const availableForHp = salary + bizPositive + nonSalaryIncome;
+    const hpSetOff = Math.max(0, Math.min(hpLoss, cap, availableForHp));
+
+    const gti = salary + bizPositive + nonSalaryIncome - hpSetOff;
 
     return {
         heads: {
             salary,
             housePropertyIncome: hpIncome,
-            housePropertySetOff: setOff,
-            housePropertyCarriedForward: carriedForward,
-            business,
+            housePropertySetOff: hpSetOff,
+            housePropertyCarriedForward: hpLoss - hpSetOff + (bfHp - bfHpUsed),
+            business: bizPositive,
             businessDetail,
-            businessLossNotSetOff,
+            businessLossNotSetOff: businessLossRemaining,
             otherSources,
         },
         gti: Math.max(0, gti),
@@ -535,12 +602,94 @@ function aggregateHeads(
         grossIncome:
             input.grossSalary +
             hpIncome +
-            business +
+            Math.max(0, bizRaw) +
             otherSources +
             slabTaxedGains +
-            Math.max(0, input.capitalGains.stcg111A) +
-            Math.max(0, input.capitalGains.ltcg112A) +
-            Math.max(0, input.capitalGains.ltcg112),
+            Math.max(0, netGains.stcg111A) +
+            Math.max(0, netGains.ltcg112A) +
+            Math.max(0, netGains.ltcg112),
+        businessLossRemaining,
+        businessUse: {
+            available: bfBiz + bizLoss,
+            used: bfBizUsed + bizLossUsedHere,
+            carriedForward: bfBiz - bfBizUsed + businessLossRemaining,
+        },
+        housePropertyUse: {
+            available: bfHp + hpLoss,
+            used: bfHpUsed + hpSetOff,
+            carriedForward: bfHp - bfHpUsed + (hpLoss - hpSetOff),
+        },
+    };
+}
+
+/**
+ * Set capital losses against capital gains - s.70 for this year's, s.74 for
+ * the ones brought forward.
+ *
+ * TWO ORDERING RULES, both chosen to give the reader the smaller bill, because
+ * the Act lets the assessee choose and any other order hands them a charge the
+ * law does not require:
+ *
+ *   A SHORT-TERM loss may be set against either kind of gain, so it goes to the
+ *   dearest first: 20% s.111A gains before 12.5% long-term ones.
+ *
+ *   A LONG-TERM loss may only be set against long-term gains, and it goes to
+ *   s.112 BEFORE s.112A - because s.112A gains carry their own Rs 1.25 lakh
+ *   exemption, and spending a loss on income that was going to be exempt anyway
+ *   wastes it.
+ *
+ * SIMPLIFICATION, STATED. A short-term loss is set against the flat-rate 20%
+ * gains before slab-rate short-term gains. For a reader in the 30% bracket the
+ * slab gains are actually the dearer ones, so this can leave a little tax on
+ * the table. Doing better needs the marginal rate, which is not known until
+ * after the set-off that determines it - a circularity worth solving only if it
+ * turns out to matter. The direction is stated rather than assumed: this
+ * OVERSTATES the bill for a 30%-bracket reader with both kinds of short-term
+ * gain, never understates it.
+ */
+function applyCapitalLosses(
+    cg: CapitalGainsInput,
+    losses: LossesInput
+): { gains: CapitalGainsInput; shortTerm: LossUse; longTerm: LossUse } {
+    const buckets = {
+        stcg111A: Math.max(0, cg.stcg111A),
+        stcgSlab: Math.max(0, cg.stcgSlab),
+        ltcg112: Math.max(0, cg.ltcg112),
+        ltcg112A: Math.max(0, cg.ltcg112A),
+    };
+
+    const spend = (pool: number, order: (keyof typeof buckets)[]): number => {
+        for (const k of order) {
+            if (pool <= 0) break;
+            const used = Math.min(pool, buckets[k]);
+            buckets[k] -= used;
+            pool -= used;
+        }
+        return pool;
+    };
+
+    const stAvailable =
+        Math.max(0, losses.shortTermLoss) + Math.max(0, losses.broughtForwardShortTerm);
+    const ltAvailable =
+        Math.max(0, losses.longTermLoss) + Math.max(0, losses.broughtForwardLongTerm);
+
+    // Long-term first: it is the pickier of the two, so letting the flexible
+    // short-term loss go first could strand it against gains it cannot touch.
+    const ltLeft = spend(ltAvailable, ['ltcg112', 'ltcg112A']);
+    const stLeft = spend(stAvailable, ['stcg111A', 'stcgSlab', 'ltcg112', 'ltcg112A']);
+
+    return {
+        gains: { ...buckets },
+        shortTerm: {
+            available: stAvailable,
+            used: stAvailable - stLeft,
+            carriedForward: stLeft,
+        },
+        longTerm: {
+            available: ltAvailable,
+            used: ltAvailable - ltLeft,
+            carriedForward: ltLeft,
+        },
     };
 }
 
@@ -715,7 +864,29 @@ function taxCapitalGains(
 
 function computeRegime(input: TaxInput, regime: Regime): TaxRegimeResult {
     const isNew = regime === 'new';
-    const { heads, gti, grossIncome } = aggregateHeads(input, regime);
+
+    // Capital losses meet capital gains first - s.70 and s.74 - so every later
+    // step sees the gains that actually survived.
+    const netted = applyCapitalLosses(input.capitalGains, input.losses);
+    const agg = aggregateHeads(input, regime, netted.gains);
+    const { heads, gti, grossIncome } = agg;
+
+    // s.71 lets a business loss reach capital gains too, so whatever the slab
+    // heads could not absorb comes here rather than being carried forward
+    // early. Dearest gain first, for the same reason as everywhere else.
+    const gainsAfterBusinessLoss = { ...netted.gains };
+    let bizLeft = agg.businessLossRemaining;
+    for (const k of ['stcg111A', 'ltcg112', 'ltcg112A'] as const) {
+        if (bizLeft <= 0) break;
+        const used = Math.min(bizLeft, gainsAfterBusinessLoss[k]);
+        gainsAfterBusinessLoss[k] -= used;
+        bizLeft -= used;
+    }
+    const businessUse: LossUse = {
+        available: agg.businessUse.available,
+        used: agg.businessUse.used + (agg.businessLossRemaining - bizLeft),
+        carriedForward: agg.businessUse.carriedForward - (agg.businessLossRemaining - bizLeft),
+    };
 
     const stdDeduction =
         input.grossSalary > 0
@@ -736,7 +907,7 @@ function computeRegime(input: TaxInput, regime: Regime): TaxRegimeResult {
     const slabIncome = round10(Math.max(0, gti - chapterVIA));
 
     const cg = taxCapitalGains(
-        input.capitalGains,
+        gainsAfterBusinessLoss,
         basicExemptionLimit(regime, input.ageBracket) - slabIncome
     );
 
@@ -804,6 +975,16 @@ function computeRegime(input: TaxInput, regime: Regime): TaxRegimeResult {
         taxableIncome,
         slabIncome,
         capitalGains: cg,
+        losses: {
+            shortTerm: netted.shortTerm,
+            longTerm: netted.longTerm,
+            business: businessUse,
+            houseProperty: agg.housePropertyUse,
+            // Surfaced so the screen can explain a large loss that moved
+            // nothing: s.71 bars a capital loss from every head but its own.
+            capitalLossBarredFromOtherHeads:
+                netted.shortTerm.carriedForward > 0 || netted.longTerm.carriedForward > 0,
+        },
         slabs: base.slabs,
         slabTax: base.baseTax,
         specialRateTax: cg.specialRateTax,
@@ -849,6 +1030,14 @@ export const EMPTY_TAX_INPUT: TaxInput = {
         basis: 'books',
     },
     capitalGains: { stcg111A: 0, ltcg112A: 0, ltcg112: 0, stcgSlab: 0 },
+    losses: {
+        shortTermLoss: 0,
+        longTermLoss: 0,
+        broughtForwardBusiness: 0,
+        broughtForwardHouseProperty: 0,
+        broughtForwardShortTerm: 0,
+        broughtForwardLongTerm: 0,
+    },
     otherIncome: 0,
     ageBracket: 'below60',
     sec80c: 0,

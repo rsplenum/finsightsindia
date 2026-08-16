@@ -1,6 +1,6 @@
 # FinSight — Launch Gate
 
-**Not live. No domain.** 308 tests green · 38 commits on `fix/learning-loop-integrity-and-calculator-correctness`
+**Not live. No domain.** 365 tests green · 46 commits on `fix/learning-loop-integrity-and-calculator-correctness`
 
 This is a list, not a document. Explanations live in commit messages, `design-doctrine.json` and `engineering-solutions.json`. This says what is done and what is next.
 
@@ -139,7 +139,7 @@ Scope, settled 15 Aug: the SIP page inherits T2 whole — shared engine, `planne
 - [x] **sol-041** — a typed maturity of 0 no longer becomes ₹10 lakh, and `formatShortRupee` stopped printing paise
 - [x] **The whole form now answers as you type** — `setupFormattingField` takes an opt-in `live` flag, debounced. Opt-in on purpose: its other 13 callers sit on pages where one recompute is a 10,000-path simulation. sol-042
 
-## T6 — Income tax calculator (incl. your T10) · 6/9
+## T6 — Income tax calculator (incl. your T10) · 8/9
 
 - [x] Double-counted base tax fixed `0dd3950`
 - [x] Test coverage restored — 3 failing → 49 passing `0dd3950`
@@ -147,8 +147,8 @@ Scope, settled 15 Aug: the SIP page inherits T2 whole — shared engine, `planne
 - [x] **One input reader — `taxInputs.ts`** `f598870`. Added to this list, not previously on it: the page read eleven fields inline, the sol-026/sol-039 shape, latent only because there is one surface. Every remaining item adds one. No live sol-041 bug here — all fallbacks were 0, so zero and empty genuinely coincided — but the distinction is built in, and it is the rule for every money field rather than opt-in
 - [x] **Multiple income heads** `8c3ed1a` — `tax.ts` is structured by s.14. Found on the way: the home loan field was a *house property* item (s.24(b)) being deducted like a Chapter VI-A one. Same rupees for the simple case, which is why it never showed; it would have double-counted the moment the head existed. Self-occupied interest is old-regime only — s.115BAC withdraws it entirely, which is the biggest single reason a homeowner stays on the old regime. Losses that the caps disallow are *reported*, not swallowed
 - [x] **STCG/LTCG separated, with the 87A interaction** — four buckets by rate, ₹1.25L exemption, unused basic exemption absorbed dearest-first, Chapter VI-A barred against gains, surcharge on gains capped at 15%. **The 87A rule was researched, not assumed**: under the new regime the rebate never touches special-rate tax, and the ₹12L threshold is tested EXCLUDING special-rate income — so ₹11L salary + ₹2L STCG keeps its rebate. Reading it the intuitive way would deny the rebate to a great many filers. Two sources, worked example, cited in the code
-- [ ] Presumptive taxation: 44AD and 44ADA
-- [ ] Loss set-off and carry-forward
+- [x] **Presumptive taxation: 44AD and 44ADA** `f6171c3` — 6% on banked turnover / 8% on cash, blended; ceilings 2cr→3cr and 50L→75L when cash is ≤5%. **Both bases are always costed** so the page can show the election adjacently rather than behind a dropdown — dd-006/dont-2, since the actual-vs-deemed difference *is* the lesson. An ineligible election falls back to the books rather than deeming zero profit
+- [x] **Loss set-off and carry-forward** — the three rules kept apart: intra-head (s.70), inter-head (s.71), carry-forward (s.72/74/71B). A capital loss can never touch salary and the engine says so explicitly; a business loss can reach rent, interest *and* capital gains but never salary; brought-forward losses meet their own kind only. Set-off order is dearest-first, and LTCL goes to s.112 before s.112A so the ₹1.25L exemption isn't wasted. Conservation asserted: available = used + carried, on every loss
 - [ ] Progressive disclosure — salaried users never see business fields. **Design settled first, in `TaxAnswer.checks.md`** — entry is one field (gross salary); the heads are additive chips, each ≤2 fields, house property and capital gains split rather than crammed; a chip is not a mode because it adds data rather than hiding half a difference; the regime stays two adjacent columns and never a switch; presumptive is shown adjacently because there the difference *is* the lesson. Answer headlines the monthly bite (dd-010) and the break-even deduction total (dd-008)
 
 ## T7 — Dejargonise · 3/5

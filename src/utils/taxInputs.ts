@@ -61,6 +61,15 @@ const F = {
   cgLtcg112A: 'inCgLtcgEquity',
   cgLtcg112: 'inCgLtcgOther',
   cgStcgSlab: 'inCgStcgOther',
+
+  // Losses. The deepest layer, and the only genuinely retrospective input on
+  // the page - the reader needs last year's return in front of them.
+  lossStcCurrent: 'inLossStcgCurrent',
+  lossLtcCurrent: 'inLossLtcgCurrent',
+  lossBfBusiness: 'inLossBfBusiness',
+  lossBfHouseProperty: 'inLossBfHouseProperty',
+  lossBfShortTerm: 'inLossBfShortTerm',
+  lossBfLongTerm: 'inLossBfLongTerm',
 } as const;
 
 /**
@@ -90,6 +99,12 @@ export const MONEY_FIELD_IDS: readonly string[] = [
   F.cgLtcg112A,
   F.cgLtcg112,
   F.cgStcgSlab,
+  F.lossStcCurrent,
+  F.lossLtcCurrent,
+  F.lossBfBusiness,
+  F.lossBfHouseProperty,
+  F.lossBfShortTerm,
+  F.lossBfLongTerm,
 ];
 
 /** The non-money controls, which fire `change` rather than blur. */
@@ -214,6 +229,15 @@ export function readTaxInputs(): TaxInput {
       // stated on the screen rather than assumed silently.
       digitalSharePct: pct(F.businessDigitalShare, 100),
       basis: businessBasis(),
+    },
+
+    losses: {
+      shortTermLoss: money(F.lossStcCurrent),
+      longTermLoss: money(F.lossLtcCurrent),
+      broughtForwardBusiness: money(F.lossBfBusiness),
+      broughtForwardHouseProperty: money(F.lossBfHouseProperty),
+      broughtForwardShortTerm: money(F.lossBfShortTerm),
+      broughtForwardLongTerm: money(F.lossBfLongTerm),
     },
 
     capitalGains: {
