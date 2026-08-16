@@ -29,10 +29,68 @@ export interface HousePropertyInput {
     interest: number;
 }
 
-/** Head 3 - profits and gains of business or profession. Presumptive is next. */
+/**
+ * Head 3 - profits and gains of business or profession.
+ *
+ * Presumptive taxation is an ELECTION, not a fact about the reader, so the
+ * engine computes every basis that is open to them and lets the page show them
+ * side by side. The difference between declaring actual profit and declaring a
+ * deemed one is the whole lesson for a small business (dd-006/dont-2), so it
+ * must not sit behind a dropdown that shows one answer at a time.
+ */
 export interface BusinessInput {
     /** Net profit as per books. May be negative. */
     netProfit: number;
+    /** Business turnover, for s.44AD. */
+    turnover: number;
+    /** Professional gross receipts, for s.44ADA. */
+    professionalReceipts: number;
+    /**
+     * Share of receipts taken through banking or prescribed electronic modes,
+     * 0-100. It does two jobs: it sets the 44AD rate (6% on the digital part,
+     * 8% on the cash part) and it raises both turnover ceilings when cash is
+     * 5% or less. One field rather than two because the reader thinks of it as
+     * one fact about how they get paid.
+     */
+    digitalSharePct: number;
+    /** Which basis the reader is electing. Both are always computed. */
+    basis: 'books' | '44AD' | '44ADA';
+}
+
+/** s.44AD - 8% of turnover, 6% on whatever came through a bank. */
+export const RATE_44AD_CASH = 0.08;
+export const RATE_44AD_DIGITAL = 0.06;
+/** s.44ADA - half of gross receipts, for the professions in s.44AA(1). */
+export const RATE_44ADA = 0.5;
+/** Ceilings, and the raised ones that apply when cash receipts are <= 5%. */
+export const LIMIT_44AD = 20000000;
+export const LIMIT_44AD_MOSTLY_DIGITAL = 30000000;
+export const LIMIT_44ADA = 5000000;
+export const LIMIT_44ADA_MOSTLY_DIGITAL = 7500000;
+/** Cash may be no more than this share of receipts to earn the raised ceiling. */
+export const CASH_SHARE_FOR_RAISED_LIMIT = 5;
+
+/** One presumptive basis: whether it is open, and what it would deem. */
+export interface PresumptiveDetail {
+    available: boolean;
+    /** The ceiling that applied, given how much came through a bank. */
+    limit: number;
+    /** Turnover or gross receipts, whichever this basis runs on. */
+    receipts: number;
+    /** Blended for 44AD; a flat 50% for 44ADA. */
+    effectiveRate: number;
+    deemedProfit: number;
+    /** Why it is not available, in the reader's words. Empty when it is. */
+    unavailableReason: string;
+}
+
+export interface BusinessDetail {
+    /** What actually entered the computation, on the elected basis. */
+    taxedProfit: number;
+    basis: BusinessInput['basis'];
+    booksProfit: number;
+    ad44: PresumptiveDetail;
+    ada44: PresumptiveDetail;
 }
 
 /**
@@ -150,6 +208,8 @@ export interface HeadDetail {
     /** The part of the loss that could not be used this year. */
     housePropertyCarriedForward: number;
     business: number;
+    /** Every basis costed, so the page can show the election rather than hide it. */
+    businessDetail: BusinessDetail;
     /**
      * A business loss the engine has NOT set off, because inter-head set-off of
      * business losses is the loss item on the gate and is not modelled yet.
@@ -428,8 +488,9 @@ function aggregateHeads(
     // into the other heads would have done.
     const salary = Math.max(0, input.grossSalary - stdDeduction - hra);
 
-    const business = Math.max(0, input.business.netProfit);
-    const businessLossNotSetOff = Math.max(0, -input.business.netProfit);
+    const businessDetail = businessProfitFor(input.business);
+    const business = Math.max(0, businessDetail.taxedProfit);
+    const businessLossNotSetOff = Math.max(0, -businessDetail.taxedProfit);
     const otherSources = input.otherIncome;
     const hpIncome = computeHousePropertyIncome(input.houseProperty, regime);
 
@@ -462,6 +523,7 @@ function aggregateHeads(
             housePropertySetOff: setOff,
             housePropertyCarriedForward: carriedForward,
             business,
+            businessDetail,
             businessLossNotSetOff,
             otherSources,
         },
@@ -480,6 +542,89 @@ function aggregateHeads(
             Math.max(0, input.capitalGains.ltcg112A) +
             Math.max(0, input.capitalGains.ltcg112),
     };
+}
+
+/**
+ * Both presumptive bases, computed whether or not the reader elected them.
+ *
+ * The deemed profit is a FLOOR, not a fixed answer: a reader whose books show
+ * more may declare more, and declaring LESS than the deemed figure is what
+ * costs them the scheme and triggers audit. The page shows both numbers so the
+ * election is visible rather than assumed.
+ */
+export function computePresumptive(b: BusinessInput): {
+    ad44: PresumptiveDetail;
+    ada44: PresumptiveDetail;
+} {
+    const digital = Math.min(100, Math.max(0, b.digitalSharePct));
+    const cashShare = 100 - digital;
+    const mostlyDigital = cashShare <= CASH_SHARE_FOR_RAISED_LIMIT;
+
+    // s.44AD - 6% on what came through a bank, 8% on the rest.
+    const turnover = Math.max(0, b.turnover);
+    const ad44Limit = mostlyDigital ? LIMIT_44AD_MOSTLY_DIGITAL : LIMIT_44AD;
+    const ad44Rate = (digital / 100) * RATE_44AD_DIGITAL + (cashShare / 100) * RATE_44AD_CASH;
+    const ad44Over = turnover > ad44Limit;
+
+    // s.44ADA - half of gross receipts, for the s.44AA(1) professions.
+    const receipts = Math.max(0, b.professionalReceipts);
+    const ada44Limit = mostlyDigital ? LIMIT_44ADA_MOSTLY_DIGITAL : LIMIT_44ADA;
+    const ada44Over = receipts > ada44Limit;
+
+    const inCrore = (n: number) =>
+        n >= 10000000 ? `${n / 10000000} crore` : `${n / 100000} lakh`;
+
+    // A deemed profit is a rupee amount, so it is rounded to one here rather
+    // than carried as a binary residue. A 50/50 split gives a blended rate of
+    // 0.07000000000000001, and Rs 7,00,000.0000000001 of "profit" would be
+    // shown on the comparison card and fed into the slabs. A 1e-9 residue
+    // counting as a real quantity is how sol-040's phantom missed payment
+    // happened; the fix belongs at the source, not in the formatter.
+    const rupees = (n: number) => Math.round(n);
+
+    return {
+        ad44: {
+            available: turnover > 0 && !ad44Over,
+            limit: ad44Limit,
+            receipts: turnover,
+            effectiveRate: ad44Rate,
+            deemedProfit: ad44Over ? 0 : rupees(turnover * ad44Rate),
+            unavailableReason: ad44Over
+                ? `Turnover is above the ${inCrore(ad44Limit)} ceiling for this scheme.`
+                : turnover > 0
+                  ? ''
+                  : 'No business turnover entered.',
+        },
+        ada44: {
+            available: receipts > 0 && !ada44Over,
+            limit: ada44Limit,
+            receipts,
+            effectiveRate: RATE_44ADA,
+            deemedProfit: ada44Over ? 0 : rupees(receipts * RATE_44ADA),
+            unavailableReason: ada44Over
+                ? `Gross receipts are above the ${inCrore(ada44Limit)} ceiling for this scheme.`
+                : receipts > 0
+                  ? ''
+                  : 'No professional receipts entered.',
+        },
+    };
+}
+
+/** The profit that actually goes into the computation, on the elected basis. */
+function businessProfitFor(b: BusinessInput): BusinessDetail {
+    const { ad44, ada44 } = computePresumptive(b);
+    const booksProfit = b.netProfit;
+
+    // An election the reader is not eligible for falls back to the books
+    // rather than silently deeming zero profit on income they really have.
+    let basis = b.basis;
+    if (basis === '44AD' && !ad44.available) basis = 'books';
+    if (basis === '44ADA' && !ada44.available) basis = 'books';
+
+    const taxedProfit =
+        basis === '44AD' ? ad44.deemedProfit : basis === '44ADA' ? ada44.deemedProfit : booksProfit;
+
+    return { taxedProfit, basis, booksProfit, ad44, ada44 };
 }
 
 /** The slab at which tax starts - and the allowance gains can borrow from. */
@@ -696,7 +841,13 @@ export const EMPTY_TAX_INPUT: TaxInput = {
     rentPaid: 0,
     isMetro: false,
     houseProperty: { kind: 'none', annualRent: 0, municipalTaxes: 0, interest: 0 },
-    business: { netProfit: 0 },
+    business: {
+        netProfit: 0,
+        turnover: 0,
+        professionalReceipts: 0,
+        digitalSharePct: 100,
+        basis: 'books',
+    },
     capitalGains: { stcg111A: 0, ltcg112A: 0, ltcg112: 0, stcgSlab: 0 },
     otherIncome: 0,
     ageBracket: 'below60',

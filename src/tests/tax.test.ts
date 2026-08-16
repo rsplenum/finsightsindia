@@ -106,6 +106,123 @@ describe('India Tax Engine - the breakdown must reconcile', () => {
   }
 });
 
+describe('India Tax Engine - presumptive taxation, 44AD and 44ADA', () => {
+  const biz = (over: Partial<TaxInput['business']>): Partial<TaxInput> => ({
+    business: {
+      netProfit: 0,
+      turnover: 0,
+      professionalReceipts: 0,
+      digitalSharePct: 100,
+      basis: 'books',
+      ...over,
+    },
+  });
+
+  it('44AD deems 6% on bank receipts and 8% on cash, blended', () => {
+    // Half through a bank, half in cash: 6% on one half, 8% on the other.
+    const r = calculateIndiaTaxEngine({
+      ...base,
+      ...biz({ turnover: 10000000, digitalSharePct: 50, basis: '44AD' }),
+    });
+    const d = r.newRegime.heads.businessDetail;
+    expect(d.ad44.effectiveRate).toBeCloseTo(0.07, 10);
+    expect(d.ad44.deemedProfit).toBe(700000);
+    expect(d.taxedProfit).toBe(700000);
+  });
+
+  it('all-digital turnover is deemed at 6%, all-cash at 8%', () => {
+    const digital = calculateIndiaTaxEngine({
+      ...base,
+      ...biz({ turnover: 10000000, digitalSharePct: 100, basis: '44AD' }),
+    }).newRegime.heads.businessDetail;
+    const cash = calculateIndiaTaxEngine({
+      ...base,
+      ...biz({ turnover: 10000000, digitalSharePct: 0, basis: '44AD' }),
+    }).newRegime.heads.businessDetail;
+    expect(digital.ad44.deemedProfit).toBe(600000);
+    expect(cash.ad44.deemedProfit).toBe(800000);
+  });
+
+  it('the 44AD ceiling is 2 crore, but 3 crore when cash is 5% or less', () => {
+    // The raised ceiling is the reason the digital share is one field doing two
+    // jobs, and getting the boundary wrong silently disqualifies a real filer.
+    const at25WithCash = calculateIndiaTaxEngine({
+      ...base,
+      ...biz({ turnover: 25000000, digitalSharePct: 90, basis: '44AD' }),
+    }).newRegime.heads.businessDetail;
+    const at25MostlyDigital = calculateIndiaTaxEngine({
+      ...base,
+      ...biz({ turnover: 25000000, digitalSharePct: 95, basis: '44AD' }),
+    }).newRegime.heads.businessDetail;
+
+    expect(at25WithCash.ad44.available).toBe(false);
+    expect(at25WithCash.ad44.limit).toBe(20000000);
+    expect(at25MostlyDigital.ad44.available).toBe(true);
+    expect(at25MostlyDigital.ad44.limit).toBe(30000000);
+  });
+
+  it('44ADA deems half of professional receipts, ceiling 50L / 75L', () => {
+    const r = calculateIndiaTaxEngine({
+      ...base,
+      ...biz({ professionalReceipts: 4000000, digitalSharePct: 100, basis: '44ADA' }),
+    });
+    const d = r.newRegime.heads.businessDetail;
+    expect(d.ada44.deemedProfit).toBe(2000000);
+    expect(d.ada44.limit).toBe(7500000);
+    expect(d.taxedProfit).toBe(2000000);
+  });
+
+  it('an election the reader is not eligible for falls back to the books', () => {
+    // Silently deeming zero profit on income they really have would be worse
+    // than ignoring the election, and it is the shape a bad default takes.
+    const r = calculateIndiaTaxEngine({
+      ...base,
+      ...biz({
+        turnover: 50000000, // way over even the raised ceiling
+        netProfit: 900000,
+        digitalSharePct: 100,
+        basis: '44AD',
+      }),
+    });
+    const d = r.newRegime.heads.businessDetail;
+    expect(d.ad44.available).toBe(false);
+    expect(d.ad44.unavailableReason).toContain('ceiling');
+    expect(d.basis).toBe('books');
+    expect(d.taxedProfit).toBe(900000);
+  });
+
+  it('BOTH bases are costed even when only one is elected', () => {
+    // dd-006/dont-2: the difference between actual and deemed profit is the
+    // lesson for a small business, so the page must be able to show both at
+    // once. That is only possible if the engine always computes both.
+    const r = calculateIndiaTaxEngine({
+      ...base,
+      ...biz({
+        turnover: 10000000,
+        professionalReceipts: 3000000,
+        netProfit: 1500000,
+        digitalSharePct: 100,
+        basis: 'books',
+      }),
+    });
+    const d = r.newRegime.heads.businessDetail;
+    expect(d.basis).toBe('books');
+    expect(d.taxedProfit).toBe(1500000);
+    // ...and the roads not taken are still priced
+    expect(d.ad44.deemedProfit).toBe(600000);
+    expect(d.ada44.deemedProfit).toBe(1500000);
+  });
+
+  it('electing 44AD changes the tax, and the change is the whole point', () => {
+    const common = { turnover: 10000000, netProfit: 1500000, digitalSharePct: 100 };
+    const books = calculateIndiaTaxEngine({ ...base, ...biz({ ...common, basis: 'books' }) });
+    const presumptive = calculateIndiaTaxEngine({ ...base, ...biz({ ...common, basis: '44AD' }) });
+    expect(books.newRegime.slabIncome).toBe(1500000);
+    expect(presumptive.newRegime.slabIncome).toBe(600000);
+    expect(presumptive.newRegime.totalTax).toBeLessThan(books.newRegime.totalTax);
+  });
+});
+
 describe('India Tax Engine - capital gains and the 87A interaction', () => {
   const cg = (over: Partial<TaxInput['capitalGains']>): Partial<TaxInput> => ({
     capitalGains: { stcg111A: 0, ltcg112A: 0, ltcg112: 0, stcgSlab: 0, ...over },

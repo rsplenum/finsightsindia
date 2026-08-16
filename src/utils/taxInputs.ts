@@ -1,5 +1,5 @@
 import { parseFormattedNumber } from './formatters';
-import type { HousePropertyInput, TaxInput } from './tax';
+import type { BusinessInput, HousePropertyInput, TaxInput } from './tax';
 
 /**
  * The tax calculator's one DOM reader.
@@ -45,8 +45,13 @@ const F = {
   hpMunicipalTaxes: 'inHpMunicipalTaxes',
   hpInterest: 'inHomeLoan',
 
-  // Head 3 - business or profession.
+  // Head 3 - business or profession. Both presumptive bases are always costed
+  // by the engine, so the page can show the election rather than hide it.
   businessProfit: 'inBusinessProfit',
+  businessTurnover: 'inBusinessTurnover',
+  businessReceipts: 'inProfessionalReceipts',
+  businessDigitalShare: 'inBusinessDigitalShare',
+  businessBasis: 'inBusinessBasis',
 
   // Head 4 - capital gains, split by the RATE that applies rather than by the
   // asset, because the rate is all the arithmetic cares about. The chip opens
@@ -79,6 +84,8 @@ export const MONEY_FIELD_IDS: readonly string[] = [
   F.hpRent,
   F.hpMunicipalTaxes,
   F.businessProfit,
+  F.businessTurnover,
+  F.businessReceipts,
   F.cgStcg111A,
   F.cgLtcg112A,
   F.cgLtcg112,
@@ -86,7 +93,13 @@ export const MONEY_FIELD_IDS: readonly string[] = [
 ];
 
 /** The non-money controls, which fire `change` rather than blur. */
-export const CHOICE_FIELD_IDS: readonly string[] = [F.ageBracket, F.isMetro, F.hpKind];
+export const CHOICE_FIELD_IDS: readonly string[] = [
+  F.ageBracket,
+  F.isMetro,
+  F.hpKind,
+  F.businessBasis,
+  F.businessDigitalShare,
+];
 
 const el = (id: string) => document.getElementById(id) as HTMLInputElement | null;
 
@@ -140,6 +153,24 @@ const ageBracket = (): AgeBracket => {
 const isMetro = (): boolean =>
   (document.getElementById(F.isMetro) as HTMLSelectElement | null)?.value === 'true';
 
+/** A 0-100 share. Clamped, because a percentage outside it is not an opinion. */
+const pct = (id: string, fallback: number): number => {
+  const raw = (el(id)?.value ?? '').trim();
+  if (raw === '') return fallback;
+  const v = parseFloat(raw);
+  return Number.isFinite(v) ? Math.min(100, Math.max(0, v)) : fallback;
+};
+
+const BUSINESS_BASES = ['books', '44AD', '44ADA'] as const;
+
+/** Which basis the reader elected. The engine costs all of them regardless. */
+const businessBasis = (): BusinessInput['basis'] => {
+  const v = (document.getElementById(F.businessBasis) as HTMLSelectElement | null)?.value;
+  return (BUSINESS_BASES as readonly string[]).includes(v ?? '')
+    ? (v as BusinessInput['basis'])
+    : 'books';
+};
+
 const HP_KINDS = ['none', 'selfOccupied', 'letOut'] as const;
 
 /**
@@ -174,7 +205,16 @@ export function readTaxInputs(): TaxInput {
       interest: money(F.hpInterest),
     },
 
-    business: { netProfit: money(F.businessProfit) },
+    business: {
+      netProfit: money(F.businessProfit),
+      turnover: money(F.businessTurnover),
+      professionalReceipts: money(F.businessReceipts),
+      // Defaults to fully banked, which is both the common case for anyone
+      // filing online and the one that gives the reader the better rate. It is
+      // stated on the screen rather than assumed silently.
+      digitalSharePct: pct(F.businessDigitalShare, 100),
+      basis: businessBasis(),
+    },
 
     capitalGains: {
       stcg111A: money(F.cgStcg111A),
