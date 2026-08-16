@@ -1,0 +1,327 @@
+---
+// Rung 6 of the SIP ladder: "Can I buy protection from that - and is it worth
+// it?"
+//
+// Built to dd-012, which was written after this exact screen failed on the
+// planner. That version reported protection as a movement in an average taken
+// over all ten thousand futures - "95 in 100 unprotected, 93 in 100 protected"
+// - and put "so protection is worth -2 in 100" on the verdict line. Insurance
+// does not exist to move an average; it exists for the minority of futures
+// where things go wrong, and it is paid for out of all the others. Judging it
+// by the one measure it was never built to move made the honest arithmetic read
+// as an argument against the product, which was both confusing and beside the
+// point.
+//
+// So the verdict here is the worst one in ten futures, in rupees, with and
+// without - two numbers a reader can picture, adjacent, never a difference.
+//
+// Three measures were computed and they disagree: the average payout never
+// covers the premium anywhere on the track; the count of savers left short gets
+// WORSE with protection until about 25% roughness; the worst decile turns
+// positive at 20%. All three are correct, because they measure different
+// things. Only one is on the screen - shipping two would put a contradiction in
+// front of the reader, which is dd-012's fourth rule.
+//
+// The answer this screen gives on the page's own shipped assumptions is NO, and
+// it is not softened. Selling a floor that does not pay would be the reduction
+// dd-001 forbids, pointed at the reader's wallet.
+---
+
+<section id="rungSipProtection" class="max-w-3xl mx-auto px-4 sm:px-6 py-4" aria-labelledby="rungSipProtQ">
+  <div class="card-premium rounded-2xl p-6 sm:p-8 space-y-6">
+
+    <div>
+      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-400 dark:text-navy-500">
+        Next question
+      </p>
+      <h2 id="rungSipProtQ" class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 mt-1">
+        Can you buy protection from that?
+      </h2>
+      <p class="text-sm text-navy-500 dark:text-navy-400 mt-2">
+        You can. The question is what it costs, and when it pays.
+      </p>
+    </div>
+
+    <!-- dd-009: name the contract before using it. -->
+    <div class="rounded-lg bg-navy-50/70 dark:bg-navy-900/40 border border-navy-200 dark:border-navy-800 px-4 py-3">
+      <p id="sipProtWhat" class="text-sm text-navy-800 dark:text-navy-200 leading-relaxed">
+        Loading the quote…
+      </p>
+    </div>
+
+    <!-- The price, and what it is actually worth. Stated together, so the gap
+         between them is explained where it appears (dd-009). -->
+    <div class="grid grid-cols-3 gap-px rounded-xl overflow-hidden border border-navy-200 dark:border-navy-700 bg-navy-200 dark:bg-navy-700">
+      <div class="bg-white dark:bg-navy-950 px-3 py-3">
+        <p class="text-[11px] uppercase tracking-wider text-navy-500 dark:text-navy-400">You pay</p>
+        <p id="sipProtPremium" class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100 mt-0.5">—</p>
+        <p class="text-[11px] text-navy-500 dark:text-navy-400">a year, on the insured part</p>
+      </div>
+      <div class="bg-white dark:bg-navy-950 px-3 py-3">
+        <p class="text-[11px] uppercase tracking-wider text-navy-500 dark:text-navy-400">It is worth</p>
+        <p id="sipProtFair" class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100 mt-0.5">—</p>
+        <p class="text-[11px] text-navy-500 dark:text-navy-400">at the roughness you assumed</p>
+      </div>
+      <div class="bg-white dark:bg-navy-950 px-3 py-3">
+        <p class="text-[11px] uppercase tracking-wider text-navy-500 dark:text-navy-400">So you pay</p>
+        <p id="sipProtMarkup" class="text-lg font-bold tabular-nums text-amber-600 dark:text-amber-400 mt-0.5">—</p>
+        <p class="text-[11px] text-navy-500 dark:text-navy-400">what it is worth</p>
+      </div>
+    </div>
+
+    <!-- The control: the one thing on this screen nobody chooses. -->
+    <div class="space-y-2">
+      <div class="flex items-baseline justify-between gap-4">
+        <label for="sipProtSlider" class="text-sm text-navy-700 dark:text-navy-300">
+          How rough the market turns out to be
+        </label>
+        <output id="sipProtValue" for="sipProtSlider"
+                class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">—</output>
+      </div>
+
+      <div class="relative pt-1 pb-9">
+        <input id="sipProtSlider" type="range" min="8" max="32" step="1" value="15"
+               aria-describedby="sipProtBoundary"
+               class="w-full accent-gold-500 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/50 rounded" />
+        <div id="sipProtBreakevenMark" class="hidden absolute top-0 -translate-x-1/2 pointer-events-none">
+          <div class="h-6 w-0.5 bg-emerald-500/80 dark:bg-emerald-400/80 mx-auto"></div>
+          <div id="sipProtBreakevenLabel"
+               class="mt-0.5 whitespace-nowrap text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 -translate-x-1/2 relative left-1/2"></div>
+        </div>
+        <div id="sipProtAssumedMark" class="hidden absolute top-0 -translate-x-1/2 pointer-events-none">
+          <div class="h-6 w-0.5 bg-navy-400/70 dark:bg-navy-500/70 mx-auto"></div>
+          <div id="sipProtAssumedLabel"
+               class="mt-4 whitespace-nowrap text-[10px] font-medium text-navy-500 dark:text-navy-400 relative left-1/2 -translate-x-1/2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THE VERDICT. Two futures, both in rupees, adjacent (dd-006, dd-012).
+         The bad future first, because that is the situation the contract exists
+         for and an average over all futures would judge it by a measure it was
+         never built to move. -->
+    <div class="rounded-xl border border-navy-200 dark:border-navy-700 overflow-hidden">
+      <div class="grid grid-cols-3 gap-px bg-navy-200 dark:bg-navy-700">
+        <div class="bg-navy-50 dark:bg-navy-900/60 px-3 py-2"></div>
+        <div class="bg-navy-50 dark:bg-navy-900/60 px-3 py-2 text-center">
+          <p class="text-[11px] font-semibold uppercase tracking-wider text-navy-600 dark:text-navy-300">Unprotected</p>
+        </div>
+        <div class="bg-navy-50 dark:bg-navy-900/60 px-3 py-2 text-center">
+          <p class="text-[11px] font-semibold uppercase tracking-wider text-navy-600 dark:text-navy-300">Protected</p>
+        </div>
+
+        <div class="bg-white dark:bg-navy-950 px-3 py-3.5">
+          <p class="text-sm font-semibold text-navy-900 dark:text-navy-100">In the worst 1 in 10 futures</p>
+          <p class="text-xs text-navy-500 dark:text-navy-400">you finish with, in today's money</p>
+        </div>
+        <div class="bg-white dark:bg-navy-950 px-3 py-3.5 flex items-center justify-center">
+          <span id="sipProtP10U" class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">—</span>
+        </div>
+        <div class="bg-white dark:bg-navy-950 px-3 py-3.5 flex items-center justify-center">
+          <span id="sipProtP10H" class="text-lg font-bold tabular-nums">—</span>
+        </div>
+
+        <div class="bg-white dark:bg-navy-950 px-3 py-3">
+          <p class="text-sm text-navy-700 dark:text-navy-300">In a typical future</p>
+          <p class="text-xs text-navy-500 dark:text-navy-400">you finish with, in today's money</p>
+        </div>
+        <div class="bg-white dark:bg-navy-950 px-3 py-3 flex items-center justify-center">
+          <span id="sipProtP50U" class="text-base font-semibold tabular-nums text-navy-700 dark:text-navy-300">—</span>
+        </div>
+        <div class="bg-white dark:bg-navy-950 px-3 py-3 flex items-center justify-center">
+          <span id="sipProtP50H" class="text-base font-semibold tabular-nums">—</span>
+        </div>
+
+        <div class="bg-white dark:bg-navy-950 px-3 py-3">
+          <p class="text-sm text-navy-700 dark:text-navy-300">The floor catches a year</p>
+          <p class="text-xs text-navy-500 dark:text-navy-400">this often</p>
+        </div>
+        <div class="bg-white dark:bg-navy-950 px-3 py-3 flex items-center justify-center">
+          <span class="text-sm text-navy-400 dark:text-navy-600">never</span>
+        </div>
+        <div class="bg-white dark:bg-navy-950 px-3 py-3 flex items-center justify-center">
+          <span id="sipProtBind" class="text-base font-semibold tabular-nums text-navy-700 dark:text-navy-300">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- The boundary. One sentence covering the whole track. -->
+    <p id="sipProtBoundary"
+       class="rounded-lg bg-gold-500/10 border border-gold-500/30 px-4 py-3 text-sm leading-relaxed text-navy-800 dark:text-navy-200">
+      Working out where this contract starts earning its price…
+    </p>
+
+    <!-- What it does NOT cover. dd-012: as plainly as what it does. -->
+    <div class="rounded-lg border border-rose-200 dark:border-rose-900/50 bg-rose-50/50 dark:bg-rose-950/20 px-4 py-3 space-y-2">
+      <p class="text-[11px] font-semibold uppercase tracking-wider text-rose-700 dark:text-rose-400">
+        What this does not do
+      </p>
+      <p id="sipProtLimit1" class="text-sm text-navy-800 dark:text-navy-200 leading-relaxed"></p>
+      <p class="text-sm text-navy-800 dark:text-navy-200 leading-relaxed">
+        It does not cover the money you have not put in yet. The contract is
+        struck once a year on the balance you have at that moment, so an
+        instalment paid in month eleven bought no protection at all that year.
+      </p>
+    </div>
+
+    <!-- The principle. True at every position of the control. -->
+    <p class="text-base leading-relaxed text-navy-800 dark:text-navy-200">
+      There is a deeper reason this is a harder sell for you than for someone
+      already retired, and it is the same reason the last step turned out the way
+      it did. For the next stretch of your life you are a <em>buyer</em>. A
+      falling market is the price of everything you have not bought yet coming
+      down. Insurance against a fall pays you for exactly the thing that, most of
+      the time, is working in your favour — and you pay for it every single year,
+      including the great many in which nothing happens.
+    </p>
+    <p class="text-base leading-relaxed text-navy-800 dark:text-navy-200">
+      That is not an argument against ever buying it. It is an argument for
+      knowing what you are buying: a fixed, certain cost against an uncertain
+      payout that only arrives if the market turns out rougher than the price
+      assumed. The nearer you get to the end — where the last step showed the
+      damage actually lands — the better that trade looks.
+    </p>
+
+    <div class="pt-4 border-t border-navy-200 dark:border-navy-800">
+      <p class="text-sm text-navy-600 dark:text-navy-400">
+        Everything underneath this — the allocation, the floor depth, the tax
+        assumption, the full year-by-year ledger —
+        <span class="font-medium text-navy-800 dark:text-navy-200">is in the last step.</span>
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  const $ = (id: string) => document.getElementById(id);
+  const pct = (n: number, dp = 1) => `${n < 0 ? '−' : ''}${Math.abs(n).toFixed(dp)}%`;
+
+  function money(n: number): string {
+    const v = Math.round(n);
+    if (v >= 10000000) return `₹${(v / 10000000).toFixed(2)} cr`;
+    if (v >= 100000) return `₹${(v / 100000).toFixed(1)} L`;
+    return `₹${v.toLocaleString('en-IN')}`;
+  }
+
+  let curve: any = null;
+  let inputs: any = null;
+
+  function pointAt(roughness: number) {
+    if (!curve?.points?.length) return null;
+    let best = curve.points[0];
+    for (const p of curve.points) {
+      if (Math.abs(p.roughness - roughness) < Math.abs(best.roughness - roughness)) best = p;
+    }
+    return best;
+  }
+
+  function place(mark: HTMLElement, roughness: number) {
+    const frac = (roughness - curve.min) / (curve.max - curve.min);
+    mark.style.left = `${Math.min(100, Math.max(0, frac * 100))}%`;
+    mark.classList.remove('hidden');
+  }
+
+  function paintFixed() {
+    $('sipProtWhat')!.innerHTML =
+      `<span class="font-semibold">The contract:</span> once a year you pay a ` +
+      `premium, and in exchange your equity cannot lose more than ` +
+      `${pct(Math.abs(curve.floor), 0)} over the following twelve months. If it ` +
+      `falls further, you are paid the difference. If it does not, the premium is ` +
+      `simply gone — which is most years.`;
+
+    $('sipProtPremium')!.textContent = `${pct(curve.premium, 2)}`;
+    $('sipProtFair')!.textContent = `${pct(curve.fairValueAtReaderRoughness, 2)}`;
+    $('sipProtMarkup')!.textContent =
+      Number.isFinite(curve.markupAtReaderRoughness)
+        ? `${curve.markupAtReaderRoughness.toFixed(1)}×`
+        : '—';
+
+    // dd-012: state plainly what the protection does not cover.
+    // Sign is carried by the words, not by a minus the eye can skip. "stopped
+    // at -10%" was read on review as a gain of 10%.
+    $('sipProtLimit1')!.textContent =
+      `It resets every year, so it does not stop a long slide. Three years each ` +
+      `cut off at a ${pct(Math.abs(curve.floor), 0)} loss still leaves you ` +
+      `${pct(Math.abs(curve.consecutiveThreeYearLoss), 0)} down — and you will ` +
+      `have paid the premium three times to get there.`;
+
+    const mark = $('sipProtBreakevenMark')!;
+    if (curve.breakeven === null) {
+      mark.classList.add('hidden');
+    } else {
+      $('sipProtBreakevenLabel')!.textContent = `${pct(curve.breakeven, 0)}`;
+      place(mark, curve.breakeven);
+    }
+
+    const assumed = $('sipProtAssumedMark')!;
+    if (curve.readerRoughness >= curve.min && curve.readerRoughness <= curve.max) {
+      $('sipProtAssumedLabel')!.textContent = `you assumed ${pct(curve.readerRoughness, 0)}`;
+      place(assumed, curve.readerRoughness);
+    } else {
+      assumed.classList.add('hidden');
+    }
+
+    // The boundary sentence: one statement covering the entire track, which only
+    // moves when some OTHER input does (dd-008).
+    const at = pointAt(curve.readerRoughness);
+    const helpsHere = at ? at.p10Protected >= at.p10Unprotected : false;
+    if (curve.breakeven === null) {
+      $('sipProtBoundary')!.textContent =
+        `At no roughness on this track does the floor leave you better off in the ` +
+        `bad futures. At this price, for this plan, it is a cost and nothing else.`;
+    } else if (helpsHere) {
+      $('sipProtBoundary')!.textContent =
+        `Above about ${pct(curve.breakeven, 0)} roughness the floor leaves you ` +
+        `better off in the bad futures, and you have assumed ` +
+        `${pct(curve.readerRoughness, 0)} — so on your own assumption it earns ` +
+        `its price. Below that line you are paying for a payout that rarely comes.`;
+    } else {
+      $('sipProtBoundary')!.textContent =
+        `The floor only starts earning its price once the market is rougher than ` +
+        `about ${pct(curve.breakeven, 0)} a year. You have assumed ` +
+        `${pct(curve.readerRoughness, 0)}, so on your own assumption this contract ` +
+        `costs you money in the bad futures as well as the ordinary ones.`;
+    }
+  }
+
+  function paintRow(roughness: number) {
+    const p = pointAt(roughness);
+    if (!p) return;
+
+    $('sipProtValue')!.textContent = pct(roughness, 0);
+    $('sipProtP10U')!.textContent = money(p.p10Unprotected);
+    $('sipProtP10H')!.textContent = money(p.p10Protected);
+    $('sipProtP50U')!.textContent = money(p.p50Unprotected);
+    $('sipProtP50H')!.textContent = money(p.p50Protected);
+    $('sipProtBind')!.textContent = Number.isFinite(p.oneYearIn)
+      ? `1 year in ${p.oneYearIn}` : 'almost never';
+
+    // Colour asserts exactly one thing: did protection leave you better or
+    // worse off. It is applied to the protected column and to nothing else.
+    const verdict = (el: HTMLElement, better: boolean, size: string) => {
+      el.className = `${size} tabular-nums ` +
+        (better ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400');
+    };
+    verdict($('sipProtP10H') as HTMLElement, p.p10Protected >= p.p10Unprotected, 'text-lg font-bold');
+    verdict($('sipProtP50H') as HTMLElement, p.p50Protected >= p.p50Unprotected, 'text-base font-semibold');
+  }
+
+  const slider = $('sipProtSlider') as HTMLInputElement | null;
+  slider?.addEventListener('input', () => paintRow(Number(slider.value)));
+
+  window.addEventListener('sip:protection', (e) => {
+    const d = (e as CustomEvent).detail;
+    curve = d.protection;
+    inputs = d.inputs;
+    if (!curve?.points?.length) return;
+    if (slider) {
+      slider.min = String(curve.min);
+      slider.max = String(curve.max);
+      slider.step = String(curve.step);
+      slider.value = String(curve.readerRoughness);
+    }
+    paintFixed();
+    paintRow(curve.readerRoughness);
+  });
+</script>

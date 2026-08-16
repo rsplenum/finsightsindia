@@ -1,5 +1,6 @@
 ---
-// Rung 2 of the SIP ladder (dd-002): "What did you put in, and what did the
+// Rung 3 of the SIP ladder (dd-002) - counting the Answer as rung 1, which is
+// how Rahul counts them and therefore how they are numbered here: "What did you put in, and what did the
 // market add?"
 //
 // Both moneys side by side rather than behind a toggle (dd-006). The difference
@@ -9,7 +10,7 @@
 //
 // One prose voice, one size (dd-007).
 //
-// No new concept. Rung 1 established that prices rise and that only the gap
+// No new concept. Rung 2 established that prices rise and that only the gap
 // matters; this shows what that does in rupees, and answers the question every
 // saver eventually asks: of everything I end up with, how much did I actually
 // provide?
@@ -63,14 +64,37 @@
           </tr>
           <tr>
             <th scope="row" class="text-left font-normal text-navy-700 dark:text-navy-300 py-2.5">
+              The fund takes
+              <span id="sipCellFeeLabel" class="block text-xs text-navy-500 dark:text-navy-400"></span>
+            </th>
+            <td id="sipCellFeeReal" class="text-right tabular-nums font-semibold text-navy-900 dark:text-navy-100 py-2.5 pl-4">—</td>
+            <td id="sipCellFeeNom" class="text-right tabular-nums text-navy-500 dark:text-navy-400 py-2.5 pl-4">—</td>
+          </tr>
+          <!-- The ledger lands twice: once before tax and once after. It used
+               to land once and print "not counted yet" for tax whenever the
+               page's BEFORE TAX button was in its shipped position — so the one
+               screen whose job is to show where the money goes omitted the last
+               thing that takes some (sol-037). Both landings are always shown,
+               so this rung contains whichever figure the Answer is quoting and
+               cannot contradict it. -->
+          <tr class="border-t border-navy-300 dark:border-navy-600">
+            <th scope="row" class="text-left font-medium text-navy-800 dark:text-navy-200 py-2.5">
+              Before tax you have
+            </th>
+            <td id="sipCellPreTaxReal" class="text-right tabular-nums font-semibold text-navy-800 dark:text-navy-200 py-2.5 pl-4">—</td>
+            <td id="sipCellPreTaxNom" class="text-right tabular-nums text-navy-500 dark:text-navy-400 py-2.5 pl-4">—</td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-left font-normal text-navy-700 dark:text-navy-300 py-2.5">
               Tax takes, when you sell
+              <span id="sipCellTaxLabel" class="block text-xs text-navy-500 dark:text-navy-400"></span>
             </th>
             <td id="sipCellTaxReal" class="text-right tabular-nums font-semibold text-navy-900 dark:text-navy-100 py-2.5 pl-4">—</td>
             <td id="sipCellTaxNom" class="text-right tabular-nums text-navy-500 dark:text-navy-400 py-2.5 pl-4">—</td>
           </tr>
           <tr class="border-t-2 border-navy-300 dark:border-navy-600">
             <th scope="row" class="text-left font-semibold text-navy-900 dark:text-navy-100 py-3">
-              You end up with
+              So you keep
             </th>
             <td id="sipCellEndReal" class="text-right tabular-nums font-bold text-base text-navy-900 dark:text-navy-100 py-3 pl-4">—</td>
             <td id="sipCellEndNom" class="text-right tabular-nums font-semibold text-navy-500 dark:text-navy-400 py-3 pl-4">—</td>
@@ -115,37 +139,49 @@
     $('sipFlowMonthly')!.textContent = `₹${grp(inputs.monthlySip)}`;
 
     // Every figure is the engine's; nothing here is re-derived (sol-023). Both
-    // columns close: put in + market added − tax = what you keep.
+    // columns close: put in + market added − the fund's cut − tax = what you keep.
     $('sipCellInReal')!.textContent = money(f.investedReal);
     $('sipCellInNom')!.textContent = money(f.investedNominal);
     $('sipCellGrowthReal')!.textContent = money(f.growthReal);
     $('sipCellGrowthNom')!.textContent = money(f.growthNominal);
-    // Before-tax figures are not "zero tax" - the tax simply has not been
-    // counted yet, and saying so is the honest reading (dd-009).
-    $('sipCellTaxReal')!.textContent = inputs.isPostTax
-      ? `− ${money(f.taxReal)}` : 'not counted yet';
-    $('sipCellTaxNom')!.textContent = inputs.isPostTax
-      ? `− ${money(f.taxNominal)}` : 'switch on "after tax" above';
-    $('sipCellEndReal')!.textContent = money(f.endReal);
-    $('sipCellEndNom')!.textContent = money(f.endNominal);
+    // The fund's fee. It was invisible until today - not hidden, simply netted
+    // off the growth, which is the same thing from where the reader sits.
+    $('sipCellFeeReal')!.textContent = `− ${money(f.feeReal)}`;
+    $('sipCellFeeNom')!.textContent = `− ${money(f.feeNominal)}`;
+    $('sipCellFeeLabel')!.textContent =
+      `${inputs.expenseRatio.toFixed(2)}% a year, every year`;
+    // Always counted. "Not counted yet" was honest about the toggle and
+    // dishonest about the money: a reader looking at a ledger is entitled to
+    // see every line of it, and the tax is owed whether or not a button
+    // upstairs is pressed (sol-037, dd-006).
+    $('sipCellPreTaxReal')!.textContent = money(f.preTaxEndReal);
+    $('sipCellPreTaxNom')!.textContent = money(f.preTaxEndNominal);
+    $('sipCellTaxReal')!.textContent = `− ${money(f.taxAlwaysReal)}`;
+    $('sipCellTaxNom')!.textContent = `− ${money(f.taxAlwaysNominal)}`;
+    $('sipCellTaxLabel')!.textContent =
+      `${inputs.ltcgTax}% on the gain, first ₹1.25 lakh exempt`;
+    $('sipCellEndReal')!.textContent = money(f.afterTaxEndReal);
+    $('sipCellEndNom')!.textContent = money(f.afterTaxEndNominal);
 
     // The gap between the columns, said plainly. This is the whole reason both
     // are on screen: the statement figure is the one the reader will see, and
     // it is not the one that matters.
-    const shrink = f.endNominal > 0 ? 1 - f.endReal / f.endNominal : 0;
+    const shrink = f.afterTaxEndNominal > 0
+      ? 1 - f.afterTaxEndReal / f.afterTaxEndNominal : 0;
     $('sipFlowGap')!.textContent =
-      `The number on the screen at the end will be ${money(f.endNominal)}. What ` +
+      `The number on the screen at the end will be ${money(f.afterTaxEndNominal)}. What ` +
       `that will actually buy, in the prices you know today, is ` +
-      `${money(f.endReal)} — about ${Math.round(shrink * 100)}% less. Both ` +
+      `${money(f.afterTaxEndReal)} — about ${Math.round(shrink * 100)}% less. Both ` +
       `numbers are true; only the second one is a plan.`;
 
     // The multiple is the thing worth carrying away (dd-010): not the total,
     // but what each rupee genuinely given up came back as.
-    const mult = f.multiple;
-    const share = f.endReal > 0 ? Math.min(1, f.investedReal / f.endReal) : 1;
+    const mult = f.investedReal > 0 ? f.afterTaxEndReal / f.investedReal : 0;
+    const share = f.afterTaxEndReal > 0
+      ? Math.min(1, f.investedReal / f.afterTaxEndReal) : 1;
     $('sipFlowIdea')!.textContent =
-      `Of the ${money(f.endReal)} you keep, ${money(f.investedReal)} is money ` +
-      `you provided and ${money(f.endReal - f.investedReal)} is what time did ` +
+      `Of the ${money(f.afterTaxEndReal)} you keep, ${money(f.investedReal)} is money ` +
+      `you provided and ${money(f.afterTaxEndReal - f.investedReal)} is what time did ` +
       `with it. Every rupee you really gave up came back as ${mult.toFixed(2)} — ` +
       `so about ${Math.round(share * 100)} paise in the rupee is yours and the ` +
       `other ${Math.round((1 - share) * 100)} is compounding. That ratio is what ` +

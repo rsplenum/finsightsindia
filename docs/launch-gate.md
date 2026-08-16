@@ -1,6 +1,6 @@
 # FinSight — Launch Gate
 
-**Not live. No domain.** 166 tests green · 34 commits on `fix/learning-loop-integrity-and-calculator-correctness`
+**Not live. No domain.** 267 tests green · 34 commits on `fix/learning-loop-integrity-and-calculator-correctness`
 
 This is a list, not a document. Explanations live in commit messages, `design-doctrine.json` and `engineering-solutions.json`. This says what is done and what is next.
 
@@ -8,34 +8,48 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 
 ---
 
-## Done today · 15 Aug
+## Done today · 16 Aug
 
-✅ **sol-018** hedging floor — annual, on the index. Goal seek said insurance *cut* the SIP needed, 19,646 → 7,744; now 20,561
-✅ **sol-023** SIP ledger fed from the engine, not invented beside it · column widths
-✅ **sol-026** the page ran **two engines on two input sets** and showed both. One input set, one simulation, one seed. The rungs had been deaf to CAGR, inflation, volatility, tax and both toggles
-✅ **sol-027** one engine, not two — `returnsByYear` retired the duplicate `swpDeterministic`
-✅ **sol-028** volatility default was the calmest decade in 35 years. Named periods now, computed from real data. **Survival on the shipped plan: 9534 → 7025**
-✅ **rung 5** built, rejected, rebuilt to dd-012 — leads with ruined retirements, premium priced not chosen
-✅ **rung 6** — one `<details>` over ~590 lines became the ladder's last step, split by question. dd-002's origin case, finally closed. Revised after review: live answer always visible, controls open by default, plain headings, guardrails removed
-✅ **sol-023 second instance** on the planner ledger · **sol-029** premium had two sources after I priced it in rung 5
-✅ **dd-012, dd-013** recorded · 166 tests (was 125) · 4 new detectors
-✅ **T3 started** — the SIP page has the Answer + a four-rung ladder, and the old page is its last rung
-✅ **sol-030** — sol-028's second instance. Growth, roughness and the floor were *unreachable constants* in `sipWorker`; presets would have moved a label only. Now required parameters. The 10-year preset moves the shipped answer 59.4 → 78.4 lakh
-✅ **sol-031** — the flow rung's column did not add up: three medians and one mean sharing four rows
-✅ `InputGroup` never supported `readonly` — the planner's "priced, not chosen" premium has been editable all along
+**dd-016** the doctrine as do's and don'ts, generated + gated · **dd-017** the
+contribution is asked for in today's money, three modes · **sol-033** neither
+engine charged a fund fee · **sol-034** step-up meant opposite things on the two
+pages · **sol-035** a rung printed NaN · **sol-036** the fee and the return
+series are a pair · **sol-037** rung 3 counted no tax · **sol-038** two rungs,
+one formula, two copies · **T3 rungs 5 and 6** built (order-of-returns, and what
+protection costs).
+
+Numbers that moved: the shipped answer ₹43.7 L → ₹89.1 L, and the contribution
+needed for a crore ₹56,500 → ~₹35,500. 204 → 267 tests.
+
+Detail in `engineering-solutions.json`, `design-doctrine.json` and the commit
+messages. **Rung numbering: the Answer is rung 1.**
+
+## Done · 15 Aug
+
+Fifteen items, archived: sol-018 · sol-023 · sol-026 … sol-032 · T1 homepage ·
+planner rungs 5 and 6 · dd-012, dd-013 · T3 started. Detail in
+[`docs/session-2026-08-15.md`](session-2026-08-15.md), the solutions file and
+the commit messages — which is where it belongs once it is no longer *next*.
 
 ## Next — in order
 
 - [x] ~~**T2 last item** — the door is gone; the expert panel is rung 6, three doors named by question~~
-- [ ] **T3 rungs 4 and 5** — order-of-returns (a crash *late* is the saver's nightmare, the mirror of T2's) and what protection costs
+- [x] ~~**T3 rungs 4 and 5** — order-of-returns and what protection costs~~ **Both shipped 16 Aug.** The mirror holds: 2 months at the start, 4.8 years at the end
+- [ ] **sol-033 second instance: the planner still assumes a free fund** — `swpWorker` has no expense ratio. Needs the same required-parameter treatment, a control, a row on its money-flow rung, and three test bases updated. Deferred rather than rushed at the end of a long session; until it lands the two pages assume different worlds
+- [ ] **A typed boundary between the compute host and the rungs** — sol-035's real cause. Rungs receive `any` across a CustomEvent, so a renamed field fails silently at runtime. Every rung is exposed to this, not just the one that broke
+- [ ] **Rung 2 should own the contribution-mode chooser** — it is the rung about inflation eating money, so it is the right home. Today the entry's "change how your contribution grows" link points at the expert rung, where the control actually is; a compact chooser in rung 1 is the proper end state
+- [ ] **The same grid defect is latent in rung 6** — `protectionCurve` steps roughness by 1 from 8, so a shipped 28.4% assumption uses the 28% point. Hidden today only because the rung prints roughness to zero decimals. Anchor it the same way rung 4 now is
+- [ ] **T5 — insurance analyser. THE NEXT SESSION.** Starts with extracting `runReplicationAnalysis()` from the 35KB page so it can be tested at all; everything else in T5 is blocked behind that
 - [ ] **T1 homepage** — six items, untouched since the audit
 - [ ] Delete `swpDeterministic.ts` — no production caller; 11 tests still use it as a harness *(needs `growth`/`netMonthly` on the MC engine first)*
-- [ ] Rung 5 term selector, 3/6/9/12 months — *needs term-invariant return generation; today it drifts the unhedged baseline 39→42, an artefact*
+- [ ] Rung 6 term selector, 3/6/9/12 months — *needs term-invariant return generation; today it drifts the unhedged baseline 39→42, an artefact*
 
 ## Waiting on Rahul
 
 - [x] ~~**What counts as "this plan works" when saving?**~~ **Answered 16 Aug: 50%, the typical path.** Not the planner's 85% — that bar is for ruin, and it would tell a saver of ₹25,000/mo that a crore needs ₹83,000/mo. The honesty is carried in the copy instead: every card states "50 still fall short" beside the promise
 - [ ] **The presets state a CAGR; both engines consume it as an arithmetic average** — so the median path lands a few points below the number on the button. True on the planner too, since 15 Aug. Fixing it moves T2's shipped figures, so it is not a silent change
+- [ ] **T3 rung 5 says our own hedging product does not pay** — at the shipped 28.4% roughness the floor loses money in the bad futures *and* the typical ones; it only earns its price above ~30%. The rung states this plainly. Do we keep offering the toggle, re-price it, or change the default floor? A product decision, not an engineering one
+- [ ] **The fund-fee default is the DEAREST plan — 1.75%, through a distributor** — chosen because most retail money is in regular plans and because sol-028's flattering default is exactly how the last one survived unexamined. It moves the shipped answer from ₹57.8 lakh to ₹47.4 lakh. Costed at all three plans before choosing, not defended after. Your call
 - [ ] **Debt 7.1% and gold 8.5% are still typed in** — same fault as sol-028, no series in the repo to derive them from. The page says so in plain words rather than hiding it
 - [x] ~~**The floor depth is three different numbers**~~ **Two now.** Both engines take it as a parameter and both pages ship −10%; only the copy's "−10% or −15%" is still loose
 - [ ] **CLAUDE.md's dev-server instruction is wrong for this harness** — says `astro dev --background`; must use the preview tools. sol-025
@@ -50,18 +64,22 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 - [ ] **13 articles fail the R2 screen, 26 fail R7** → sol-021, worklist committed. Rahul's publishing gate 2.
 - [ ] **Property-based testing (`fast-check`)** → sol-022, the real answer to "correct across all inputs". Needs boundary behaviour defined first.
 - [ ] **19 loose python scripts at repo root** → never triaged; some may be live tooling.
+- [ ] **12 checks files predate dd-016** — they cite entries but answer no rules by id. Ratcheted so the count can only fall; retrofit them as each component is next touched, not in one sweep.
+- [ ] **T4 goal engine — deliberately deferred, 16 Aug.** Rahul's call: T5 first. T4 asks whether SIP and SWP can share one core, and that spike is worth more once T5 has shown whether a third page can be brought onto the same engine at all
+- [ ] **A PWA service worker can serve a stale page** — `@vite-pwa/astro` kept a fixed rung out of Rahul's browser through a normal reload on 16 Aug. Harmless while nothing is live; a launch blocker once it is, because a reader can be pinned to an old build
+- [ ] **Cross-surface agreement is checked pair by pair, by hand** — sol-038's tests are bespoke, one pair at a time, which is the same weakness the duplicated formulas had. A generalised check would fail the suite when any two surfaces disagree about one quantity
 - [ ] **Proposed rung: "what if life happens?"** — a lump-sum shock (marriage, an operation no insurance covers). Liquidity risk, not market risk. Rahul's idea; not yet scoped.
 
 ---
 
-## T1 — Homepage · 1/6
+## T1 — Homepage · 6/6
 
 - [x] Audit; identify what to keep
-- [ ] Promote the five intent chips to be the page
-- [ ] Rewrite the subhead in sol-008's register
-- [ ] Remove "THE DECISION PARADIGM SHIFT" and "Explore Decision Hubs"
-- [ ] Demote the five hubs to a second screen
-- [ ] Cut page weight so the first real choice is above the fold
+- [x] Promote the five intent chips to be the page
+- [x] Rewrite the subhead in sol-008's register
+- [x] Remove "THE DECISION PARADIGM SHIFT" and "Explore Decision Hubs"
+- [x] Replace the five hubs with direct calculator cards; research remains below them
+- [x] Cut page weight so the first real choice is above the fold
 
 ## T2 — SWP planner (the pilot) · 9/10
 
@@ -76,7 +94,7 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 - [x] Rung 6: the expert panel, as the last rung rather than a door
 - [ ] Proposed rung: what if life happens?
 
-## T3 — SIP engine · 6/9
+## T3 — SIP engine · 9/9 ✅
 
 Scope, settled 15 Aug: the SIP page inherits T2 whole — shared engine, `plannerInputs`, regime presets, rung pattern. Start cold from this file, dd-012/dd-013 and sol-026 … sol-031.
 
@@ -87,9 +105,9 @@ Scope, settled 15 Aug: the SIP page inherits T2 whole — shared engine, `planne
 - [x] Three-input entry, ladder for the rest — `SipAnswer` + rungs 1–3 + the old page as the last rung
 - [x] One input reader, one worker, one simulation — `sipInputs.ts`, `sipAdviceWorker.ts` (sol-026 pre-empted rather than repeated)
 - [x] Assumption panel shared with T2 — same presets, same pricing, both pages quote 5.73% for the same contract
-- [ ] Rung 4: order-of-returns, mirrored — for a saver a crash *late* is the ruinous one
-- [ ] Rung 5: what protection costs, on the dd-012 pattern
-- [ ] Surface total cost drag — fund fees and exit load are still missing; tax is now in the flow rung
+- [x] Rung 4: order-of-returns, mirrored — the whole profile is drawn at once rather than hidden behind a crash-year slider (dd-006); the control is how long the run lasts
+- [x] Rung 5: what protection costs, on the dd-012 pattern — worst 1-in-10 in rupees, never a difference of averages
+- [x] Surface total cost drag — **sol-033**. The fund's fee is a row in the flow rung and a named-plan control in the expert rung. Exit load is deliberately not modelled and the page says so: on a plan this long you sell units bought years earlier, so it rounds to nothing
 
 ## T4 — Goal engine (accumulate → draw down) · 1/6
 

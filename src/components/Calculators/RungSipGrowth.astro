@@ -1,5 +1,5 @@
 ---
-// Rung 3 of the SIP ladder: "What if growth is slower than you hope?"
+// Rung 4 of the SIP ladder: "What if growth is slower than you hope?"
 //
 // The first rung with a control, built to dd-008:
 //
@@ -32,7 +32,7 @@
         What if growth is slower than you hope?
       </h2>
       <p class="text-sm text-navy-500 dark:text-navy-400 mt-2">
-        Drag it and watch the last two rows. Everything else on this screen stays put.
+        Drag it and watch the rows below. Every word on this screen stays put.
       </p>
     </div>
 
@@ -40,7 +40,7 @@
     <div class="space-y-2">
       <div class="flex items-baseline justify-between gap-4">
         <label for="sipGrowthSlider" class="text-sm text-navy-700 dark:text-navy-300">
-          Yearly growth on your savings
+          What the market does, before any costs
         </label>
         <output id="sipGrowthValue" for="sipGrowthSlider"
                 class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">—</output>
@@ -71,11 +71,29 @@
     <!-- Fixed slots. The eye returns to the same rows and sees digits change. -->
     <div class="rounded-xl border border-navy-200 dark:border-navy-700 divide-y divide-navy-200 dark:divide-navy-700 overflow-hidden">
       <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">The market grows your savings by</span>
+        <span id="sipgGross" class="text-base font-semibold tabular-nums text-navy-900 dark:text-navy-100">—</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">
+          The fund takes
+          <span class="block text-xs text-navy-500 dark:text-navy-400">whatever the market does</span>
+        </span>
+        <span id="sipgFee" class="text-base font-semibold tabular-nums text-rose-600 dark:text-rose-400">—</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
         <span class="text-sm text-navy-700 dark:text-navy-300">Prices rise by</span>
         <span id="sipgInflation" class="text-base font-semibold tabular-nums text-rose-600 dark:text-rose-400">—</span>
       </div>
-      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
-        <span class="text-sm text-navy-700 dark:text-navy-300">So you are genuinely better off by</span>
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3 border-t-2 border-navy-300 dark:border-navy-600">
+        <span class="text-sm text-navy-700 dark:text-navy-300">
+          So you are genuinely better off by
+          <!-- dd-009: a reader who tries to subtract these three gets a
+               different answer, so the screen says why before they try. -->
+          <span class="block text-xs text-navy-500 dark:text-navy-400">
+            these compound, they do not subtract
+          </span>
+        </span>
         <span id="sipgReal" class="text-base font-semibold tabular-nums text-navy-900 dark:text-navy-100">—</span>
       </div>
       <div class="flex items-baseline justify-between gap-4 px-4 py-3">
@@ -85,12 +103,26 @@
         </span>
         <span id="sipgTarget" class="text-base font-semibold tabular-nums text-gold-600 dark:text-gold-400">—</span>
       </div>
+      <!-- Both tax frames, adjacent. The page has a BEFORE TAX / AFTER TAX
+           button and this rung used to obey it, which meant it deducted no tax
+           in the default view - dd-006's forbidden shape exactly, because the
+           gap between the two IS the lesson and so cannot be a mode. -->
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">You would typically finish with</span>
+        <span id="sipgEnd" class="text-base font-semibold tabular-nums">—</span>
+      </div>
       <div class="flex items-baseline justify-between gap-4 px-4 py-3.5 bg-navy-50/60 dark:bg-navy-900/40">
-        <span class="text-sm font-semibold text-navy-900 dark:text-navy-100">You would typically finish with</span>
-        <span id="sipgEnd" class="text-lg font-bold tabular-nums">—</span>
+        <span class="text-sm font-semibold text-navy-900 dark:text-navy-100">
+          And after the tax due when you sell
+          <span id="sipgTaxNote" class="block text-xs font-normal text-navy-500 dark:text-navy-400"></span>
+        </span>
+        <span id="sipgEndNet" class="text-lg font-bold tabular-nums">—</span>
       </div>
       <div class="flex items-baseline justify-between gap-4 px-4 py-3">
-        <span class="text-sm text-navy-700 dark:text-navy-300">Futures that reach the goal</span>
+        <span class="text-sm text-navy-700 dark:text-navy-300">
+          Futures that reach the goal
+          <span class="block text-xs text-navy-500 dark:text-navy-400">counted on the after-tax figure</span>
+        </span>
         <span id="sipgOdds" class="text-base font-semibold tabular-nums text-navy-900 dark:text-navy-100">—</span>
       </div>
     </div>
@@ -110,13 +142,20 @@
       the forecast you pick, and the two levers that give you room were on the
       answer at the top: the amount, and the years.
     </p>
+    <p class="text-base leading-relaxed text-navy-800 dark:text-navy-200">
+      Which is worth holding next to the row above it. The fund's fee is the
+      only line in that list you <em>can</em> set, and it is the only one
+      charged with certainty — the market may do anything, prices may do
+      anything, and the fee is taken every year regardless. People spend weeks
+      choosing a forecast they cannot influence and minutes on the one number
+      they decide outright.
+    </p>
 
     <div class="pt-4 border-t border-navy-200 dark:border-navy-800">
       <p class="text-sm text-navy-600 dark:text-navy-400">
         And there is a harder version of this:
         <span class="font-medium text-navy-800 dark:text-navy-200">what if the average is fine, but the bad years come at the end?</span>
       </p>
-      <p class="text-xs text-navy-400 dark:text-navy-500 mt-1">That is the next step — coming shortly.</p>
     </div>
 
   </div>
@@ -157,16 +196,19 @@
     if (!curve) return;
 
     if (curve.breakeven === null) {
+      // Four levers now, not three. The fund is the newest and the only one
+      // that costs the reader nothing to pull.
       el.textContent =
         `Even at ${pct(curve.max, 0)} growth this plan does not typically reach ` +
-        `the goal. Growth alone will not close it — the amount, the years or the ` +
-        `size of the goal has to move.`;
+        `the goal. Growth alone will not close it — the amount, the years, the ` +
+        `size of the goal, or the fund you hold it in has to move.`;
       mark.classList.add('hidden');
     } else {
       el.textContent =
-        `This plan needs growth above ${pct(curve.breakeven)} a year to reach the ` +
-        `goal on a typical run. Below that line you finish short however patient ` +
-        `you are.`;
+        `This plan needs the market to do better than ${pct(curve.breakeven)} a ` +
+        `year — before the fund takes its ${pct(curve.expenseRatio, 2)} — to reach ` +
+        `the goal on a typical run. Below that line you finish short however ` +
+        `patient you are.`;
       $('sipBreakevenLabel')!.textContent = pct(curve.breakeven);
       place(mark, curve.breakeven);
     }
@@ -186,24 +228,39 @@
     if (!p || !inputs) return;
 
     $('sipGrowthValue')!.textContent = pct(growth);
+    // The chain, in the order the reader meets it: what the market does, what
+    // the fund takes, what inflation eats, what is actually left. Every step is
+    // on screen, so the last figure is traceable without arithmetic (dd-009).
+    $('sipgGross')!.textContent = `${pct(growth)} a year`;
+    $('sipgFee')!.textContent = `− ${pct(curve.expenseRatio, 2)} a year`;
     $('sipgInflation')!.textContent = `− ${pct(inputs.expectedInflation)} a year`;
     $('sipgReal')!.textContent = `${pct(p.real)} a year`;
     $('sipgTarget')!.textContent = money(inputs.targetRealWealth);
-    $('sipgEnd')!.textContent = money(p.endReal);
-    $('sipgOdds')!.textContent = `${Math.round(p.odds * 100)} in 100`;
+    // Both frames, always. Neither depends on which view the reader has
+    // selected above, so this rung cannot disagree with the Answer - it
+    // contains the Answer's figure whichever mode the page is in.
+    $('sipgEnd')!.textContent = money(p.endRealPreTax);
+    $('sipgEndNet')!.textContent = money(p.endRealPostTax);
+    $('sipgOdds')!.textContent = `${Math.round(p.oddsAfterTax * 100)} in 100`;
+    $('sipgTaxNote')!.textContent =
+      `${pct(inputs.ltcgTax, 1)} on the gain, first ₹1.25 lakh exempt — ` +
+      `that is ${money(p.endRealPreTax - p.endRealPostTax)} of this plan`;
 
     const end = $('sipgEnd') as HTMLElement;
-    end.className = 'text-lg font-bold tabular-nums ' +
-      (p.endReal >= inputs.targetRealWealth
+    end.className = 'text-base font-semibold tabular-nums text-navy-700 dark:text-navy-300';
+
+    const net = $('sipgEndNet') as HTMLElement;
+    net.className = 'text-lg font-bold tabular-nums ' +
+      (p.endRealPostTax >= inputs.targetRealWealth
         ? 'text-emerald-700 dark:text-emerald-400'
-        : p.endReal >= inputs.targetRealWealth * 0.75
+        : p.endRealPostTax >= inputs.targetRealWealth * 0.75
           ? 'text-amber-600 dark:text-amber-400'
           : 'text-rose-600 dark:text-rose-400');
 
     const odds = $('sipgOdds') as HTMLElement;
     odds.className = 'text-base font-semibold tabular-nums ' +
-      (p.odds >= 0.5 ? 'text-emerald-700 dark:text-emerald-400'
-       : p.odds >= 0.25 ? 'text-amber-600 dark:text-amber-400'
+      (p.oddsAfterTax >= 0.5 ? 'text-emerald-700 dark:text-emerald-400'
+       : p.oddsAfterTax >= 0.25 ? 'text-amber-600 dark:text-amber-400'
        : 'text-rose-600 dark:text-rose-400');
   }
 

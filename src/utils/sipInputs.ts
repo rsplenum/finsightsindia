@@ -1,5 +1,6 @@
 import { parseFormattedNumber } from './formatters';
 import { pricePut } from './putPricing';
+import { fundCostById, DEFAULT_FUND_COST } from './fundCosts';
 import type { SipInputs } from './sipAdvice';
 
 /**
@@ -28,7 +29,10 @@ const F = {
   seed: 'seedCapital',
   monthly: 'monthlySip',
   target: 'targetRealWealth',
-  stepUp: 'stepUpRate',
+  stepUp: 'sipRealStepUp',
+  mode: 'sipContributionMode',
+  income: 'sipMonthlyIncome',
+  savingsRate: 'sipSavingsRate',
   years: 'investmentYears',
   inflation: 'inflationRate',
   ret: 'sipExpectedReturn',
@@ -41,6 +45,7 @@ const F = {
   hedgeToggle: 'bsHedgingToggle',
   premium: 'sipHedgingDrag',
   floor: 'sipHedgingFloor',
+  fundPlan: 'sipFundPlan',
 } as const;
 
 /** The three entry fields, which mirror three of the above and nothing more. */
@@ -93,7 +98,14 @@ export function readSipInputs(): SipInputs {
     seedCapital: parseFormattedNumber(el(F.seed)?.value ?? '') || 0,
     monthlySip: money(F.monthly, 0),
     targetRealWealth: money(F.target, 0),
-    annualStepUp: num(F.stepUp, 0),
+    // dd-017. The reader's monthly figure is read as TODAY'S money unless they
+    // say otherwise, and the step-up on top of it is a REAL rise - career
+    // progression - not the whole of the escalation. Zero here is a complete
+    // plan: hold your saving level. It used to mean "let it decay".
+    contributionMode: (el(F.mode)?.value as any) || 'real',
+    realStepUp: num(F.stepUp, 0),
+    monthlyIncome: money(F.income, 0),
+    savingsRatePct: num(F.savingsRate, 20),
     horizonYears: Math.max(1, Math.min(60, Math.round(num(F.years, 20)))),
     expectedInflation: num(F.inflation, 6),
     expectedReturn: num(F.ret, 13.4),
@@ -105,7 +117,7 @@ export function readSipInputs(): SipInputs {
     goldPct: gold / total,
     bsEnabled: checked(F.hedgeToggle),
     // PRICED, not read. dd-013 and sol-029: the planner shipped a free premium
-    // input that still said 1.85% while rung 5 priced the same contract at
+    // input that still said 1.85% while rung 6 priced the same contract at
     // 5.73%, and the ledger duly reported a return per rupee on a floor nobody
     // would sell at that price. This page's premium was worse - the literal
     // `0.0185` appeared at two call sites and moved for nothing at all.
@@ -114,6 +126,10 @@ export function readSipInputs(): SipInputs {
     // does the one conversion to a portfolio-level charge.
     hedgingDragCost: pricePut(floorPct, roughness, HEDGE_TERM_MONTHS).annual,
     hedgingFloorLimit: floorPct,
+    // Chosen by name from a small list, never typed as a number. sol-028's
+    // lesson a third time: the reader picks a fund they could actually own,
+    // and the percentage follows from it.
+    expenseRatio: fundCostById(el(F.fundPlan)?.value ?? DEFAULT_FUND_COST.id).expenseRatio,
     numSimulations: SIP_SIMS,
     seed: SIP_SEED,
   };

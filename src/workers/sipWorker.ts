@@ -88,8 +88,10 @@ function required(params: any, key: string): number {
   if (!Number.isFinite(v)) {
     throw new Error(
       `sipWorker: ${key} is required and was ${JSON.stringify(params?.[key])}. ` +
-      `Growth, roughness and the floor are assumptions about the world; this ` +
-      `engine holds no opinion about them (sol-028).`
+      `Growth, roughness, the floor and the fund's fee are assumptions about ` +
+      `the world; this engine holds no opinion about them (sol-028). A fund ` +
+      `that costs nothing to own is an assumption too, and the most expensive ` +
+      `one to leave implicit.`
     );
   }
   return v;
@@ -160,7 +162,20 @@ const HEDGE_TERM_MONTHS = 12;
 interface World {
 	seedCapital: number;
 	monthlySip: number;
+	/**
+	 * The REAL increase in the contribution each year, as a fraction. Career
+	 * progression, on top of merely keeping pace with prices.
+	 *
+	 * dd-017. This used to be the NOMINAL step, so a value of zero meant the
+	 * saver's contribution decayed with inflation for the whole horizon - two
+	 * thirds of its purchasing power over twenty years. The planner has always
+	 * escalated its withdrawal by (1 + inflation) * (1 + stepUp), so the same
+	 * field meant "hold purchasing power" there and "get poorer" here, in one
+	 * product, under one name. It means the planner's thing on both pages now.
+	 */
 	stepUpRate: number;
+	/** Needed here because the escalation is defined against it. */
+	inflationRate: number;
 	horizonYears: number;
 	eqPct: number;
 	debtPct: number;
@@ -173,7 +188,39 @@ interface World {
 	equityVolatility: number;
 	/** Depth of the protective floor, negative %, e.g. -10. */
 	hedgingFloorLimit: number;
+	/**
+	 * What the fund charges to own it, % a year. Required, like growth and
+	 * roughness, and for the same reason: this engine used to assume a fund that
+	 * costs nothing, and a zero that arrives by omission is the hardest kind to
+	 * find. It is also the ONLY certain cost in the whole simulation - the market
+	 * may or may not fall, but this is taken every year regardless.
+	 */
+	annualExpenseRatio: number;
+	/**
+	 * An explicit annual EQUITY return for each year, as fractions, or null for
+	 * the usual random walk. When supplied nothing is drawn at all: debt and gold
+	 * run at their own expected returns and the path is fully determined.
+	 *
+	 * This exists so the order-of-returns rung can hold the multiset of yearly
+	 * returns fixed and permute only WHERE the bad run falls. The mean is then
+	 * identical across every scenario by construction rather than by
+	 * approximation, which is what makes that screen a proof and not an anecdote.
+	 *
+	 * The alternative was a second, deterministic SIP walk beside this one. That
+	 * is how the LTCG double-charge came to need fixing twice on the planner, and
+	 * it is dd-013: a new surface built beside the engine instead of on top of it.
+	 */
+	equityReturnsByYear: number[] | null;
 }
+
+/**
+ * Deterministic monthly step for an annual return, compounding to it exactly.
+ * Used only on the fixed-sequence path, where a drawn return would defeat the
+ * purpose of fixing the sequence.
+ */
+const monthlyOf = (annualFraction: number) => Math.pow(1 + annualFraction, 1 / 12) - 1;
+const DEBT_MONTHLY_FIXED = monthlyOf(DEBT_RETURN_PCT / 100);
+const GOLD_MONTHLY_FIXED = monthlyOf(GOLD_RETURN_PCT / 100);
 
 /**
  * Pull the world out of a params bag once, loudly, so that a missing assumption
@@ -184,6 +231,10 @@ function readWorld(params: any): World {
 		seedCapital: Number(params.seedCapital) || 0,
 		monthlySip: Number(params.monthlySip) || 0,
 		stepUpRate: Number(params.stepUpRate) || 0,
+		// Required rather than defaulted: the contribution's escalation is now
+		// defined against inflation, so a missing rate would silently mean a
+		// contribution flat in nominal terms - the exact defect dd-017 names.
+		inflationRate: required(params, 'inflationRate'),
 		horizonYears: Math.max(1, Math.round(required(params, 'horizonYears'))),
 		eqPct: Number(params.eqPct) || 0,
 		debtPct: Number(params.debtPct) || 0,
@@ -193,6 +244,10 @@ function readWorld(params: any): World {
 		equityReturn: required(params, 'equityReturn'),
 		equityVolatility: required(params, 'equityVolatility'),
 		hedgingFloorLimit: required(params, 'hedgingFloorLimit'),
+		annualExpenseRatio: required(params, 'annualExpenseRatio'),
+		equityReturnsByYear: Array.isArray(params.equityReturnsByYear)
+			? params.equityReturnsByYear.map((r: number) => Number(r))
+			: null,
 	};
 }
 
@@ -200,7 +255,8 @@ function simulatePath(
 	w: World,
 	monthlySip: number,
 	recordYear:
-		((yr: number, balance: number, premiumPaid: number, floorPayout: number) => void)
+		((yr: number, balance: number, premiumPaid: number, floorPayout: number,
+		  feePaid: number) => void)
 		| null,
 	hedgeOverride?: { bsEnabled: boolean; annualHedgingDragCost: number }
 ): number {
@@ -213,6 +269,8 @@ function simulatePath(
 		: w.annualHedgingDragCost;
 
 	const eq = assetDrift(w.equityReturn, w.equityVolatility);
+	const fixedReturns = w.equityReturnsByYear;
+	const expenseMonthly = w.annualExpenseRatio / 100 / 12;
 	const floor = w.hedgingFloorLimit / 100;
 	let portBal = seedCapital;
 	let currentSip = monthlySip;
@@ -226,9 +284,16 @@ function simulatePath(
 	// Per-year ledger figures, reset each year end.
 	let premiumThisYear = 0;
 	let payoutThisYear = 0;
+	let feeThisYear = 0;
+
+	// (1 + inflation) * (1 + real step). At a real step of zero the instalment
+	// holds its purchasing power, which is what a saver means when they say
+	// "25,000 a month" - and it is exactly how the planner escalates the
+	// withdrawal on the other side of the same product (dd-017).
+	const escalation = (1 + w.inflationRate) * (1 + stepUpRate);
 
 	for (let yr = 1; yr <= horizonYears; yr++) {
-		if (yr > 1) { currentSip = currentSip * (1 + stepUpRate); }
+		if (yr > 1) { currentSip = currentSip * escalation; }
 
 		for (let m = 1; m <= 12; m++) {
 			portBal += currentSip;
@@ -246,9 +311,24 @@ function simulatePath(
 				monthOfTerm++;
 			}
 
-			const rEqM = Math.exp(eq.drift + eq.volMult * getRandomNormal()) - 1;
-			const rDebtM = Math.exp(debt.drift + debt.volMult * getRandomNormal()) - 1;
-			const rGoldM = Math.exp(gold.drift + gold.volMult * getRandomNormal()) - 1;
+			// A fixed sequence draws nothing. The equity year is spread evenly
+			// across its twelve months, so the hedge index - which compounds those
+			// months and is tested at expiry - lands exactly on the year's stated
+			// return, and the floor therefore binds precisely when that year is
+			// worse than the floor. Anything else would make the demonstration
+			// disagree with its own crash figure.
+			const fixedYear = fixedReturns
+				? fixedReturns[yr - 1] ?? w.equityReturn / 100
+				: null;
+			const rEqM = fixedYear !== null
+				? monthlyOf(fixedYear)
+				: Math.exp(eq.drift + eq.volMult * getRandomNormal()) - 1;
+			const rDebtM = fixedReturns
+				? DEBT_MONTHLY_FIXED
+				: Math.exp(debt.drift + debt.volMult * getRandomNormal()) - 1;
+			const rGoldM = fixedReturns
+				? GOLD_MONTHLY_FIXED
+				: Math.exp(gold.drift + gold.volMult * getRandomNormal()) - 1;
 
 			// The equity return itself is never truncated. The put is an asset
 			// held alongside the portfolio, not a cap on monthly returns.
@@ -256,6 +336,16 @@ function simulatePath(
 
 			const portReturn = (eqPct * rEqM) + (debtPct * rDebtM) + (goldPct * rGoldM);
 			portBal = portBal * (1 + portReturn);
+
+			// The fund's own fee, taken monthly on the balance whatever the
+			// market did. Deliberately a separate statement from the return
+			// above rather than folded into it - netting a cost against a
+			// return is exactly what makes a cost invisible, and it is the same
+			// reason the hedging premium and payout are two statements and not
+			// one expression.
+			const feeThisMonth = portBal * expenseMonthly;
+			portBal -= feeThisMonth;
+			feeThisYear += feeThisMonth;
 
 			if (hedged && monthOfTerm === HEDGE_TERM_MONTHS) {
 				const indexReturn = hedgeIndex - 1;
@@ -269,10 +359,11 @@ function simulatePath(
 		}
 
 		if (recordYear) {
-			recordYear(yr, Math.max(0, portBal), premiumThisYear, payoutThisYear);
+			recordYear(yr, Math.max(0, portBal), premiumThisYear, payoutThisYear, feeThisYear);
 		}
 		premiumThisYear = 0;
 		payoutThisYear = 0;
+		feeThisYear = 0;
 	}
 
 	return portBal;
@@ -308,13 +399,16 @@ const LTCG_EXEMPTION = 125000;
  * any year rather than only at the horizon.
  */
 function contributions(w: World, monthlySip: number, inflationRate: number) {
+	// The same escalation the simulation uses. Two copies of this arithmetic is
+	// how the cost of a plan comes to disagree with the plan.
+	const escalation = (1 + inflationRate) * (1 + w.stepUpRate);
 	const nominalByYear = [w.seedCapital];
 	let nominal = w.seedCapital;
 	let realPV = w.seedCapital;
 	let sip = monthlySip;
 	let month = 0;
 	for (let yr = 1; yr <= w.horizonYears; yr++) {
-		if (yr > 1) sip = sip * (1 + w.stepUpRate);
+		if (yr > 1) sip = sip * escalation;
 		for (let m = 1; m <= 12; m++) {
 			month++;
 			nominal += sip;
@@ -438,13 +532,31 @@ export function runSimulation(params: any) {
 		? Array.from({ length: horizonYears + 1 }, () => new Float64Array(numSims)) : null;
 	const bindingYears = new Float64Array(wantLedger ? numSims : 0);
 
+	// What the fund charged, per path. Collected ALWAYS, unlike the hedging
+	// ledger above, because unlike the hedge this cost is not optional - it is
+	// paid on every path of every run, and the whole point of surfacing it is
+	// that it was invisible while it was merely netted off the returns.
+	//
+	// Both moneys, for the same reason the contributions are: a rupee taken in
+	// year 20 is not a rupee taken today, and the raw sum overstates the real
+	// cost badly over a long horizon (dd-004).
+	const feeNominalByPath = new Float64Array(numSims);
+	const feeRealByPath = new Float64Array(numSims);
+
 	for (let s = 0; s < numSims; s++) {
 		let runningPremium = 0;
 		let runningPayout = 0;
 		simulatePath(
 			w, monthlySip,
-			(yr, balance, premiumPaid, floorPayout) => {
+			(yr, balance, premiumPaid, floorPayout, feePaid) => {
 				yearlyPathsNominal[yr][s] = balance;
+				feeNominalByPath[s] += feePaid;
+				// Discounted from the year end it was charged in. Within-year
+				// timing is ignored deliberately: it moves the figure by well
+				// under a percent and the alternative is a second monthly loop
+				// whose only job is to be slightly more precise about a number
+				// the reader reads to the nearest thousand.
+				feeRealByPath[s] += feePaid / Math.pow(1 + inflationRate, yr);
 				if (cumPremium && cumPayout) {
 					runningPremium += premiumPaid;
 					runningPayout += floorPayout;
@@ -473,7 +585,14 @@ export function runSimulation(params: any) {
 		}
 		for (let yr = 0; yr <= horizonYears; yr++) {
 			const sorted = Array.from(twin[yr]).sort((a, b) => a - b);
-			unhedgedP50Nominal.push(Math.round(sorted[Math.floor(numSims * 0.50)] || 0));
+			// NOT rounded here. It was, and the result was that this quantity
+			// reached the ledger through two roundings - to the rupee in nominal
+			// terms, then again after discounting - while the very same median
+			// reached the chart through one. The two disagreed by a rupee, which
+			// is small, invisible in code and exactly the class of thing that
+			// makes a reader stop trusting a page (dd-013). Round once, at the
+			// end, where the number is actually shown.
+			unhedgedP50Nominal.push(sorted[Math.floor(numSims * 0.50)] || 0);
 		}
 	}
 
@@ -562,6 +681,31 @@ export function runSimulation(params: any) {
 	const sortedNet = Array.from(netReal).sort((a, b) => a - b);
 	const at = (q: number) => sortedNet[Math.floor(numSims * q)] || 0;
 
+	// The AFTER-TAX outcome, computed whether or not the reader is currently
+	// looking at after-tax figures.
+	//
+	// Rahul, 16 Aug: rung 3 deducted no tax. It was obeying the page's
+	// BEFORE TAX / AFTER TAX button, which is dd-006's forbidden shape - the gap
+	// between the two is the lesson, so it cannot be a mode. A surface can only
+	// show both if both exist, and only one did. This is cheap: one more pass
+	// over an array the engine already has.
+	const netRealTaxed = new Float64Array(numSims);
+	for (let s = 0; s < numSims; s++) {
+		netRealTaxed[s] = netRealFinal(
+			finalNominal[s], nominalTotalInvested, true, ltcgTaxPct, inflationRate, horizonYears
+		);
+	}
+	const sortedTaxed = Array.from(netRealTaxed).sort((a, b) => a - b);
+	const reachedTaxed = targetRealWealth === null
+		? null
+		: sortedTaxed.filter((v) => v >= targetRealWealth).length / numSims;
+
+	// WHICH path is the median one. Needed because the fee is charged along a
+	// path and cannot be recovered from a percentile: sorting the fees would
+	// give the median fee, which belongs to some other future entirely.
+	const medianPathIdx = Array.from({ length: numSims }, (_, i) => i)
+		.sort((a, b) => finalNominal[a] - finalNominal[b])[Math.floor(numSims * 0.5)];
+
 	// The tax the TYPICAL path pays, not the average tax across all of them.
 	//
 	// The average was the obvious thing to compute and it is the wrong number
@@ -627,6 +771,27 @@ export function runSimulation(params: any) {
 		taxPaidNominal: Math.round(taxPaidReal * Math.pow(1 + inflationRate, horizonYears)),
 		/** Ending wealth BEFORE that tax, today's money - the flow rung's top line. */
 		grossRealFinal: Math.round(grossMedianReal),
+		/**
+		 * Ending wealth AFTER the tax due on selling up, always - regardless of
+		 * which view the reader has selected. Paired with `grossRealFinal` so any
+		 * surface can put the two side by side instead of behind a toggle.
+		 */
+		afterTaxRealP50: Math.round(sortedTaxed[Math.floor(numSims * 0.5)] || 0),
+		/** Share of futures reaching the goal once that tax is paid, 0..1. */
+		reachedTargetAfterTax: reachedTaxed,
+		/**
+		 * What the fund charged on THE SAME PATH the other figures describe.
+		 *
+		 * The median path, not the median fee, and the distinction is sol-031
+		 * exactly: that entry was four rows of a column made of three medians
+		 * and a mean, which did not add up. Ending wealth is a monotone
+		 * transform of the ending nominal balance, so the path sitting at the
+		 * 50th percentile is the same one for every figure in the flow rung -
+		 * and the column therefore closes by construction rather than by luck.
+		 */
+		feePaidReal: Math.round(feeRealByPath[medianPathIdx] ?? 0),
+		/** The same fees, as the raw sum of rupees actually handed over. */
+		feePaidNominal: Math.round(feeNominalByPath[medianPathIdx] ?? 0),
 		/** Restated so every consumer reads the goal the engine actually used. */
 		targetRealWealth,
 		isPostTax,

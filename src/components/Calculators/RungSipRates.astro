@@ -1,5 +1,5 @@
 ---
-// Rung 1 of the SIP ladder. The spine (dd-005).
+// Rung 2 of the SIP ladder. The spine (dd-005).
 //
 // The planner's two-rates rung asks what the pot really grows at against what
 // is really being taken out. The accumulation twin asks what the money really
@@ -41,6 +41,13 @@
       </div>
       <div class="flex items-baseline justify-between gap-4 px-4 py-3">
         <span class="text-sm text-navy-700 dark:text-navy-300">
+          The fund takes
+          <span class="block text-xs text-navy-500 dark:text-navy-400">whatever the market does</span>
+        </span>
+        <span id="sipRateFee" class="text-base font-semibold tabular-nums text-rose-600 dark:text-rose-400">—</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-4 px-4 py-3">
+        <span class="text-sm text-navy-700 dark:text-navy-300">
           Prices rise by
           <span class="block text-xs text-navy-500 dark:text-navy-400">so the same rupee buys less each year</span>
         </span>
@@ -49,7 +56,7 @@
       <div class="flex items-baseline justify-between gap-4 px-4 py-3 bg-navy-50/60 dark:bg-navy-900/40">
         <span class="text-sm font-medium text-navy-800 dark:text-navy-200">
           So you are genuinely better off by
-          <span class="block text-xs font-normal text-navy-500 dark:text-navy-400">this is the number that actually matters</span>
+          <span class="block text-xs font-normal text-navy-500 dark:text-navy-400">these compound, they do not subtract</span>
         </span>
         <span id="sipRateReal" class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">—</span>
       </div>
@@ -82,6 +89,10 @@
 </section>
 
 <script>
+  import {
+    contributionPlan, instalmentInYear, realRateChain,
+  } from '../../utils/sipAdvice';
+
   const $ = (id: string) => document.getElementById(id);
   const pct = (n: number, dp = 1) => `${n >= 0 ? '' : '−'}${Math.abs(n).toFixed(dp)}%`;
   const grp = (n: number) => Math.round(n).toLocaleString('en-IN');
@@ -92,23 +103,32 @@
     const i = inputs.expectedInflation;
     const years = inputs.horizonYears;
 
-    // Real growth is the ratio, not the difference. 13.4% and 6% leaves 7.0%,
-    // not 7.4% - and over twenty years that gap compounds into a large error.
-    const real = ((1 + g / 100) / (1 + i / 100) - 1) * 100;
+    // ONE definition of the chain, shared with rung 4 (sol-038). This used to
+    // be a second hand-written copy of the same ratio, and when the fund fee was
+    // added to rung 4's copy and not to this one the page printed 6.7% and 6.9%
+    // for the identical quantity.
+    const chain = realRateChain(inputs);
+    const real = chain.real;
 
     // What the LAST instalment is worth in today's money. A step-up pushes the
     // nominal figure up; inflation pulls the real one down; this row is where
     // the two meet, and it is the argument for the step-up control.
-    const lastNominal = inputs.monthlySip * Math.pow(1 + inputs.annualStepUp / 100, years - 1);
+    // dd-017 / sol-035. This read `inputs.annualStepUp`, a field that no longer
+    // exists - the contribution's escalation is derived from the mode now - so
+    // it produced NaN and printed it. The rung asks the engine's own derivation
+    // rather than re-deriving the schedule from a field it hopes is there.
+    const plan = contributionPlan(inputs);
+    const lastNominal = instalmentInYear(inputs, years);
     const lastReal = lastNominal / Math.pow(1 + i / 100, years - 1);
 
-    $('sipRateGross')!.textContent = `+ ${pct(g)} a year`;
-    $('sipRateInflation')!.textContent = `− ${pct(i)} a year`;
+    $('sipRateGross')!.textContent = `+ ${pct(chain.growth)} a year`;
+    $('sipRateFee')!.textContent = `− ${pct(chain.fee, 2)} a year`;
+    $('sipRateInflation')!.textContent = `− ${pct(chain.inflation)} a year`;
     $('sipRateReal')!.textContent = `${pct(real, 1)} a year`;
-    $('sipRateContribution')!.textContent = `₹${grp(inputs.monthlySip)} a month`;
+    $('sipRateContribution')!.textContent = `₹${grp(plan.monthly)} a month`;
     $('sipRateLastReal')!.textContent = `₹${grp(lastReal)} a month`;
 
-    const gap = lastReal / inputs.monthlySip;
+    const gap = plan.monthly > 0 ? lastReal / plan.monthly : 0;
     const lastRow = $('sipRateLastReal') as HTMLElement;
     lastRow.className =
       'text-lg font-bold tabular-nums ' +
@@ -118,25 +138,40 @@
           ? 'text-amber-600 dark:text-amber-400'
           : 'text-rose-600 dark:text-rose-400');
 
+    // The rung's argument changed with dd-017 and the copy had to change with
+    // it. It used to be "a fixed instalment shrinks, so consider a step-up".
+    // Holding purchasing power is the DEFAULT now, so the interesting sentence
+    // is what that costs in cash - and the shrinking version is only true for
+    // someone who has deliberately chosen a flat rupee amount.
     if (real <= 0) {
       $('sipRatesInsight')!.textContent =
         `Your savings grow ${pct(g)} while prices rise ${pct(i)}, so in what the ` +
         `money can actually buy you are going backwards. Every year of this plan ` +
         `costs you real money, however healthy the balance looks on the statement.`;
-    } else if (inputs.annualStepUp <= 0) {
+    } else if (!plan.holdsPurchasingPower) {
       $('sipRatesInsight')!.textContent =
         `Your savings grow ${pct(g)}, but prices rise ${pct(i)}, so you are only ` +
-        `genuinely ${pct(real, 1)} better off each year. And the ₹${grp(inputs.monthlySip)} ` +
-        `you put in stays ₹${grp(inputs.monthlySip)} while everything around it gets ` +
-        `dearer — by year ${years} it is really worth ₹${grp(lastReal)} a month, ` +
-        `about ${Math.round(gap * 100)}% of what it costs you today.`;
+        `genuinely ${pct(real, 1)} better off each year. And you have chosen to ` +
+        `keep the instalment at ₹${grp(plan.monthly)} while everything around it ` +
+        `gets dearer — by year ${years} it is really worth ₹${grp(lastReal)} a ` +
+        `month, about ${Math.round(gap * 100)}% of what it costs you today. That ` +
+        `is a decision to save less every year, not a neutral one.`;
+    } else if (plan.realStep > 0) {
+      $('sipRatesInsight')!.textContent =
+        `Your savings grow ${pct(g)}, but prices rise ${pct(i)}, so you are ` +
+        `genuinely ${pct(real, 1)} better off each year. Your instalment keeps ` +
+        `pace with prices and adds ${pct(plan.realStep * 100)} a year on top, so ` +
+        `by year ${years} you are paying ₹${grp(lastNominal)} a month — worth ` +
+        `₹${grp(lastReal)} in today's money, more than the ₹${grp(plan.monthly)} ` +
+        `you start with. You are saving harder in real terms every year.`;
     } else {
       $('sipRatesInsight')!.textContent =
         `Your savings grow ${pct(g)}, but prices rise ${pct(i)}, so you are ` +
-        `genuinely ${pct(real, 1)} better off each year. Raising the amount by ` +
-        `${pct(inputs.annualStepUp)} a year keeps your last instalment worth ` +
-        `₹${grp(lastReal)} in today's money against the ₹${grp(inputs.monthlySip)} ` +
-        `you start with — the contribution holds its size instead of shrinking.`;
+        `genuinely ${pct(real, 1)} better off each year. The same erosion applies ` +
+        `to what you put in, which is why your instalment rises with prices: by ` +
+        `year ${years} you are paying ₹${grp(lastNominal)} a month, and that is ` +
+        `still the same ₹${grp(plan.monthly)} of spending power you are giving ` +
+        `up today. What it costs you never changes.`;
     }
 
     $('sipRatesIdea')!.textContent =

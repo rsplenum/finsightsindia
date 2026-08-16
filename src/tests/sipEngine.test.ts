@@ -26,6 +26,13 @@ const base = {
   equityReturn: 12,
   equityVolatility: 15,
   hedgingFloorLimit: -8,
+  // Zero, stated. Every figure below was recorded in a world where the fund was
+  // free to own, because until 16 Aug the engine had no idea funds charged
+  // anything. Writing the zero down rather than inheriting it is the whole
+  // point of sol-028 - and it keeps these characterization figures describing
+  // the world they were actually taken from. What the fee does is asserted
+  // separately, below.
+  annualExpenseRatio: 0,
 };
 
 const sim = (over = {}) => runSimulation({ ...base, monthlySip: 20000, numSims: 800, ...over });
@@ -64,6 +71,16 @@ describe('sol-028 - the engine has no opinion about the market', () => {
     const { hedgingFloorLimit, ...noFloor } = base;
     expect(() => runSimulation({ ...noFloor, monthlySip: 20000, numSims: 10 }))
       .toThrow(/hedgingFloorLimit is required/);
+  });
+
+  it('the fund fee must be stated too - a free fund is not a default', () => {
+    // The newest assumption gets the strictest treatment, because a zero that
+    // arrives by omission is the hardest kind to find. Growth is uncertain and
+    // the crash is uncertain; this one is charged every year regardless, and it
+    // was the only cost missing.
+    const { annualExpenseRatio, ...noFee } = base;
+    expect(() => runSimulation({ ...noFee, monthlySip: 20000, numSims: 10 }))
+      .toThrow(/annualExpenseRatio is required/);
   });
 
   it('a different regime gives a different answer', () => {
@@ -117,14 +134,43 @@ describe('SIP simulation - internal consistency', () => {
   });
 
   it('total invested matches the step-up schedule', () => {
-    // 20k/month, 10% annual step-up, 20 years, no seed capital.
+    // 20k/month, 20 years, no seed capital, and a step-up that is now a REAL
+    // 10% on top of holding pace with 6% inflation (dd-017). The instalment
+    // therefore rises by 1.06 * 1.10 a year in cash.
+    //
+    // This figure moved when the meaning of `stepUpRate` changed, and it moved
+    // deliberately: the field used to be the whole of the escalation, so a
+    // 10% step-up meant the saver's real contribution grew by only 3.8% a year
+    // while the planner's identically named field meant a real 10% on the other
+    // side of the same product.
     let expected = 0;
     let s = 20000;
+    const escalation = 1.06 * 1.10;
     for (let yr = 1; yr <= 20; yr++) {
-      if (yr > 1) s *= 1.10;
+      if (yr > 1) s *= escalation;
       expected += s * 12;
     }
     expect(Math.abs(sim().nominalTotalInvested - expected)).toBeLessThan(1);
+  });
+
+  it('a real step-up of zero holds the instalment\'s purchasing power', () => {
+    // dd-017, and the reason the default is what it is. At a zero real step the
+    // contribution still rises in cash, exactly with prices, so what the saver
+    // gives up each month never changes. It used to stand still in cash and
+    // fall by two thirds in value across the horizon.
+    const flat = sim({ stepUpRate: 0 });
+    let expected = 0;
+    let s = 20000;
+    for (let yr = 1; yr <= 20; yr++) {
+      if (yr > 1) s *= 1.06;
+      expected += s * 12;
+    }
+    expect(Math.abs(flat.nominalTotalInvested - expected)).toBeLessThan(1);
+
+    // And the real cost per year is genuinely constant: 20,000 x 12, every
+    // year, discounted back. Twenty years of it, to within rounding.
+    expect(flat.realOutflowPV / (20000 * 12 * 20)).toBeGreaterThan(0.94);
+    expect(flat.realOutflowPV / (20000 * 12 * 20)).toBeLessThan(1.0);
   });
 
   it('the real cost of the plan is less than its nominal cost', () => {
@@ -267,7 +313,11 @@ describe('SIP simulation - portfolio insurance', () => {
 // every path. The page's old `calculateNetRealWealth` could only ever reach
 // p10, p50 and p90, which is why the question was never asked.
 describe('SIP simulation - did you get there', () => {
-  const withGoal = (over = {}) => sim({ targetRealWealth: 10000000, ...over });
+  // A goal this plan does NOT walk to, so tax and rates still move the odds.
+  // Under dd-017 the instalment holds its purchasing power, which lifted these
+  // inputs to a near-certain success and flattened every assertion below to 1.
+  const withGoal = (over = {}) =>
+    sim({ targetRealWealth: 10000000, stepUpRate: 0, monthlySip: 16000, ...over });
 
   it('there is no verdict without a goal', () => {
     expect(sim().final.reachedTarget).toBeNull();

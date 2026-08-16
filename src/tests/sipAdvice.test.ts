@@ -13,7 +13,12 @@ const base: SipInputs = {
   seedCapital: 0,
   monthlySip: 25000,
   targetRealWealth: 50000000,
-  annualStepUp: 0,
+  // dd-017: the monthly figure is in today's money and holds its value. A real
+  // step-up of zero is a complete plan, not an absent one.
+  contributionMode: 'real' as const,
+  realStepUp: 0,
+  monthlyIncome: 0,
+  savingsRatePct: 20,
   horizonYears: 20,
   expectedInflation: 6,
   expectedReturn: DEFAULT_REGIME.growth,
@@ -26,6 +31,10 @@ const base: SipInputs = {
   bsEnabled: false,
   hedgingDragCost: 0,
   hedgingFloorLimit: -10,
+  // Zero, stated. These figures were recorded before the engine knew a fund
+  // charges anything to own; writing the zero down keeps them describing the
+  // world they were taken from rather than silently inheriting a new one.
+  expenseRatio: 0,
   numSimulations: 400,
 };
 
@@ -184,9 +193,15 @@ describe('sipAdvice - the growth track', () => {
   const curve = growthCurve({ ...base, monthlySip: 40000 }, 6, 16, 2, 200);
 
   it('covers the whole track the control can reach', () => {
-    expect(curve.points[0].growth).toBe(6);
-    expect(curve.points[curve.points.length - 1].growth).toBe(16);
+    // The grid is ANCHORED on the reader's own assumption so the slider thumb
+    // can sit exactly where the readouts say it does, so the endpoints are the
+    // requested range rounded outwards rather than the request itself. It must
+    // still cover everything the control can reach, and it must contain the
+    // reader's growth exactly.
+    expect(curve.points[0].growth).toBeLessThanOrEqual(6);
+    expect(curve.points[curve.points.length - 1].growth).toBeGreaterThanOrEqual(16);
     expect(curve.readerGrowth).toBe(DEFAULT_REGIME.growth);
+    expect(curve.points.some((p) => p.growth === DEFAULT_REGIME.growth)).toBe(true);
   });
 
   it('better growth is never worse for the goal', () => {
@@ -201,8 +216,19 @@ describe('sipAdvice - the growth track', () => {
   it('real growth is the ratio, not the difference', () => {
     // 12% against 6% leaves 5.66%. Over twenty years the difference between
     // that and 6% is not a rounding error.
-    const p = curve.points.find((x) => x.growth === 12)!;
-    expect(p.real).toBeCloseTo(((1.12 / 1.06) - 1) * 100, 6);
+    //
+    // Asked of a point the curve actually computed rather than of the round
+    // number 12. Looking a point up by a tidy value only ever worked because
+    // the grid happened to start on one, which is the same accident that put
+    // the slider thumb half a step from the reader's own assumption.
+    const p = curve.points.find((x) => x.growth === curve.readerGrowth)!;
+    const g = 1 + p.growth / 100;
+    const kept = Math.pow(1 - base.expenseRatio / 100 / 12, 12);
+    expect(p.real).toBeCloseTo((g * kept / 1.06 - 1) * 100, 6);
+    // With no fee it collapses to the plain two-rate ratio it always was.
+    const free = growthCurve({ ...base, monthlySip: 40000, expenseRatio: 0 }, 6, 16, 2, 40);
+    const q = free.points.find((x) => x.growth === free.readerGrowth)!;
+    expect(q.real).toBeCloseTo((1 + q.growth / 100) / 1.06 * 100 - 100, 6);
   });
 
   it('the breakeven is the first growth rate that reaches the goal', () => {

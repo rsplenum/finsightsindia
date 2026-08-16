@@ -1,6 +1,12 @@
 ---
 // Layer 1 of sol-019, for accumulation: the Answer.
 //
+// RUNG NUMBERING, stated here because getting it wrong cost a round trip on
+// 16 Aug: every question the page asks is a rung, and THE ANSWER IS RUNG 1.
+// So: 1 Answer, 2 rates, 3 money flow, 4 growth, 5 sequence, 6 protection,
+// 7 expert. My own comments had been counting from the rates rung, so a report
+// about "rung 3" was answered in rung 4 and the real defect stayed shipped.
+//
 // Three inputs, opinionated defaults for everything else, and a result stated
 // as a sentence. Everything the old page asked for up front - a seed capital
 // field, a step-up, an inflation rate, three allocation sliders, four
@@ -69,15 +75,29 @@
         <span class="shrink-0">at the end of it.</span>
       </div>
 
-      <!-- dd-004. The goal is the one input where the frame is not obvious and
-           getting it wrong is silent: a reader who means "a crore, enough to
-           retire on" means today's money, and a crore in 2046 is a different
-           and much smaller wish. Stated at the point of entry, not in a
-           tooltip. -->
-      <p class="text-xs text-navy-500 dark:text-navy-400 pl-0.5">
-        In today's money — what ₹1 crore buys now, not what the number will read
-        in twenty years.
-      </p>
+      <!-- dd-004 and dd-017. The frame was stated for the goal and not for the
+           contribution, so the page took one input in today's money and the
+           other in rupees that quietly decayed for twenty years.
+           BOTH are in today's money now, and the interpretation is STATED
+           rather than asked: a mode question here would be a fourth input at
+           the very step that exists to have only three. -->
+      <div class="text-xs leading-relaxed text-navy-500 dark:text-navy-400 pl-0.5 space-y-1.5">
+        <p>
+          <span class="font-semibold text-navy-600 dark:text-navy-300">Both amounts are in today's money.</span>
+          ₹1 crore means what a crore buys now, not what the number will read in
+          twenty years. And ₹25,000 a month means ₹25,000 of today's spending
+          power — so we raise the instalment each year in line with prices to
+          keep it worth that. <span id="sipAnsEscalation" class="text-navy-600 dark:text-navy-300"></span>
+        </p>
+        <p>
+          When you retire you will ask for an income that holds its value, not a
+          fixed number of rupees. It is only fair to invest the same way.
+          <button type="button" id="sipAnsOpenContribution"
+                  class="underline decoration-dotted underline-offset-2 hover:text-navy-700 dark:hover:text-navy-200 cursor-pointer">
+            Change how your contribution grows
+          </button>
+        </p>
+      </div>
     </div>
 
     <!-- The answer -->
@@ -113,6 +133,7 @@
 </section>
 
 <script>
+  import { contributionPlan, instalmentInYear } from '../../utils/sipAdvice';
   import {
     readSipInputs,
     syncAdvancedFromEntry,
@@ -132,10 +153,28 @@
 
   let worker: Worker | null = null;
 
-  // Every figure on this screen is in today's prices, stated as such. Rung 2
+  // Every figure on this screen is in today's prices, stated as such. Rung 3
   // shows both moneys side by side; there is no mode to keep in sync, because a
   // difference that matters cannot be hidden behind a control (dd-006).
   const readInputs = readSipInputs;
+
+  function renderEscalation(inputs: any) {
+    const el = $('sipAnsEscalation');
+    if (!el) return;
+    const plan = contributionPlan(inputs);
+    const last = instalmentInYear(inputs, inputs.horizonYears);
+    if (!plan.holdsPurchasingPower) {
+      el.textContent =
+        `You have set a flat ₹${grp(plan.monthly)} a month, so by year ` +
+        `${inputs.horizonYears} it will buy about ` +
+        `₹${grp(plan.monthly / Math.pow(1 + inputs.expectedInflation / 100, inputs.horizonYears - 1))} ` +
+        `of what it buys today.`;
+      return;
+    }
+    el.textContent =
+      `That means paying ₹${grp(last)} a month by year ${inputs.horizonYears} — ` +
+      `worth the same ₹${grp(plan.monthly)} you can afford now.`;
+  }
 
   function renderAnswer(inputs: any, outlook: any) {
     const headline = $('sipAnsHeadline')!;
@@ -274,7 +313,20 @@
         }));
         return;
       }
+      if (e.data.stage === 'sequence') {
+        window.dispatchEvent(new CustomEvent('sip:sequence', {
+          detail: { inputs, sequence: e.data.sequence },
+        }));
+        return;
+      }
+      if (e.data.stage === 'protection') {
+        window.dispatchEvent(new CustomEvent('sip:protection', {
+          detail: { inputs, protection: e.data.protection },
+        }));
+        return;
+      }
 
+      renderEscalation(inputs);
       renderAnswer(inputs, e.data.outlook);
       // Every surface subscribes to this rather than running its own
       // simulation - including the expert panel below, which used to own a
@@ -300,6 +352,24 @@
 
     // Opens the last rung's first door - the controls - which is what a reader
     // clicking "change the assumptions" is asking for.
+    // dd-017: a real-terms instalment quietly commits the reader to a much
+    // larger cash figure later, and they are entitled to see it before they
+    // agree to it. This is the affordability check, not a flourish.
+    // Points at the control that actually exists, in the expert rung's
+    // assumptions. A link that scrolls somewhere with nothing to change is a
+    // promise the page does not keep. Giving rung 2 its own compact chooser is
+    // on the gate - it is the rung about inflation eating money, so it is the
+    // right home once it is built properly rather than bolted on now.
+    $('sipAnsOpenContribution')?.addEventListener('click', () => {
+      const rung = document.getElementById('rungSipExpert');
+      if (!rung) return;
+      const first = rung.querySelector('details') as HTMLDetailsElement | null;
+      if (first) first.open = true;
+      document.getElementById('sipContributionMode')?.scrollIntoView({
+        behavior: 'smooth', block: 'center',
+      });
+    });
+
     $('sipAnsOpenDetail')?.addEventListener('click', () => {
       const rung = document.getElementById('rungSipExpert');
       if (!rung) return;

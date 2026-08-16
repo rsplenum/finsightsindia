@@ -6,10 +6,15 @@ import InputGroup from '../components/InputGroup.astro';
 import SectionTitle from '../components/SectionTitle.astro';
 import ButtonGold from '../components/ButtonGold.astro';
 import { REGIME_PRESETS, DEFAULT_REGIME } from '../utils/regimePresets';
+import {
+	FUND_COST_PLANS, DEFAULT_FUND_COST, SEBI_EQUITY_TER_CAP, EXIT_LOAD_NOT_MODELLED,
+} from '../utils/fundCosts';
 import SipAnswer from '../components/Calculators/SipAnswer.astro';
 import RungSipRates from '../components/Calculators/RungSipRates.astro';
 import RungSipFlow from '../components/Calculators/RungSipFlow.astro';
 import RungSipGrowth from '../components/Calculators/RungSipGrowth.astro';
+import RungSipSequence from '../components/Calculators/RungSipSequence.astro';
+import RungSipProtection from '../components/Calculators/RungSipProtection.astro';
 import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 ---
 
@@ -33,6 +38,8 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 	<RungSipRates />
 	<RungSipFlow />
 	<RungSipGrowth />
+	<RungSipSequence />
+	<RungSipProtection />
 
 	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-16 sm:pt-6 sm:pb-24">
 
@@ -100,14 +107,51 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 							/>
 
 							<InputGroup
-								id="stepUpRate"
-								label="Yearly Increase"
-								tooltip="How much you raise the monthly amount each year. At zero, a fixed instalment shrinks in real terms every year — rung 1 shows by how much."
-								suffix="% / yr"
+								id="sipRealStepUp"
+								label="Yearly Raise, On Top"
+								tooltip="Career progression. Your instalment already rises with prices to hold its value — this is any REAL increase beyond that. Zero is a complete plan, not an absent one."
+								suffix="% real / yr"
 								type="number"
 								value="0"
-								min="0" max="25" step="0.5"
+								min="0" max="15" step="0.5"
 							/>
+						</div>
+
+						<!-- dd-017. The contribution is read as TODAY'S money, and this is
+						     where that reading can be changed. It is not asked at the entry:
+						     stating an interpretation is allowed, adding a fourth question to
+						     a three-question contract is not. -->
+						<div class="space-y-2">
+							<span class="text-[11px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">
+								What your monthly figure means
+							</span>
+							<select id="sipContributionMode"
+									class="w-full rounded border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-950 px-2 py-1.5 text-xs text-navy-800 dark:text-navy-200">
+								<option value="real" selected>₹25,000 of today's spending power — raised each year with prices</option>
+								<option value="salary">A fixed share of my monthly income</option>
+								<option value="fixed">A flat ₹25,000 a month, never raised</option>
+							</select>
+							<p id="sipModeNote" class="text-[10px] leading-relaxed text-navy-500 dark:text-navy-400"></p>
+
+							<div id="sipSalaryFields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+								<InputGroup
+									id="sipMonthlyIncome"
+									label="Monthly Income"
+									tooltip="What you take home each month, today. Your instalment is a share of it, and a share of a salary keeps pace with prices by itself."
+									prefix="₹"
+									suffix="/month"
+									value="1,25,000"
+								/>
+								<InputGroup
+									id="sipSavingsRate"
+									label="Share You Save"
+									tooltip="How much of each month's income goes into this plan."
+									suffix="% of income"
+									type="number"
+									value="20"
+									min="1" max="80" step="1"
+								/>
+							</div>
 						</div>
 					</div>
 
@@ -183,6 +227,29 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 									))}
 								</div>
 								<p id="sipRegimeNote" class="text-[10px] leading-relaxed text-navy-500 dark:text-navy-400"></p>
+							</div>
+
+							<!-- The fund's own fee. Until 16 Aug both engines assumed a fund
+							     that costs nothing to own - a zero arrived at by omission on
+							     the one cost that is certain. Named plans rather than a free
+							     number, for sol-028's reason: the reader picks something they
+							     could actually hold, and the percentage follows. -->
+							<div class="sm:col-span-2 space-y-2">
+								<div class="flex items-baseline justify-between gap-3">
+									<span class="text-[11px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">
+										What the fund charges you
+									</span>
+									<span class="text-[10px] text-navy-400 dark:text-navy-500">SEBI caps equity funds at {SEBI_EQUITY_TER_CAP}%</span>
+								</div>
+								<select id="sipFundPlan"
+										class="w-full rounded border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-950 px-2 py-1.5 text-xs text-navy-800 dark:text-navy-200">
+									{FUND_COST_PLANS.map((p) => (
+										<option value={p.id} selected={p.id === DEFAULT_FUND_COST.id}>
+											{p.label} — {p.expenseRatio.toFixed(2)}% a year
+										</option>
+									))}
+								</select>
+								<p id="sipFundNote" class="text-[10px] leading-relaxed text-navy-500 dark:text-navy-400"></p>
 							</div>
 						</div>
 					</div>
@@ -460,6 +527,7 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 	// SipAnswer broadcasts. It used to own a worker of its own, a second input
 	// reader made of `getNumValue` calls, a module-scoped `isPostTax` no other
 	// surface could see, and two separate literal `0.0185` premiums.
+	import { FUND_COST_PLANS, EXIT_LOAD_NOT_MODELLED, ACTIVE_FUND_CAVEAT } from '../utils/fundCosts';
 	import {
 		readSipInputs,
 		syncEntryFromAdvanced,
@@ -504,6 +572,7 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 		'seedCapital', 'monthlySip', 'targetRealWealth', 'stepUpRate',
 		'investmentYears', 'inflationRate', 'sipExpectedReturn', 'sipVolatility',
 		'sipLtcgTax', 'sipHedgingFloor', 'equitySlider', 'debtSlider', 'goldSlider',
+		'sipRealStepUp', 'sipSavingsRate',
 	];
 
 	function parseUrlParams() {
@@ -884,6 +953,58 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 		paint();
 	}
 
+	// dd-017. Switching the mode swaps which fields are asked for rather than
+	// adding to them: 'real' and 'fixed' stay at the same three, 'salary' trades
+	// the monthly amount for an income and a share of it.
+	function initContributionMode() {
+		const sel = document.getElementById('sipContributionMode') as HTMLSelectElement | null;
+		const salary = document.getElementById('sipSalaryFields');
+		const monthly = document.getElementById('monthlySip')?.closest('div');
+		const note = document.getElementById('sipModeNote');
+		if (!sel) return;
+
+		const paint = () => {
+			const mode = sel.value;
+			salary?.classList.toggle('hidden', mode !== 'salary');
+			(monthly as HTMLElement | null)?.classList.toggle('hidden', mode === 'salary');
+			if (note) {
+				note.textContent =
+					mode === 'salary'
+						? 'A share of income rises with your pay, and pay rises with prices — so this holds its value without you doing anything. Add a raise on top for career progression.'
+						: mode === 'fixed'
+							? 'A flat instalment is a plan to save less in real terms every year. At 6% inflation it buys about a third as much by year 20. Kept because some people do mean it.'
+							: 'The amount you typed is treated as today\'s spending power and raised each year in line with prices, so what you give up every month never changes.';
+			}
+		};
+
+		sel.addEventListener('change', () => { paint(); trigger(); });
+		paint();
+	}
+
+	// The fund's fee. A cost the reader can actually act on - unlike growth,
+	// inflation or a crash, this one is a choice - so the note says what the
+	// choice is worth rather than merely restating the percentage.
+	function initFundPlan() {
+		const sel = document.getElementById('sipFundPlan') as HTMLSelectElement | null;
+		const note = document.getElementById('sipFundNote');
+		if (!sel) return;
+
+		const paint = () => {
+			const plan = FUND_COST_PLANS.find((p) => p.id === sel.value);
+			if (note && plan) {
+				// The fee and the return series are a PAIR (sol-036). The growth
+				// assumption is the Nifty 50's own record, so choosing an active
+				// fund is a claim about a manager, and the reader is told what
+				// they are implicitly assuming rather than left to notice.
+				const pairing = plan.id === 'index-direct' ? '' : ` ${ACTIVE_FUND_CAVEAT}`;
+				note.textContent = `${plan.note}${pairing} ${EXIT_LOAD_NOT_MODELLED}`;
+			}
+		};
+
+		sel.addEventListener('change', () => { paint(); trigger(); });
+		paint();
+	}
+
 	function initPresets() {
 		document.querySelectorAll('.preset-btn').forEach(btn => {
 			btn.addEventListener('click', () => {
@@ -978,6 +1099,8 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 		initSliders();
 		initPresets();
 		initRegimePresets();
+		initFundPlan();
+		initContributionMode();
 		setPostTax(isPostTax());
 
 		document.getElementById('runSipBtn')?.addEventListener('click', debouncedTrigger);
