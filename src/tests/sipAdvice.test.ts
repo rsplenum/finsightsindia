@@ -136,7 +136,14 @@ describe('sipAdvice - the outlook answers the saver s question', () => {
   });
 });
 
-describe('sipAdvice - the three levers', () => {
+// Each of these runs the goal-seek, which is a full Monte Carlo per iteration.
+// They take a couple of seconds alone and comfortably exceed vitest's 5s
+// default when the machine is also running a build - which produced three RED
+// tests on a green tree twice in one session. A suite that fails because
+// something else was busy is a suite people learn to scroll past, so the limit
+// is stated here rather than left to chance. It is a ceiling against a hang,
+// not a performance assertion.
+describe('sipAdvice - the three levers', { timeout: 30000 }, () => {
   // A plan that plainly does not reach, so all three levers exist.
   const short = { ...base, monthlySip: 10000, targetRealWealth: 50000000 };
 

@@ -4,7 +4,7 @@
 
 The reasoning, the trigger and Rahul's verbatim words live in the JSON and are the part worth reading twice. This page is the other half: the same lessons reduced to lines you can check a screen against without re-reading an essay. dd-016 exists because a cited principle is not an instruction.
 
-18 entries · 95 rules · 13 entries bind any calculator screen
+19 entries · 105 rules · 13 entries bind any calculator screen
 
 ---
 
@@ -356,3 +356,25 @@ Generate the skeleton with `npm run doctrine:checks <ComponentName>`.
 - `dd-017/dont-5` Don't state a goal in today's money beside a contribution in tomorrow's without saying they differ.
 
 > **Test.** Read the entry fields and the headline together. Are they in the same money? If the answer is in today's prices and any input is not, name which. And count the questions the entry asks: stating an interpretation is allowed, asking the reader to choose one at step one is not.
+
+### dd-018 — Flowing prose over choppy sentences
+
+*articles · content factory · prose · content_drafter · content_evaluator*
+
+**Do**
+
+- `dd-018/do-1` Write in flowing, cohesive paragraphs that sustain an analytical argument, matching the pacing of 'The Loss That Never Happened'.
+- `dd-018/do-2` Anchor an abstract tax rule in one named person's concrete conflict, as Section 50CA is anchored in Arjun Mehta's sale.
+- `dd-018/do-3` State the government's own economic motive for a rule - the State's Perspective - not only its mechanics.
+- `dd-018/do-4` Use strong, structural analogies (e.g., slicing a pizza, the 5 share prices) to translate technical depth without losing the reader.
+- `dd-018/do-5` Study 'The Loss That Never Happened' for mechanical pacing and flow.
+- `dd-018/do-6` Study the rewritten 'The Price You Didn't Receive' for narrative anchoring and associative explainability.
+
+**Don't**
+
+- `dd-018/dont-1` Don't write choppy, half-a-line, or single-sentence paragraphs like the original draft of 'The Price You Didn't Receive'.
+- `dd-018/dont-2` Don't confuse simplicity of explanation with primitive, staccato sentence structures.
+- `dd-018/dont-3` Don't atomise a deep, complex argument into disjointed fragments that destroy the pacing and reading experience.
+- `dd-018/dont-4` Don't produce 'lazy AI slop' that blindly lists facts without weaving them into a cohesive, magazine-style narrative.
+
+> **Test.** Read the draft aloud. Does it flow like a cohesive, authoritative article in a premium magazine, or does it sound like a disjointed slide presentation? Are the paragraphs properly structured with complete sentences?

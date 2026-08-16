@@ -489,5 +489,35 @@
     "refinement": [
       "Rahul's answer corrected the shape of the fix, not just its default, and the correction is the more important half.\n\nI had proposed the three modes as a QUESTION at the entry - pick how you contribute, then answer the three inputs. He rejected that without naming it: 'this works for everybody and doesn't introduce cognitive load at the very first step'. The entry contract stays three questions (sol-019). What changes is that we INTERPRET the number correctly and say so - if someone types 25,000 a month they mean 25,000 in real terms, and we tell them that is what we are running with. An interpretation stated is not a question asked.\n\nThe second correction is structural. A step-up is no longer the nominal growth of the contribution; it is an OPTIONAL REAL increment on top of a base that already holds purchasing power. That separates two things which had been collapsed into one field and were therefore both invisible: keeping pace with prices, which nearly everybody does without thinking, and career progression, which is a genuine extra. At zero step-up the plan now means 'I hold my saving level', not 'I get poorer every year'.\n\nThe third is about who the reader is. A fixed percentage of a salary captures inflation by itself, so for the salaried the natural framing is a share of income. A professional in practice - his examples are a CA, an advocate, a doctor - has no payslip, so the same idea has to arrive as growing the contribution with inflation. Same arithmetic, two vocabularies, and picking one for everybody would lose half the audience.\n\nHis justification is the sentence to put on the screen, because it is the whole argument in one line: you will want at least fixed purchasing power after you retire, so you have to invest in fixed purchasing power."
     ]
+  },
+  {
+    "id": "dd-018",
+    "date": "2026-08-16",
+    "title": "Flowing prose over choppy sentences",
+    "trigger": "Rahul comparing the original 'The Price You Didn't Receive' (lots of half a line sentences) with 'The Loss That Never Happened' (proper sentences, paragraphs and flow).",
+    "verbatim": "compare the two articles 1. The loss that never happened 2. The price you didn't receive. in the 1st article there is flow and proper sentences and paragraphs as compared to the 2nd article where there are a lot of half a line sentences. is it feasible to keep all the content in 2nd article and modify its structure so it feels more like an article. i want you to direct our content factory, and you personally too, to study the two articles ... and draw design, prose, pacing, flow, content, depth, width, language, simplicity, associativeness, intuitiveness, explanability lessons and record them and enforce them.",
+    "spirit": "FinSight articles are deep-dive, magazine-style whitepapers, not punchy Twitter threads or slide decks. They require flowing, cohesive prose, structured into proper paragraphs that carry a sustained analytical argument. The benchmark is 'The Loss That Never Happened'—which masterfully uses paradoxes, analogies, and pacing to explain complex mechanics. In contrast, the original 'The Price You Didn't Receive' represented the 'lazy AI slop' we must eradicate: it shattered pacing by atomising the text into choppy, single-sentence lines that destroyed perceived authority. The *fixed* version of 'The Price You Didn't Receive' provides our second benchmark: it uses narrative anchoring (Arjun Mehta's startup sale) and explicitly uncovers the 'State's Perspective' (Information Asymmetry) to explain the *why* before the *how*. Simplicity does not mean primitive sentence structure. Intuitiveness and explainability are achieved through narrative flow, associative framing, and clear transitions.",
+    "applies_to": [
+      "articles",
+      "content factory",
+      "prose",
+      "content_drafter",
+      "content_evaluator"
+    ],
+    "do": [
+      "Write in flowing, cohesive paragraphs that sustain an analytical argument, matching the pacing of 'The Loss That Never Happened'.",
+      "Anchor an abstract tax rule in one named person's concrete conflict, as Section 50CA is anchored in Arjun Mehta's sale.",
+      "State the government's own economic motive for a rule - the State's Perspective - not only its mechanics.",
+      "Use strong, structural analogies (e.g., slicing a pizza, the 5 share prices) to translate technical depth without losing the reader.",
+      "Study 'The Loss That Never Happened' for mechanical pacing and flow.",
+      "Study the rewritten 'The Price You Didn't Receive' for narrative anchoring and associative explainability."
+    ],
+    "dont": [
+      "Don't write choppy, half-a-line, or single-sentence paragraphs like the original draft of 'The Price You Didn't Receive'.",
+      "Don't confuse simplicity of explanation with primitive, staccato sentence structures.",
+      "Don't atomise a deep, complex argument into disjointed fragments that destroy the pacing and reading experience.",
+      "Don't produce 'lazy AI slop' that blindly lists facts without weaving them into a cohesive, magazine-style narrative."
+    ],
+    "test": "Read the draft aloud. Does it flow like a cohesive, authoritative article in a premium magazine, or does it sound like a disjointed slide presentation? Are the paragraphs properly structured with complete sentences?"
   }
 ]
