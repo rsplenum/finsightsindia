@@ -39,8 +39,12 @@ Age      = ______
 (2)  Capital Gain
      Futures & options
      etc.
-     — only those that can be adjusted [?] in dropdown-1
+     — only those that can't be clubbed in dropdown-1
 ```
+
+**The illegible verb was read back by Rahul on 17 Aug: "clubbed", and the
+sentence is NEGATIVE.** That reverses the reading below, so the original is left
+struck through rather than quietly corrected.
 
 **Checked against the photo, and it settles the category question.** Sheet 2
 reads `Business / Professional / Salaried / Self-employed / etc.` — and the
@@ -49,9 +53,30 @@ set of four**. Sheet 1's "Services" is superseded rather than dropped: build the
 categories as data, not as four hard-coded branches, because Rahul has said in
 the drawing itself that more are coming.
 
-Block (2) is not a third input block. It is an annotation on Dropdown 1, naming
+~~Block (2) is not a third input block. It is an annotation on Dropdown 1, naming
 what that dropdown contains — capital gains, futures and options, and the rest
-of the income heads.
+of the income heads.~~
+
+**Wrong, and wrong in the direction that would have cost the most.** With the
+verb resolved — *"only those that can't be **clubbed** in dropdown-1"* — block (2)
+is the opposite of an annotation on Dropdown 1. **It is a separate input block,
+and it exists precisely because these items cannot be clubbed.**
+
+"Clubbed" is the word that matters, and it names a real mechanic. Dropdown 1's
+sources ADD UP: salary, pension and arrears are one figure to the slabs, and
+five different kinds of business income are one profit. Capital gains cannot
+join them — each bucket carries its own rate (20% under s.111A, 12.5% under
+s.112A with its own exemption, slab rate for short-term gains on other assets),
+so summing them would destroy the only thing the arithmetic cares about. F&O is
+business income but carries loss rules the other business sources do not share.
+
+So the layout has THREE input blocks, not two: Income sources (clubbable),
+Deductions, and a separate block for what must be kept apart. This agrees with
+how `tax.ts` is already built — four capital-gains buckets by rate, not one
+figure — and it agrees with the rule sol-059 arrived at independently, that
+catalogue entries sharing a `target` sum into it. Rahul's note is the same
+observation from the reader's side: some things club, some cannot, and the form
+must not pretend otherwise.
 
 ### Right column — the outputs, and there are TWO of them
 
@@ -111,14 +136,20 @@ that changed, and it changed deliberately.
 
 1. ~~Does "Services" survive?~~ **Settled by the photo:** the sheet ends the
    list with `etc.`, so the categories are open-ended. Model them as data.
-   Still unresolved on the same sheet: one word in block (2)'s note —
-   *"only those that can be **[?]** in dropdown-1"*. Higher resolution did not
-   crack it. The sense is clear enough (block 2 names what Dropdown 1 contains)
-   that it does not block the build, but the exact verb is worth a glance from
-   Rahul when he next passes this file.
-2. **Name and Age — what are they for?** Age has a real computational job
-   (60/80 thresholds under the old regime). Name has none, so presumably it is
-   for the report or the PDF. Worth confirming it is not meant to do more.
+   ~~One word in block (2)'s note is unresolved.~~ **Settled by Rahul, 17 Aug:
+   "clubbed", and negatively — *"only those that can't be clubbed in
+   dropdown-1"*.** This was the item recorded as "does not block the build", and
+   that judgement was wrong: the agent's reading had block (2) as an annotation
+   ON Dropdown 1, when it is a SEPARATE BLOCK for what Dropdown 1 cannot hold.
+   Building from the wrong reading would have summed four capital-gains buckets
+   into one figure and destroyed the rates. **A [?] that changes a layout is not
+   a footnote** — the README's rule (transcribe and read back before building)
+   earned its place here.
+2. ~~**Name and Age — what are they for?**~~ **Settled by Rahul, 17 Aug: "name
+   is not necessary".** Age keeps its computational job at the 60/80 thresholds.
+   Name is dropped from the form. It had been filed as a RISK in
+   `TaxInputForm.checks.md` against dd-020/dont-2 and dd-021/dont-2 and
+   escalated rather than decided; recorded as a reinforcing instance on dd-020.
 3. **Is the two-panel split live-updating side by side with the inputs**, or
    does it sit below on narrow screens? The sketch is a desktop layout and the
    answer decides the mobile behaviour.

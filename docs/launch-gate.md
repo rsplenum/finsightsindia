@@ -88,12 +88,31 @@ template literal (`` `inDed${section}` `` → `inDed`), minimum four characters 
 it cannot become a blanket amnesty. **A wall that fires on correct code is a wall
 someone switches off**, and then it stops catching the real ones too.
 
+**sol-060 — the insurance analyser stops flattering the route it argues for.**
+Rahul's ruling on the untaxed bond route, built and verified the same day. **This
+unblocks the insurance analyser overhaul**, which had been waiting on it. Detail
+in the *Waiting on Rahul* section below, which now records it as answered.
+
+**Two more of Rahul's rulings, 17 Aug.** *"name is not necessary"* — the Name
+field is dropped from the tax form. It was filed as a RISK against dd-020/dont-2
+and dd-021/dont-2 and **escalated rather than decided**, and the rule was right;
+recorded as a reinforcing instance on dd-020, because building it silently would
+have been defensible and would have cost every future reader one pointless
+question. And the illegible verb on sheet 2 is **"clubbed", negatively**: *"only
+those that can't be clubbed in dropdown-1"*. **That reverses the transcription's
+reading** — block (2) is not an annotation on Dropdown 1, it is a SEPARATE block
+for what Dropdown 1 cannot hold. Capital gains carry four different rates, so
+summing them destroys the only thing the arithmetic cares about. **The layout has
+three input blocks, not two.** The item had been recorded as "does not block the
+build"; that judgement was wrong, and a `[?]` that changes a layout is not a
+footnote.
+
 **`TaxInputForm.checks.md` written — the design, before the component.** Three
-RISKs filed rather than smoothed over. Two are **the same instance seen twice**:
+RISKs filed rather than smoothed over. Two were **the same instance seen twice**:
 *Name buys no simplification* (dd-020/dont-2) and *Name cannot change the
-verdict* (dd-021/dont-2) — it is on Rahul's sheet so it is built, optional and
-labelled for the report, and flagged rather than dropped or smuggled. The third
-is Rahul's own tension — an exhaustive dropdown IS a list of worries if
+verdict* (dd-021/dont-2). **Both now closed — Rahul dropped the field**, so
+every question the form asks goes on to remove something or move a figure. The
+third is Rahul's own tension — an exhaustive dropdown IS a list of worries if
 presented as one — and is recorded as a judgement to check on the built page,
 not a property the markup guarantees. **The decision that matters most:** a
 field that becomes ineligible when the category changes is **kept**, carrying
@@ -166,7 +185,7 @@ the working tree — HEAD plus the staged diff, in a throwaway worktree.
 - [ ] **The presets state a CAGR; both engines consume it as an arithmetic average** — so the median path lands a few points below the number on the button. True on the planner too, since 15 Aug. Fixing it moves T2's shipped figures, so it is not a silent change
 - [ ] **T3 rung 5 says our own hedging product does not pay** — at the shipped 28.4% roughness the floor loses money in the bad futures *and* the typical ones; it only earns its price above ~30%. The rung states this plainly. Do we keep offering the toggle, re-price it, or change the default floor? A product decision, not an engineering one
 - [ ] **The fund-fee default is the DEAREST plan — 1.75%, through a distributor** — chosen because most retail money is in regular plans and because sol-028's flattering default is exactly how the last one survived unexamined. It moves the shipped answer from ₹57.8 lakh to ₹47.4 lakh. Costed at all three plans before choosing, not defended after. Your call
-- [ ] **The safe DIY route is charged no tax at all** — the growth route pays 12.5% LTCG; the bond route pays nothing. Interest is taxed at slab, and we have no income input to apply one with. It flatters the very route the page uses to argue the policy is beatable *without risk*, so it is not a neutral omission. Options: assume a slab, ask for one, or say plainly that the bond figure is pre-tax. Your call. sol-039
+- [x] ~~**The safe DIY route is charged no tax at all**~~ **ANSWERED 17 Aug — "ask them to choose a slab. 10, 20, 30". Built the same day, sol-060.** Rahul picked the only option that neither guesses nor gives up. **A second fault surfaced in the building**: interest is not a capital gain — it is taxed *as it accrues*, so the tax leaves the balance every year and the money it would have compounded on is gone. The engine's third parameter was a boolean that could say "taxed like equity" or "not taxed" and had no way to say "taxed like interest", so the right rate on the wrong mechanic would still have understated the drag. It is now a three-mode union. **The shipped figures moved a long way, and they moved TOWARD THE POLICY**: at the default 20% slab the safe route runs out in year 25 rather than 30, with **₹17.18 lakh** unpaid instead of ₹11.08 lakh; at 30% it is year 23 and ₹19.06 lakh. Verified on the built page. The tool had been biased against the product it was assessing — precisely what dd-021 exists to prevent. **Default is 20%, the middle of the three, because 10 flatters DIY and 30 flatters the policy and only the middle is not an argument**
 - [ ] **Debt 7.1% and gold 8.5% are still typed in** — same fault as sol-028, no series in the repo to derive them from. The page says so in plain words rather than hiding it
 - [x] ~~**The floor depth is three different numbers**~~ **Two now.** Both engines take it as a parameter and both pages ship −10%; only the copy's "−10% or −15%" is still loose
 - [ ] **CLAUDE.md's dev-server instruction is wrong for this harness** — says `astro dev --background`; must use the preview tools. sol-025

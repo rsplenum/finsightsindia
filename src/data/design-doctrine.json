@@ -583,7 +583,15 @@
       "Don't ask a question that does not go on to remove something - a question that buys no simplification is pure cost.",
       "Don't let a category filter change a computed answer; it removes what cannot apply, never what is inconvenient to support."
     ],
-    "test": "Take any option the category has removed and ask: is this removed because the statute forbids it, or because we guessed the reader probably will not need it? Only the first survives. If a salaried reader with F&O income, or a professional with capital gains, would be unable to enter something true about their year, the filter is wrong."
+    "test": "Take any option the category has removed and ask: is this removed because the statute forbids it, or because we guessed the reader probably will not need it? Only the first survives. If a salaried reader with F&O income, or a professional with capital gains, would be unable to enter something true about their year, the filter is wrong.",
+    "reinforced": [
+      {
+        "date": "2026-08-17",
+        "context": "The Name field on Rahul's own tax-calculator sketch. TaxInputForm.checks.md filed it as a RISK against dd-020/dont-2 (a question that removes nothing) and dd-021/dont-2 (an input that cannot change the verdict), built it as optional, and escalated rather than deciding unilaterally.",
+        "verbatim": "name is not necessary",
+        "note": "The first time a RISK filed by a checks file was escalated to Rahul and answered, and the rule was right. Worth recording because the alternative was available and tempting: Name was on his own drawing, so building it silently would have been defensible and would have cost every future reader one pointless question. dd-020/dont-2 is not a rule about tidiness - a question that buys no simplification is pure cost, and the cost is paid by the reader, every time, forever."
+      }
+    ]
   },
   {
     "id": "dd-021",
@@ -610,6 +618,14 @@
       "Don't ask a question the comparison does not need - every input must be capable of changing the verdict.",
       "Don't hand the reader the figures and leave them to reach the conclusion; the screen says who wins."
     ],
-    "test": "Feed it a genuinely good policy. Does the screen say so, plainly and without hedging? If the design can only produce one verdict, or produces the other one grudgingly, it is advocacy. Then check the costs: if either route is charged a tax or a fee the other is spared, the thesis has already been built into the defaults."
+    "test": "Feed it a genuinely good policy. Does the screen say so, plainly and without hedging? If the design can only produce one verdict, or produces the other one grudgingly, it is advocacy. Then check the costs: if either route is charged a tax or a fee the other is spared, the thesis has already been built into the defaults.",
+    "reinforced": [
+      {
+        "date": "2026-08-17",
+        "context": "Rahul ruling on the open decision this entry's own test had raised: the safe DIY bond route was charged no tax at all while the growth route paid 12.5% LTCG. Asked to choose between assuming a slab, asking the reader, or labelling the figure pre-tax.",
+        "verbatim": "ask them to choose a slab. 10, 20, 30",
+        "note": "He chose the only option that neither guesses nor gives up. Assuming a slab would have put OUR number into the reader's comparison; labelling the figure pre-tax would have left the two routes incomparable, which is the one thing this tool exists to fix. Asking costs one control and makes the comparison honest at whatever rate the reader actually pays. Note also what he did NOT pick: 10/20/30 rather than a single conservative 30%, so the tool does not quietly assume the reader is rich. This is dd-021's own test - 'if either route is charged a tax or a fee the other is spared, the thesis has already been built into the defaults' - firing, being escalated, and being answered."
+      }
+    ]
   }
 ]

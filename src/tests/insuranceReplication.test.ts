@@ -11,7 +11,28 @@ import {
   LTCG_RATE_PCT,
   LTCG_EXEMPTION,
   type PolicyInputs,
+  type Taxation,
 } from '../utils/insuranceReplication';
+import { DEFAULT_SLAB_PCT, SLAB_RATES_PCT } from '../utils/insuranceInputs';
+
+/** The two taxations the page uses, plus the untaxed one kept only for tests. */
+const CG: Taxation = {
+  kind: 'capitalGains',
+  ratePct: LTCG_RATE_PCT,
+  annualExemption: LTCG_EXEMPTION,
+};
+const NO_TAX: Taxation = { kind: 'none' };
+const slab = (ratePct: number): Taxation => ({ kind: 'slabOnAccrual', ratePct });
+
+/**
+ * How well a route did, as ONE number that stays monotone past exhaustion.
+ *
+ * `finalBalance` alone cannot be compared here: sol-040 floors it at zero, and
+ * the shipped safe route already runs out — so two routes that fail by wildly
+ * different amounts both read 0. Surplus above the line, shortfall below it.
+ */
+const outcome = (r: { finalBalance: number; unfundedPayout: number }) =>
+  r.finalBalance - r.unfundedPayout;
 
 // The insurance analyser's engine, which until now could not be tested at all.
 //
@@ -41,6 +62,7 @@ const shipped: PolicyInputs = {
   termCost: 12000,
   accidentCost: 5000,
   ltcgRatePct: LTCG_RATE_PCT,
+  slabRatePct: DEFAULT_SLAB_PCT,
   ltcgExemption: LTCG_EXEMPTION,
   // Fixed, so that the same policy yields the same yield twice. The page passes
   // today's date; the engine never reaches for a clock of its own.
@@ -159,7 +181,7 @@ describe('replication - one walk, at any rate', () => {
     // percent of the capital put in.
     const noCover = at({ termCost: 0, accidentCost: 0 });
     const irr = analyseReplication(noCover).policy.xirrPct;
-    const route = replicate(noCover, irr, false);
+    const route = replicate(noCover, irr, NO_TAX);
 
     expect(Math.abs(route.finalBalance)).toBeLessThan(0.005 * route.capitalInvested);
   });
@@ -199,7 +221,7 @@ describe('replication - one walk, at any rate', () => {
     // The other half of the same statement, and the one a person actually
     // lives through (dd-010): year 14, 15, 16, 18.
     const generous = at({ payoutAmount: 400000, maturityBenefit: 5000000 });
-    const ranOut = (rate: number) => replicate(generous, rate, true).exhaustedInYear!;
+    const ranOut = (rate: number) => replicate(generous, rate, CG).exhaustedInYear!;
 
     expect(ranOut(8)).toBeLessThanOrEqual(ranOut(10));
     expect(ranOut(10)).toBeLessThanOrEqual(ranOut(12));
@@ -218,8 +240,8 @@ describe('replication - one walk, at any rate', () => {
     // is empty; it does not borrow at the equity rate and carry on.
     const broke = at({ payoutAmount: 400000, maturityBenefit: 5000000 });
     for (const rate of [0, 4, 8, 11, 12, 14, 20]) {
-      expect(replicate(broke, rate, false).finalBalance).toBeGreaterThanOrEqual(0);
-      expect(replicate(broke, rate, true).finalBalance).toBeGreaterThanOrEqual(0);
+      expect(replicate(broke, rate, NO_TAX).finalBalance).toBeGreaterThanOrEqual(0);
+      expect(replicate(broke, rate, CG).finalBalance).toBeGreaterThanOrEqual(0);
     }
   });
 
@@ -315,15 +337,20 @@ describe('tax on the growth route', () => {
     expect(r.growth.taxDrag).toBeGreaterThan(0);
   });
 
-  it('leaves the safe route untaxed - which is a defect, recorded here rather than defended', () => {
-    // Interest on a bond or a PPF-alternative is not tax-free at slab rates,
-    // and the page taxes only the equity route. That flatters the SAFE route,
-    // which is the one the page uses to argue the policy is beatable without
-    // taking any risk. Named in a test so the next person to touch this cannot
-    // mistake it for a decision that was already made.
+  it('taxes the safe route too - sol-060, and this test used to assert the opposite', () => {
+    // It read: "leaves the safe route untaxed - which is a defect, recorded here
+    // rather than defended". The defect is fixed, so the test that named it had
+    // to be the test that inverts. Keeping it in place, rather than deleting it
+    // and writing a fresh one elsewhere, is the point: the ledger of what this
+    // engine assumes should show its own corrections.
+    //
+    // Interest on a bond or a PPF-alternative is taxed at slab as it accrues.
+    // The reader picks the rate (Rahul, 17 Aug: "ask them to choose a slab. 10,
+    // 20, 30"), because assuming one would put our number inside their
+    // comparison.
     const r = analyseReplication(at({ payoutAmount: 20000, maturityBenefit: 0 }));
     expect(r.safe.finalBalance).toBeGreaterThan(0);
-    expect(r.safe.taxDrag).toBe(0);
+    expect(r.safe.taxDrag).toBeCloseTo(574359.38, 2);
   });
 });
 
@@ -334,10 +361,17 @@ describe('the verdict - sign, word and badge cannot disagree', () => {
     // POLICY WINS, while the bottom line called it SURPLUS WEALTH. Four
     // independent decisions about one fact.
     //
-    // What it says now: the money runs out in year 30 and ₹11.08 lakh of the
-    // promised income - ₹1.93 lakh in today's money - never arrives. The
+    // What it says now: the money runs out in year 25 and ₹17.18 lakh of the
+    // promised income - ₹3.19 lakh in today's money - never arrives. The
     // policy's 7.22% beats the 7.1% safe rate, so bonds genuinely cannot
     // replicate it, and that is a real finding rather than a formatting bug.
+    //
+    // sol-060 MOVED THESE FIGURES, and they moved a long way: year 30 to year
+    // 25, and ₹11.08 lakh of unpaid income to ₹17.18 lakh. Charging the safe
+    // route the slab tax a bond investor actually pays makes the POLICY look
+    // materially better. That is the direction dd-021 warned about - the page
+    // was built to argue the policy is beatable, and the untaxed bond route was
+    // that argument sitting in the defaults.
     const r = analyseReplication(shipped);
     const v = verdictFor(r.safe);
 
@@ -345,9 +379,9 @@ describe('the verdict - sign, word and badge cannot disagree', () => {
     expect(v.kind).toBe('shortfall');
     expect(v.tone).toBe('bad');
     if (v.kind !== 'shortfall') throw new Error('unreachable');
-    expect(v.exhaustedInYear).toBe(30);
-    expect(v.unfunded).toBeCloseTo(1108260.16, 2);
-    expect(v.unfundedReal).toBeCloseTo(192959.32, 2);
+    expect(v.exhaustedInYear).toBe(25);
+    expect(v.unfunded).toBeCloseTo(1717521.99, 2);
+    expect(v.unfundedReal).toBeCloseTo(319269.59, 2);
   });
 
   it('the growth route wins at the shipped defaults, by a lot', () => {
@@ -384,7 +418,7 @@ describe('the verdict - sign, word and badge cannot disagree', () => {
 
     for (const p of policies) {
       for (const rate of [0, 5, 7.1, 12, 20]) {
-        const route = replicate(p, rate, true);
+        const route = replicate(p, rate, CG);
         const v = verdictFor(route);
 
         expect(route.finalBalance).toBeGreaterThanOrEqual(0);
@@ -413,7 +447,7 @@ describe('the verdict - sign, word and badge cannot disagree', () => {
     // verdict is still a shortfall. This is why the label reads off the
     // verdict rather than off the sign of the balance.
     const r = analyseReplication(at({ ppt: 20, payoutStartYear: 3, payoutYears: 5 }));
-    const route = replicate(r.inputs, 20, true);
+    const route = replicate(r.inputs, 20, CG);
     const v = verdictFor(route);
 
     expect(route.finalBalance).toBeGreaterThan(0);
@@ -491,5 +525,74 @@ describe('grossing up a withdrawal for tax', () => {
     // ₹40,000 of payout at a 50% gain ratio realises ₹20,000 - well under the
     // exemption, so nothing is sold to cover a tax that is not owed.
     expect(grossUpForTax(40000, 0.5, 0.125, 125000)).toBe(40000);
+  });
+});
+
+
+/**
+ * sol-060 — the safe route is taxed, and taxed the way interest actually is.
+ *
+ * Until now it paid nothing at all while the growth route paid 12.5%, which
+ * flattered the DIY side the page already argues for. dd-021's own test caught
+ * it: "if either route is charged a tax or a fee the other is spared, the thesis
+ * has already been built into the defaults." Rahul ruled on 17 Aug that the
+ * reader chooses the rate — "ask them to choose a slab. 10, 20, 30" — because
+ * assuming one would put OUR number inside the reader's comparison.
+ */
+describe('sol-060 — interest is taxed as it accrues, not when it is withdrawn', () => {
+  it('the safe route now pays tax, where it used to pay none', () => {
+    const r = analyseReplication(shipped);
+    expect(r.safe.taxDrag).toBeGreaterThan(0);
+    // And it is not a rounding artefact — it is a material sum over 30 years.
+    expect(r.safe.taxDrag).toBeGreaterThan(100000);
+  });
+
+  it('a higher slab always leaves the reader worse off, never better', () => {
+    // The monotonicity is the property worth pinning. An accrual tax that could
+    // ever IMPROVE a balance would mean the leak is being credited somewhere.
+    const results = SLAB_RATES_PCT.map((pct) =>
+      outcome(replicate(at({ slabRatePct: pct }), shipped.safeRate, slab(pct)))
+    );
+    for (let i = 1; i < results.length; i++) {
+      expect(results[i]).toBeLessThan(results[i - 1]);
+    }
+  });
+
+  it('taxing on accrual costs MORE than taxing the same rate on sale', () => {
+    // This is the whole reason a bond route could not be modelled by pointing
+    // the equity path at a different rate. Tax paid every year is money that
+    // never compounds again; tax paid on sale compounds until the sale. Same
+    // rate, same return, different money — and the accrual case must be worse.
+    const p = at({ slabRatePct: 30 });
+    const accrual = outcome(replicate(p, p.safeRate, slab(30)));
+    const onSale = outcome(
+      replicate(p, p.safeRate, { kind: 'capitalGains', ratePct: 30, annualExemption: 0 })
+    );
+    expect(accrual).toBeLessThan(onSale);
+  });
+
+  it('the growth route is untouched by the slab — it pays LTCG, not slab', () => {
+    const a = analyseReplication(at({ slabRatePct: 10 }));
+    const b = analyseReplication(at({ slabRatePct: 30 }));
+    expect(outcome(a.growth)).toBe(outcome(b.growth));
+    expect(a.growth.taxDrag).toBe(b.growth.taxDrag);
+    // ...while the safe route moves, which is what says the input reached it.
+    expect(outcome(a.safe)).toBeGreaterThan(outcome(b.safe));
+  });
+
+  it('a zero rate reproduces the untaxed walk exactly', () => {
+    // The bridge to the old behaviour. If these ever diverge, the accrual path
+    // is doing something beyond taxing.
+    const p = at();
+    expect(outcome(replicate(p, p.safeRate, slab(0)))).toBeCloseTo(
+      outcome(replicate(p, p.safeRate, NO_TAX)),
+      6
+    );
+  });
+
+  it('neither route is spared what the other pays — dd-021, as an assertion', () => {
+    const r = analyseReplication(shipped);
+    expect(r.safe.taxDrag).toBeGreaterThan(0);
+    expect(r.growth.taxDrag).toBeGreaterThan(0);
   });
 });

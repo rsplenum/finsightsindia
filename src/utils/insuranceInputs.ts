@@ -26,6 +26,7 @@ const F = {
   accidentCover: 'inAccidentCover',
   termCost: 'inTermCostOverride',
   accidentCost: 'inAccidentCostOverride',
+  slabRate: 'inSlabRate',
 } as const;
 
 /**
@@ -37,6 +38,22 @@ const F = {
  * named here rather than buried in the arithmetic so that the day they are
  * derived from a series, there is one place to change.
  */
+/**
+ * The slabs the reader may pick from, and the one the form opens on.
+ *
+ * Rahul, 17 Aug: "ask them to choose a slab. 10, 20, 30." Three rates, not a
+ * single conservative assumption — a tool that quietly assumed 30% would tax
+ * the DIY route harder than most readers are taxed and hand the win to the
+ * policy, which is the same fault as leaving it untaxed, pointing the other way.
+ *
+ * The default is the MIDDLE one. Any default flatters somebody: 10% flatters
+ * DIY, 30% flatters the policy, and dd-021's test is that neither route may be
+ * charged something the other is spared. 20% is the only choice here that is
+ * not an argument, and the control sits in the open so the reader can correct it.
+ */
+export const SLAB_RATES_PCT = [10, 20, 30] as const;
+export const DEFAULT_SLAB_PCT = 20;
+
 export const SAFE_RATE_PCT = 7.1;
 export const EQUITY_RATE_PCT = 12.0;
 
@@ -84,6 +101,19 @@ const num = (id: string, fallback: number): number => {
 };
 
 /** Read the one true input set. Every surface on the page goes through this. */
+/**
+ * The reader's slab, accepted only if it is one we offer.
+ *
+ * `Number(value) || DEFAULT` would have been the short way and it is the sol-041
+ * shape in a percentage's clothes: a renamed option would fall through to 20%
+ * and quietly retax the route this page argues for, with nothing on screen to
+ * say so.
+ */
+const slabRate = (): number => {
+  const raw = Number((el(F.slabRate) as HTMLSelectElement | null)?.value);
+  return (SLAB_RATES_PCT as readonly number[]).includes(raw) ? raw : DEFAULT_SLAB_PCT;
+};
+
 export function readPolicyInputs(now: Date = new Date()): PolicyInputs {
   const unbundle = el(F.unbundle)?.checked ?? true;
 
@@ -105,6 +135,7 @@ export function readPolicyInputs(now: Date = new Date()): PolicyInputs {
     // deliberately unfair to the policy, and the page says so.
     termCost: unbundle ? money(F.termCost, 0) : 0,
     accidentCost: unbundle ? money(F.accidentCost, 0) : 0,
+    slabRatePct: slabRate(),
     ltcgRatePct: LTCG_RATE_PCT,
     ltcgExemption: LTCG_EXEMPTION,
     startDate: now,

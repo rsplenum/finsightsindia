@@ -48,10 +48,10 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-019/dont-3 | PASS | The disambiguation is the row's noun, not the frame. Two figures that share a frame are told apart by what they count. |
 | dd-019/dont-4 | N/A | No heading here claims an equivalence. |
 | dd-020/dont-1 | PASS | Enforced by test, not by care: `taxCatalogue.test.ts` fails on an exclusion with no statute, on an entry excluded from every category, and on any category that loses a whole head or falls below three quarters of all sources. A salaried filer is offered futures and options — dd-020's own worked example. |
-| dd-020/dont-2 | RISK | **Name buys no simplification.** Age earns its place at the 60/80 thresholds and Category earns its place by removing the presumptive schemes; Name removes nothing and computes nothing. It is on Rahul's sheet, so it is built — optional, and labelled as being for the report rather than for the answer. Flagged to Rahul rather than silently dropped or silently included; it is already listed as an open reading in the sketch transcription. |
+| dd-020/dont-2 | PASS | Was RISK. Name bought no simplification — Age earns its place at the 60/80 thresholds and Category earns its place by removing the presumptive schemes, and Name removed nothing and computed nothing. Escalated rather than decided, and **Rahul ruled it out on 17 Aug: "name is not necessary"**. Every question the form now asks goes on to remove something or to change a figure. |
 | dd-020/dont-3 | PASS | Two mechanisms, because this is the rule most easily broken by accident. Structurally: `tax.ts` cannot import `taxCatalogue.ts` and a test asserts it. Behaviourally: **switching category never removes a value the reader has already entered** — a field that becomes ineligible stays on screen carrying the statute that now excludes it, for the reader to remove or not. Deleting it would change the computed answer, which is precisely what this rule forbids. |
 | dd-021/dont-1 | PASS | The regime comparison is a verdict, and sol-043 already made every emphasis on the page flow from one `verdictFor()` — card ring, weight, colour, column headers and tag. The screen is as willing to print "old regime" as "new". |
-| dd-021/dont-2 | RISK | Same instance as dd-020/dont-2: Name cannot change the verdict. Recorded twice on purpose, because the two rules catch it for different reasons — dd-020 says it buys no simplification, dd-021 says it cannot move the answer. |
+| dd-021/dont-2 | PASS | Was RISK, the same instance as dd-020/dont-2 seen through a second rule: Name could not change the verdict. Gone with it. Worth keeping the note that TWO rules caught one field for different reasons — dd-020 that it buys no simplification, dd-021 that it cannot move the answer. |
 | dd-021/dont-3 | PASS | `TaxAnswer` states the cheaper regime outright, in a sentence, above this form. The reader is not handed two columns and left to subtract. |
 
 ## Deliberate choices
@@ -72,5 +72,18 @@ PASS and RISK need a reason. N/A may stand alone.
   Deductions and so does this form; the engine's house-property head is where it
   lands. sol-059.
 
-- **Name is built because Rahul drew it**, marked optional and labelled for the
-  report. Flagged above under dd-020/dont-2 rather than resolved unilaterally.
+- **Name is dropped.** It was on Rahul's own sheet, so building it silently
+  would have been defensible — which is exactly why it was escalated instead.
+  He ruled on 17 Aug: *"name is not necessary"*. Recorded as a reinforcing
+  instance on dd-020.
+
+- **THREE input blocks, not two** — settled 17 Aug when Rahul read back the one
+  illegible word on his sheet: *"only those that can't be **clubbed** in
+  dropdown-1"*. Dropdown 1's sources ADD UP (salary + pension + arrears is one
+  figure to the slabs; five kinds of business income are one profit). Capital
+  gains cannot join them — each bucket carries its own rate, so summing them
+  destroys the only thing the arithmetic cares about — and F&O carries loss
+  rules the other business sources do not share. The earlier reading had block
+  (2) as an annotation *on* Dropdown 1; it is a separate block for what Dropdown
+  1 cannot hold. "Clubbed" is the reader's-side name for sol-059's rule that
+  entries sharing a `target` sum into it.

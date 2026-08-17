@@ -619,5 +619,23 @@
       "src/tests/taxCatalogue.test.ts"
     ],
     "found_by": "Reading the untracked file against the engine's TaxInput before adopting it, as the session was asked to - verify it, test it and commit it, or delete it and start over."
+  },
+  {
+    "id": "sol-060",
+    "date": "2026-08-17",
+    "category": "Insurance analyser / Correctness",
+    "status": "fixed",
+    "problem": "The safe DIY route was charged NO TAX AT ALL while the growth route paid 12.5% LTCG. Interest on a bond or an FD is taxed at slab, and the page had no income input to apply one with, so it applied none.\n\nThis was never a rounding matter. The safe route is the one the page uses to argue a policy is beatable WITHOUT taking risk, so leaving it untaxed flattered exactly the conclusion the page was already reaching. dd-021's own test names it: 'if either route is charged a tax or a fee the other is spared, the thesis has already been built into the defaults.'",
+    "diagnosis": "Two faults, and the second is the one that made this more than a missing parameter.\n\nThe first: no rate. Rahul ruled on 17 Aug that the reader supplies it - 'ask them to choose a slab. 10, 20, 30' - rather than the tool assuming one. Assuming would have put OUR number inside the reader's own comparison, and a single conservative 30% would have been the same fault pointing the other way: over-taxing DIY hands the win to the policy.\n\nThe second, and it would have produced a wrong answer even with the right rate: INTEREST IS NOT A CAPITAL GAIN. It is taxed as it accrues, every year, whether or not a rupee is withdrawn - so the tax leaves the balance annually and the money it would have compounded on is gone for good. Capital gains tax waits for a sale and compounds until then. The engine's third parameter was a BOOLEAN, `taxGains`, which could express 'taxed like equity' and 'not taxed' and had no way to say 'taxed like interest'. Charging the equity path a slab rate would have understated the drag.",
+    "solution": "`taxGains: boolean` becomes `taxation: Taxation`, a union of three modes: `capitalGains` (rate + annual exemption), `slabOnAccrual` (rate, applied to each year's growth and removed from the balance), and `none`, kept only so tests can measure what a tax costs. `PolicyInputs.slabRatePct` is a required input; `SLAB_RATES_PCT = [10, 20, 30]` and a select on the page carry Rahul's three choices.\n\nThe default is 20, the MIDDLE of the three, and that is a decision rather than a convenience: 10% flatters DIY, 30% flatters the policy, and 20 is the only one of the three that is not an argument. The control sits in the open, above the fold, with a line saying why it matters.\n\nThe reader's rate is validated against the offered set rather than coerced with `Number(v) || DEFAULT`, which is the sol-041 shape in a percentage's clothes: a renamed option would fall through to 20% and quietly retax the route this page argues for.",
+    "prevention": "Six new tests. The properties, not the rupees: a higher slab always leaves the reader worse off; taxing on ACCRUAL costs strictly more than taxing the same rate on sale (the assertion that says the two mechanics really are different); the growth route is untouched by the slab while the safe route moves; and a zero rate reproduces the untaxed walk exactly. `finalBalance` could not be used for any of these - sol-040 floors it at zero and the safe route already runs out - so they compare `finalBalance - unfundedPayout`, which stays monotone past exhaustion.\n\nThe test that recorded this defect ('leaves the safe route untaxed - which is a defect, recorded here rather than defended') was INVERTED in place rather than deleted and replaced elsewhere, so the engine's ledger of its own assumptions shows its own corrections.",
+    "impact": "The shipped figures moved a long way, and they moved TOWARD THE POLICY. At the default 20% slab the safe route now runs out in year 25 rather than year 30, with Rs 17.18 lakh of promised income unpaid instead of Rs 11.08 lakh. At 30% it is year 23 and Rs 19.06 lakh. Verified on the built page, not only in tests. The tool had been biased against the product it was assessing, which is the precise failure dd-021 exists to prevent.",
+    "files": [
+      "src/utils/insuranceReplication.ts",
+      "src/utils/insuranceInputs.ts",
+      "src/pages/insurance-analyzer.astro",
+      "src/tests/insuranceReplication.test.ts"
+    ],
+    "found_by": "dd-021's test, applied to the page that entry was written about. Escalated to Rahul as an open decision on 16 Aug and answered on 17 Aug."
   }
 ]

@@ -84,7 +84,40 @@ import InsuranceAnswer from '../components/Calculators/InsuranceAnswer.astro';
 						/>
 					</div>
 
-					<InputGroup 
+					<!--
+						sol-060. The safe DIY route earns interest, and interest is taxed
+						at slab as it accrues. Until now it was charged nothing at all while
+						the growth route paid 12.5%, which flattered the very route this
+						page uses to argue a policy is beatable WITHOUT risk — dd-021's own
+						test, firing on the page's defaults.
+
+						Asked, not assumed. Rahul, 17 Aug: "ask them to choose a slab. 10,
+						20, 30." Our own number inside the reader's comparison would be the
+						same fault wearing a different rate.
+					-->
+					<div class="space-y-1">
+						<!--
+							Sentence case, not the uppercase label style its neighbours use.
+							F-03's ratchet caps this page at 24 all-caps elements pending its
+							rewrite, and a new control is not a reason to spend the budget —
+							the whole finding was that when everything shouts, nothing does.
+						-->
+						<label for="inSlabRate" class="block text-sm font-bold text-navy-700 dark:text-navy-200">
+							Your income tax slab
+						</label>
+						<select id="inSlabRate" class="w-full bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-lg px-3 py-2 text-sm text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-gold-500">
+							<option value="10">10%</option>
+							<option value="20" selected>20%</option>
+							<option value="30">30%</option>
+						</select>
+						<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed">
+							The safe route earns interest, and interest is taxed at your slab
+							every year — not when you withdraw it. Set this to your own rate:
+							it changes how much the do-it-yourself route really keeps.
+						</p>
+					</div>
+
+					<InputGroup
 						id="inPayout"
 						label="Annual Income Received"
 						tooltip="The recurring yearly payout amount promised by the policy."
@@ -740,7 +773,7 @@ import InsuranceAnswer from '../components/Calculators/InsuranceAnswer.astro';
 			el?.addEventListener('input', run);
 		});
 
-		['inPPT', 'inPayoutStart', 'inPayoutYears', 'inInflation'].forEach(id => {
+		['inPPT', 'inPayoutStart', 'inPayoutYears', 'inInflation', 'inSlabRate'].forEach(id => {
 			const el = document.getElementById(id);
 			if (!el) return;
 			el.addEventListener('input', debounce(updateDashboardUI, 250));

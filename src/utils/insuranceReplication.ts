@@ -83,6 +83,18 @@ export interface PolicyInputs {
   accidentCost: number;
   /** LTCG rate on the growth route, in percent. */
   ltcgRatePct: number;
+  /**
+   * The reader's income tax slab, in percent — 10, 20 or 30.
+   *
+   * The safe route earns INTEREST, and interest is taxed at slab as it accrues.
+   * Rahul ruled on 17 Aug that this is asked rather than assumed: "ask them to
+   * choose a slab. 10, 20, 30." Assuming one would have put our number inside
+   * the reader's own comparison, and leaving the route untaxed — which is what
+   * this page did until sol-060 — flattered the side the page already argues
+   * for. dd-021: charge both routes the same taxes, or the thesis is in the
+   * defaults.
+   */
+  slabRatePct: number;
   /** LTCG exemption, in rupees. Applied once to the terminal gain - see above. */
   ltcgExemption: number;
   /**
@@ -129,7 +141,7 @@ export interface RouteResult {
   capitalInvested: number;
   /** Total spent on the term and accident cover that replaces the policy's protection. */
   riskCostPaid: number;
-  /** Capital gains tax deducted at the end. Zero on the safe route, which this page does not tax. */
+  /** Tax this route paid. Capital gains on the growth route; slab-rate tax on interest, every year, on the safe one. */
   taxDrag: number;
   /** The year the money first ran out mid-payment, or null if it never did. */
   exhaustedInYear: number | null;
@@ -279,16 +291,42 @@ export function buildLedger(inputs: PolicyInputs): LedgerRow[] {
  * that can be labelled honestly, which is why this had to be fixed before the
  * labels could be.
  *
- * `taxGains` is what separates the two routes on this page. The growth route
- * pays capital gains tax on the terminal balance; the safe route pays none,
- * which is not what a real bond investor experiences and is noted as a defect
- * rather than defended.
+ * `taxation` is what separates the two routes on this page, and until sol-060
+ * it separated them dishonestly: the growth route paid capital gains tax and
+ * the safe route paid nothing at all, which is not what a real bond investor
+ * experiences and flattered the very route the page uses to argue the policy is
+ * beatable WITHOUT risk.
  */
+/**
+ * How a route is taxed. THREE MODES, because there are three real mechanics and
+ * the boolean this replaced could only express two of them.
+ *
+ * `capitalGains` — equity. Tax falls on a REALISED gain, at 12.5%, with a fresh
+ *   ₹1.25 lakh exemption each year, and nothing is owed on a balance that has
+ *   not been sold.
+ *
+ * `slabOnAccrual` — bonds, FDs, debt. Tax falls on the interest AS IT IS
+ *   EARNED, at the reader's slab rate, whether or not a rupee is withdrawn.
+ *   That is not a variation of capital gains tax, it is a different event: it
+ *   compounds against the investor every year rather than waiting for a sale,
+ *   which is exactly why a bond route cannot be modelled by pointing the equity
+ *   path at a different rate.
+ *
+ * `none` — kept only so the difference a tax makes can be measured in tests.
+ *   No route on the page uses it, and sol-060 is the reason: the safe route ran
+ *   untaxed and flattered the DIY side the page already argues for.
+ */
+export type Taxation =
+  | { kind: 'none' }
+  | { kind: 'capitalGains'; ratePct: number; annualExemption: number }
+  | { kind: 'slabOnAccrual'; ratePct: number };
+
 export function replicate(
   inputs: PolicyInputs,
   annualRatePct: number,
-  taxGains: boolean
+  taxation: Taxation
 ): RouteResult {
+  const taxGains = taxation.kind === 'capitalGains';
   const ledger = buildLedger(inputs);
   const investableCapital = investableCapitalOf(inputs);
   const riskCostPerYear = inputs.termCost + inputs.accidentCost;
@@ -308,7 +346,7 @@ export function replicate(
   let unfundedPayoutReal = 0;
   let taxDrag = 0;
 
-  const rate = inputs.ltcgRatePct / 100;
+  const rate = taxation.kind === 'capitalGains' ? taxation.ratePct / 100 : 0;
 
   for (const row of ledger) {
     const investedThisYear = row.year <= inputs.ppt ? investableCapital : 0;
@@ -316,7 +354,23 @@ export function replicate(
     costBasis += investedThisYear;
 
     balance += investedThisYear;
-    balance *= 1 + annualRatePct / 100;
+
+    const growthThisYear = balance * (annualRatePct / 100);
+    balance += growthThisYear;
+
+    // sol-060. Interest is taxed WHEN IT IS EARNED, not when it is taken out,
+    // so the tax comes off the balance every year and the money it would have
+    // compounded on is gone for good. That annual leak is the whole difference
+    // between a bond route and an equity one, and it is why this could not be
+    // done by charging the equity path a different rate.
+    if (taxation.kind === 'slabOnAccrual' && growthThisYear > 0) {
+      const tax = growthThisYear * (taxation.ratePct / 100);
+      balance -= tax;
+      taxDrag += tax;
+      // No capital gain is left behind: the reader has already paid on this
+      // growth, so a later withdrawal sells nothing but taxed money.
+      costBasis += growthThisYear - tax;
+    }
 
     // A fresh exemption every year. That is the whole of the fix: the page used
     // to apply one ₹1.25 lakh exemption to a single terminal gain, while a real
@@ -507,8 +561,20 @@ export function analyseReplication(inputs: PolicyInputs): ReplicationResult {
   const ledger = buildLedger(inputs);
   const riskCostPerYear = inputs.termCost + inputs.accidentCost;
 
-  const safe = replicate(inputs, inputs.safeRate, false);
-  const growth = replicate(inputs, inputs.equityRate, true);
+  // sol-060. The safe route used to be charged NO TAX AT ALL while the growth
+  // route paid 12.5%, which flattered the DIY side the page already argues for
+  // — dd-021's test, fired on this page's own defaults. Rahul's ruling, 17 Aug:
+  // "ask them to choose a slab. 10, 20, 30."
+  const cg: Taxation = {
+    kind: 'capitalGains',
+    ratePct: inputs.ltcgRatePct,
+    annualExemption: inputs.ltcgExemption,
+  };
+  const safe = replicate(inputs, inputs.safeRate, {
+    kind: 'slabOnAccrual',
+    ratePct: inputs.slabRatePct,
+  });
+  const growth = replicate(inputs, inputs.equityRate, cg);
 
   // The reader's own rate always has a row, even if it is not one of ours. The
   // table's "(Your Input)" marker used to be a hardcoded `rate === 12` in the
@@ -520,7 +586,7 @@ export function analyseReplication(inputs: PolicyInputs): ReplicationResult {
   );
 
   const sensitivity: SensitivityRow[] = rates.map((rate) => {
-    const route = replicate(inputs, rate, true);
+    const route = replicate(inputs, rate, cg);
     return {
       rate,
       surplus: route.finalBalance,
