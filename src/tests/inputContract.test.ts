@@ -285,6 +285,21 @@ describe('sol-051 - no page declares an id that nothing references', () => {
    * store with no failure mode.
    */
   const referenced = new Set<string>();
+  /**
+   * Handles that are BUILT rather than written, as `` `inDed${section}` ``.
+   *
+   * The harvest above only sees a handle spelled out in full, so the moment a
+   * page stopped listing its Chapter VI-A fields and started deriving them from
+   * the engine's rules table, three live fields read as dead. The wall was
+   * right to fire - it could not see the holder - and wrong about the fact, and
+   * a wall that fires on correct code is a wall someone eventually switches
+   * off.
+   *
+   * A prefix is only harvested when it is at least four characters, so a bare
+   * `` `${x}` `` cannot admit everything and quietly turn this test green for
+   * all inputs.
+   */
+  const constructedPrefixes: string[] = [];
   for (const f of files) {
     // Comments are stripped for the reason given at the top of this file: a name
     // that appears only in prose must not vouch for itself. An HTML comment
@@ -302,6 +317,8 @@ describe('sol-051 - no page declares an id that nothing references', () => {
     // shape the SIP page uses to bind its inputs.
     for (const m of body.matchAll(/(['"`])([A-Za-z][\w-]*)\1/g)) referenced.add(m[2]);
 
+    for (const m of body.matchAll(/`([A-Za-z][\w-]{3,})\$\{/g)) constructedPrefixes.push(m[1]);
+
     // '#x' as a CSS rule, a selector string, or an anchor target.
     for (const m of body.matchAll(/#([A-Za-z][\w-]*)/g)) referenced.add(m[1]);
 
@@ -314,6 +331,9 @@ describe('sol-051 - no page declares an id that nothing references', () => {
       }
     }
   }
+
+  const isHeld = (id: string) =>
+    referenced.has(id) || constructedPrefixes.some((p) => id.startsWith(p));
 
   const pages = files.filter((f) => f.startsWith('src/pages/') && f.endsWith('.astro'));
   const idsIn = (src: string) =>
@@ -329,11 +349,19 @@ describe('sol-051 - no page declares an id that nothing references', () => {
     expect(referenced.has('downloadPdfBtn')).toBe(true);
     expect(referenced.has('tier3ActionableFooter')).toBe(false);
     expect(referenced.has('sacrificeMetric1')).toBe(false);
+    // The constructed-prefix widening must stay narrow enough to still fail.
+    // Both dead ids above have to survive it, and the derived Chapter VI-A
+    // fields have to be admitted by it - otherwise it is either useless or a
+    // blanket amnesty.
+    expect(constructedPrefixes).toContain('inDed');
+    expect(isHeld('inDed80C')).toBe(true);
+    expect(isHeld('sacrificeMetric1')).toBe(false);
+    expect(isHeld('tier3ActionableFooter')).toBe(false);
   });
 
   for (const page of ['src/pages/swp-planner.astro', 'src/pages/sip-engine.astro']) {
     it(`${page} declares no id that nothing holds`, () => {
-      const dead = idsIn(fs.readFileSync(page, 'utf-8')).filter((id) => !referenced.has(id));
+      const dead = idsIn(fs.readFileSync(page, 'utf-8')).filter((id) => !isHeld(id));
       expect(dead, deadIdMessage(page, dead)).toEqual([]);
     });
   }
@@ -342,7 +370,7 @@ describe('sol-051 - no page declares an id that nothing references', () => {
     const offenders: string[] = [];
     for (const page of pages) {
       for (const id of idsIn(fs.readFileSync(page, 'utf-8'))) {
-        if (!referenced.has(id)) offenders.push(`${page}  ${id}`);
+        if (!isHeld(id)) offenders.push(`${page}  ${id}`);
       }
     }
     expect(offenders, deadIdMessage('src/pages', offenders)).toEqual([]);

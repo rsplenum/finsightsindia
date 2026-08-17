@@ -198,6 +198,139 @@ export interface LossDetail {
     capitalLossBarredFromOtherHeads: boolean;
 }
 
+/**
+ * The Chapter VI-A sections the engine can price.
+ *
+ * Deliberately a closed union rather than a free string: an unknown section
+ * reaching the deduction total would be a silent, uncapped deduction, and the
+ * gate's highest-value item is precisely that a renamed field becomes
+ * `undefined` at runtime while the build stays green.
+ */
+export type ChapterVIASection =
+    | '80C'
+    | '80CCD1B'
+    | '80CCD2'
+    | '80D'
+    | '80DD'
+    | '80DDB'
+    | '80E'
+    | '80G'
+    | '80GG'
+    | '80TTA'
+    | '80TTB'
+    | '80U';
+
+interface ChapterVIARule {
+    /** Which regimes allow it. s.115BAC withdraws all but one of these. */
+    regimes: readonly Regime[];
+    /** The statutory ceiling, or `null` where the section sets none. */
+    cap: number | null;
+    /** A ceiling that moves with the filer's own facts - age, or salary. */
+    capFor?: (input: TaxInput, regime: Regime) => number | null;
+    /** Non-empty when the filer cannot claim this section at all. */
+    barredFor?: (input: TaxInput) => string;
+}
+
+/**
+ * Every ceiling in Chapter VI-A, in one table, for FY 2025-26.
+ *
+ * A ceiling here is the STATUTORY MAXIMUM, not a judgement about what a reader
+ * is likely to claim. Where the section genuinely sets none - 80E on education
+ * loan interest, 80G where the qualifying amount depends on the donee - the cap
+ * is `null` and the reader's figure stands. Inventing a ceiling to feel safe
+ * would understate a real deduction, which is the same class of harm as
+ * inventing a deduction.
+ */
+export const CHAPTER_VIA_RULES: Record<ChapterVIASection, ChapterVIARule> = {
+    '80C': { regimes: ['old'], cap: 150000 },
+    '80CCD1B': { regimes: ['old'], cap: 50000 },
+    // The one survivor of s.115BAC, and the reason it is worth a reader's while
+    // to ask their employer for it. The ceiling is a share of salary rather than
+    // a flat sum: 14% under the new regime, 10% under the old for a non-government
+    // employee. `basicSalary` here is basic plus DA, the statute's "salary"; it
+    // falls back to gross when the reader has not broken it out, which overstates
+    // the ceiling rather than silently zeroing a real deduction.
+    '80CCD2': {
+        regimes: ['old', 'new'],
+        cap: null,
+        capFor: (input, regime) => {
+            const salary = input.basicSalary > 0 ? input.basicSalary : input.grossSalary;
+            return Math.round(salary * (regime === 'new' ? 0.14 : 0.1));
+        },
+    },
+    // 25,000 for the filer's own family, 50,000 where the insured is a senior
+    // citizen, and the two stack - so 1,00,000 is the aggregate maximum.
+    '80D': { regimes: ['old'], cap: 100000 },
+    // A FIXED sum, not a reimbursement: 75,000, or 1,25,000 where the disability
+    // is severe. The cap is the severe figure because the engine is not told
+    // which it is, and the reader who types the lower one gets it unchanged.
+    '80DD': { regimes: ['old'], cap: 125000 },
+    // 40,000, or 1,00,000 where the patient is a senior citizen.
+    '80DDB': {
+        regimes: ['old'],
+        cap: 40000,
+        capFor: (input) => (input.ageBracket === 'below60' ? 40000 : 100000),
+    },
+    '80E': { regimes: ['old'], cap: null },
+    '80G': { regimes: ['old'], cap: null },
+    '80GG': { regimes: ['old'], cap: 60000 },
+    // 80TTA and 80TTB are the same relief at two ages, and the statute lets a
+    // filer have exactly one of them. Barring rather than capping, because the
+    // reader who is 65 and claims 80TTA has not claimed too much - they have
+    // claimed under the wrong section, and the screen should say which.
+    '80TTA': {
+        regimes: ['old'],
+        cap: 10000,
+        barredFor: (input) =>
+            input.ageBracket === 'below60'
+                ? ''
+                : 's.80TTA is for filers under 60. At your age the wider s.80TTB applies instead, and the two cannot both be claimed.',
+    },
+    '80TTB': {
+        regimes: ['old'],
+        cap: 50000,
+        barredFor: (input) =>
+            input.ageBracket === 'below60'
+                ? 's.80TTB is available only from age 60. Below that the narrower s.80TTA applies instead.'
+                : '',
+    },
+    '80U': { regimes: ['old'], cap: 125000 },
+};
+
+/** What happened to one claimed section, so the screen can say it. */
+export interface ChapterVIALine {
+    section: ChapterVIASection;
+    claimed: number;
+    allowed: number;
+    /**
+     * The ceiling that applied to this filer, or `null` where the section sets
+     * none. Carried as a number rather than baked into `reason`, because a
+     * figure the engine has formatted into a sentence is a figure the screen
+     * cannot frame - dd-019 wants the quantity, the amount and the frame
+     * arriving together, and only the view knows how this page says rupees.
+     */
+    cap: number | null;
+    /**
+     * Why less was allowed than claimed. Empty when the whole claim stood.
+     *
+     * Present for the same reason `businessLossNotSetOff` is: a number the
+     * reader typed that quietly stops mattering is the sol-041 shape, and a
+     * screen that cannot say "this is not being used" can only not use it.
+     */
+    reason: string;
+}
+
+export interface ChapterVIADetail {
+    /** One line per section the reader claimed, in the order of the table above. */
+    lines: ChapterVIALine[];
+    /** The sum of what the sections allowed, before s.80A(2) bites. */
+    beforeGtiClamp: number;
+    /** What s.80A(2) removed - Chapter VI-A may reduce income to nil, never below. */
+    clampedByGti: number;
+    /** What actually came off gross total income. */
+    total: number;
+}
+
 export interface TaxInput {
     // --- Head 1: Salaries ---
     grossSalary: number;
@@ -222,10 +355,27 @@ export interface TaxInput {
 
     ageBracket: AgeBracket;
 
-    // --- Chapter VI-A deductions (old regime only) ---
-    sec80c: number;
-    sec80d: number;
-    sec80ccd1b: number;
+    /**
+     * Professional tax, s.16(iii). NOT Chapter VI-A - it comes off salary
+     * itself, before gross total income is struck, which is why it cannot live
+     * in the map below however much it looks like it belongs there.
+     */
+    professionalTax: number;
+
+    /**
+     * Chapter VI-A, one entry per section.
+     *
+     * This was three named fields - `sec80c`, `sec80d`, `sec80ccd1b` - each
+     * with its ceiling written inline as a `Math.min`. Three was liveable; the
+     * catalogue offers thirteen, and thirteen inline ceilings is sol-038's
+     * shape with a decade of Budgets ahead of it. One map, one rules table, one
+     * place a ceiling changes.
+     *
+     * A section absent from the map is not claimed. A section present with 0 is
+     * claimed as nothing, which is the same rupees and a different sentence -
+     * the distinction matters to the screen, not to the arithmetic.
+     */
+    chapterVIA: Partial<Record<ChapterVIASection, number>>;
 
     /**
      * NOT A FORM FIELD. The break-even solver asks "what if this reader could
@@ -283,7 +433,11 @@ export interface TaxRegimeResult {
     heads: HeadDetail;
     exemptions: number;
     deductions: number;
+    /** Every Chapter VI-A section claimed, with what each was actually worth. */
+    chapterVIADetail: ChapterVIADetail;
     standardDeduction: number;
+    /** s.16(iii), off salary itself. Zero under the new regime. */
+    professionalTax: number;
     /** Total income - the slab part plus the special-rate part. */
     taxableIncome: number;
     /** The part of total income that goes through the slabs. */
@@ -549,10 +703,14 @@ function aggregateHeads(
             ? Math.min(input.grossSalary, regime === 'new' ? STD_DEDUCTION_NEW : STD_DEDUCTION_OLD)
             : 0;
     const hra = regime === 'old' ? calculateHRAExemption(input) : 0;
-    // Floored at zero because both of these are reliefs against SALARY. They
-    // cannot shelter interest or rent, which is what letting them run negative
-    // into the other heads would have done.
-    const salary = Math.max(0, input.grossSalary - stdDeduction - hra);
+    // s.16(iii), and it goes here rather than with Chapter VI-A because it is a
+    // deduction FROM SALARY, taken before gross total income is struck. Old
+    // regime only - s.115BAC withdraws the whole of s.16 except s.16(ia).
+    const ptax = regime === 'old' ? Math.max(0, input.professionalTax) : 0;
+    // Floored at zero because all three of these are reliefs against SALARY.
+    // They cannot shelter interest or rent, which is what letting them run
+    // negative into the other heads would have done.
+    const salary = Math.max(0, input.grossSalary - stdDeduction - hra - ptax);
 
     const businessDetail = businessProfitFor(input.business);
     const otherSources = input.otherIncome;
@@ -874,6 +1032,77 @@ function taxCapitalGains(
     };
 }
 
+/**
+ * Chapter VI-A, section by section, with a reason wherever a claim was cut.
+ *
+ * The order is the rules table's, so two readers claiming the same sections see
+ * them in the same order however they typed them in.
+ *
+ * `gti` is gross total income, and s.80A(2) caps the whole chapter at it:
+ * Chapter VI-A can reduce income to nil but never below, so it cannot create a
+ * loss to carry anywhere. That clamp is reported separately rather than spread
+ * back across the lines, because "your 80C was cut" is a different sentence
+ * from "you did not earn enough for all of this to be worth claiming".
+ */
+function computeChapterVIA(input: TaxInput, regime: Regime, gti: number): ChapterVIADetail {
+    const lines: ChapterVIALine[] = [];
+
+    for (const section of Object.keys(CHAPTER_VIA_RULES) as ChapterVIASection[]) {
+        const claimed = Math.max(0, input.chapterVIA[section] ?? 0);
+        // A section the reader never opened is not a line. A section they
+        // opened and left at zero is, so the panel can show it standing at
+        // nothing rather than appearing to have been ignored.
+        if (input.chapterVIA[section] === undefined) continue;
+
+        const rule = CHAPTER_VIA_RULES[section];
+
+        if (!rule.regimes.includes(regime)) {
+            lines.push({
+                section,
+                claimed,
+                allowed: 0,
+                cap: 0,
+                reason:
+                    regime === 'new'
+                        ? 's.115BAC withdraws this deduction under the new regime.'
+                        : 'Not available under the old regime.',
+            });
+            continue;
+        }
+
+        const barred = rule.barredFor?.(input) ?? '';
+        if (barred) {
+            lines.push({ section, claimed, allowed: 0, cap: 0, reason: barred });
+            continue;
+        }
+
+        const cap = rule.capFor ? rule.capFor(input, regime) : rule.cap;
+        const allowed = cap === null ? claimed : Math.min(cap, claimed);
+        lines.push({
+            section,
+            claimed,
+            allowed,
+            cap,
+            reason: allowed < claimed ? 'Capped by the section’s own ceiling.' : '',
+        });
+    }
+
+    // The break-even solver's lever. It is not a section and never appears as a
+    // line - it stands for ANY further relief the reader might find, which is
+    // why it is uncapped and why it must not be mistaken for one of the above.
+    const whatIf = regime === 'old' ? Math.max(0, input.whatIfExtraDeduction ?? 0) : 0;
+
+    const beforeGtiClamp = lines.reduce((sum, l) => sum + l.allowed, 0) + whatIf;
+    const total = Math.min(beforeGtiClamp, Math.max(0, gti));
+
+    return {
+        lines,
+        beforeGtiClamp,
+        clampedByGti: beforeGtiClamp - total,
+        total,
+    };
+}
+
 function computeRegime(input: TaxInput, regime: Regime): TaxRegimeResult {
     const isNew = regime === 'new';
 
@@ -905,14 +1134,13 @@ function computeRegime(input: TaxInput, regime: Regime): TaxRegimeResult {
             ? Math.min(input.grossSalary, isNew ? STD_DEDUCTION_NEW : STD_DEDUCTION_OLD)
             : 0;
     const hra = isNew ? 0 : calculateHRAExemption(input);
+    const ptax = isNew ? 0 : Math.max(0, input.professionalTax);
 
-    // Chapter VI-A. None of it survives under the new regime.
-    const chapterVIA = isNew
-        ? 0
-        : Math.min(150000, Math.max(0, input.sec80c)) +
-          Math.min(100000, Math.max(0, input.sec80d)) +
-          Math.min(50000, Math.max(0, input.sec80ccd1b)) +
-          Math.max(0, input.whatIfExtraDeduction ?? 0);
+    // Chapter VI-A. All but s.80CCD(2) is withdrawn by s.115BAC, and which
+    // sections those are is the rules table's business rather than an `isNew`
+    // ternary here.
+    const chapterVIADetail = computeChapterVIA(input, regime, gti);
+    const chapterVIA = chapterVIADetail.total;
 
     // Chapter VI-A comes off the SLAB income only. s.112A(6) and s.111A(2) bar
     // it against gains taxed at special rates, so an 80C investment cannot
@@ -984,7 +1212,9 @@ function computeRegime(input: TaxInput, regime: Regime): TaxRegimeResult {
         heads,
         exemptions: hra,
         deductions: chapterVIA,
+        chapterVIADetail,
         standardDeduction: stdDeduction,
+        professionalTax: ptax,
         taxableIncome,
         slabIncome,
         capitalGains: cg,
@@ -1053,7 +1283,6 @@ export const EMPTY_TAX_INPUT: TaxInput = {
     },
     otherIncome: 0,
     ageBracket: 'below60',
-    sec80c: 0,
-    sec80d: 0,
-    sec80ccd1b: 0,
+    professionalTax: 0,
+    chapterVIA: {},
 };

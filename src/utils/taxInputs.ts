@@ -1,5 +1,6 @@
 import { parseFormattedNumber } from './formatters';
-import type { BusinessInput, HousePropertyInput, TaxInput } from './tax';
+import { CHAPTER_VIA_RULES } from './tax';
+import type { BusinessInput, ChapterVIASection, HousePropertyInput, TaxInput } from './tax';
 
 /**
  * The tax calculator's one DOM reader.
@@ -32,9 +33,8 @@ const F = {
   rentPaid: 'inRentPaid',
   isMetro: 'inIsMetro',
 
-  sec80c: 'inSec80c',
-  sec80d: 'inSec80d',
-  sec80ccd1b: 'inSec80ccd',
+  // s.16(iii), a deduction from salary rather than a Chapter VI-A one.
+  professionalTax: 'inProfessionalTax',
 
   // Head 2 - house property. `inHomeLoan` keeps its id because it is the same
   // question the reader was always being asked; what changed is where the
@@ -80,15 +80,26 @@ const F = {
  * Today's page keeps its own literal array and it is already missing nothing
  * only by luck.
  */
+/**
+ * The field id for one Chapter VI-A section, derived rather than listed.
+ *
+ * Derived on purpose: the sections come from the engine's rules table, so a
+ * section added there gets a field id, a change handler and a place in the
+ * input set without anyone remembering to add it in three files. A list
+ * maintained twice is a list that will disagree with itself.
+ */
+export const chapterVIAFieldId = (section: ChapterVIASection) => `inDed${section}`;
+
+export const CHAPTER_VIA_SECTIONS = Object.keys(CHAPTER_VIA_RULES) as ChapterVIASection[];
+
 export const MONEY_FIELD_IDS: readonly string[] = [
   F.grossSalary,
   F.otherIncome,
+  F.professionalTax,
+  ...CHAPTER_VIA_SECTIONS.map(chapterVIAFieldId),
   F.basicSalary,
   F.hraReceived,
   F.rentPaid,
-  F.sec80c,
-  F.sec80d,
-  F.sec80ccd1b,
   F.hpInterest,
   F.hpRent,
   F.hpMunicipalTaxes,
@@ -201,6 +212,23 @@ const housePropertyKind = (): HousePropertyInput['kind'] => {
   return 'selfOccupied';
 };
 
+/**
+ * Every Chapter VI-A section whose field is on the page, with what was typed.
+ *
+ * A section whose field is ABSENT stays out of the map entirely, and that is
+ * the whole design: the reader adds a deduction from the dropdown, which puts
+ * its field on the page, which puts it in this map. A section that is present
+ * and empty reads as 0 - claimed, and worth nothing - which is a different
+ * thing from never having been claimed and reads differently on the panel.
+ */
+const readChapterVIA = (): Partial<Record<ChapterVIASection, number>> => {
+  const claimed: Partial<Record<ChapterVIASection, number>> = {};
+  for (const section of CHAPTER_VIA_SECTIONS) {
+    if (el(chapterVIAFieldId(section))) claimed[section] = money(chapterVIAFieldId(section));
+  }
+  return claimed;
+};
+
 /** Read the one true input set. Every surface on the page goes through this. */
 export function readTaxInputs(): TaxInput {
   return {
@@ -247,11 +275,16 @@ export function readTaxInputs(): TaxInput {
       stcgSlab: money(F.cgStcgSlab),
     },
 
+    professionalTax: money(F.professionalTax),
+
     // The statutory caps are the engine's business, not the form's. It already
     // applies them, and applying them here as well would be sol-038's shape:
     // one rule, two places, and a cap that changes in one Budget and one file.
-    sec80c: money(F.sec80c),
-    sec80d: money(F.sec80d),
-    sec80ccd1b: money(F.sec80ccd1b),
+    //
+    // A section is present in this map only when its field is ON THE PAGE. An
+    // absent section was never claimed; a present one standing at zero was
+    // claimed as nothing. Same rupees, different sentence - and the Income
+    // Computation panel prints the sentence.
+    chapterVIA: readChapterVIA(),
   };
 }

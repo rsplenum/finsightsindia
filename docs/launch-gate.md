@@ -65,6 +65,29 @@ planner rungs 5 and 6 · dd-012, dd-013 · T3 started. Detail in
 [`docs/session-2026-08-15.md`](session-2026-08-15.md), the solutions file and
 the commit messages — which is where it belongs once it is no longer *next*.
 
+## Done today · 17 Aug (tax revamp, in progress)
+
+**sol-056 — Chapter VI-A becomes a table, so the dropdown can be exhaustive.**
+The engine could price **three** deduction sections; the catalogue for Rahul's
+dropdown lists **thirteen**. That gap is not a missing feature, it is sol-041 on
+ten sections at once — a field the reader fills in and a bill that does not move.
+`TaxInput.chapterVIA` is now one map and `CHAPTER_VIA_RULES` one table holding
+every ceiling, regime and age gate, returning **a line per section** — claimed,
+allowed, the ceiling that applied, and a reason wherever a claim was cut — which
+is what the Income Computation panel needs. **80TTA/80TTB bar rather than cap
+each other**: a 65-year-old claiming 80TTA has not claimed too much, they have
+claimed under the wrong section. **Professional tax is s.16(iii), not Chapter
+VI-A** — it comes off salary before gross total income is struck, the same
+distinction that moved home loan interest to its head in T6. Field ids are
+**derived** from the rules table, so a new section gets a field, a handler and a
+place in the input set without anyone remembering three files. 411 → 424 tests.
+
+**sol-057 — sol-051's dead-id wall fired on three live fields.** Derived ids are
+invisible to a literal grep. The harvest now also collects the static head of a
+template literal (`` `inDed${section}` `` → `inDed`), minimum four characters so
+it cannot become a blanket amnesty. **A wall that fires on correct code is a wall
+someone switches off**, and then it stops catching the real ones too.
+
 ## Next — in order
 
 - [ ] **Interface + content audit, 16 Aug — 20 findings, F-01…F-20.** Report: [`ux-audit-2026-08-16.html`](ux-audit-2026-08-16.html). Plan: [`repair-sequence-2026-08-16.html`](repair-sequence-2026-08-16.html) — 16 items, sol-048…sol-060, six phases. **All six decisions answered 16 Aug** — see *Waiting on Rahul* below; D-6 was answered against the plan's recommendation, so the "narrow to insurance" thread in both documents is dead and every calculator ships. Headline blockers: all four trust pages still branded "SWP Intelligence Engine" (0 occurrences of "FinSight India"), `text-gold-600` fails WCAG AA at 2.88:1, 317 pieces of type below 12px, zero external citations across 54 articles, the tax page renders the regime comparison twice. **sol-050 and sol-051 are done** (16 Aug); the other 14 items still wait on D-1…D-6

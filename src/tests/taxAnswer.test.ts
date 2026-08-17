@@ -22,9 +22,7 @@ describe('verdictFor - one decision, for every surface to render from', () => {
         const oldWins = verdictFor(
             calculateIndiaTaxEngine(
                 salary(1500000, {
-                    sec80c: 150000,
-                    sec80d: 100000,
-                    sec80ccd1b: 50000,
+                    chapterVIA: { '80C': 150000, '80D': 100000, '80CCD1B': 50000 },
                     basicSalary: 750000,
                     hraReceived: 400000,
                     rentPaid: 500000,
@@ -51,7 +49,7 @@ describe('verdictFor - one decision, for every surface to render from', () => {
                     const v = verdictFor(
                         calculateIndiaTaxEngine(
                             salary(gross, {
-                                sec80c: c,
+                                chapterVIA: { '80C': c },
                                 houseProperty: {
                                     kind: 'selfOccupied',
                                     annualRent: 0,
@@ -112,9 +110,7 @@ describe('breakEvenDeductions - the number the page is really for', () => {
         // number exists to correct.
         const be = breakEvenDeductions(
             salary(1500000, {
-                sec80c: 150000,
-                sec80d: 100000,
-                sec80ccd1b: 50000,
+                chapterVIA: { '80C': 150000, '80D': 100000, '80CCD1B': 50000 },
                 basicSalary: 750000,
                 hraReceived: 400000,
                 rentPaid: 500000,
@@ -132,7 +128,7 @@ describe('breakEvenDeductions - the number the page is really for', () => {
 
     it('80C alone does not get there at 15 lakh, and says how far short', () => {
         const be = breakEvenDeductions(
-            salary(1500000, { sec80c: 150000, sec80d: 100000, sec80ccd1b: 50000 })
+            salary(1500000, { chapterVIA: { '80C': 150000, '80D': 100000, '80CCD1B': 50000 } })
         );
         expect(be.exists).toBe(true);
         expect(be.shortfall).toBeGreaterThan(0);
@@ -176,7 +172,7 @@ describe('breakEvenDeductions - the number the page is really for', () => {
         // make the shortfall look larger than it is.
         const be = breakEvenDeductions(
             salary(1500000, {
-                sec80c: 150000,
+                chapterVIA: { '80C': 150000 },
                 basicSalary: 750000,
                 hraReceived: 300000,
                 rentPaid: 240000,

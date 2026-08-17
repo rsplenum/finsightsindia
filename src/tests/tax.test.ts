@@ -47,7 +47,7 @@ describe('India Tax Engine - totals', () => {
   });
 
   it('15L with 1.5L of 80C: new regime wins', () => {
-    const r = calculateIndiaTaxEngine(salary(1500000, { sec80c: 150000 }));
+    const r = calculateIndiaTaxEngine(salary(1500000, { chapterVIA: { '80C': 150000 } }));
     expect(r.newRegime.totalTax).toBe(97500);
     expect(r.oldRegime.totalTax).toBe(210600);
     expect(r.isNewBetter).toBe(true);
@@ -474,7 +474,7 @@ describe('India Tax Engine - capital gains and the 87A interaction', () => {
     // s.112A(6) and s.111A(2). An 80C investment reduces slab income and can
     // wipe out the slab tax entirely, and the gain is untouched by all of it.
     const r = calculateIndiaTaxEngine(
-      salary(550000, { sec80c: 150000, ...cg({ ltcg112A: 500000 }) })
+      salary(550000, { chapterVIA: { '80C': 150000 }, ...cg({ ltcg112A: 500000 }) })
     );
     const o = r.oldRegime;
     expect(o.slabIncome).toBe(350000);
