@@ -20,7 +20,12 @@ import TaxComputation from '../components/Calculators/TaxComputation.astro';
 
 	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 space-y-10">
 
-		<div class="max-w-7xl mx-auto"><TaxAnswer /></div>
+		<!--
+			The answer does not exist until there is income to answer about, so it
+			is not on the screen saying nil. The page at rest is one question
+			(dd-022); this is the same rule applied to the output.
+		-->
+		<div id="taxAnswerWrap" class="max-w-7xl mx-auto" hidden><TaxAnswer /></div>
 
 		<!--
 			Rahul's sheet 2: inputs on the left, and TWO output panels on the
@@ -35,9 +40,15 @@ import TaxComputation from '../components/Calculators/TaxComputation.astro';
 		<CardPremium class="max-w-7xl mx-auto">
 			<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 				<div class="lg:col-span-5"><TaxInputForm /></div>
-				<div class="lg:col-span-7 space-y-6">
-					<TaxIncomeComputation />
-					<TaxComputation />
+				<div class="lg:col-span-7">
+					<p id="taxPanelsWaiting" class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
+						The working appears here as soon as you tell us what you earned — every head, every
+						deduction, and what each one did to the bill.
+					</p>
+					<div id="taxPanels" class="space-y-6" hidden>
+						<TaxIncomeComputation />
+						<TaxComputation />
+					</div>
 				</div>
 			</div>
 		</CardPremium>
@@ -106,7 +117,10 @@ import TaxComputation from '../components/Calculators/TaxComputation.astro';
 	const entryById = new Map(ALL_ENTRIES.map((e) => [e.id, e]));
 
 	const category = () =>
-		(document.getElementById('inCategory') as HTMLSelectElement | null)?.value ?? 'salaried';
+		(document.getElementById('inCategory') as HTMLSelectElement | null)?.value ?? '';
+
+	const isPrimary = (entry: CatalogueEntry, cat: string) =>
+		(entry.primaryFor ?? []).includes(cat);
 
 	const fieldNodes = () =>
 		[...document.querySelectorAll<HTMLElement>('.tax-field')];
@@ -142,6 +156,13 @@ import TaxComputation from '../components/Calculators/TaxComputation.astro';
 		const cat = category();
 		setText('categoryHint', CATEGORIES.find((c) => c.id === cat)?.hint ?? '');
 
+		// NOTHING EXISTS BEFORE THE CATEGORY. Until we know who is asking, every
+		// field we could show is one that might not apply to them, and showing it
+		// is asking a question we already know may be wrong (dd-022).
+		const body = document.getElementById('taxFormBody');
+		if (body) body.hidden = !cat;
+		if (!cat) return;
+
 		const shownIds = new Set<string>();
 
 		for (const wrap of fieldNodes()) {
@@ -150,14 +171,16 @@ import TaxComputation from '../components/Calculators/TaxComputation.astro';
 			if (!entry) continue;
 
 			const eligible = isEligible(entry, cat);
-			const common = wrap.dataset.common === 'true';
 			const wasActive = inputOf(wrap)?.dataset.active === 'true';
 
 			// An answered field survives everything. An unanswered one that has
 			// stopped being offered goes quietly, because it moves no money and so
 			// nothing can change behind the reader's back.
 			const keep = wasActive && (eligible || hasAnswer(wrap));
-			const shown = keep || (common && eligible);
+			// THE ONE FIELD THIS CATEGORY OPENS ON. Everything else on this form
+			// got here because the reader asked for it.
+			const primary = isPrimary(entry, cat);
+			const shown = keep || primary;
 			setShown(wrap, shown);
 			if (shown) shownIds.add(id);
 
@@ -173,10 +196,11 @@ import TaxComputation from '../components/Calculators/TaxComputation.astro';
 				statuteEl.hidden = !statute;
 			}
 
-			// Removable when it is not one of the permanently visible ones this
-			// category is entitled to.
+			// Removable unless it is the one field the category opens on — that one
+			// is the form's floor, and a form with nothing in it is not a state the
+			// reader can do anything from.
 			const drop = wrap.querySelector<HTMLElement>('.tax-field-drop');
-			if (drop) drop.hidden = !shown || (common && eligible);
+			if (drop) drop.hidden = !shown || primary;
 		}
 
 		rebuildAdders(cat, shownIds);
@@ -203,7 +227,9 @@ import TaxComputation from '../components/Calculators/TaxComputation.astro';
 			select.innerHTML = '';
 			const placeholder = document.createElement('option');
 			placeholder.value = '';
-			placeholder.innerText = 'Choose…';
+			// The control reads as an add button and behaves as a picker, so its
+			// resting text is the invitation rather than the word "Choose".
+			placeholder.innerText = `＋  ${select.dataset.addLabel ?? 'Add'}`;
 			select.appendChild(placeholder);
 
 			for (const group of groups) {
@@ -221,8 +247,10 @@ import TaxComputation from '../components/Calculators/TaxComputation.astro';
 			}
 			// A dropdown with nothing left in it is a control that does nothing, so
 			// it says so rather than sitting there looking broken.
+			// A control with nothing left in it does nothing, so it says so rather
+			// than sitting there looking tappable.
 			select.disabled = select.options.length <= 1;
-			if (select.disabled) placeholder.innerText = 'You have added everything on offer';
+			if (select.disabled) placeholder.innerText = 'You have added everything on offer here';
 		};
 
 		const bySource = (want: 'clubbable' | 'separate') =>
@@ -255,6 +283,13 @@ import TaxComputation from '../components/Calculators/TaxComputation.astro';
 	function addEntry(entryId: string) {
 		const wrap = wrapFor(entryId);
 		if (!wrap) return;
+
+		// THE FIELD LANDS WHERE THE ADD CONTROL WAS, and the control moves down
+		// under it. Fields are rendered by the server in catalogue order; moving
+		// the node to the end of its block puts them in the order the READER
+		// added them, so the form reads back as the conversation they just had
+		// rather than as our list. dd-022.
+		wrap.parentElement?.appendChild(wrap);
 		setShown(wrap, true);
 
 		// Electing a presumptive basis IS choosing to be taxed on it. Leaving the
@@ -751,6 +786,20 @@ import TaxComputation from '../components/Calculators/TaxComputation.astro';
 		// matters before the second surface exists rather than after.
 		const input = readTaxInputs();
 		const model = buildTaxAnswer(input);
+
+		// Nothing to answer yet, so nothing claims to. A screen showing a
+		// confident nil is worse than an empty one: the reader cannot tell a
+		// result from a starting position.
+		const hasIncome = model.result.newRegime.grossIncome > 0;
+		const show = (id: string, on: boolean) => {
+			const e = document.getElementById(id);
+			if (e) e.hidden = !on;
+		};
+		show('taxAnswerWrap', hasIncome);
+		show('taxPanels', hasIncome);
+		show('taxPanelsWaiting', !hasIncome);
+		if (!hasIncome) return;
+
 		renderAnswer(model);
 		applyVerdict(model.verdict);
 		renderIncomeComputation(input, model.result);
@@ -771,7 +820,13 @@ import TaxComputation from '../components/Calculators/TaxComputation.astro';
 			document.getElementById(id)?.addEventListener('change', calculate);
 		});
 
-		document.getElementById('inCategory')?.addEventListener('change', () => {
+		document.getElementById('inCategory')?.addEventListener('change', (e) => {
+			// The opening question can be answered but not un-answered. Going back
+			// to "Choose one to begin" would hide the form while its fields kept
+			// their values and kept computing - figures the reader can no longer
+			// see moving a bill they can. Once answered, the placeholder goes.
+			const select = e.target as HTMLSelectElement;
+			if (select.value) select.querySelector('option[value=""]')?.remove();
 			refreshOffers();
 			calculate();
 		});

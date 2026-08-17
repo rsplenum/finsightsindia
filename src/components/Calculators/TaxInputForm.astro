@@ -1,31 +1,38 @@
 ---
 /**
- * The tax calculator's input column — Rahul's sheet 2, left-hand side.
+ * The tax calculator's input column — Rahul's sheet 2, rebuilt 18 Aug against
+ * dd-022 and dd-023.
  *
- * Design settled before the component in `TaxInputForm.checks.md`, which is
- * where the reasoning lives. Three things it is worth knowing before reading
- * the markup:
+ * IT OPENS AT ONE CONTROL. Category, and nothing else on the screen. Answer it
+ * and one field appears — the primary field for that category — with an add
+ * control below it. Every other field arrives because the reader asked for it,
+ * lands where the add control was, and pushes the add control down.
  *
- * THREE BLOCKS, NOT TWO. Block 1 holds the sources that CLUB — salary, pension
- * and arrears are one figure to the slabs, and five kinds of business income are
- * one profit. Block 2 holds what cannot join them, and every member of it says
- * why in its own words. Block 3 is deductions. Settled 17 Aug when Rahul read
- * back the illegible verb on his sheet: *"only those that can't be clubbed in
- * dropdown-1"*, negatively.
+ * The previous version showed ten fields at rest, because "only the most common
+ * options should be permanently visible" had been read as a SET of fields.
+ * Rahul corrected it: "only one major field (that is the primary field for that
+ * category appears) and a add sign below ... as a person selects an additional
+ * source of income the add sign moves below and so on ... all the complexity is
+ * underneath, the user faces zero cognitive load and maximum satisfaction and
+ * simplicity."
  *
- * EVERY ELIGIBLE FIELD IS RENDERED HERE, INCLUDING THE ONES NOT ON OFFER TO THE
- * CURRENT CATEGORY. The category decides what is SHOWN, never what exists, so
- * that switching category can never have to build a field — and so a field the
- * reader has already answered can stay on screen carrying the statute that now
- * excludes it. Deleting it would silently move the tax, which is precisely what
- * dd-020/dont-3 forbids.
+ * THE SINGLE COLUMN IS THE DESIGN (dd-023), not the fallback. One question, one
+ * field, one control is the same shape at 375 and at 1280; what a wide screen
+ * buys is the panels sitting beside the form instead of below it.
+ *
+ * THREE BLOCKS, NOT TWO. Block 1 holds the sources that CLUB. Block 2 holds
+ * what cannot join them, and every member says why in its own words. Block 3 is
+ * deductions. Blocks 2 and 3 open with no field at all, which is correct rather
+ * than an omission: the standard deduction is applied without being asked, and
+ * nobody has a capital gain by default.
+ *
+ * EVERY ELIGIBLE FIELD IS RENDERED HERE, including ones not on offer to the
+ * current category, so switching category never has to build one — and so a
+ * field the reader has already answered can stay on screen carrying the statute
+ * that now excludes it. Deleting it would silently move the tax (dd-020/dont-3).
  *
  * A FIELD IS ACTIVE WHEN IT IS ON SCREEN, and `readTaxInputs()` reads
- * `data-active` rather than presence. A section merely rendered must not read
- * as claimed.
- *
- * Every id here is derived from the catalogue, so a source added there arrives
- * on this form with a field, a handler and a place in the input set.
+ * `data-active` rather than presence.
  */
 import {
   CATEGORIES,
@@ -36,46 +43,30 @@ import {
 } from '../../utils/taxCatalogue';
 import { taxFieldId } from '../../utils/taxInputs';
 
-/** The category the server renders for. The client re-applies on every change. */
-const DEFAULT_CATEGORY = 'salaried';
-
 type Block = 'income' | 'separate' | 'deduction';
 
 interface Field {
   entry: CatalogueEntry;
   block: Block;
-  /** Old-regime-only deductions say so where the reader is entering the figure. */
+  /** Old-regime-only deductions say so where the reader enters the figure. */
   note: string;
-  initial: string;
 }
 
 const fields: Field[] = [
   ...INCOME_SOURCES.filter((s) => s.target).map((s) => ({
     entry: s as CatalogueEntry,
-    // Block 2 is exactly the sources that say why they cannot be clubbed. It is
-    // read off the catalogue rather than listed here, so the form and the rule
+    // Block 2 is exactly the sources that say why they cannot be clubbed. Read
+    // off the catalogue rather than listed here, so the form and the rule
     // cannot drift apart.
     block: (s.unclubbable ? 'separate' : 'income') as Block,
     note: '',
-    // The one default on the form. It exists so the page opens with a real
-    // answer rather than nil, and it is a salary rather than a deduction on
-    // purpose: a pre-filled deduction would be an argument for the old regime
-    // sitting in the defaults, which is dd-021 exactly.
-    initial: s.id === 'grossSalary' ? '15,00,000' : '',
   })),
   ...DEDUCTIONS.filter((d) => d.target).map((d) => ({
     entry: d as CatalogueEntry,
     block: 'deduction' as Block,
     note: regimesForDeduction(d).includes('new') ? '' : 'Old regime only.',
-    initial: '',
   })),
 ];
-
-const isExcluded = (e: CatalogueEntry, category: string) =>
-  (e.excluded ?? []).some((x) => x.category === category);
-
-/** Visible on the server render, and therefore active on the server render. */
-const startsVisible = (f: Field) => Boolean(f.entry.common) && !isExcluded(f.entry, DEFAULT_CATEGORY);
 
 const blocks: Array<{ id: Block; title: string; lede: string; addLabel: string; selectId: string }> = [
   {
@@ -89,7 +80,7 @@ const blocks: Array<{ id: Block; title: string; lede: string; addLabel: string; 
     id: 'separate',
     title: 'Money taxed on its own terms',
     lede: 'Each of these carries its own rate or its own rules, so it cannot be added to the figures above.',
-    addLabel: 'Add something taxed on its own terms',
+    addLabel: 'Add a capital gain, or declare a deemed profit',
     selectId: 'taxAddSeparate',
   },
   {
@@ -102,116 +93,109 @@ const blocks: Array<{ id: Block; title: string; lede: string; addLabel: string; 
 ];
 
 const selectClass =
-  'w-full bg-white dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-xl px-3 py-2.5 text-sm text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-navy-500 dark:focus:ring-navy-400';
+  'w-full bg-white dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-xl px-3 py-3 text-base text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-navy-500 dark:focus:ring-navy-400';
 const inputClass =
-  'w-full bg-white dark:bg-navy-900 border border-navy-200 dark:border-navy-700 text-base font-medium text-navy-900 dark:text-navy-100 rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-navy-500 dark:focus:ring-navy-400 transition-all shadow-sm';
+  'w-full bg-white dark:bg-navy-900 border border-navy-200 dark:border-navy-700 text-base font-medium text-navy-900 dark:text-navy-100 rounded-xl pl-9 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-navy-500 dark:focus:ring-navy-400 transition-all shadow-sm';
 const labelClass = 'block text-sm font-semibold text-navy-700 dark:text-navy-300';
 ---
 
 <section id="taxInputForm" class="space-y-8" aria-label="What you have to tell us about your year">
   <!--
-    Two questions, and both of them do work. Category removes what the statute
-    forbids this filer; Age moves the exemption at 60 and 80. The Name field on
-    Rahul's own sheet was dropped on 17 Aug — "name is not necessary" — because
-    it removed nothing and computed nothing, and every question the form asks
-    has to earn its place (dd-020/dont-2).
+    THE WHOLE SCREEN AT REST. One question. Until we know who is asking, every
+    field we could show is a field that might not apply to them, and showing it
+    is asking a question we already know may be wrong (dd-022).
   -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-    <div class="space-y-1.5">
-      <label for="inCategory" class={labelClass}>What do you do?</label>
-      <select id="inCategory" class={selectClass}>
-        {CATEGORIES.map((c) => (
-          <option value={c.id} selected={c.id === DEFAULT_CATEGORY}>{c.label}</option>
-        ))}
-      </select>
-      <p id="categoryHint" class="text-xs leading-snug text-navy-600 dark:text-navy-400"></p>
-    </div>
+  <div class="space-y-2">
+    <label for="inCategory" class="block text-lg font-bold text-navy-900 dark:text-navy-100">
+      What do you do?
+    </label>
+    <select id="inCategory" class={selectClass}>
+      <option value="">Choose one to begin</option>
+      {CATEGORIES.map((c) => <option value={c.id}>{c.label}</option>)}
+    </select>
+    <p id="categoryHint" class="text-sm leading-snug text-navy-600 dark:text-navy-400 empty:hidden"></p>
+  </div>
 
-    <div class="space-y-1.5">
+  <div id="taxFormBody" class="space-y-8" hidden>
+    <div class="space-y-2">
       <label for="inAgeBracket" class={labelClass}>How old are you?</label>
       <select id="inAgeBracket" class={selectClass}>
         <option value="below60">Under 60</option>
         <option value="60_80">60 to 80</option>
         <option value="above80">Over 80</option>
       </select>
-      <p class="text-xs leading-snug text-navy-600 dark:text-navy-400">
+      <p class="text-sm leading-snug text-navy-600 dark:text-navy-400">
         The old regime exempts more income from 60, and more again from 80.
       </p>
     </div>
-  </div>
 
-  {blocks.map((block) => (
-    <div class="space-y-4">
-      <div class="border-b border-navy-200 dark:border-navy-800 pb-2 space-y-1">
-        <h3 class="text-base font-bold text-navy-900 dark:text-navy-100">{block.title}</h3>
-        <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">{block.lede}</p>
-      </div>
+    {blocks.map((block) => (
+      <div class="space-y-4">
+        <div class="space-y-1">
+          <h3 class="text-base font-bold text-navy-900 dark:text-navy-100">{block.title}</h3>
+          <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">{block.lede}</p>
+        </div>
 
-      {/*
-        The standard deduction is applied by the engine without being asked, so
-        it has no field. It is stated anyway: a reader who cannot see it cannot
-        check that it happened, and its amount differs by regime, which is a
-        fact the two computation panels carry.
-      */}
-      {block.id === 'deduction' && (
-        <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed rounded-xl border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900/60 px-4 py-3">
-          <span class="font-semibold text-navy-900 dark:text-navy-100">Standard deduction</span> —
-          taken off your salary automatically. The amount differs by regime, and both are shown in
-          the computation.
-        </p>
-      )}
-
-      <div id={`taxFields_${block.id}`} class="space-y-5">
-        {fields.filter((f) => f.block === block.id).map((f) => (
-          <div
-            class="tax-field space-y-1.5"
-            data-field={f.entry.id}
-            data-common={f.entry.common ? 'true' : 'false'}
-            hidden={!startsVisible(f)}
-          >
-            <div class="flex items-baseline justify-between gap-3">
-              <label for={taxFieldId(f.entry.id)} class={labelClass}>{f.entry.label}</label>
-              <button
-                type="button"
-                class="tax-field-drop text-xs font-semibold text-navy-500 dark:text-navy-400 hover:text-rose-700 dark:hover:text-rose-400"
-                data-drop={f.entry.id}
-                hidden
-              >Remove</button>
+        <div id={`taxFields_${block.id}`} class="space-y-5 empty:hidden">
+          {fields.filter((f) => f.block === block.id).map((f) => (
+            <div class="tax-field space-y-1.5" data-field={f.entry.id} hidden>
+              <div class="flex items-baseline justify-between gap-3">
+                <label for={taxFieldId(f.entry.id)} class={labelClass}>{f.entry.label}</label>
+                <button
+                  type="button"
+                  class="tax-field-drop text-sm font-semibold text-navy-500 dark:text-navy-400 hover:text-rose-700 dark:hover:text-rose-400"
+                  data-drop={f.entry.id}
+                  hidden
+                >Remove</button>
+              </div>
+              <div class="relative flex items-center">
+                <span class="absolute left-3.5 text-base font-medium text-navy-500 dark:text-navy-400 select-none">₹</span>
+                <input
+                  id={taxFieldId(f.entry.id)}
+                  name={taxFieldId(f.entry.id)}
+                  type="text"
+                  inputmode="numeric"
+                  value=""
+                  data-active="false"
+                  class={inputClass}
+                />
+              </div>
+              <p class="text-sm leading-snug text-navy-600 dark:text-navy-400">
+                {f.entry.hint}{f.note ? ` ${f.note}` : ''}
+              </p>
+              {/*
+                The statute that now excludes a field the reader has already
+                answered. Written by the page from `whyExcluded()`, so the reason
+                a question stopped applying is never something we merely assert.
+              */}
+              <p class="tax-field-statute text-sm leading-snug text-amber-700 dark:text-amber-400" hidden></p>
             </div>
-            <div class="relative flex items-center">
-              <span class="absolute left-3.5 text-base font-medium text-navy-500 dark:text-navy-400 select-none">₹</span>
-              <input
-                id={taxFieldId(f.entry.id)}
-                name={taxFieldId(f.entry.id)}
-                type="text"
-                inputmode="numeric"
-                value={f.initial}
-                data-active={startsVisible(f) ? 'true' : 'false'}
-                class={inputClass}
-              />
-            </div>
-            <p class="text-xs leading-snug text-navy-600 dark:text-navy-400">
-              {f.entry.hint}{f.note ? ` ${f.note}` : ''}
+          ))}
+        </div>
+
+        {/*
+          THE ADD CONTROL, and it is the last child of the block on purpose. A
+          new field is appended before it, so it moves down under whatever was
+          just added — which is where the reader is already looking (dd-022).
+
+          A native select, because on a phone that is a full-screen picker for
+          free, needs no hover, and is the largest tap target on the screen
+          (dd-023).
+        */}
+        <div class="tax-add">
+          <label for={block.selectId} class="sr-only">{block.addLabel}</label>
+          <select id={block.selectId} class="tax-add-select" data-add-label={block.addLabel}>
+            <option value="">{`＋  ${block.addLabel}`}</option>
+          </select>
+        </div>
+
+        {block.id === 'separate' && (
+          <div id="taxPresumptiveControls" class="space-y-4 rounded-xl border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900/60 p-4" hidden>
+            <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
+              You have declared a turnover or a receipts figure, so there are two profits the law
+              will accept. Both are costed below; this chooses which one you are charged on.
             </p>
-            {/*
-              The statute that now excludes a field the reader has already
-              answered. Written by the page from `whyExcluded()`, so the reason
-              a question stopped applying is never something we merely assert.
-            */}
-            <p class="tax-field-statute text-xs leading-snug text-amber-700 dark:text-amber-400" hidden></p>
-          </div>
-        ))}
-      </div>
-
-      {block.id === 'separate' && (
-        <div id="taxPresumptiveControls" class="space-y-4 rounded-xl border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900/60 p-4" hidden>
-          <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
-            You have declared a turnover or a receipts figure, so there are two profits the law
-            will accept. Both are costed in the computation; this chooses which one you are
-            charged on.
-          </p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="space-y-1.5">
+            <div class="space-y-2">
               <label for="inBusinessBasis" class={labelClass}>Tax me on</label>
               <select id="inBusinessBasis" class={selectClass}>
                 <option value="books">My actual profit</option>
@@ -219,147 +203,176 @@ const labelClass = 'block text-sm font-semibold text-navy-700 dark:text-navy-300
                 <option value="44ADA">The deemed profit — s.44ADA</option>
               </select>
             </div>
-            <div class="space-y-1.5">
+            <div class="space-y-2">
               <label for="inBusinessDigitalShare" class={labelClass}>Received through a bank (%)</label>
-              <input
-                id="inBusinessDigitalShare"
-                type="number"
-                min="0"
-                max="100"
-                value="100"
-                class={selectClass}
-              />
-              <p class="text-xs leading-snug text-navy-600 dark:text-navy-400">
+              <input id="inBusinessDigitalShare" type="number" min="0" max="100" value="100" class={selectClass} />
+              <p class="text-sm leading-snug text-navy-600 dark:text-navy-400">
                 s.44AD deems 6% of what came through a bank and 8% of what came in cash.
               </p>
             </div>
+            <div id="presumptiveCompare" class="text-sm space-y-1.5 border-t border-navy-200 dark:border-navy-800 pt-3"></div>
           </div>
-          <div id="presumptiveCompare" class="text-sm space-y-1.5 border-t border-navy-200 dark:border-navy-800 pt-3"></div>
-        </div>
-      )}
+        )}
 
-      <div class="space-y-1.5">
-        <label for={block.selectId} class={labelClass}>{block.addLabel}</label>
-        <select id={block.selectId} class={selectClass}>
-          <option value="">Choose…</option>
-        </select>
-      </div>
-
-      {/*
-        THE BOUNDARY, not the reader's current position (dd-008/do-3). It states
-        what would have to be true for the other regime to win, which is the idea
-        the reader keeps and can apply next year without us.
-      */}
-      {block.id === 'deduction' && (
-        <p id="deductionBoundary" class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed empty:hidden"></p>
-      )}
-
-      {/*
-        Losses are neither income nor a deduction: they are set-off, with three
-        rules the Act keeps apart. They belong in this block because a capital
-        loss is the extreme case of something that cannot be clubbed — it may
-        meet a capital gain and nothing else in the world.
-      */}
-      {block.id === 'separate' && (
-        <details class="tax-chip rounded-xl border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-900/40 px-4 py-3">
-          <summary class="text-sm font-semibold text-navy-900 dark:text-navy-100">Losses to set off</summary>
-          <div class="space-y-4 pt-4">
-            <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
-              A capital loss can only ever meet a capital gain — never salary, rent or interest.
-            </p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div class="space-y-1.5">
-                <label for="inLossStcgCurrent" class={labelClass}>Short-term loss, this year</label>
-                <input id="inLossStcgCurrent" type="text" inputmode="numeric" value="" class={selectClass} />
-              </div>
-              <div class="space-y-1.5">
-                <label for="inLossLtcgCurrent" class={labelClass}>Long-term loss, this year</label>
-                <input id="inLossLtcgCurrent" type="text" inputmode="numeric" value="" class={selectClass} />
-              </div>
-            </div>
-            <details class="tax-chip rounded-xl border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900/60 px-3 py-2">
-              <summary class="text-sm font-semibold text-navy-700 dark:text-navy-300">Brought forward from earlier years</summary>
-              <div class="space-y-4 pt-3">
-                <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
-                  Carried losses are set off in flat rupees. The law gives no inflation adjustment,
-                  so a loss from seven years ago buys far less than the number suggests.
-                </p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div class="space-y-1.5">
-                    <label for="inLossBfBusiness" class={labelClass}>Business</label>
-                    <input id="inLossBfBusiness" type="text" inputmode="numeric" value="" class={selectClass} />
-                  </div>
-                  <div class="space-y-1.5">
-                    <label for="inLossBfHouseProperty" class={labelClass}>House property</label>
-                    <input id="inLossBfHouseProperty" type="text" inputmode="numeric" value="" class={selectClass} />
-                  </div>
-                  <div class="space-y-1.5">
-                    <label for="inLossBfShortTerm" class={labelClass}>Short-term capital</label>
-                    <input id="inLossBfShortTerm" type="text" inputmode="numeric" value="" class={selectClass} />
-                  </div>
-                  <div class="space-y-1.5">
-                    <label for="inLossBfLongTerm" class={labelClass}>Long-term capital</label>
-                    <input id="inLossBfLongTerm" type="text" inputmode="numeric" value="" class={selectClass} />
-                  </div>
+        {/*
+          Losses are neither income nor a deduction: they are set-off, with three
+          rules the Act keeps apart. They belong in this block because a capital
+          loss is the extreme case of something that cannot be clubbed — it may
+          meet a capital gain and nothing else in the world. Closed, so the
+          reader who has none never sees six retrospective questions.
+        */}
+        {block.id === 'separate' && (
+          <details class="tax-chip rounded-xl border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-900/40 px-4 py-3">
+            <summary class="text-sm font-semibold text-navy-900 dark:text-navy-100">Losses to set off</summary>
+            <div class="space-y-4 pt-4">
+              <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
+                A capital loss can only ever meet a capital gain — never salary, rent or interest.
+              </p>
+              <div class="space-y-4">
+                <div class="space-y-2">
+                  <label for="inLossStcgCurrent" class={labelClass}>Short-term loss, this year</label>
+                  <input id="inLossStcgCurrent" type="text" inputmode="numeric" value="" class={selectClass} />
+                </div>
+                <div class="space-y-2">
+                  <label for="inLossLtcgCurrent" class={labelClass}>Long-term loss, this year</label>
+                  <input id="inLossLtcgCurrent" type="text" inputmode="numeric" value="" class={selectClass} />
                 </div>
               </div>
-            </details>
-            <p id="lossNote" class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed empty:hidden"></p>
-          </div>
-        </details>
-      )}
-
-      {/*
-        HRA cannot be a catalogue entry: an entry names ONE target and this
-        exemption is computed from four facts. It stays a hand-built group,
-        offered to every category, because salary is offered to every category.
-      */}
-      {block.id === 'deduction' && (
-        <details class="tax-chip rounded-xl border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-900/40 px-4 py-3">
-          <summary class="text-sm font-semibold text-navy-900 dark:text-navy-100">House rent allowance</summary>
-          <div class="space-y-4 pt-4">
-            <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
-              Old regime only, and it is worked out from three figures rather than claimed: the
-              allowance you received, the rent you paid, and your basic salary.
-            </p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div class="space-y-1.5">
-                <label for="inBasicSalary" class={labelClass}>Basic salary</label>
-                <input id="inBasicSalary" type="text" inputmode="numeric" value="" class={selectClass} />
-              </div>
-              <div class="space-y-1.5">
-                <label for="inHraReceived" class={labelClass}>Allowance received</label>
-                <input id="inHraReceived" type="text" inputmode="numeric" value="" class={selectClass} />
-              </div>
-              <div class="space-y-1.5">
-                <label for="inRentPaid" class={labelClass}>Rent paid, for the year</label>
-                <input id="inRentPaid" type="text" inputmode="numeric" value="" class={selectClass} />
-              </div>
-              <div class="space-y-1.5">
-                <label for="inIsMetro" class={labelClass}>Where you live</label>
-                <select id="inIsMetro" class={selectClass}>
-                  <option value="true">A metro</option>
-                  <option value="false" selected>Anywhere else</option>
-                </select>
-              </div>
+              <details class="tax-chip rounded-xl border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900/60 px-3 py-2">
+                <summary class="text-sm font-semibold text-navy-700 dark:text-navy-300">Brought forward from earlier years</summary>
+                <div class="space-y-4 pt-3">
+                  <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
+                    Carried losses are set off in flat rupees. The law gives no inflation
+                    adjustment, so a loss from seven years ago buys far less than the number
+                    suggests.
+                  </p>
+                  <div class="space-y-4">
+                    <div class="space-y-2">
+                      <label for="inLossBfBusiness" class={labelClass}>Business</label>
+                      <input id="inLossBfBusiness" type="text" inputmode="numeric" value="" class={selectClass} />
+                    </div>
+                    <div class="space-y-2">
+                      <label for="inLossBfHouseProperty" class={labelClass}>House property</label>
+                      <input id="inLossBfHouseProperty" type="text" inputmode="numeric" value="" class={selectClass} />
+                    </div>
+                    <div class="space-y-2">
+                      <label for="inLossBfShortTerm" class={labelClass}>Short-term capital</label>
+                      <input id="inLossBfShortTerm" type="text" inputmode="numeric" value="" class={selectClass} />
+                    </div>
+                    <div class="space-y-2">
+                      <label for="inLossBfLongTerm" class={labelClass}>Long-term capital</label>
+                      <input id="inLossBfLongTerm" type="text" inputmode="numeric" value="" class={selectClass} />
+                    </div>
+                  </div>
+                </div>
+              </details>
+              <p id="lossNote" class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed empty:hidden"></p>
             </div>
-            <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
-              Exempt this year:
-              <span id="valHraExempt" class="font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</span>
-            </p>
-          </div>
-        </details>
-      )}
-    </div>
-  ))}
+          </details>
+        )}
+
+        {/*
+          The standard deduction is applied by the engine without being asked, so
+          it has no field. It is stated anyway: a reader who cannot see it cannot
+          check that it happened, and its amount differs by regime.
+        */}
+        {block.id === 'deduction' && (
+          <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed rounded-xl border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900/60 px-4 py-3">
+            <span class="font-semibold text-navy-900 dark:text-navy-100">Standard deduction</span> —
+            taken off your salary automatically. The amount differs by regime, and both are shown in
+            the computation.
+          </p>
+        )}
+
+        {/*
+          HRA cannot be a catalogue entry: an entry names ONE target and this
+          exemption is computed from four facts. It stays a hand-built group,
+          offered to every category, because salary is offered to every category.
+        */}
+        {block.id === 'deduction' && (
+          <details class="tax-chip rounded-xl border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-900/40 px-4 py-3">
+            <summary class="text-sm font-semibold text-navy-900 dark:text-navy-100">House rent allowance</summary>
+            <div class="space-y-4 pt-4">
+              <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
+                Old regime only, and it is worked out from three figures rather than claimed: the
+                allowance you received, the rent you paid, and your basic salary.
+              </p>
+              <div class="space-y-4">
+                <div class="space-y-2">
+                  <label for="inBasicSalary" class={labelClass}>Basic salary</label>
+                  <input id="inBasicSalary" type="text" inputmode="numeric" value="" class={selectClass} />
+                </div>
+                <div class="space-y-2">
+                  <label for="inHraReceived" class={labelClass}>Allowance received</label>
+                  <input id="inHraReceived" type="text" inputmode="numeric" value="" class={selectClass} />
+                </div>
+                <div class="space-y-2">
+                  <label for="inRentPaid" class={labelClass}>Rent paid, for the year</label>
+                  <input id="inRentPaid" type="text" inputmode="numeric" value="" class={selectClass} />
+                </div>
+                <div class="space-y-2">
+                  <label for="inIsMetro" class={labelClass}>Where you live</label>
+                  <select id="inIsMetro" class={selectClass}>
+                    <option value="true">A metro</option>
+                    <option value="false" selected>Anywhere else</option>
+                  </select>
+                </div>
+              </div>
+              <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
+                Exempt this year:
+                <span id="valHraExempt" class="font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</span>
+              </p>
+            </div>
+          </details>
+        )}
+
+        {block.id === 'deduction' && (
+          <p id="deductionBoundary" class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed empty:hidden"></p>
+        )}
+      </div>
+    ))}
+  </div>
 </section>
 
 <style>
   /*
     Plain CSS rather than @apply: Tailwind v4 needs an @reference in a scoped
     style block, and the rest of this codebase puts utilities on the element.
-    Only the disclosure marker needs CSS at all.
+
+    THE ADD CONTROL. It has to read as a button and behave as a picker, because
+    a native select is the one control a phone renders full-screen for free —
+    no hover, no custom menu, and the largest tap target on the page (dd-023).
+    So the select itself is styled as the row: dashed, quiet, full width, and
+    tall enough for a thumb.
   */
+  .tax-add-select {
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    border: 1px dashed var(--color-navy-300, #cbd5e1);
+    border-radius: 0.75rem;
+    background: transparent;
+    padding: 0.875rem 1rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-navy-700, #334155);
+    text-align: left;
+    cursor: pointer;
+  }
+  .tax-add-select:focus {
+    outline: 2px solid var(--color-navy-500, #64748b);
+    outline-offset: 2px;
+  }
+  .tax-add-select:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+  :root.dark .tax-add-select,
+  html.dark .tax-add-select {
+    border-color: var(--color-navy-700, #334155);
+    color: var(--color-navy-300, #cbd5e1);
+  }
+
   .tax-chip > summary {
     cursor: pointer;
     list-style: none;

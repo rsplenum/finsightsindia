@@ -59,6 +59,13 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-021/dont-1 | PASS | Both regime columns are drawn identically and the panel argues for neither. What emphasis exists is applied by the page's one `verdictFor()`, which is sol-043's whole point. |
 | dd-021/dont-2 | N/A | The panel asks for nothing. |
 | dd-021/dont-3 | PASS | The conclusion is not left to the reader: `TaxAnswer` states the cheaper regime in a sentence above this panel, and this panel exists to show the working behind it rather than to replace it. |
+| dd-022/dont-1 | N/A |  |
+| dd-022/dont-2 | N/A |  |
+| dd-022/dont-3 | N/A |  |
+| dd-022/dont-4 | N/A |  |
+| dd-023/dont-1 | RISK | The panel was designed as the right-hand column of a 1280 layout and stacks below the form on a phone. That is the wrong order of design under dd-023, and it is being reworked in the same pass that rebuilds the form. Filed rather than back-dated to a pass. |
+| dd-023/dont-2 | PASS | Every figure is rendered in place. The explanatory line under a control is visible prose rather than a hover tooltip, so nothing the reader needs is behind a pointer. |
+| dd-023/dont-3 | RISK | Three columns of figures - the item and both regimes - is the artefact dd-023 names. It fits at 375 without overflow, but fitting is not reading, and this is the longest table on the site. The judgement is owed on a phone. |
 
 ## Deliberate choices
 

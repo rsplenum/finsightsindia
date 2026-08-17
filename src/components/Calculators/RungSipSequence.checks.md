@@ -55,6 +55,13 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-021/dont-1 | PASS | It reports that the same crash costs 2 months at the start and 4.8 years at the end - an unflattering fact about the plan, printed rather than softened. |
 | dd-021/dont-2 | PASS | The control is how long the bad run lasts, and it moves both the best and worst timing outcomes. |
 | dd-021/dont-3 | PASS | Each row states what the reader finishes with under that timing, in a sentence, instead of leaving the two figures to be differenced. |
+| dd-022/dont-1 | N/A |  |
+| dd-022/dont-2 | N/A |  |
+| dd-022/dont-3 | N/A |  |
+| dd-022/dont-4 | N/A |  |
+| dd-023/dont-1 | RISK | Honest answer: this was designed at 1280 and checked at 375 afterwards, which is the exact practice dd-023 was written to name. It has not been re-examined as a phone screen. Recorded rather than claimed as compliant, and on the launch gate as a sweep of its own. |
+| dd-023/dont-2 | PASS | Every figure is rendered in place. The explanatory line under a control is visible prose rather than a hover tooltip, so nothing the reader needs is behind a pointer. |
+| dd-023/dont-3 | N/A |  |
 
 ## Deliberate choices
 

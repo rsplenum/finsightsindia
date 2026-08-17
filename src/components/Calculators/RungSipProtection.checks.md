@@ -55,6 +55,13 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-021/dont-1 | PASS | The strongest evidence on the site that the design is not arguing a thesis: this rung reports that our own hedging costs more than it returns at the shipped roughness, and says so plainly instead of burying it. A tool willing to print that is willing to print a good policy. |
 | dd-021/dont-2 | PASS | The floor and the roughness are the inputs, and both move the protected and unprotected outcomes. |
 | dd-021/dont-3 | PASS | Worst 1-in-10 and typical futures are set side by side with the verdict stated, never as a difference of averages (dd-012). |
+| dd-022/dont-1 | PASS | Its one control is the subject of the rung, and the reader opened the rung to ask about it. Nothing here is a box they have to read and dismiss. |
+| dd-022/dont-2 | N/A |  |
+| dd-022/dont-3 | N/A |  |
+| dd-022/dont-4 | N/A |  |
+| dd-023/dont-1 | RISK | Honest answer: this was designed at 1280 and checked at 375 afterwards, which is the exact practice dd-023 was written to name. It has not been re-examined as a phone screen. Recorded rather than claimed as compliant, and on the launch gate as a sweep of its own. |
+| dd-023/dont-2 | PASS | Every figure is rendered in place. The explanatory line under a control is visible prose rather than a hover tooltip, so nothing the reader needs is behind a pointer. |
+| dd-023/dont-3 | N/A |  |
 
 ## Deliberate choices
 

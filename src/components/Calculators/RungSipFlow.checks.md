@@ -62,6 +62,13 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-007 | does every visual difference mean something? | Three rows of equal weight for the three quantities that are equally real — what you gave up, what the market added, what you keep. The total is heavier because it is a total. Nothing else varies. |
 | dd-009 | is any needed explanation cut? | No. Two things that would otherwise be a silent surprise are stated outright: that the nominal total invested overstates the real sacrifice, and that the tax figure only becomes real on the day the units are sold. |
 | dd-010 | lived quantity or accountant's? | The multiple — what each rupee really given up came back as — is the one a saver carries away. The rupee totals are there because they are what the reader arrived expecting to see. |
+| dd-022/dont-1 | N/A |  |
+| dd-022/dont-2 | N/A |  |
+| dd-022/dont-3 | N/A |  |
+| dd-022/dont-4 | N/A |  |
+| dd-023/dont-1 | RISK | Honest answer: this was designed at 1280 and checked at 375 afterwards, which is the exact practice dd-023 was written to name. It has not been re-examined as a phone screen. Recorded rather than claimed as compliant, and on the launch gate as a sweep of its own. |
+| dd-023/dont-2 | PASS | Every figure is rendered in place. The explanatory line under a control is visible prose rather than a hover tooltip, so nothing the reader needs is behind a pointer. |
+| dd-023/dont-3 | RISK | This rung IS a table of money columns, and T8 puts both moneys in it side by side on purpose because the pair is the lesson. On a phone those columns are the narrowest thing on the site. Whether the comparison still reads at 375 has not been judged, only measured for overflow, and the two are not the same question. |
 
 ## Deliberate choices
 

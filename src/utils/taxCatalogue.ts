@@ -24,11 +24,11 @@ import { CHAPTER_VIA_RULES, type ChapterVIASection, type Regime } from './tax';
  *   A reader who switches category does not get a different tax on the same
  *   facts, only a different set of questions.
  *
- * dd-001/do-3 — within the eligible set, offer EVERYTHING, not a shortlist.
- *   Hence `common` is a visibility flag, not a filter: the uncommon options are
- *   one click away in the dropdown, never absent. "Only the most common options
- *   should be permanently visible" is answered by what stays on screen, not by
- *   what exists.
+ * dd-001/do-3 and dd-022 together — within the eligible set, offer EVERYTHING,
+ *   and show ONE. `primaryFor` names the single field a category opens on; every
+ *   other entry is reached through the add control. The two rules are not in
+ *   tension, they are the architecture: what is offered is exhaustive, what is
+ *   on screen at rest is one field, and the complexity lives underneath.
  *
  * sol-041 — AND EVERY OPTION HAS SOMEWHERE FOR ITS RUPEES TO GO. This is the
  *   rule the first draft of this file did not have, and it is the one that
@@ -115,10 +115,22 @@ export interface CatalogueEntry {
    */
   pending?: string;
   /**
-   * Permanently visible rather than in the dropdown. This is a VISIBILITY
-   * decision only — an uncommon option is still offered, one click away.
+   * THE ONE FIELD THIS CATEGORY OPENS ON — dd-022.
+   *
+   * There was a `common` boolean here, meaning "permanently visible rather than
+   * in the dropdown", and it produced a form with ten boxes standing at zero
+   * before the reader had typed anything. Rahul overturned that reading on 18
+   * Aug: after the category is answered, exactly ONE field is on screen and
+   * every other one arrives because the reader asked for it.
+   *
+   * It is deleted rather than reinterpreted. A flag left in place with a new
+   * meaning lets the old meaning be re-derived by the next person to read the
+   * file, which is dd-012's failure exactly.
+   *
+   * Visibility, not availability: what is OFFERED stays exhaustive within the
+   * eligible set (dd-001/do-3). Only what is on screen at rest has changed.
    */
-  common?: boolean;
+  primaryFor?: string[];
   /** Categories that cannot lawfully choose this, each with its provision. */
   excluded?: Exclusion[];
 }
@@ -154,7 +166,8 @@ export interface IncomeSource extends CatalogueEntry {
 export const INCOME_SOURCES: IncomeSource[] = [
   // ---- Head 1: Salaries -------------------------------------------------
   {
-    id: 'grossSalary', head: 'salaries', common: true, target: 'grossSalary',
+    id: 'grossSalary', head: 'salaries', target: 'grossSalary',
+    primaryFor: ['salaried'],
     label: 'Salary',
     hint: 'Everything on your payslip before deductions — basic, allowances, bonus.',
     excluded: [],
@@ -179,15 +192,20 @@ export const INCOME_SOURCES: IncomeSource[] = [
   // home loan interest is a DEDUCTION, which is also where the reader looks for
   // it; the engine's house property head is where it lands.
   {
-    id: 'letOutRent', head: 'houseProperty', common: true, target: 'houseProperty.annualRent',
+    id: 'letOutRent', head: 'houseProperty', target: 'houseProperty.annualRent',
     label: 'Rent received',
     hint: 'Rent from a property you own and let out, for the whole year.',
   },
 
   // ---- Head 3: Business or profession -----------------------------------
   {
-    id: 'businessBooks', head: 'businessProfession', common: true, target: 'business.netProfit',
-    label: 'Business profit (from your books)',
+    id: 'businessBooks', head: 'businessProfession', target: 'business.netProfit',
+    primaryFor: ['business', 'professional'],
+    // Not "Business profit". Under dd-022 this is the ONE question a business or
+    // a professional sees on opening the form, and a practising doctor reading
+    // "Business profit" as their only question would hesitate. The same field
+    // serves a shop, a surgery and a chambers; the label now does too.
+    label: 'Profit from your books',
     hint: 'Actual profit — turnover less expenses — as your accounts show it.',
     excluded: [
       { category: 'salaried', statute: 'A salaried filer has no business income to declare under this head; if they do run a business, the Business category is the one that fits.' },
@@ -241,6 +259,7 @@ export const INCOME_SOURCES: IncomeSource[] = [
   },
   {
     id: 'freelanceReceipts', head: 'businessProfession', target: 'business.netProfit',
+    primaryFor: ['selfEmployed'],
     label: 'Freelance or contract income',
     hint: 'Paid per project or per hour rather than by an employer. Enter what is left after your costs; to declare presumptively instead, use 44ADA above and enter the gross receipts.',
   },
@@ -252,14 +271,14 @@ export const INCOME_SOURCES: IncomeSource[] = [
 
   // ---- Head 4: Capital gains --------------------------------------------
   {
-    id: 'stcg111A', head: 'capitalGains', common: true, target: 'capitalGains.stcg111A',
+    id: 'stcg111A', head: 'capitalGains', target: 'capitalGains.stcg111A',
     label: 'Short-term gains on shares or equity funds',
     hint: 'Listed equity held 12 months or less, sold on an exchange. Taxed at a flat 20% under s.111A.',
     unclubbable:
       'It carries its own flat rate under s.111A. Added to your salary it would be charged at your slab rate instead, which is the rate this section exists to displace.',
   },
   {
-    id: 'ltcg112A', head: 'capitalGains', common: true, target: 'capitalGains.ltcg112A',
+    id: 'ltcg112A', head: 'capitalGains', target: 'capitalGains.ltcg112A',
     label: 'Long-term gains on shares or equity funds',
     hint: 'Listed equity held over 12 months. 12.5% under s.112A, with the first ₹1.25 lakh of gains exempt.',
     unclubbable:
@@ -289,12 +308,12 @@ export const INCOME_SOURCES: IncomeSource[] = [
 
   // ---- Head 5: Other sources --------------------------------------------
   {
-    id: 'savingsInterest', head: 'otherSources', common: true, target: 'otherIncome',
+    id: 'savingsInterest', head: 'otherSources', target: 'otherIncome',
     label: 'Savings account interest',
     hint: 'Interest credited by your bank on a savings account. Up to ₹10,000 of it comes back as a deduction under 80TTA — or ₹50,000 under 80TTB from age 60.',
   },
   {
-    id: 'depositInterest', head: 'otherSources', common: true, target: 'otherIncome',
+    id: 'depositInterest', head: 'otherSources', target: 'otherIncome',
     label: 'Fixed deposit interest',
     hint: 'Interest on FDs and recurring deposits, taxed as it accrues rather than when it is paid out.',
   },
@@ -331,7 +350,7 @@ export interface Deduction extends CatalogueEntry {
 
 export const DEDUCTIONS: Deduction[] = [
   {
-    id: 'standardDeduction', section: 's.16(ia)', regimes: ['old', 'new'], common: true,
+    id: 'standardDeduction', section: 's.16(ia)', regimes: ['old', 'new'],
     automatic: true,
     label: 'Standard deduction',
     hint: 'A flat deduction against salary or pension. Applied automatically — you do not claim it, and the amount differs by regime.',
@@ -342,23 +361,22 @@ export const DEDUCTIONS: Deduction[] = [
     ],
   },
   {
-    id: 'sec80c', section: 's.80C', target: 'chapterVIA.80C', common: true,
+    id: 'sec80c', section: 's.80C', target: 'chapterVIA.80C',
     label: 'Investments and payments (80C)',
     hint: 'EPF, PPF, ELSS, life insurance premium, principal on a home loan, tuition fees. Capped at ₹1.5 lakh.',
   },
   {
-    id: 'sec80d', section: 's.80D', target: 'chapterVIA.80D', common: true,
+    id: 'sec80d', section: 's.80D', target: 'chapterVIA.80D',
     label: 'Health insurance premium (80D)',
     hint: 'Premium for yourself, your family and your parents. The ceiling rises when the insured is a senior citizen.',
   },
   {
-    id: 'sec80ccd1b', section: 's.80CCD(1B)', target: 'chapterVIA.80CCD1B', common: true,
+    id: 'sec80ccd1b', section: 's.80CCD(1B)', target: 'chapterVIA.80CCD1B',
     label: 'NPS, your own contribution (80CCD(1B))',
     hint: 'An extra ₹50,000 over and above the 80C ceiling.',
   },
   {
     id: 'homeLoanInterest', section: 's.24(b)', regimes: ['old'], target: 'houseProperty.interest',
-    common: true,
     label: 'Home loan interest (24(b))',
     hint: 'Up to ₹2 lakh against the home you live in, and uncapped against one you let out. This is a house-property deduction, not a Chapter VI-A one — which is why s.115BAC withdraws it entirely on a home you live in, and why that is the single biggest reason a borrower stays on the old regime.',
   },
@@ -476,13 +494,21 @@ export const deductionsFor = (category: string, regime: Regime): Deduction[] =>
   );
 
 /**
- * The split the sheet asks for: what stays on screen, and what waits in the
- * dropdown. Both halves are offered — this is visibility, never availability.
+ * The one field this category opens on — dd-022, and there is exactly one.
+ *
+ * Everything else in the form is reached through the add control. This replaces
+ * `splitByVisibility`, which answered "which fields stay on screen" and was the
+ * encoding of a reading Rahul overturned on 18 Aug: the answer is not a set, it
+ * is a field.
+ *
+ * Deductions and the sources that cannot be clubbed have no primary at all, and
+ * that is correct rather than an omission: the standard deduction is applied
+ * without being asked, and nobody has a capital gain by default.
  */
-export const splitByVisibility = <T extends CatalogueEntry>(entries: T[]) => ({
-  visible: entries.filter((e) => e.common),
-  inDropdown: entries.filter((e) => !e.common),
-});
+export const primaryIncomeFor = (category: string): IncomeSource | null =>
+  INCOME_SOURCES.find(
+    (s) => (s.primaryFor ?? []).includes(category) && !s.pending && !isExcluded(s, category)
+  ) ?? null;
 
 /** Grouped for the dropdown, since the engine is structured by s.14 heads. */
 export const groupByHead = (sources: IncomeSource[]): Array<{ head: Head; label: string; sources: IncomeSource[] }> =>

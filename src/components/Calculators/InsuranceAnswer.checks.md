@@ -69,6 +69,13 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-021/dont-1 | RISK | This is the entry the rule was written against. The page was built to argue the policy is beatable, and the thesis has already reached the defaults: the safe DIY route is charged NO TAX AT ALL while the growth route pays 12.5% LTCG, which flatters the very route the page uses to win. Rahul's brief is the correction - the maths reveals, it does not argue. Open in the gate; the overhaul is queued behind the token sweep. |
 | dd-021/dont-2 | RISK | The input set is not yet the minimum the brief specifies, and it is missing one the verdict genuinely needs: accident or health cover. The brief's list is annual premium, number of outgoing payments, when income starts and whether it grows, life cover, accident/health cover. Replicating a bundle without pricing its accident leg understates the DIY cost and so tilts the verdict. |
 | dd-021/dont-3 | PASS | This part already holds. sol-040 gave the page one verdictFor() driving the heading, the figure, the colour, the badge and the sentence, so the screen states who wins rather than leaving the reader to subtract two numbers and decide. |
+| dd-022/dont-1 | RISK | This component holds no fields, but the page it heads lays its whole six-field form out at once, which is what dd-022 forbids. The analyser overhaul is the next item on the launch gate and this entry now governs it: category first, one field, and the rest added. |
+| dd-022/dont-2 | N/A |  |
+| dd-022/dont-3 | RISK | Same instance as dont-1 seen from the other side. The analyser form is laid out rather than built, so its length is our list of inputs and not the reader s situation. To be fixed in the overhaul, not here. |
+| dd-022/dont-4 | N/A |  |
+| dd-023/dont-1 | RISK | Honest answer: this was designed at 1280 and checked at 375 afterwards, which is the exact practice dd-023 was written to name. It has not been re-examined as a phone screen. Recorded rather than claimed as compliant, and on the launch gate as a sweep of its own. |
+| dd-023/dont-2 | PASS | Every figure is rendered in place. The explanatory line under a control is visible prose rather than a hover tooltip, so nothing the reader needs is behind a pointer. |
+| dd-023/dont-3 | PASS | The two routes are stated as a verdict in a sentence before they are shown as figures, so the comparison survives being stacked. The sentence is the comparison; the figures support it. |
 
 ## Deliberate choices
 

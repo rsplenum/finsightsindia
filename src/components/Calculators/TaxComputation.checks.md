@@ -56,6 +56,13 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-021/dont-1 | PASS | Both columns are drawn identically and the panel argues for neither regime. The winner's emphasis comes from the page's one `verdictFor()`, which is what sol-043 exists to guarantee. |
 | dd-021/dont-2 | N/A | The panel asks for nothing. |
 | dd-021/dont-3 | PASS | The reader is not left to compare two columns and infer a winner. Rung 1 says which regime is cheaper in a sentence, and this panel is the working behind that sentence. |
+| dd-022/dont-1 | N/A |  |
+| dd-022/dont-2 | N/A |  |
+| dd-022/dont-3 | N/A |  |
+| dd-022/dont-4 | N/A |  |
+| dd-023/dont-1 | RISK | Same as its sibling panel: designed as the right-hand column of a 1280 layout. Being reworked in the pass that rebuilds the form, and recorded here as a fault of order rather than of output. |
+| dd-023/dont-2 | PASS | Every figure is rendered in place. The explanatory line under a control is visible prose rather than a hover tooltip, so nothing the reader needs is behind a pointer. |
+| dd-023/dont-3 | RISK | Both regimes sit in one table beside each other, and the slab working sits as two ladders side by side that become two stacked ladders on a phone - which is further apart than a comparison wants to be. Owed a judgement at 375. |
 
 ## Deliberate choices
 

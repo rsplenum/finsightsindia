@@ -52,6 +52,13 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-021/dont-1 | PASS | It reports the real return after inflation whether that figure is flattering or not, and the insight sentence states the erosion case as readily as the growth case. |
 | dd-021/dont-2 | N/A | The rung asks nothing of its own; it reads the shared input set. |
 | dd-021/dont-3 | PASS | The prose insight states the conclusion outright - what the instalment is worth by the final year against what it is today - rather than leaving two rates to be compared. |
+| dd-022/dont-1 | N/A |  |
+| dd-022/dont-2 | N/A |  |
+| dd-022/dont-3 | N/A |  |
+| dd-022/dont-4 | N/A |  |
+| dd-023/dont-1 | RISK | Honest answer: this was designed at 1280 and checked at 375 afterwards, which is the exact practice dd-023 was written to name. It has not been re-examined as a phone screen. Recorded rather than claimed as compliant, and on the launch gate as a sweep of its own. |
+| dd-023/dont-2 | PASS | Every figure is rendered in place. The explanatory line under a control is visible prose rather than a hover tooltip, so nothing the reader needs is behind a pointer. |
+| dd-023/dont-3 | N/A |  |
 
 ## Deliberate choices
 

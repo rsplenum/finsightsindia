@@ -627,5 +627,58 @@
         "note": "He chose the only option that neither guesses nor gives up. Assuming a slab would have put OUR number into the reader's comparison; labelling the figure pre-tax would have left the two routes incomparable, which is the one thing this tool exists to fix. Asking costs one control and makes the comparison honest at whatever rate the reader actually pays. Note also what he did NOT pick: 10/20/30 rather than a single conservative 30%, so the tool does not quietly assume the reader is rich. This is dd-021's own test - 'if either route is charged a tax or a fee the other is spared, the thesis has already been built into the defaults' - firing, being escalated, and being answered."
       }
     ]
+  },
+  {
+    "id": "dd-022",
+    "date": "2026-08-18",
+    "title": "The screen starts at one question; the reader builds the rest",
+    "trigger": "Rahul, on the tax calculator the session had just built. It shipped with roughly ten fields standing on screen before the reader had typed anything - salary, rent, two kinds of interest, two kinds of capital gain, and four deductions - because the catalogue's `common` flag had been read as \"these stay visible\". He corrected the reading immediately and completely.",
+    "verbatim": "start with the category, the rest of the fields appear after the category is selected.\nafter the category is selected, only one major field (that is the primary field for that category appears) and a add sign below with a dropdown for other sources of income, as a person selects an additional source of income the add sign moves below and so on.\nsame for dedutions\nsame for other sources of income like capital gain\n\nwe are designing the website for mobile first.\n\nare you catching my drift about the minimalism of the design, all the complexity is underneath, the user faces zero cognitive load and maximum satisfaction and simplicity.",
+    "spirit": "THE NUMBER IS ONE. Not \"a few\", not \"the common ones\". After the category is answered, exactly one field is on screen - the primary field for that category - and every other field in the form arrives because the reader asked for it.\n\nThis is a correction to how \"only the most common options should be permanently visible\" (16 Aug) was read. It had been taken to mean \"the common ones stay on screen and the long tail moves into a dropdown\", which produced a form with ten boxes at rest, most of them standing at zero. Rahul's clarification is that a box standing at zero is not free. It is a question the reader has to read, understand and decide does not apply to them, and ten of those before the first keystroke is precisely the cognitive load the design exists to remove.\n\nAND NOTHING EXISTS BEFORE THE CATEGORY. The form does not open with fields and a category selector above them; it opens with the category alone. Until we know who is asking, every field on screen is a field that might not apply to them, and showing it is asking a question we already know may be wrong.\n\nTHE ADD CONTROL TRAVELS. It sits immediately below the last field and moves down as each new one lands - \"as a person selects an additional source of income the add sign moves below and so on\". The form therefore grows downward under the reader's hand: the next action is always exactly where they just finished, rather than in a fixed place they have to go back and find. This is a small mechanic carrying a large idea. The reader is BUILDING the form, and it ends up exactly as long as their own life rather than as long as our catalogue.\n\nIt does not contradict dd-001/do-3, and the distinction is the whole architecture: what is OFFERED stays exhaustive within the eligible set, and what is VISIBLE collapses to one. The complexity does not go away, it goes underneath - which is Rahul's own closing line, and the meta-principle of the project stated again in his words: \"all the complexity is underneath, the user faces zero cognitive load and maximum satisfaction and simplicity.\"\n\nThe word worth keeping is SATISFACTION. A form that grows as you answer it is not merely tolerable, it is pleasant; a form laid out in front of you is a chore before it is anything else. That is the difference between a screen that is correct and a screen someone finishes.",
+    "applies_to": [
+      "calculators",
+      "every screen",
+      "whole product",
+      "forms"
+    ],
+    "do": [
+      "Ask the category, or whatever question decides what applies, FIRST - and show nothing else until it is answered.",
+      "Show exactly ONE field once that is known: the primary field for that category. Every other field arrives because the reader asked for it.",
+      "Keep the add control below the last field, so it moves down as the form grows and the next action is always where the reader just finished.",
+      "Keep the whole catalogue reachable from that one control - the surface shrinks, the offering does not (dd-001/do-3).",
+      "Apply the same shape to every block on the screen: income, deductions, and whatever is kept apart from both."
+    ],
+    "dont": [
+      "Don't put a field on screen the reader has not asked for; a box standing at zero is still a question they must read and dismiss.",
+      "Don't read 'the most common options stay visible' as a SET of fields - it is one field, and it is the one the category implies.",
+      "Don't lay the form out in front of the reader; let them build it, so its length is the length of their life and not of our catalogue.",
+      "Don't leave the add control in a fixed position while the form grows around it - it belongs below the last thing they added."
+    ],
+    "test": "Count the controls on the screen before the reader has typed anything. One is right; two is a design that has not been finished. Then answer the first question and count again: still one field, plus the control that adds the next. Then add a source and look for the add control - if the reader has to go and find it, the form is not growing under their hand."
+  },
+  {
+    "id": "dd-023",
+    "date": "2026-08-18",
+    "title": "Mobile first, and it is not a breakpoint",
+    "trigger": "The same message as dd-022, given while correcting the tax calculator. The build it was correcting had been designed at 1280 - inputs in a left column, two output panels in a right one - and then CHECKED at 375 to confirm nothing broke. That is desktop-first with a mobile audit stapled to it, and it passed its audit, which is what makes it worth recording.",
+    "verbatim": "we are designing the website for mobile first.",
+    "spirit": "Mobile first inverts which layout is the real one. The single column IS the design; the wide layout is what that design is allowed to become when there is room. It is not the same thing as a layout that survives being narrowed, and the tax calculator is the proof: it was measured at 375px with zero overflow and zero clipped elements and it was still a desktop design, because the two output panels beside the inputs were where the thinking went and the stack was where the checking went.\n\nWhat changes in practice. Vertical rhythm becomes the primary axis, so the ORDER of things carries the argument rather than their arrangement. A comparison that only reads side by side has not been designed for a phone - and this bites hardest on exactly the thing this product does most, which is put two regimes or two routes next to each other. A three-column table of figures is a desktop artefact. Everything must be reachable by thumb, which rules out hover as a way of holding any figure the reader needs.\n\nIt also sharpens dd-022. On a phone there is no room to lay a form out in front of anybody, so a form that grows under the thumb is not a nicety there, it is the only thing that works - and a screen that is right on a phone is almost always right when it is given more room, while the reverse is what we have been finding out.\n\nRecorded as its own entry rather than as a note on dd-022 because it governs every screen on the site, including the ones with no form on them at all.",
+    "applies_to": [
+      "calculators",
+      "every screen",
+      "whole product"
+    ],
+    "do": [
+      "Design at the narrow width first, and let the wide layout be what that design becomes when there is room.",
+      "Make the single column the real layout: order carries the argument, because arrangement cannot.",
+      "Verify at 375px before 1280, and treat a fault found there as a design fault rather than a breakpoint bug.",
+      "Assume a thumb: every control reachable without hover, and every target big enough to hit."
+    ],
+    "dont": [
+      "Don't design at desktop width and check the phone afterwards; passing a mobile audit is not the same as having been designed for one.",
+      "Don't put a figure the reader needs behind a hover state, a tooltip or anything else a thumb cannot reach.",
+      "Don't let a side-by-side arrangement be the only way a comparison reads; on a phone it will be stacked, and it has to still work."
+    ],
+    "test": "Open the screen at 375px and ask whether this is the design or a narrowed version of one. If any comparison, table or panel only makes its point once it is wider, it was designed for the desktop and adapted afterwards."
   }
 ]

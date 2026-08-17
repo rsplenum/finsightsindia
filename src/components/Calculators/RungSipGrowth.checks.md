@@ -68,6 +68,13 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-005 | pushes on the spine? | Directly. It moves the first of the two rates and shows the goal respond. |
 | dd-003 | what do they leave with? | That the growth rate is the one term in this plan they do not control, so a plan that only works at the top of the track is a hope. The two they DO control were the levers on the Answer. |
 | dd-012 | judged where it acts? | The row that moves is the odds of reaching the goal, not an average ending balance — a saver's exposure to disappointing growth is the chance of falling short, and an average conceals it. |
+| dd-022/dont-1 | PASS | Its one control is the subject of the rung, and the reader opened the rung to ask about it. Nothing here is a box they have to read and dismiss. |
+| dd-022/dont-2 | N/A |  |
+| dd-022/dont-3 | N/A |  |
+| dd-022/dont-4 | N/A |  |
+| dd-023/dont-1 | RISK | Honest answer: this was designed at 1280 and checked at 375 afterwards, which is the exact practice dd-023 was written to name. It has not been re-examined as a phone screen. Recorded rather than claimed as compliant, and on the launch gate as a sweep of its own. |
+| dd-023/dont-2 | PASS | Every figure is rendered in place. The explanatory line under a control is visible prose rather than a hover tooltip, so nothing the reader needs is behind a pointer. |
+| dd-023/dont-3 | N/A |  |
 
 ## Deliberate choices
 

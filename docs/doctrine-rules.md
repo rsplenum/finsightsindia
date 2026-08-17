@@ -4,7 +4,7 @@
 
 The reasoning, the trigger and Rahul's verbatim words live in the JSON and are the part worth reading twice. This page is the other half: the same lessons reduced to lines you can check a screen against without re-reading an essay. dd-016 exists because a cited principle is not an instruction.
 
-22 entries · 129 rules · 16 entries bind any calculator screen
+24 entries · 145 rules · 18 entries bind any calculator screen
 
 ---
 
@@ -51,6 +51,13 @@ Generate the skeleton with `npm run doctrine:checks <ComponentName>`.
 - `dd-021/dont-1` Don't build a tool that argues a thesis; it reports which side the maths favours, including when that is the product we doubt.
 - `dd-021/dont-2` Don't ask a question the comparison does not need - every input must be capable of changing the verdict.
 - `dd-021/dont-3` Don't hand the reader the figures and leave them to reach the conclusion; the screen says who wins.
+- `dd-022/dont-1` Don't put a field on screen the reader has not asked for; a box standing at zero is still a question they must read and dismiss.
+- `dd-022/dont-2` Don't read 'the most common options stay visible' as a SET of fields - it is one field, and it is the one the category implies.
+- `dd-022/dont-3` Don't lay the form out in front of the reader; let them build it, so its length is the length of their life and not of our catalogue.
+- `dd-022/dont-4` Don't leave the add control in a fixed position while the form grows around it - it belongs below the last thing they added.
+- `dd-023/dont-1` Don't design at desktop width and check the phone afterwards; passing a mobile audit is not the same as having been designed for one.
+- `dd-023/dont-2` Don't put a figure the reader needs behind a hover state, a tooltip or anything else a thumb cannot reach.
+- `dd-023/dont-3` Don't let a side-by-side arrangement be the only way a comparison reads; on a phone it will be stacked, and it has to still work.
 
 ---
 
@@ -452,3 +459,43 @@ What fails is a figure whose noun sits in a separate block above it while its fr
 - `dd-021/dont-3` Don't hand the reader the figures and leave them to reach the conclusion; the screen says who wins.
 
 > **Test.** Feed it a genuinely good policy. Does the screen say so, plainly and without hedging? If the design can only produce one verdict, or produces the other one grudgingly, it is advocacy. Then check the costs: if either route is charged a tax or a fee the other is spared, the thesis has already been built into the defaults.
+
+### dd-022 — The screen starts at one question; the reader builds the rest
+
+*calculators · every screen · whole product · forms*
+
+**Do**
+
+- `dd-022/do-1` Ask the category, or whatever question decides what applies, FIRST - and show nothing else until it is answered.
+- `dd-022/do-2` Show exactly ONE field once that is known: the primary field for that category. Every other field arrives because the reader asked for it.
+- `dd-022/do-3` Keep the add control below the last field, so it moves down as the form grows and the next action is always where the reader just finished.
+- `dd-022/do-4` Keep the whole catalogue reachable from that one control - the surface shrinks, the offering does not (dd-001/do-3).
+- `dd-022/do-5` Apply the same shape to every block on the screen: income, deductions, and whatever is kept apart from both.
+
+**Don't**
+
+- `dd-022/dont-1` Don't put a field on screen the reader has not asked for; a box standing at zero is still a question they must read and dismiss.
+- `dd-022/dont-2` Don't read 'the most common options stay visible' as a SET of fields - it is one field, and it is the one the category implies.
+- `dd-022/dont-3` Don't lay the form out in front of the reader; let them build it, so its length is the length of their life and not of our catalogue.
+- `dd-022/dont-4` Don't leave the add control in a fixed position while the form grows around it - it belongs below the last thing they added.
+
+> **Test.** Count the controls on the screen before the reader has typed anything. One is right; two is a design that has not been finished. Then answer the first question and count again: still one field, plus the control that adds the next. Then add a source and look for the add control - if the reader has to go and find it, the form is not growing under their hand.
+
+### dd-023 — Mobile first, and it is not a breakpoint
+
+*calculators · every screen · whole product*
+
+**Do**
+
+- `dd-023/do-1` Design at the narrow width first, and let the wide layout be what that design becomes when there is room.
+- `dd-023/do-2` Make the single column the real layout: order carries the argument, because arrangement cannot.
+- `dd-023/do-3` Verify at 375px before 1280, and treat a fault found there as a design fault rather than a breakpoint bug.
+- `dd-023/do-4` Assume a thumb: every control reachable without hover, and every target big enough to hit.
+
+**Don't**
+
+- `dd-023/dont-1` Don't design at desktop width and check the phone afterwards; passing a mobile audit is not the same as having been designed for one.
+- `dd-023/dont-2` Don't put a figure the reader needs behind a hover state, a tooltip or anything else a thumb cannot reach.
+- `dd-023/dont-3` Don't let a side-by-side arrangement be the only way a comparison reads; on a phone it will be stacked, and it has to still work.
+
+> **Test.** Open the screen at 375px and ask whether this is the design or a narrowed version of one. If any comparison, table or panel only makes its point once it is wider, it was designed for the desktop and adapted afterwards.

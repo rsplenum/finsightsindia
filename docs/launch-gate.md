@@ -1,6 +1,6 @@
 # FinSight — Launch Gate
 
-**Not live. No domain.** 468 tests green · 66 commits on `fix/learning-loop-integrity-and-calculator-correctness`
+**Not live. No domain.** 471 tests green · 67 commits on `fix/learning-loop-integrity-and-calculator-correctness`
 
 This is a list, not a document. Explanations live in commit messages, `design-doctrine.json` and `engineering-solutions.json`. This says what is done and what is next.
 
@@ -8,55 +8,15 @@ Session archive: [`docs/session-2026-08-15.md`](session-2026-08-15.md).
 
 ---
 
-## Done · 16 Aug (later session)
+## Done · 16 Aug
 
-**T7 closed 5/5** — the jargon ratchet's baseline is 8 → 2, and both survivors
-are the content workstream's. **T8 closed 5/5** — the planner's two 30-year
-tables and the FAQ's purchasing-power card now carry their money's frame.
-**sol-044 · sol-045 · sol-046** — three correctness defects on the two engine
-pages, all live on default inputs, none caught by 376 green tests. Order of
-discovery matters here: sol-044 was found by reading the live page, sol-045 by
-verifying sol-044's fix, and sol-046 by pointing sol-044's new detector at a
-second page nobody had complained about. The worst of the three was the last:
-`19.20% a year, after inflation` where the truth is `4.09%`.
-
-**sol-050 · sol-051 — the audit's two decision-free items, done.** Phase 1's
-other two are blocked on D-1. html2pdf now loads on the click instead of the
-page load: **960 KB → 46 KB** on the planner and **956 KB → 42 KB** on SIP,
-measured down the static import graph, since counting the scripts named in the
-page HTML says 35 KB both before and after and is the wrong measurement. The
-permanently-stuck "Calculating actionable financial guidance…" is gone, with 13
-more dead ids across 7 pages, and a test now fails on any id in `src/pages` that
-nothing references. **Six of the seven on the planner had to be kept** — the
-plan said delete and `wowMetricBanner` is the whole cash-flow dashboard. 390 tests.
-
-**sol-047 — Rahul spotted the two pages assuming different worlds.** The visible
-defaults already matched (both render 13.3% from the Nifty file); the *fallbacks*
-did not. The planner fell back to sol-028's retired 12%/15% pair and SIP to a
-typed 13.4% that had already drifted from the computed 13.3%. Reachable by
-clearing the CAGR box, which silently moved the shipped answer ₹1.28 cr → ₹59.5
-lakh. Both now derive from `DEFAULT_REGIME`; a test forbids a numeric literal there.
-
-## Done today · 16 Aug
-
-**dd-016** the doctrine as do's and don'ts, generated + gated · **dd-017** the
-contribution is asked for in today's money, three modes · **sol-033** neither
-engine charged a fund fee · **sol-034** step-up meant opposite things on the two
-pages · **sol-035** a rung printed NaN · **sol-036** the fee and the return
-series are a pair · **sol-037** rung 3 counted no tax · **sol-038** two rungs,
-one formula, two copies · **sol-039** the insurance engine leaves the page and
-becomes testable · **sol-040** an exhausted portfolio stops growing a debt, and
-four surfaces stop disagreeing about one number · **sol-041** zero was read as
-empty · **sol-042** the DIY route was undertaxed, not overtaxed · **T3 rungs 5
-and 6** built · **T5 complete**.
-
-Numbers that moved: the shipped answer ₹43.7 L → ₹89.1 L, the contribution
-needed for a crore ₹56,500 → ~₹35,500, and the insurance page's safe route from
-"−₹11.08 L surplus" to "runs out in year 30, ₹11.08 L of income unpaid".
-204 → 308 tests.
-
-Detail in `engineering-solutions.json`, `design-doctrine.json` and the commit
-messages. **Rung numbering: the Answer is rung 1.**
+Two sessions, archived: T7 and T8 closed · sol-033 … sol-047 · sol-050 · sol-051 ·
+dd-016, dd-017 · T3 rungs 5 and 6 · T5 complete. The three that still get quoted:
+**sol-046** printed `19.20% a year, after inflation` where the truth was 4.09%,
+**sol-047** had the two engines falling back on different worlds, and **sol-041**
+read a typed zero as an empty box. Detail in
+[`docs/session-2026-08-16.md`](session-2026-08-16.md), the solutions file and the
+commit messages.
 
 ## Done · 15 Aug
 
@@ -143,6 +103,29 @@ clone. Raising 121 → 213 is not a loosening: **173 of the 213 fall the moment
 the type-floor workstream commits.** Found by verifying the INDEX rather than
 the working tree — HEAD plus the staged diff, in a throwaway worktree.
 
+## Done today · 18 Aug
+
+**dd-022 · dd-023 · sol-063 — the form opened on ten questions, and Rahul
+corrected the reading that put them there.** *"after the category is selected,
+only one major field (that is the primary field for that category appears) and
+a add sign below ... all the complexity is underneath, the user faces zero
+cognitive load and maximum satisfaction and simplicity."* **The number is one.**
+"Only the most common options should be permanently visible" (16 Aug) had been
+encoded as a `common` boolean on ten catalogue entries; **a box standing at zero
+is not free**, it is a question the reader must read and dismiss. `common` is
+**deleted rather than reinterpreted** — a flag left in place with a new meaning
+lets the old one be re-derived, which is dd-012's failure — and `primaryFor`
+replaces it. **The add control travels**: it is the last child of its block and
+an added field lands before it, which also puts fields in the order the reader
+added them rather than in ours. The page at rest is now **one control**; the
+answer and both panels do not exist until there is income to answer about.
+**dd-023 — mobile first, and it is not a breakpoint.** The previous build was
+designed at 1280 and *passed* its 375 audit, which is exactly what the entry
+exists to name.
+
+**Answering the two new entries' seven don'ts across all ten checks files
+produced a finding nobody had filed** — see *Next* below.
+
 **sol-061 — the tax form is built from the catalogue, and the reader sums by
 target.** The form asked eleven questions where the catalogue held thirty-five.
 `readTaxInputs()` now walks the catalogue and adds every active field's rupees
@@ -178,6 +161,9 @@ clipped elements, 0 type below 12px**; at 375px they stack in reading order.
 first, 37 rules each. **468 tests.**
 
 ## Next — in order
+
+- [ ] **EVERY EXISTING CALCULATOR SCREEN IS DESKTOP-FIRST, and now each one says so in its own checks file.** Found by adding dd-023 and making all ten strict checks files answer it: seven `dd-023/dont-1` RISKs, honestly filed rather than back-dated to a pass. Two more are `dd-023/dont-3` — `RungSipFlow` is a table of money columns and T8 puts both moneys in it side by side *on purpose*, and the two tax panels put both regimes in one table. **They fit at 375 without overflow, and fitting is not reading.** Owed: a judgement pass on a phone, screen by screen, before launch. The tax form and the two panels are the first to have been designed narrow-first; nothing else has
+- [ ] **The primary field for Professional and Self-employed is our judgement, not Rahul's.** dd-022 says one field, and which one is data (`primaryFor`). Salaried opens on Salary and Business on profit from your books, both obvious. **Professional also opens on profit from your books** — and the label lost the word "Business" so a doctor is not asked about one — while **Self-employed opens on freelance or contract income**. Both are one line of data to change. Flagged because under dd-022 this is the *only* question those two categories see
 
 - [ ] **Interface + content audit, 16 Aug — 20 findings, F-01…F-20.** Report: [`ux-audit-2026-08-16.html`](ux-audit-2026-08-16.html). Plan: [`repair-sequence-2026-08-16.html`](repair-sequence-2026-08-16.html) — 16 items, sol-048…sol-060, six phases. **All six decisions answered 16 Aug** — see *Waiting on Rahul* below; D-6 was answered against the plan's recommendation, so the "narrow to insurance" thread in both documents is dead and every calculator ships. Headline blockers: all four trust pages still branded "SWP Intelligence Engine" (0 occurrences of "FinSight India"), `text-gold-600` fails WCAG AA at 2.88:1, 317 pieces of type below 12px, zero external citations across 54 articles, the tax page renders the regime comparison twice. **sol-050 and sol-051 are done** (16 Aug); the other 14 items still wait on D-1…D-6
 - [ ] **THE CRITICAL PATH is now the chassis, not the launch date (D-1 reversed).** In order: the Phase 2 token sweep (contrast, type floor, emphasis budget — the three rules D-2 sent to lint), the insurance analyser overhaul, the tax calculator revamp from Rahul's sketch. Launch follows all three. Rahul, 16 Aug: *"the low hanging fruit first then the tough job"*. **THE PHASE 2 TOKEN SWEEP IS COMPLETE, 17 Aug** — contrast (F-02), type floor (F-01) and emphasis (F-03). **THE TAX CALCULATOR REVAMP IS COMPLETE, 17 Aug — sol-061, sol-062.** **Two of the three chassis items are done; the insurance analyser overhaul is the last thing standing between here and launch**, and it is no longer blocked (sol-060 answered the untaxed bond route)

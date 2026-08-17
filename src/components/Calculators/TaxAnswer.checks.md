@@ -135,6 +135,13 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-021/dont-1 | PASS | It compares two regimes and prints whichever wins. sol-043 was exactly this failure caught and fixed - the page had been rendering the LOSING regime as the recommended one - and one verdictFor() now drives ring, weight, colour, both headers and the tag. Both outcomes are reachable and neither is flattered. |
 | dd-021/dont-2 | PASS | Entry is one field, gross salary. Every further input is a head the reader opts into, and each one moves the bill; nothing is asked that cannot change the answer. |
 | dd-021/dont-3 | PASS | It leads with the monthly bite and the break-even deduction total, so the conclusion is stated rather than left to be inferred from two columns of tax. |
+| dd-022/dont-1 | N/A |  |
+| dd-022/dont-2 | N/A |  |
+| dd-022/dont-3 | N/A |  |
+| dd-022/dont-4 | N/A |  |
+| dd-023/dont-1 | RISK | Honest answer: this was designed at 1280 and checked at 375 afterwards, which is the exact practice dd-023 was written to name. It has not been re-examined as a phone screen. Recorded rather than claimed as compliant, and on the launch gate as a sweep of its own. |
+| dd-023/dont-2 | PASS | Every figure is rendered in place. The explanatory line under a control is visible prose rather than a hover tooltip, so nothing the reader needs is behind a pointer. |
+| dd-023/dont-3 | PASS | The two regime cards are `grid-cols-1 sm:grid-cols-2`, so they stack on a phone - and the verdict is a sentence above them either way, so the reader never has to hold two figures side by side to know which won. |
 
 ## Deliberate choices
 

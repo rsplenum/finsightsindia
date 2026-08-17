@@ -9,8 +9,8 @@ import {
   deductionsFor,
   incomeBlocksFor,
   incomeSourcesFor,
+  primaryIncomeFor,
   regimesForDeduction,
-  splitByVisibility,
   whyExcluded,
   type CatalogueEntry,
 } from '../utils/taxCatalogue';
@@ -338,20 +338,53 @@ describe('dd-020/dont-3 — a category filter never changes a computed answer', 
   });
 });
 
-describe('dd-001/do-3 — exhaustive within the eligible set', () => {
-  it('what is visible plus what is in the dropdown IS everything eligible', () => {
-    // "Only the most common options should be permanently visible" is answered
-    // by what stays on screen, never by what exists. `common` may hide an option
-    // from the surface; it may never remove one.
+describe('dd-022 — the form opens on one field, and the rest is reachable', () => {
+  it('every category has exactly one primary income source', () => {
+    // Not "a few". Rahul, 18 Aug: after the category is answered, ONE field is
+    // on screen. A category with two primaries is the old `common` reading
+    // creeping back in one entry at a time, and a category with none opens on
+    // an empty form.
+    for (const c of CATEGORIES) {
+      const primaries = INCOME_SOURCES.filter((s) => (s.primaryFor ?? []).includes(c.id));
+      expect(primaries.length, `${c.id} has ${primaries.length} primary fields, not 1`).toBe(1);
+      expect(primaryIncomeFor(c.id)?.id, `${c.id}'s primary is not offered to it`)
+        .toBe(primaries[0].id);
+    }
+  });
+
+  it('no primary is one the category is forbidden or the engine cannot price', () => {
+    // The one field on screen must be one the reader can actually use.
+    for (const s of INCOME_SOURCES) {
+      for (const category of s.primaryFor ?? []) {
+        expect(CATEGORIES.map((c) => c.id), `${s.id} is primary for a category that does not exist`)
+          .toContain(category);
+        expect(s.pending, `${s.id} is primary and the engine cannot price it`).toBeUndefined();
+        expect(whyExcluded(s.id, category), `${s.id} is primary for ${category} and excluded from it`)
+          .toBeNull();
+      }
+    }
+  });
+
+  it('a primary source is never one that has to be kept apart', () => {
+    // The opening field belongs to the block that CLUBS. Opening on a capital
+    // gain or a presumptive election would make the exception the entry point.
+    for (const s of INCOME_SOURCES) {
+      if (!(s.primaryFor ?? []).length) continue;
+      expect(s.unclubbable, `${s.id} opens a form and cannot be clubbed`).toBeUndefined();
+    }
+  });
+
+  it('nothing but the primary is on screen, and everything else is still offered', () => {
+    // dd-001/do-3 survives dd-022 intact: the surface shrinks, the offering does
+    // not. Everything eligible and not primary is reachable through the add
+    // control, and there is plenty of it.
     for (const c of CATEGORIES) {
       for (const regime of ['old', 'new'] as const) {
         const eligible = [...incomeSourcesFor(c.id), ...deductionsFor(c.id, regime)];
-        const split = splitByVisibility(eligible);
-        expect(split.visible.length + split.inDropdown.length).toBe(eligible.length);
-        expect(split.visible.length, `${c.id}/${regime} has nothing permanently visible`)
-          .toBeGreaterThan(0);
-        expect(split.inDropdown.length, `${c.id}/${regime} has an empty dropdown`)
-          .toBeGreaterThan(0);
+        const onScreen = eligible.filter((e) => (e.primaryFor ?? []).includes(c.id));
+        expect(onScreen.length, `${c.id}/${regime} opens on ${onScreen.length} fields, not 1`).toBe(1);
+        expect(eligible.length - onScreen.length, `${c.id}/${regime} has an empty add control`)
+          .toBeGreaterThan(5);
       }
     }
   });
