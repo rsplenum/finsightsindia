@@ -95,7 +95,7 @@ import SectionTitle from '../components/SectionTitle.astro';
 							<h3 class="text-xs font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Theoretical Option Premiums</h3>
 							<div class="text-xs text-navy-500 dark:text-navy-400 mt-1">Fair value calculated via Black-Scholes continuous pricing model</div>
 						</div>
-						<div class="text-[10px] font-bold tracking-widest text-navy-600 dark:text-navy-400 bg-navy-100 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 px-3 py-1.5 rounded-md">
+						<div class="text-xs font-bold tracking-widest text-navy-600 dark:text-navy-400 bg-navy-100 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 px-3 py-1.5 rounded-md">
 							d1: <span id="valD1" class="text-navy-900 dark:text-navy-100">0.00</span> | d2: <span id="valD2" class="text-navy-900 dark:text-navy-100">0.00</span>
 						</div>
 					</div>
@@ -103,7 +103,7 @@ import SectionTitle from '../components/SectionTitle.astro';
 					<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 						<!-- Call Option Premium -->
 						<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-5 flex flex-col justify-between">
-							<div class="flex items-center justify-between text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-widest mb-1">
+							<div class="flex items-center justify-between text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-widest mb-1">
 								<span>Call Premium</span>
 								<span class="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 rounded-md">Bullish</span>
 							</div>
@@ -115,7 +115,7 @@ import SectionTitle from '../components/SectionTitle.astro';
 
 						<!-- Put Option Premium -->
 						<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-5 flex flex-col justify-between">
-							<div class="flex items-center justify-between text-[10px] font-bold text-rose-700 dark:text-rose-400 uppercase tracking-widest mb-1">
+							<div class="flex items-center justify-between text-xs font-bold text-rose-700 dark:text-rose-400 uppercase tracking-widest mb-1">
 								<span>Put Premium</span>
 								<span class="bg-rose-50 text-rose-700 dark:bg-rose-950/80 dark:text-rose-300 border border-rose-200 dark:border-rose-800 px-2 py-0.5 rounded-md">Bearish / Hedge</span>
 							</div>
@@ -139,7 +139,7 @@ import SectionTitle from '../components/SectionTitle.astro';
 						<!-- Delta -->
 						<div class="p-4 bg-navy-50 dark:bg-navy-900 rounded-lg border border-navy-200 dark:border-navy-800 flex flex-col justify-between">
 							<div class="flex justify-between items-baseline mb-2">
-								<span class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Delta (Δ)</span>
+								<span class="text-xs font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Delta (Δ)</span>
 								<span class="text-[9px] font-bold text-navy-500 dark:text-navy-400">Velocity</span>
 							</div>
 							<div class="space-y-1.5 text-xs text-navy-600 dark:text-navy-400 mt-1">
@@ -152,7 +152,7 @@ import SectionTitle from '../components/SectionTitle.astro';
 									<span id="valDeltaPut" class="font-bold text-rose-700 dark:text-rose-400">-0.0000</span>
 								</div>
 							</div>
-							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-3 pt-2 border-t border-navy-200 dark:border-navy-800 leading-tight">
+							<div class="text-xs text-navy-500 dark:text-navy-400 mt-3 pt-2 border-t border-navy-200 dark:border-navy-800 leading-tight">
 								If Nifty goes up ₹100, the call option goes up approx ₹<span id="ctxDeltaCall" class="font-bold text-navy-700 dark:text-navy-300">0</span>.
 							</div>
 						</div>
@@ -160,13 +160,13 @@ import SectionTitle from '../components/SectionTitle.astro';
 						<!-- Gamma -->
 						<div class="p-4 bg-navy-50 dark:bg-navy-900 rounded-lg border border-navy-200 dark:border-navy-800 flex flex-col justify-between">
 							<div class="flex justify-between items-baseline mb-2">
-								<span class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Gamma (Γ)</span>
+								<span class="text-xs font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Gamma (Γ)</span>
 								<span class="text-[9px] font-bold text-navy-500 dark:text-navy-400">Acceleration</span>
 							</div>
 							<div class="text-xl font-extrabold text-navy-900 dark:text-navy-100 mt-1">
 								<span id="valGamma">0.000000</span>
 							</div>
-							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-3 pt-2 border-t border-navy-200 dark:border-navy-800 leading-tight">
+							<div class="text-xs text-navy-500 dark:text-navy-400 mt-3 pt-2 border-t border-navy-200 dark:border-navy-800 leading-tight">
 								Rate of change in Delta per ₹1 move in spot price. Higher near ATM.
 							</div>
 						</div>
@@ -174,7 +174,7 @@ import SectionTitle from '../components/SectionTitle.astro';
 						<!-- Theta -->
 						<div class="p-4 bg-navy-50 dark:bg-navy-900 rounded-lg border border-navy-200 dark:border-navy-800 flex flex-col justify-between">
 							<div class="flex justify-between items-baseline mb-2">
-								<span class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Theta (Θ)</span>
+								<span class="text-xs font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Theta (Θ)</span>
 								<span class="text-[9px] font-bold text-navy-500 dark:text-navy-400">Time Decay</span>
 							</div>
 							<div class="space-y-1.5 text-xs text-navy-600 dark:text-navy-400 mt-1">
@@ -187,7 +187,7 @@ import SectionTitle from '../components/SectionTitle.astro';
 									<span id="valThetaPut" class="font-bold text-amber-700 dark:text-amber-400">-₹0.0000</span>
 								</div>
 							</div>
-							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-3 pt-2 border-t border-navy-200 dark:border-navy-800 leading-tight">
+							<div class="text-xs text-navy-500 dark:text-navy-400 mt-3 pt-2 border-t border-navy-200 dark:border-navy-800 leading-tight">
 								Every day you hold this option, it loses approx ₹<span id="ctxThetaCall" class="font-bold text-navy-700 dark:text-navy-300">0</span> in time value.
 							</div>
 						</div>
@@ -195,13 +195,13 @@ import SectionTitle from '../components/SectionTitle.astro';
 						<!-- Vega -->
 						<div class="p-4 bg-navy-50 dark:bg-navy-900 rounded-lg border border-navy-200 dark:border-navy-800 flex flex-col justify-between">
 							<div class="flex justify-between items-baseline mb-2">
-								<span class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Vega (ν)</span>
+								<span class="text-xs font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Vega (ν)</span>
 								<span class="text-[9px] font-bold text-navy-500 dark:text-navy-400">Volatility</span>
 							</div>
 							<div class="text-xl font-extrabold text-cyan-600 dark:text-cyan-400 mt-1">
 								₹<span id="valVega">0.0000</span>
 							</div>
-							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-3 pt-2 border-t border-navy-200 dark:border-navy-800 leading-tight">
+							<div class="text-xs text-navy-500 dark:text-navy-400 mt-3 pt-2 border-t border-navy-200 dark:border-navy-800 leading-tight">
 								If IV rises 1%, your option gains approx ₹<span id="ctxVega" class="font-bold text-navy-700 dark:text-navy-300">0</span>.
 							</div>
 						</div>
@@ -209,7 +209,7 @@ import SectionTitle from '../components/SectionTitle.astro';
 						<!-- Rho -->
 						<div class="p-4 bg-navy-50 dark:bg-navy-900 rounded-lg border border-navy-200 dark:border-navy-800 flex flex-col justify-between">
 							<div class="flex justify-between items-baseline mb-2">
-								<span class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Rho (ρ)</span>
+								<span class="text-xs font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Rho (ρ)</span>
 								<span class="text-[9px] font-bold text-navy-500 dark:text-navy-400">Interest Rates</span>
 							</div>
 							<div class="space-y-1.5 text-xs text-navy-600 dark:text-navy-400 mt-1">
@@ -222,7 +222,7 @@ import SectionTitle from '../components/SectionTitle.astro';
 									<span id="valRhoPut" class="font-bold text-indigo-600 dark:text-indigo-400">-0.0000</span>
 								</div>
 							</div>
-							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-3 pt-2 border-t border-navy-200 dark:border-navy-800 leading-tight">
+							<div class="text-xs text-navy-500 dark:text-navy-400 mt-3 pt-2 border-t border-navy-200 dark:border-navy-800 leading-tight">
 								Price change per 1% change in risk-free rate.
 							</div>
 						</div>
@@ -238,11 +238,11 @@ import SectionTitle from '../components/SectionTitle.astro';
 					</div>
 					<div class="flex items-end gap-4">
 						<div class="w-1/2">
-							<label class="block text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400 mb-1">Target Premium (₹)</label>
+							<label class="block text-xs font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400 mb-1">Target Premium (₹)</label>
 							<input type="number" id="ivTargetPrice" class="w-full bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-lg px-3 py-2 text-sm text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-gold-500" placeholder="e.g. 150" />
 						</div>
 						<div class="w-1/2">
-							<label class="block text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400 mb-1">Option Type</label>
+							<label class="block text-xs font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400 mb-1">Option Type</label>
 							<select id="ivOptionType" class="w-full bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-lg px-3 py-2 text-sm text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-gold-500">
 								<option value="call">Call Option</option>
 								<option value="put">Put Option</option>
@@ -251,7 +251,7 @@ import SectionTitle from '../components/SectionTitle.astro';
 					</div>
 					<button id="btnSolveIV" class="w-full bg-navy-900 dark:bg-navy-100 text-white dark:text-navy-900 font-medium py-2 rounded-lg text-sm hover:bg-navy-800 dark:hover:bg-white transition-colors">Solve for IV</button>
 					<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-4 mt-2">
-						<div class="text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400 text-center">Calculated Implied Volatility</div>
+						<div class="text-xs font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400 text-center">Calculated Implied Volatility</div>
 						<div id="valSolvedIV" class="text-2xl font-extrabold text-navy-900 dark:text-navy-100 text-center mt-1">--</div>
 					</div>
 				</CardPremium>
@@ -263,8 +263,8 @@ import SectionTitle from '../components/SectionTitle.astro';
 						<p class="text-xs text-navy-500 dark:text-navy-400 mt-1 leading-relaxed">Theoretical call price across changing days-to-expiry (rows) and implied volatility (columns).</p>
 					</div>
 					<div class="overflow-x-auto rounded-lg border border-navy-200 dark:border-navy-800">
-						<table class="w-full text-[10px] sm:text-xs text-center whitespace-nowrap">
-							<thead class="bg-navy-100 dark:bg-navy-900 text-navy-600 dark:text-navy-300 font-semibold uppercase tracking-wider text-[10px]">
+						<table class="w-full text-xs text-center whitespace-nowrap">
+							<thead class="bg-navy-100 dark:bg-navy-900 text-navy-600 dark:text-navy-300 font-semibold uppercase tracking-wider text-xs">
 								<tr>
 									<th class="px-2 py-2 text-left border-r border-navy-200 dark:border-navy-800">Days \ IV</th>
 									<th class="px-2 py-2" id="bsCol1">-5%</th>

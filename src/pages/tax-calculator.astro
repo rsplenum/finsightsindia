@@ -27,10 +27,10 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 			
 			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-navy-200 dark:border-white/10 pb-4">
 				<div>
-					<span class="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-widest">INTERACTIVE SLAB ENGINE</span>
+					<span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-widest">INTERACTIVE SLAB ENGINE</span>
 					<SectionTitle title="India Income Tax Calculator (FY 2025-26)" className="mt-1" />
 				</div>
-				<div id="indiaSavingsBadge" class="badge-safe px-3 py-1.5 text-[10px] font-bold self-start sm:self-auto">
+				<div id="indiaSavingsBadge" class="badge-safe px-3 py-1.5 text-xs font-bold self-start sm:self-auto">
 					New Regime Recommended
 				</div>
 			</div>
@@ -43,13 +43,13 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 					<!-- Income & Demographics -->
 					<div>
 						<div class="border-b border-navy-200 dark:border-navy-800 pb-2 mb-4">
-							<h3 class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Income & Demographics</h3>
+							<h3 class="text-xs font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Income & Demographics</h3>
 						</div>
 						<div class="space-y-4">
 							<InputGroup id="inGrossSalary" label="Gross Salary" tooltip="Total yearly salary before exemptions" prefix="₹" value="15,00,000" />
 							<InputGroup id="inOtherIncome" label="Other Income" tooltip="Interest, capital gains (normal slab rate), house property, etc." prefix="₹" value="0" />
 							<div class="space-y-1">
-								<label class="block text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">Age Bracket</label>
+								<label class="block text-xs font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">Age Bracket</label>
 								<select id="inAgeBracket" class="w-full bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-lg px-3 py-2 text-sm text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-gold-500">
 									<option value="below60">Below 60 Years</option>
 									<option value="60_80">60 to 80 Years (Senior)</option>
@@ -62,7 +62,7 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 					<!-- HRA Exemption -->
 					<div>
 						<div class="border-b border-navy-200 dark:border-navy-800 pb-2 mb-4">
-							<h3 class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">HRA Exemption (Old Regime)</h3>
+							<h3 class="text-xs font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">HRA Exemption (Old Regime)</h3>
 						</div>
 						<div class="space-y-4">
 							<div class="grid grid-cols-2 gap-4">
@@ -72,14 +72,14 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 							<div class="grid grid-cols-2 gap-4 items-end">
 								<InputGroup id="inRentPaid" label="Rent (Annual)" prefix="₹" value="2,40,000" />
 								<div class="space-y-1">
-									<label class="block text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">City Type</label>
+									<label class="block text-xs font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">City Type</label>
 									<select id="inIsMetro" class="w-full bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-lg px-3 py-2 text-sm text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-gold-500">
 										<option value="true">Metro (50%)</option>
 										<option value="false" selected>Non-Metro (40%)</option>
 									</select>
 								</div>
 							</div>
-							<div class="text-[10px] text-navy-500 dark:text-navy-400 bg-navy-50 dark:bg-navy-900 p-2 rounded border border-navy-200 dark:border-navy-800 flex justify-between">
+							<div class="text-xs text-navy-500 dark:text-navy-400 bg-navy-50 dark:bg-navy-900 p-2 rounded border border-navy-200 dark:border-navy-800 flex justify-between">
 								<span>Computed Exempt HRA:</span>
 								<span id="valHraExempt" class="font-bold text-navy-900 dark:text-navy-100">₹0</span>
 							</div>
@@ -89,14 +89,14 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 					<!-- Itemized Deductions -->
 					<div>
 						<div class="border-b border-navy-200 dark:border-navy-800 pb-2 mb-4">
-							<h3 class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Deductions (Old Regime)</h3>
+							<h3 class="text-xs font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Deductions (Old Regime)</h3>
 						</div>
 						<div class="grid grid-cols-2 gap-4">
 							<InputGroup id="inSec80c" label="Section 80C" tooltip="Max ₹1.5L" prefix="₹" value="1,50,000" />
 							<InputGroup id="inSec80d" label="Section 80D" tooltip="Health Insurance. Max ₹1L." prefix="₹" value="25,000" />
 							<InputGroup id="inSec80ccd" label="80CCD(1B)" tooltip="NPS tier-1. Max ₹50k" prefix="₹" value="50,000" />
 						</div>
-						<p id="deductionBoundary" class="mt-3 text-[11px] text-navy-500 dark:text-navy-400 leading-relaxed"></p>
+						<p id="deductionBoundary" class="mt-3 text-sm text-navy-500 dark:text-navy-400 leading-relaxed"></p>
 					</div>
 
 					<!--
@@ -112,14 +112,14 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 					-->
 					<div class="space-y-3">
 						<div class="border-b border-navy-200 dark:border-navy-800 pb-2">
-							<h3 class="text-[10px] font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Do you have any of these too?</h3>
+							<h3 class="text-xs font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Do you have any of these too?</h3>
 						</div>
 
 						<details class="tax-chip rounded-lg border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-900/40 px-4 py-3">
 							<summary class="text-xs font-bold text-navy-900 dark:text-navy-100">A home, or a property you rent out</summary>
 							<div class="space-y-4 pt-4">
 								<div class="space-y-1">
-									<label class="block text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">Which is it?</label>
+									<label class="block text-xs font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">Which is it?</label>
 									<select id="inHpKind" class="w-full bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-lg px-3 py-2 text-sm text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-gold-500">
 										<option value="none">Neither</option>
 										<option value="selfOccupied" selected>A home I live in</option>
@@ -133,7 +133,7 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 								<div id="hpInterestField">
 									<InputGroup id="inHomeLoan" label="Loan Interest (Annual)" tooltip="Section 24(b). Capped at ₹2L on a home you live in and allowed only under the old regime; uncapped on a property you rent out." prefix="₹" value="0" />
 								</div>
-								<p id="hpNote" class="text-[11px] text-navy-500 dark:text-navy-400 leading-relaxed"></p>
+								<p id="hpNote" class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed"></p>
 							</div>
 						</details>
 
@@ -147,7 +147,7 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 								<div class="grid grid-cols-2 gap-4">
 									<InputGroup id="inBusinessProfit" label="Net Profit (books)" prefix="₹" value="0" />
 									<div class="space-y-1">
-										<label class="block text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">Received via bank (%)</label>
+										<label class="block text-xs font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">Received via bank (%)</label>
 										<input id="inBusinessDigitalShare" type="number" min="0" max="100" value="100" class="w-full bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-lg px-3 py-2 text-sm text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-gold-500" />
 									</div>
 								</div>
@@ -157,9 +157,9 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 									priced and shown at once rather than one at a time behind
 									the selector below.
 								-->
-								<div id="presumptiveCompare" class="text-[11px] rounded-lg border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900 p-3 space-y-1.5"></div>
+								<div id="presumptiveCompare" class="text-sm rounded-lg border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900 p-3 space-y-1.5"></div>
 								<div class="space-y-1">
-									<label class="block text-[10px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">Tax me on</label>
+									<label class="block text-xs font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">Tax me on</label>
 									<select id="inBusinessBasis" class="w-full bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-lg px-3 py-2 text-sm text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-gold-500">
 										<option value="books">My actual profit</option>
 										<option value="44AD">Deemed profit — s.44AD</option>
@@ -177,7 +177,7 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 									<InputGroup id="inCgLtcgEquity" label="Equity, held over a year" tooltip="Section 112A. 12.5%, and the first ₹1.25 lakh each year is free." prefix="₹" value="0" />
 								</div>
 								<details class="tax-subchip rounded-lg border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900/60 px-3 py-2">
-									<summary class="text-[11px] font-semibold text-navy-600 dark:text-navy-300">Property, gold, debt funds, unlisted shares</summary>
+									<summary class="text-sm font-semibold text-navy-600 dark:text-navy-300">Property, gold, debt funds, unlisted shares</summary>
 									<div class="grid grid-cols-2 gap-4 pt-3">
 										<InputGroup id="inCgLtcgOther" label="Held long term" tooltip="Section 112. 12.5%." prefix="₹" value="0" />
 										<InputGroup id="inCgStcgOther" label="Held short term" tooltip="NOT section 111A. This is ordinary income at your slab rate, not 20%." prefix="₹" value="0" />
@@ -189,7 +189,7 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 						<details class="tax-chip rounded-lg border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-900/40 px-4 py-3">
 							<summary class="text-xs font-bold text-navy-900 dark:text-navy-100">Losses to set off</summary>
 							<div class="space-y-4 pt-4">
-								<p class="text-[11px] text-navy-500 dark:text-navy-400 leading-relaxed">
+								<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed">
 									A capital loss can only ever meet a capital gain — never salary, rent or interest.
 								</p>
 								<div class="grid grid-cols-2 gap-4">
@@ -197,9 +197,9 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 									<InputGroup id="inLossLtcgCurrent" label="Long-term loss, this year" prefix="₹" value="0" />
 								</div>
 								<details class="tax-subchip rounded-lg border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900/60 px-3 py-2">
-									<summary class="text-[11px] font-semibold text-navy-600 dark:text-navy-300">Brought forward from earlier years</summary>
+									<summary class="text-sm font-semibold text-navy-600 dark:text-navy-300">Brought forward from earlier years</summary>
 									<div class="space-y-4 pt-3">
-										<p class="text-[11px] text-navy-500 dark:text-navy-400 leading-relaxed">
+										<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed">
 											Carried losses are set off in flat rupees. The law gives no
 											inflation adjustment, so a loss from seven years ago buys far
 											less than the number suggests.
@@ -212,7 +212,7 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 										</div>
 									</div>
 								</details>
-								<p id="lossNote" class="text-[11px] text-navy-500 dark:text-navy-400 leading-relaxed"></p>
+								<p id="lossNote" class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed"></p>
 							</div>
 						</details>
 					</div>
@@ -224,30 +224,30 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 						<!-- New Tax Regime Card -->
 						<div id="cardNewRegime" class="p-5 card-premium rounded-lg space-y-3">
-							<div class="flex justify-between items-center text-[10px] font-bold tracking-widest">
+							<div class="flex justify-between items-center text-xs font-bold tracking-widest">
 								<span class="text-navy-500 dark:text-navy-400 uppercase">NEW REGIME</span>
 								<span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-[9px] uppercase">FY 25-26</span>
 							</div>
 							<div class="space-y-1">
-								<div class="text-[10px] uppercase font-bold tracking-widest text-navy-500 dark:text-navy-400">Total Tax Payable:</div>
+								<div class="text-xs uppercase font-bold tracking-widest text-navy-500 dark:text-navy-400">Total Tax Payable:</div>
 								<div id="valNewTax" class="text-3xl font-bold text-navy-900 dark:text-navy-100">₹ 0</div>
 							</div>
-							<div class="pt-3 border-t border-navy-200 dark:border-white/10 text-[10px] text-navy-500 dark:text-navy-400 space-y-1.5 uppercase font-bold tracking-widest">
+							<div class="pt-3 border-t border-navy-200 dark:border-white/10 text-xs text-navy-500 dark:text-navy-400 space-y-1.5 uppercase font-bold tracking-widest">
 								<div id="valNewEffectiveRate" class="font-bold text-navy-800 dark:text-navy-200">Effective Rate: 0.0%</div>
 							</div>
 						</div>
 
 						<!-- Old Tax Regime Card -->
 						<div id="cardOldRegime" class="p-5 card-premium rounded-lg space-y-3">
-							<div class="flex justify-between items-center text-[10px] font-bold tracking-widest">
+							<div class="flex justify-between items-center text-xs font-bold tracking-widest">
 								<span class="text-navy-500 dark:text-navy-400 uppercase">OLD REGIME</span>
 								<span class="px-2 py-0.5 rounded bg-navy-200 dark:bg-navy-800 text-navy-600 dark:text-navy-400 text-[9px] uppercase">FY 25-26</span>
 							</div>
 							<div class="space-y-1">
-								<div class="text-[10px] uppercase font-bold tracking-widest text-navy-500 dark:text-navy-400">Total Tax Payable:</div>
+								<div class="text-xs uppercase font-bold tracking-widest text-navy-500 dark:text-navy-400">Total Tax Payable:</div>
 								<div id="valOldTax" class="text-3xl font-bold text-navy-900 dark:text-navy-100">₹ 0</div>
 							</div>
-							<div class="pt-3 border-t border-navy-200 dark:border-white/10 text-[10px] text-navy-500 dark:text-navy-400 space-y-1.5 uppercase font-bold tracking-widest">
+							<div class="pt-3 border-t border-navy-200 dark:border-white/10 text-xs text-navy-500 dark:text-navy-400 space-y-1.5 uppercase font-bold tracking-widest">
 								<div id="valOldEffectiveRate" class="font-bold text-navy-800 dark:text-navy-200">Effective Rate: 0.0%</div>
 							</div>
 						</div>
@@ -259,7 +259,7 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 						<div class="overflow-x-auto">
 							<table class="w-full text-left text-xs">
 								<thead>
-									<tr class="border-b border-navy-200 dark:border-navy-800 text-[10px] uppercase text-navy-500 dark:text-navy-400 tracking-widest">
+									<tr class="border-b border-navy-200 dark:border-navy-800 text-xs uppercase text-navy-500 dark:text-navy-400 tracking-widest">
 										<th class="py-2">Component</th>
 										<th id="colHeadNew" class="py-2 text-right w-28">New Regime</th>
 										<th id="colHeadOld" class="py-2 text-right w-28">Old Regime</th>
@@ -626,13 +626,13 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 		if (badgeEl) {
 			if (result.isNewBetter) {
 				badgeEl.innerText = `New Regime Saves ${formatRupee(result.savingsAmount)}`;
-				badgeEl.className = "badge-safe px-3 py-1.5 text-[10px] font-bold self-start sm:self-auto";
+				badgeEl.className = "badge-safe px-3 py-1.5 text-xs font-bold self-start sm:self-auto";
 			} else if (result.isOldBetter) {
 				badgeEl.innerText = `Old Regime Saves ${formatRupee(result.savingsAmount)}`;
-				badgeEl.className = "badge-warning px-3 py-1.5 text-[10px] font-bold self-start sm:self-auto";
+				badgeEl.className = "badge-warning px-3 py-1.5 text-xs font-bold self-start sm:self-auto";
 			} else {
 				badgeEl.innerText = "Both Regimes Equal Tax";
-				badgeEl.className = "px-3 py-1.5 text-[10px] font-bold self-start sm:self-auto rounded bg-navy-200 dark:bg-navy-800 text-navy-600 dark:text-navy-400 border border-navy-300 dark:border-white/10 uppercase tracking-widest";
+				badgeEl.className = "px-3 py-1.5 text-xs font-bold self-start sm:self-auto rounded bg-navy-200 dark:bg-navy-800 text-navy-600 dark:text-navy-400 border border-navy-300 dark:border-white/10 uppercase tracking-widest";
 			}
 		}
 	}
