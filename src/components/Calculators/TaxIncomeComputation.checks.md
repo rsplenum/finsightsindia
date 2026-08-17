@@ -66,6 +66,9 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-023/dont-1 | RISK | The panel was designed as the right-hand column of a 1280 layout and stacks below the form on a phone. That is the wrong order of design under dd-023, and it is being reworked in the same pass that rebuilds the form. Filed rather than back-dated to a pass. |
 | dd-023/dont-2 | PASS | Every figure is rendered in place. The explanatory line under a control is visible prose rather than a hover tooltip, so nothing the reader needs is behind a pointer. |
 | dd-023/dont-3 | RISK | Three columns of figures - the item and both regimes - is the artefact dd-023 names. It fits at 375 without overflow, but fitting is not reading, and this is the longest table on the site. The judgement is owed on a phone. |
+| dd-024/dont-1 | PASS | It is never what the reader lands on. `TaxIntro` introduces the page and this appears only once there is income to compute, so it can neither be empty nor be the first thing they meet. |
+| dd-024/dont-2 | N/A |  |
+| dd-024/dont-3 | PASS | It is half of the reorganisation dd-024 asks for - the space it occupies belonged to the welcome until the reader answered the first question. |
 
 ## Deliberate choices
 

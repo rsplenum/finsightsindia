@@ -260,6 +260,10 @@ export function buildTaxInput(targets: Map<string, number>, choices: TaxChoices)
   return {
     grossSalary: at('grossSalary'),
     otherIncome: at('otherIncome'),
+    // Declared and not taxed - a partner's share of a firm's profit, s.10(2A).
+    // The one target on the form that is meant to move no bill, and the panel
+    // says so on its own row rather than leaving the reader to notice.
+    exemptIncome: at('exemptIncome'),
     ageBracket: choices.ageBracket,
 
     basicSalary: choices.basicSalary,

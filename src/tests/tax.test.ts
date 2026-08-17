@@ -702,3 +702,45 @@ describe('India Tax Engine - business and other sources', () => {
     expect(r.newRegime.effectiveRate).toBe(eff.toFixed(2));
   });
 });
+
+describe('exempt income is declared, carried and never taxed', () => {
+  // Rahul asked for "exempt profit" on the form. The engine had nowhere to put
+  // it, and the two wrong answers were both available: leave it off, so a reader
+  // either omits real money or pushes it into a taxable box; or fold it into
+  // `otherIncome`, which taxes income the Act exempts.
+  //
+  // It is the ONE field on the form that is meant to move no bill, which is why
+  // it needs a test rather than a comment: sol-041's whole ledger says a figure
+  // that quietly stops mattering is the defect nobody catches by looking, and
+  // the only thing separating this from that fault is that the panel says so.
+  const base: TaxInput = { ...EMPTY_TAX_INPUT, grossSalary: 1500000 };
+
+  it('changes no tax figure at all, in either regime', () => {
+    const without = calculateIndiaTaxEngine(base);
+    const withExempt = calculateIndiaTaxEngine({ ...base, exemptIncome: 900000 });
+
+    for (const regime of ['newRegime', 'oldRegime'] as const) {
+      const a = without[regime];
+      const b = withExempt[regime];
+      expect(b.totalTax, `${regime} tax moved`).toBe(a.totalTax);
+      expect(b.taxableIncome, `${regime} taxable income moved`).toBe(a.taxableIncome);
+      expect(b.grossTotalIncome, `${regime} gross total income moved`).toBe(a.grossTotalIncome);
+      // The effective rate's denominator is what the reader EARNED, and an
+      // exempt receipt must not be allowed to flatter it downwards either.
+      expect(b.effectiveRate, `${regime} effective rate moved`).toBe(a.effectiveRate);
+    }
+  });
+
+  it('is carried through to the result so the panel can show it', () => {
+    // Not taxed is not the same as not reported. A figure the reader entered
+    // that reaches no surface is indistinguishable from one that was dropped.
+    const r = calculateIndiaTaxEngine({ ...base, exemptIncome: 900000 });
+    expect(r.newRegime.exemptIncome).toBe(900000);
+    expect(r.oldRegime.exemptIncome).toBe(900000);
+  });
+
+  it('never goes negative, whatever arrives', () => {
+    const r = calculateIndiaTaxEngine({ ...base, exemptIncome: -50000 });
+    expect(r.newRegime.exemptIncome).toBe(0);
+  });
+});

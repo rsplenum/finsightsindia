@@ -40,7 +40,7 @@ const lineFor = (input: TaxInput, section: ChapterVIASection) =>
   oldLines(input).find((l) => l.section === section);
 
 describe('sol-056 - the Chapter VI-A rules table', () => {
-  it('every section carries a regime list, and only one survives the new regime', () => {
+  it('every section carries a regime list, and exactly three survive the new regime', () => {
     const sections = Object.keys(CHAPTER_VIA_RULES) as ChapterVIASection[];
     expect(sections.length).toBeGreaterThan(10);
 
@@ -50,9 +50,81 @@ describe('sol-056 - the Chapter VI-A rules table', () => {
     }
 
     const survivors = sections.filter((s) => CHAPTER_VIA_RULES[s].regimes.includes('new'));
-    // s.115BAC withdraws the whole chapter bar the employer's NPS contribution.
-    // If this ever grows, it grew because a Budget said so - not by accident.
-    expect(survivors).toEqual(['80CCD2']);
+    // s.115BAC(2) withdraws the whole chapter bar three, and this list was
+    // WRONG at one rather than deliberately narrow: the table only knew about
+    // one of the three, so the assertion was true of the engine and not of the
+    // Act. The other two arrived with the catalogue research of 18 Aug.
+    //
+    //   80CCD2  - the employer's contribution to the filer's NPS.
+    //   80CCH2  - the Central Government's contribution to an Agniveer's Corpus
+    //             Fund. The Agniveer's OWN contribution (80CCH1) does not
+    //             survive, which is why the section is modelled as two.
+    //   80JJAA  - 30% of the wages of employees taken on this year, the one
+    //             survivor that is a business deduction rather than a personal one.
+    //
+    // If this ever grows again, it grew because a Budget said so - not by accident.
+    expect(survivors).toEqual(['80CCD2', '80CCH2', '80JJAA']);
+  });
+
+  it('s.80CCE caps 80C, 80CCC and 80CCD(1) BETWEEN them, not each', () => {
+    // The fault this prevents is not a rounding matter. Each of the three sets
+    // its own limit of Rs 1.5 lakh, so a table of per-section caps alone would
+    // have handed a reader Rs 4.5 lakh of deductions the Act does not allow -
+    // and it would have understated their tax, which is the one direction this
+    // engine must never round.
+    const claimed = { '80C': 150000, '80CCC': 150000, '80CCD1': 150000 } as const;
+    const result = calculateIndiaTaxEngine({
+      ...EMPTY_TAX_INPUT,
+      grossSalary: 3000000,
+      basicSalary: 3000000,
+      chapterVIA: { ...claimed },
+    });
+
+    const lines = result.oldRegime.chapterVIADetail.lines.filter((l) =>
+      ['80C', '80CCC', '80CCD1'].includes(l.section)
+    );
+    const allowed = lines.reduce((sum, l) => sum + l.allowed, 0);
+    expect(allowed, 'the three share one Rs 1.5 lakh ceiling').toBe(150000);
+
+    // And the reader is told which provision did it, on the sections that lost.
+    const cut = lines.filter((l) => l.allowed < l.claimed);
+    expect(cut.length).toBeGreaterThan(0);
+    for (const l of cut) expect(l.reason).toContain('80CCE');
+
+    // Alone, each still gets its own full limit - the group cap must not become
+    // a blanket that fires when nothing is being shared.
+    const alone = calculateIndiaTaxEngine({
+      ...EMPTY_TAX_INPUT,
+      grossSalary: 3000000,
+      basicSalary: 3000000,
+      chapterVIA: { '80C': 150000 },
+    });
+    expect(alone.oldRegime.chapterVIADetail.lines.find((l) => l.section === '80C')!.allowed)
+      .toBe(150000);
+  });
+
+  it('s.80CCD(1) takes its ceiling from salary, or from gross total income', () => {
+    // The reason `capFor` had to be given gross total income. A rule that could
+    // not see it would have to use the flat Rs 1.5 lakh for every self-employed
+    // filer, overstating the ceiling for all of them.
+    const employee = calculateIndiaTaxEngine({
+      ...EMPTY_TAX_INPUT,
+      grossSalary: 1000000,
+      basicSalary: 500000,
+      chapterVIA: { '80CCD1': 150000 },
+    });
+    // 10% of basic, not of gross, and not the flat ceiling.
+    expect(employee.oldRegime.chapterVIADetail.lines.find((l) => l.section === '80CCD1')!.allowed)
+      .toBe(50000);
+
+    const selfEmployed = calculateIndiaTaxEngine({
+      ...EMPTY_TAX_INPUT,
+      business: { ...EMPTY_TAX_INPUT.business, netProfit: 500000 },
+      chapterVIA: { '80CCD1': 150000 },
+    });
+    // 20% of gross total income.
+    expect(selfEmployed.oldRegime.chapterVIADetail.lines.find((l) => l.section === '80CCD1')!.allowed)
+      .toBe(100000);
   });
 
   it('a section with a fixed ceiling states it, and a section with none says null', () => {

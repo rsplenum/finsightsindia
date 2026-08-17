@@ -182,6 +182,26 @@ export const INCOME_SOURCES: IncomeSource[] = [
     label: 'Salary arrears',
     hint: 'Back pay received this year for an earlier one. Taxed in full here; relief under s.89 is claimed separately and is not computed on this page.',
   },
+  {
+    id: 'directorRemuneration', head: 'salaries', target: 'grossSalary',
+    label: 'Director’s remuneration, as an employee',
+    hint: 'Salary drawn as a whole-time or managing director. You are an employee of the company, so it is salary and it earns the standard deduction. Sitting fees are a different thing — see the other sources list.',
+  },
+  {
+    id: 'bonusCommissionSalary', head: 'salaries', target: 'grossSalary',
+    label: 'Bonus or commission from your employer',
+    hint: 'Anything your employer pays on top of basic pay. Taxed as salary in the year you receive it, not the year you earned it.',
+  },
+  {
+    id: 'esopPerquisite', head: 'salaries', target: 'grossSalary',
+    label: 'ESOPs exercised this year',
+    hint: 'The difference between the market price on the day you exercised and what you paid, taxed as a perquisite. Selling the shares later is a separate capital gain.',
+  },
+  {
+    id: 'retirementBenefits', head: 'salaries', target: 'grossSalary',
+    label: 'Gratuity, leave encashment or a retirement payout',
+    hint: 'Enter only the TAXABLE part. Large exemptions apply — up to ₹20 lakh of gratuity and ₹25 lakh of leave encashment — and this page does not work them out for you.',
+  },
 
   // ---- Head 2: House property -------------------------------------------
   //
@@ -268,6 +288,31 @@ export const INCOME_SOURCES: IncomeSource[] = [
     label: 'Gig or platform income',
     hint: 'Driving, delivery, creator platforms, marketplaces. Enter what is left after your costs.',
   },
+  {
+    id: 'partnerRemuneration', head: 'businessProfession', target: 'business.netProfit',
+    label: 'Remuneration from a firm you are a partner in',
+    hint: 'Salary, bonus or commission paid to you by your partnership firm. s.28(v) makes it business income in your hands, not salary — so it earns no standard deduction.',
+  },
+  {
+    id: 'partnerInterestOnCapital', head: 'businessProfession', target: 'business.netProfit',
+    label: 'Interest on your capital in a firm',
+    hint: 'Interest the firm pays you on your capital account. Business income under s.28(v), and taxable only to the extent the firm was allowed to deduct it.',
+  },
+  {
+    id: 'commissionBrokerage', head: 'businessProfession', target: 'business.netProfit',
+    label: 'Commission or brokerage',
+    hint: 'Earned by bringing business to somebody else — insurance, property, distribution. Enter what is left after your costs.',
+  },
+  {
+    id: 'royaltyIncome', head: 'businessProfession', target: 'business.netProfit',
+    label: 'Royalties or licence fees',
+    hint: 'From books, music, patents, software or a brand you license out. A book or a patent may also earn you a deduction — see s.80QQB and s.80RRB in the deductions list.',
+  },
+  {
+    id: 'commodityCurrencyDerivatives', head: 'businessProfession', target: 'business.netProfit',
+    label: 'Commodity or currency derivatives',
+    hint: 'Traded on a recognised exchange. Non-speculative business income, like F&O — enter the profit after costs.',
+  },
 
   // ---- Head 4: Capital gains --------------------------------------------
   {
@@ -326,6 +371,61 @@ export const INCOME_SOURCES: IncomeSource[] = [
     id: 'familyPension', head: 'otherSources', target: 'otherIncome',
     label: 'Family pension',
     hint: 'A pension received as the family member of a deceased employee. Taxed under other sources, not salary — and the s.57(iia) standard deduction on it is not computed here, so this figure is taxed in full.',
+  },
+  {
+    id: 'exemptFirmProfit', head: 'otherSources', target: 'exemptIncome',
+    label: 'Your share of a firm’s profit',
+    hint: 'Exempt in your hands under s.10(2A) — the firm has already paid tax on it. Declared here so it appears in your computation, and it will not change what you owe.',
+  },
+  {
+    id: 'directorSittingFees', head: 'otherSources', target: 'otherIncome',
+    label: 'Director’s sitting fees',
+    hint: 'Paid to a non-executive director for attending board meetings. Not salary — you are not an employee — so it falls here and earns no standard deduction.',
+  },
+  {
+    id: 'giftsReceived', head: 'otherSources', target: 'otherIncome',
+    label: 'Gifts received',
+    hint: 's.56(2)(x). Gifts from relatives, and anything received on your marriage, are exempt whatever the amount. Otherwise, once the year’s gifts pass ₹50,000 the WHOLE sum is taxable, not just the excess — enter it only if you have crossed that line.',
+  },
+  {
+    id: 'bondInterest', head: 'otherSources', target: 'otherIncome',
+    label: 'Interest on bonds, debentures or NCDs',
+    hint: 'Taxed at your slab rate as it accrues. A capital gain on selling the bond itself is a separate thing.',
+  },
+  {
+    id: 'p2pInterest', head: 'otherSources', target: 'otherIncome',
+    label: 'Peer-to-peer lending interest',
+    hint: 'Interest earned through a P2P platform. Fully taxable at your slab rate — and a borrower who defaults gives you no deduction for the loss.',
+  },
+  {
+    id: 'epfInterestTaxable', head: 'otherSources', target: 'otherIncome',
+    label: 'Taxable interest on provident fund',
+    hint: 'Interest on your own PF contributions above ₹2.5 lakh in a year — ₹5 lakh where your employer contributes nothing. Only the interest on the excess is taxable.',
+  },
+  {
+    id: 'refundInterest', head: 'otherSources', target: 'otherIncome',
+    label: 'Interest on an income tax refund',
+    hint: 's.244A interest paid to you by the department. Taxable in the year you receive it, and routinely forgotten because it arrives with the refund itself.',
+  },
+  {
+    id: 'rentFromMachinery', head: 'otherSources', target: 'otherIncome',
+    label: 'Rent from machinery, plant or furniture',
+    hint: 'Letting out equipment rather than property. It falls here rather than under house property, so it earns no 30% standard deduction.',
+  },
+  {
+    id: 'subLettingRent', head: 'otherSources', target: 'otherIncome',
+    label: 'Rent from sub-letting',
+    hint: 'Rent you receive on a place you do not own. You are not the owner, so it is not house property — enter the rent received less the rent you pay.',
+  },
+  {
+    id: 'annuityFromInsurer', head: 'otherSources', target: 'otherIncome',
+    label: 'Annuity or pension from an insurer',
+    hint: 'A pension bought from an insurance company rather than paid by a former employer. It falls here, so it earns no standard deduction.',
+  },
+  {
+    id: 'compensationInterest', head: 'otherSources', target: 'otherIncome',
+    label: 'Interest on compensation or enhanced compensation',
+    hint: 'Usually on compulsorily acquired land. Half of it is deductible under s.57(iv), so enter the other half — the part you are actually taxed on.',
   },
   {
     id: 'winnings', head: 'otherSources',
@@ -407,6 +507,26 @@ export const DEDUCTIONS: Deduction[] = [
     hint: 'Up to ₹50,000 of interest — deposits as well as savings — from age 60. Replaces 80TTA rather than adding to it.',
   },
   {
+    id: 'sec80ccc', section: 's.80CCC', target: 'chapterVIA.80CCC',
+    label: 'Pension plan from an insurer (80CCC)',
+    hint: 'Premium on an annuity or pension policy from a life insurer. It shares the ₹1.5 lakh ceiling with 80C and 80CCD(1) — s.80CCE caps the three together, not each.',
+  },
+  {
+    id: 'sec80ccd1', section: 's.80CCD(1)', target: 'chapterVIA.80CCD1',
+    label: 'NPS, your own contribution within the 80C ceiling (80CCD(1))',
+    hint: 'Capped at 10% of your salary, or 20% of your total income if you have none. It shares the ₹1.5 lakh ceiling with 80C — the separate ₹50,000 under 80CCD(1B) is the one that stacks on top.',
+  },
+  {
+    id: 'sec80cch1', section: 's.80CCH(1)', target: 'chapterVIA.80CCH1',
+    label: 'Agniveer Corpus Fund, your own contribution (80CCH(1))',
+    hint: 'What you paid into the fund under the Agnipath scheme. No ceiling. Old regime only — the government’s own contribution is the half that survives the new regime.',
+  },
+  {
+    id: 'sec80cch2', section: 's.80CCH(2)', target: 'chapterVIA.80CCH2',
+    label: 'Agniveer Corpus Fund, the government’s contribution (80CCH(2))',
+    hint: 'What the Central Government paid into your fund account. It is added to your income and then deducted, so it costs you nothing — and it is one of only three deductions the new regime keeps.',
+  },
+  {
     id: 'sec80e', section: 's.80E', target: 'chapterVIA.80E',
     label: 'Education loan interest (80E)',
     hint: 'Interest on a loan for higher education. No ceiling at all, but limited to eight years from when repayment starts.',
@@ -420,6 +540,49 @@ export const DEDUCTIONS: Deduction[] = [
     id: 'sec80gg', section: 's.80GG', target: 'chapterVIA.80GG',
     label: 'Rent paid, when you get no HRA (80GG)',
     hint: 'For a reader who pays rent but receives no house rent allowance. Capped at ₹60,000.',
+  },
+  {
+    id: 'sec80ee', section: 's.80EE', target: 'chapterVIA.80EE',
+    label: 'Extra home loan interest, first home (80EE)',
+    hint: 'Up to ₹50,000 on top of the ₹2 lakh under s.24(b). Only for a loan sanctioned in FY 2016-17 on a first home — the window is closed to new borrowers.',
+  },
+  {
+    id: 'sec80eea', section: 's.80EEA', target: 'chapterVIA.80EEA',
+    label: 'Extra home loan interest, affordable housing (80EEA)',
+    hint: 'Up to ₹1.5 lakh on top of s.24(b), for a loan sanctioned between April 2019 and March 2022 on a house under ₹45 lakh. Cannot be claimed alongside 80EE.',
+  },
+  {
+    id: 'sec80eeb', section: 's.80EEB', target: 'chapterVIA.80EEB',
+    label: 'Electric vehicle loan interest (80EEB)',
+    hint: 'Up to ₹1.5 lakh of interest on a loan to buy an electric vehicle, sanctioned between April 2019 and March 2023.',
+  },
+  {
+    id: 'sec80gga', section: 's.80GGA', target: 'chapterVIA.80GGA',
+    label: 'Donations for scientific research or rural development (80GGA)',
+    hint: 'No ceiling, and no requirement that it be a charity — it is for approved research institutions. Not available if you already have business income, which has its own section for this.',
+  },
+  {
+    id: 'sec80ggc', section: 's.80GGC', target: 'chapterVIA.80GGC',
+    label: 'Contribution to a political party (80GGC)',
+    hint: 'The whole amount, with no ceiling — but not a rupee of it in cash. Anything paid in cash is disallowed entirely.',
+  },
+  {
+    id: 'sec80jjaa', section: 's.80JJAA', target: 'chapterVIA.80JJAA',
+    label: 'Wages of new employees you took on (80JJAA)',
+    hint: '30% of what you paid employees hired this year, for three years running. One of only three deductions the new regime keeps, and the only one that is a business deduction.',
+    excluded: [
+      { category: 'salaried', statute: 's.80JJAA is a deduction against the profits of a business or profession for the cost of additional employees. A salaried filer has no such profits to reduce.' },
+    ],
+  },
+  {
+    id: 'sec80qqb', section: 's.80QQB', target: 'chapterVIA.80QQB',
+    label: 'Royalty on a book you wrote (80QQB)',
+    hint: 'Up to ₹3 lakh of royalty or copyright income from a book — literary, artistic or scientific, but not a textbook or a guide.',
+  },
+  {
+    id: 'sec80rrb', section: 's.80RRB', target: 'chapterVIA.80RRB',
+    label: 'Royalty on a patent you hold (80RRB)',
+    hint: 'Up to ₹3 lakh of royalty on a patent registered in your own name under the Patents Act.',
   },
   {
     id: 'sec80dd', section: 's.80DD', target: 'chapterVIA.80DD',

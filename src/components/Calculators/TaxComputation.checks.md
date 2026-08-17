@@ -63,6 +63,9 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-023/dont-1 | RISK | Same as its sibling panel: designed as the right-hand column of a 1280 layout. Being reworked in the pass that rebuilds the form, and recorded here as a fault of order rather than of output. |
 | dd-023/dont-2 | PASS | Every figure is rendered in place. The explanatory line under a control is visible prose rather than a hover tooltip, so nothing the reader needs is behind a pointer. |
 | dd-023/dont-3 | RISK | Both regimes sit in one table beside each other, and the slab working sits as two ladders side by side that become two stacked ladders on a phone - which is further apart than a comparison wants to be. Owed a judgement at 375. |
+| dd-024/dont-1 | PASS | Same as its sibling panel: it appears only once there is something to compute, so it is never a lone element on an empty page. |
+| dd-024/dont-2 | N/A |  |
+| dd-024/dont-3 | PASS | It appears with the working rather than sitting in the layout waiting to be filled, which is the reorganisation this rule asks for. |
 
 ## Deliberate choices
 

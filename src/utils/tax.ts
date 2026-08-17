@@ -208,28 +208,76 @@ export interface LossDetail {
  */
 export type ChapterVIASection =
     | '80C'
+    | '80CCC'
+    | '80CCD1'
     | '80CCD1B'
     | '80CCD2'
+    | '80CCH1'
+    | '80CCH2'
     | '80D'
     | '80DD'
     | '80DDB'
     | '80E'
+    | '80EE'
+    | '80EEA'
+    | '80EEB'
     | '80G'
     | '80GG'
+    | '80GGA'
+    | '80GGC'
+    | '80JJAA'
+    | '80QQB'
+    | '80RRB'
     | '80TTA'
     | '80TTB'
     | '80U';
 
 interface ChapterVIARule {
-    /** Which regimes allow it. s.115BAC withdraws all but one of these. */
+    /** Which regimes allow it. s.115BAC withdraws all but three of these. */
     regimes: readonly Regime[];
     /** The statutory ceiling, or `null` where the section sets none. */
     cap: number | null;
-    /** A ceiling that moves with the filer's own facts - age, or salary. */
-    capFor?: (input: TaxInput, regime: Regime) => number | null;
+    /**
+     * A ceiling that moves with the filer's own facts - age, salary, or gross
+     * total income. `gti` is passed because s.80CCD(1)'s ceiling is a share of
+     * SALARY for an employee and of GROSS TOTAL INCOME for everybody else, and
+     * a rule that cannot see gross total income would have to overstate the
+     * ceiling for every self-employed filer. Overstating a deduction understates
+     * the tax, which is the one direction this engine must never round.
+     */
+    capFor?: (input: TaxInput, regime: Regime, gti: number) => number | null;
     /** Non-empty when the filer cannot claim this section at all. */
     barredFor?: (input: TaxInput) => string;
 }
+
+/**
+ * SECTIONS THAT SHARE ONE CEILING BETWEEN THEM, rather than each having their own.
+ *
+ * s.80CCE is the reason this exists, and it is the reason 80CCC and 80CCD(1)
+ * could not simply be added to the table above. Each of the three sets its own
+ * limit of Rs 1.5 lakh, and s.80CCE then caps the THREE TOGETHER at Rs 1.5 lakh.
+ * A reader claiming the maximum under each would otherwise be handed Rs 4.5 lakh
+ * of deductions the Act does not allow - a silent understatement of tax on the
+ * commonest deduction on the form.
+ *
+ * The order is the order of the table, and it does not change the bill: all
+ * three reduce slab income at the same rate. It changes only which section the
+ * screen reports as cut, and the reason names the provision that did it.
+ */
+export const CHAPTER_VIA_GROUPS: ReadonlyArray<{
+    id: string;
+    sections: readonly ChapterVIASection[];
+    cap: number;
+    reason: string;
+}> = [
+    {
+        id: '80CCE',
+        sections: ['80C', '80CCC', '80CCD1'],
+        cap: 150000,
+        reason:
+            's.80CCE caps s.80C, s.80CCC and s.80CCD(1) at Rs 1,50,000 BETWEEN them, not each. Your earlier claims used the ceiling up.',
+    },
+];
 
 /**
  * Every ceiling in Chapter VI-A, in one table, for FY 2025-26.
@@ -243,6 +291,23 @@ interface ChapterVIARule {
  */
 export const CHAPTER_VIA_RULES: Record<ChapterVIASection, ChapterVIARule> = {
     '80C': { regimes: ['old'], cap: 150000 },
+    // Its own limit is Rs 1.5 lakh and s.80CCE then shares that between the
+    // three - see CHAPTER_VIA_GROUPS.
+    '80CCC': { regimes: ['old'], cap: 150000 },
+    // The filer's OWN contribution to the NPS, and its ceiling is the reason
+    // `capFor` had to be given gross total income: 10% of salary for an
+    // employee, 20% of gross total income for anyone else.
+    '80CCD1': {
+        regimes: ['old'],
+        cap: 150000,
+        capFor: (input, _regime, gti) => {
+            if (input.grossSalary > 0) {
+                const salary = input.basicSalary > 0 ? input.basicSalary : input.grossSalary;
+                return Math.round(salary * 0.1);
+            }
+            return Math.round(Math.max(0, gti) * 0.2);
+        },
+    },
     '80CCD1B': { regimes: ['old'], cap: 50000 },
     // The one survivor of s.115BAC, and the reason it is worth a reader's while
     // to ask their employer for it. The ceiling is a share of salary rather than
@@ -258,6 +323,14 @@ export const CHAPTER_VIA_RULES: Record<ChapterVIASection, ChapterVIARule> = {
             return Math.round(salary * (regime === 'new' ? 0.14 : 0.1));
         },
     },
+    // The Agnipath scheme, s.80CCH, and it is TWO sections because the two
+    // halves survive s.115BAC differently. The Agniveer's own contribution is an
+    // old-regime deduction; the Central Government's contribution to their
+    // Corpus Fund account is one of the three things the new regime keeps.
+    // Modelling them as one field would have given the new regime a deduction it
+    // does not allow, or withheld one it does.
+    '80CCH1': { regimes: ['old'], cap: null },
+    '80CCH2': { regimes: ['old', 'new'], cap: null },
     // 25,000 for the filer's own family, 50,000 where the insured is a senior
     // citizen, and the two stack - so 1,00,000 is the aggregate maximum.
     '80D': { regimes: ['old'], cap: 100000 },
@@ -272,8 +345,22 @@ export const CHAPTER_VIA_RULES: Record<ChapterVIASection, ChapterVIARule> = {
         capFor: (input) => (input.ageBracket === 'below60' ? 40000 : 100000),
     },
     '80E': { regimes: ['old'], cap: null },
+    // The two extra slices of home loan interest, each shut to new borrowers by
+    // the date its window closed. The ceilings are what the Act sets; whether
+    // this filer's loan falls inside the window is theirs to know.
+    '80EE': { regimes: ['old'], cap: 50000 },
+    '80EEA': { regimes: ['old'], cap: 150000 },
+    '80EEB': { regimes: ['old'], cap: 150000 },
     '80G': { regimes: ['old'], cap: null },
     '80GG': { regimes: ['old'], cap: 60000 },
+    '80GGA': { regimes: ['old'], cap: null },
+    '80GGC': { regimes: ['old'], cap: null },
+    // The second survivor of s.115BAC after 80CCD(2), and the only one that is
+    // a BUSINESS deduction: 30% of the wages of employees taken on this year,
+    // for three years running.
+    '80JJAA': { regimes: ['old', 'new'], cap: null },
+    '80QQB': { regimes: ['old'], cap: 300000 },
+    '80RRB': { regimes: ['old'], cap: 300000 },
     // 80TTA and 80TTB are the same relief at two ages, and the statute lets a
     // filer have exactly one of them. Barring rather than capping, because the
     // reader who is 65 and claims 80TTA has not claimed too much - they have
@@ -350,6 +437,22 @@ export interface TaxInput {
 
     // --- Head 5: Other sources ---
     otherIncome: number;
+
+    /**
+     * INCOME THAT IS DECLARED AND NOT TAXED - a partner's share of a firm's
+     * profit under s.10(2A) is the common case.
+     *
+     * It touches no tax figure at all, and that is the point rather than an
+     * oversight. It is here because a reader who received it wants to see it
+     * accounted for; leaving it off the form makes them either omit real money
+     * or push it into a taxable box.
+     *
+     * This is the one field on the form that is ALLOWED to move no bill, and it
+     * is not sol-041's fault wearing a disguise: the difference is that the
+     * screen SAYS it is exempt, on its own row, naming the provision. sol-041 is
+     * about a figure that quietly stops mattering. This one loudly does not.
+     */
+    exemptIncome: number;
 
     losses: LossesInput;
 
@@ -450,6 +553,8 @@ export interface TaxRegimeResult {
     standardDeduction: number;
     /** s.16(iii), off salary itself. Zero under the new regime. */
     professionalTax: number;
+    /** Declared, not taxed. Carried through so the panel can show it as a row. */
+    exemptIncome: number;
     /** Total income - the slab part plus the special-rate part. */
     taxableIncome: number;
     /** The part of total income that goes through the slabs. */
@@ -1088,7 +1193,7 @@ function computeChapterVIA(input: TaxInput, regime: Regime, gti: number): Chapte
             continue;
         }
 
-        const cap = rule.capFor ? rule.capFor(input, regime) : rule.cap;
+        const cap = rule.capFor ? rule.capFor(input, regime, gti) : rule.cap;
         const allowed = cap === null ? claimed : Math.min(cap, claimed);
         lines.push({
             section,
@@ -1097,6 +1202,29 @@ function computeChapterVIA(input: TaxInput, regime: Regime, gti: number): Chapte
             cap,
             reason: allowed < claimed ? 'Capped by the section’s own ceiling.' : '',
         });
+    }
+
+    // s.80CCE, and any other ceiling shared BETWEEN sections rather than set on
+    // each. Applied after the individual caps, because a section is first held
+    // to its own limit and only then to the one it shares. Without this a reader
+    // claiming the maximum under 80C, 80CCC and 80CCD(1) would be handed Rs 4.5
+    // lakh where the Act allows Rs 1.5 lakh - and the bill would be wrong in the
+    // direction that flatters us.
+    for (const group of CHAPTER_VIA_GROUPS) {
+        let left = group.cap;
+        for (const line of lines) {
+            if (!group.sections.includes(line.section)) continue;
+            const permitted = Math.min(line.allowed, Math.max(0, left));
+            left -= permitted;
+            if (permitted < line.allowed) {
+                line.allowed = permitted;
+                // The section's own ceiling may have cut it first. Whichever
+                // reason the reader is shown has to be the one that actually
+                // bound, so the shared cap overwrites rather than appends.
+                line.reason = group.reason;
+                line.cap = group.cap;
+            }
+        }
     }
 
     // The break-even solver's lever. It is not a section and never appears as a
@@ -1228,6 +1356,7 @@ function computeRegime(input: TaxInput, regime: Regime): TaxRegimeResult {
         chapterVIADetail,
         standardDeduction: stdDeduction,
         professionalTax: ptax,
+        exemptIncome: Math.max(0, input.exemptIncome),
         taxableIncome,
         slabIncome,
         capitalGains: cg,
@@ -1295,6 +1424,7 @@ export const EMPTY_TAX_INPUT: TaxInput = {
         broughtForwardLongTerm: 0,
     },
     otherIncome: 0,
+    exemptIncome: 0,
     ageBracket: 'below60',
     professionalTax: 0,
     chapterVIA: {},

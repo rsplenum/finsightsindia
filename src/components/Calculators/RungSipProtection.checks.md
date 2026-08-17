@@ -62,6 +62,9 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-023/dont-1 | RISK | Honest answer: this was designed at 1280 and checked at 375 afterwards, which is the exact practice dd-023 was written to name. It has not been re-examined as a phone screen. Recorded rather than claimed as compliant, and on the launch gate as a sweep of its own. |
 | dd-023/dont-2 | PASS | Every figure is rendered in place. The explanatory line under a control is visible prose rather than a hover tooltip, so nothing the reader needs is behind a pointer. |
 | dd-023/dont-3 | N/A |  |
+| dd-024/dont-1 | PASS | A rung is never what the reader lands on. It sits inside a ladder under an Answer that has already told them what the page is, so the introduction this rule asks for is made once, above, rather than repeated on every step. |
+| dd-024/dont-2 | N/A |  |
+| dd-024/dont-3 | RISK | The ladder reveals rungs but the layout around them does not reorganise, so the page looks the same after the reader has told it everything as before they told it anything. Not wrong on this component, and not yet right on the page it belongs to. Filed against the calculator sweep already on the gate. |
 
 ## Deliberate choices
 

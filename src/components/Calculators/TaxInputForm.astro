@@ -101,16 +101,14 @@ const labelClass = 'block text-sm font-semibold text-navy-700 dark:text-navy-300
 
 <section id="taxInputForm" class="space-y-8" aria-label="What you have to tell us about your year">
   <!--
-    THE WHOLE SCREEN AT REST. One question. Until we know who is asking, every
-    field we could show is a field that might not apply to them, and showing it
-    is asking a question we already know may be wrong (dd-022).
+    THE CATEGORY QUESTION IS NOT HERE. It lives in `TaxIntro`, because answering
+    it is what resolves the page from a welcome into a form (dd-024). What stays
+    here is the answer, restated compactly so the reader can change it without
+    going back - and its hint, which says what the choice does and does not do.
   -->
-  <div class="space-y-2">
-    <label for="inCategory" class="block text-lg font-bold text-navy-900 dark:text-navy-100">
-      What do you do?
-    </label>
-    <select id="inCategory" class={selectClass}>
-      <option value="">Choose one to begin</option>
+  <div class="space-y-2 border-b border-navy-200 dark:border-navy-800 pb-5">
+    <label for="inCategoryRestate" class={labelClass}>You are</label>
+    <select id="inCategoryRestate" class={selectClass}>
       {CATEGORIES.map((c) => <option value={c.id}>{c.label}</option>)}
     </select>
     <p id="categoryHint" class="text-sm leading-snug text-navy-600 dark:text-navy-400 empty:hidden"></p>

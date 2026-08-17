@@ -47,7 +47,8 @@
     "do": [
       "Move complexity to a deeper layer and keep it reachable.",
       "Absorb the difficulty of packaging into our work, never the reader's.",
-      "Within a filtered set, offer every eligible option rather than a curated shortlist."
+      "Within a filtered set, offer every eligible option rather than a curated shortlist.",
+      "Research the offering against the source; a catalogue assembled from memory always passes its own completeness check."
     ],
     "dont": [
       "Don't delete a capability in order to make a screen simpler.",
@@ -60,6 +61,12 @@
         "context": "The note at the foot of Rahul's tax-calculator UI sketch, specifying what the two dropdowns must contain. Transcribed in docs/sketches/tax-calculator-ui_2026-08-16.md.",
         "verbatim": "The dropdowns will have exhaustive sources of money & deductions category wise. The mechanics underneath will be complex & would clash but the UI to be simple & easy & intuitive.",
         "note": "Recorded against dd-001 rather than as a new entry: this is dd-001 applied to one screen, and a duplicated rule weakens both copies - the next builder would have to work out which of the two governs. It does add one operational requirement that dd-001 did not state outright, so that is extracted as a `do` below: EXHAUSTIVE within the eligible set. Read with dd-020 it completes the contract - dd-020 says what a category may remove (only the inapplicable), this says how full what remains must be (everything)."
+      },
+      {
+        "date": "2026-08-18",
+        "context": "Rahul on the tax catalogue, which had 19 income sources and 16 deductions and had been assembled from what the builder knew rather than from what the Act contains. He named six omissions in one line without looking anything up.",
+        "verbatim": "go out on the internet and add as many common sources as possible like remuneration for director, interest on capital, dividends, exempt profit, commission, gift etc. ... same for deductions",
+        "note": "EXHAUSTIVE HAS TO BE RESEARCHED, NOT RECALLED. dd-001/do-3 says offer everything within the eligible set, and the test for it had been \"is anything we know of missing?\" - which a catalogue built from memory always passes. The instruction is to go and look. A source we never thought of is indistinguishable, from the reader's side, from one we deliberately withheld: either way the reader it fits never learns it existed and files a wrong return."
       }
     ]
   },
@@ -680,5 +687,32 @@
       "Don't let a side-by-side arrangement be the only way a comparison reads; on a phone it will be stacked, and it has to still work."
     ],
     "test": "Open the screen at 375px and ask whether this is the design or a narrowed version of one. If any comparison, table or panel only makes its point once it is wider, it was designed for the desktop and adapted afterwards."
+  },
+  {
+    "id": "dd-024",
+    "date": "2026-08-18",
+    "title": "A screen has a beginning, and it moves as the reader advances",
+    "trigger": "Rahul, on the tax calculator the same day dd-022 rebuilt it. dd-022 was applied correctly and the result was still wrong: the page at rest was one narrow select in a five-column grid with seven empty columns beside it. \"One question at rest\" had been read as a licence to leave the page empty.",
+    "verbatim": "1. go out on the internet and add as many common sources as possible like remuneration for director, interest on capital, dividends, exempt profit, commission, gift etc.\n2. same for deductions\n3. when the user arrive at the page they see one narrow toggle and a lot of blank space on the right, we have to change that, can we do this: user lands on the page and is welcome in this style take inspiration use https://antigravity.google/ for website aesthetics and design and colors and font and animations and transitions effects. we introduce the website to the user like  https://antigravity.google/\n4. then when when they select their category and the selection panel moves to the right and other options are revealed as the user asks for. we only need to expose the user to complexity that serves them not which they are not concerned with.\n\nall my feedback to be recorded in feedback record",
+    "spirit": "THE MISTAKE THIS CORRECTS IS A GOOD RULE APPLIED WITHOUT ITS PURPOSE. dd-022 says the form opens on one question, and that is right. It says nothing about what the rest of the page should be doing, and the answer is not \"nothing\". A lone control in a field of white is not minimal, it is unfinished - it gives the reader no reason to answer it and no sense of what they have arrived at.\n\nSo the page INTRODUCES ITSELF before it asks anything. Rahul named a reference for the register - antigravity.google - for \"aesthetics and design and colors and font and animations and transitions effects\", and the operative word is *welcome*: the reader is met, told what this is and what it will do for them, and only then asked the first question. The minimalism is in what is ASKED, never in what is OFFERED as an explanation of why to ask it.\n\nAND THE SCREEN MOVES. \"when they select their category and the selection panel moves to the right and other options are revealed as the user asks for\" - the layout is not a fixed frame with content poured into it. It has a state before the first answer and a different state after, and the transition between them is itself part of the design: the introduction gives way, the form takes the place it has earned, and the working appears beside it. A reader who watches the page reorganise around their first answer has been told, without a word, that the thing is responding to them.\n\nThe governing sentence is the last one: \"we only need to expose the user to complexity that serves them not which they are not concerned with.\" That is dd-022 stated as a purpose rather than as a mechanic, and it cuts both ways - it forbids showing what does not serve, and it equally forbids withholding what does. An empty right-hand column serves nobody.\n\nOn the reference: take the register, not the ornament. CLAUDE.md already bars game-UI animation, and nothing here overrides that. What is being asked for is the confidence of a page that knows what it is - considered type, real space, motion that follows the reader rather than performing at them.",
+    "applies_to": [
+      "calculators",
+      "every screen",
+      "whole product"
+    ],
+    "do": [
+      "Meet the reader before asking anything: say what this is and what it will do for them, then ask the first question.",
+      "Give the page a state before the first answer and a different one after, and let the change between them be visible.",
+      "Move the form aside as it is answered so the working can take the space it has earned.",
+      "Expose the complexity that serves this reader, and only that - which forbids withholding as much as it forbids piling on.",
+      "Take motion from a reference for its register, never its ornament: it follows the reader rather than performing at them."
+    ],
+    "dont": [
+      "Don't leave a page mostly empty and call it minimal; a lone control with nothing around it is unfinished, not restrained.",
+      "Don't read 'one question at rest' as licence to say nothing about what the reader has arrived at.",
+      "Don't hold the layout fixed while the reader's situation changes; the screen should reorganise around what they have told it."
+    ],
+    "test": "Land on the page as a stranger. Before touching anything, can you say what this does for you and why the first question is worth answering? Then answer it: does the page reorganise, or does content merely appear in a frame that was already sitting there half empty?",
+    "reinforced": []
   }
 ]

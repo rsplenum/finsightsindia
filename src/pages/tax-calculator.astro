@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Hero from '../components/Hero.astro';
 import CardPremium from '../components/CardPremium.astro';
+import TaxIntro from '../components/Calculators/TaxIntro.astro';
 import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 import TaxInputForm from '../components/Calculators/TaxInputForm.astro';
 import TaxIncomeComputation from '../components/Calculators/TaxIncomeComputation.astro';
@@ -10,15 +10,13 @@ import TaxComputation from '../components/Calculators/TaxComputation.astro';
 
 <Layout title="Income tax calculator, FY 2025-26 — old regime or new">
 
-	<Hero
-		badge="Income tax · FY 2025-26"
-		title="What will you actually pay?"
-		description="Tell us what your year looked like and this works out both regimes at once — every source of income, every deduction you are eligible for, and the monthly bite at the end of it."
-	/>
-
-	<hr class="section-divider" />
-
-	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 space-y-10">
+	<!--
+		THE HERO IS GONE, and its going is the point. It said the same thing
+		`TaxIntro` says, one section above it, so the page introduced itself twice
+		and then asked its question a screen and a half down. dd-024 asks for ONE
+		welcome that hands the reader the first question; two is not a warmer one.
+	-->
+	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-10">
 
 		<!--
 			The answer does not exist until there is income to answer about, so it
@@ -27,16 +25,16 @@ import TaxComputation from '../components/Calculators/TaxComputation.astro';
 		-->
 		<div id="taxAnswerWrap" class="max-w-7xl mx-auto" hidden><TaxAnswer /></div>
 
-		<!--
-			Rahul's sheet 2: inputs on the left, and TWO output panels on the
-			right rather than one. The income build-up is separate from the tax
-			working, so the reader follows gross income through to taxable income
-			before a rate touches anything.
+		<TaxIntro />
 
-			On a narrow screen they stack in that same order - the form, then what
-			it did to the income, then what that costs - which is the reading
-			order the sheet draws left to right.
+		<!--
+			The page has two states and the change between them is the design
+			(dd-024). Before the first answer there is a welcome and one question;
+			after it the welcome collapses and this resolves into the form and the
+			working. Sheet 2's arrangement is kept - inputs left, the two panels
+			right - because that is the drawing that can be verified.
 		-->
+		<div id="taxWorkbench" hidden>
 		<CardPremium class="max-w-7xl mx-auto">
 			<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 				<div class="lg:col-span-5"><TaxInputForm /></div>
@@ -52,6 +50,7 @@ import TaxComputation from '../components/Calculators/TaxComputation.astro';
 				</div>
 			</div>
 		</CardPremium>
+		</div>
 
 	</main>
 </Layout>
@@ -118,6 +117,53 @@ import TaxComputation from '../components/Calculators/TaxComputation.astro';
 
 	const category = () =>
 		(document.getElementById('inCategory') as HTMLSelectElement | null)?.value ?? '';
+
+	/**
+	 * The page has two states, and the change between them is the design (dd-024).
+	 *
+	 * Before the first answer: a welcome and one question. After it: the welcome
+	 * collapses and the workbench resolves into the form and the working. The
+	 * collapse is a transition rather than a keyframe, and it ends in
+	 * `display: none` rather than a zero-height box, because a welcome that stays
+	 * in the flow becomes furniture the reader scrolls past on every recompute.
+	 */
+	function resolvePage() {
+		const intro = document.getElementById('taxIntro');
+		const workbench = document.getElementById('taxWorkbench');
+		if (!intro || !workbench) return;
+		if (!category() || intro.dataset.collapsed === 'true') return;
+
+		workbench.hidden = false;
+		// The shared card carries `.reveal`, which starts at opacity 0 and is lit
+		// by an IntersectionObserver on load. An element that was `hidden` at load
+		// never intersected, so the whole workbench came back invisible. Lighting
+		// it here is the fix; the observer keeps its job for everything else.
+		workbench.querySelectorAll('.reveal, .reveal-scale').forEach((el) => el.classList.add('visible'));
+
+		intro.dataset.leaving = 'true';
+
+		let done = false;
+		const finish = () => {
+			if (done) return;
+			done = true;
+			intro.dataset.collapsed = 'true';
+			// The form's first field is where the reader is going next, so the page
+			// takes them there rather than leaving them to find it.
+			workbench.scrollIntoView({ block: 'start', behavior: 'smooth' });
+		};
+
+		// `transitionend` is the signal, and a timer is the guarantee. The event
+		// does not fire in a backgrounded tab, under some reduced-motion settings,
+		// or if the element stops transitioning for any reason - and every one of
+		// those failures would leave the welcome sitting on the page for good,
+		// which is worse than losing the animation.
+		const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (reduced) finish();
+		else {
+			intro.addEventListener('transitionend', finish, { once: true });
+			window.setTimeout(finish, 600);
+		}
+	}
 
 	const isPrimary = (entry: CatalogueEntry, cat: string) =>
 		(entry.primaryFor ?? []).includes(cat);
@@ -435,7 +481,16 @@ import TaxComputation from '../components/Calculators/TaxComputation.astro';
 			const nl = n.chapterVIADetail.lines.find((l) => l.section === section);
 			const ol = o.chapterVIADetail.lines.find((l) => l.section === section);
 			if (!(nl?.claimed || ol?.claimed)) continue;
-			add(`Deduction under s.${section}`, nl?.allowed ?? 0, ol?.allowed ?? 0, undefined, true);
+			// PUSHED, NOT `add`ed, because `add` drops a row whose figures are all
+			// zero - and a deduction the reader claimed and the law allowed NOTHING
+			// of is the one row that must never disappear. s.80CCE can zero a claim
+			// outright, and a reader who typed Rs 1 lakh and sees no line for it has
+			// been left to wonder whether we took it at all.
+			rows.push({
+				label: `Deduction under s.${section}`,
+				newVal: formatNegative(nl?.allowed ?? 0),
+				oldVal: formatNegative(ol?.allowed ?? 0),
+			});
 		}
 		add(
 			'Restricted so deductions cannot exceed income',
@@ -479,6 +534,13 @@ import TaxComputation from '../components/Calculators/TaxComputation.astro';
 		);
 
 		add('Total income', n.taxableIncome, o.taxableIncome, 'total');
+
+		// DECLARED AND NOT TAXED, and it sits BELOW the total on purpose: putting
+		// it above would make the total stop following from the rows, and putting
+		// it nowhere would leave the reader unable to see that real money they
+		// told us about was accounted for. This is the one row on the panel that
+		// is meant to change nothing, and it says so.
+		add('Exempt income, declared and not taxed', n.exemptIncome, o.exemptIncome, 'minor');
 		renderRows('incRows', rows);
 		renderIncomeNotes(input, result);
 	}
@@ -820,15 +882,31 @@ import TaxComputation from '../components/Calculators/TaxComputation.astro';
 			document.getElementById(id)?.addEventListener('change', calculate);
 		});
 
-		document.getElementById('inCategory')?.addEventListener('change', (e) => {
+		// TWO CONTROLS, ONE ANSWER. The question is asked in the welcome and
+		// restated compactly at the top of the form, so the reader can change it
+		// without going back to a screen that has collapsed. They are kept in step
+		// here rather than by each writing its own copy - dd-013/dont-2, one
+		// quantity standing on a page twice with two values.
+		const restate = document.getElementById('inCategoryRestate') as HTMLSelectElement | null;
+		const onCategoryChanged = (value: string) => {
+			const primary = document.getElementById('inCategory') as HTMLSelectElement | null;
+			if (primary && primary.value !== value) primary.value = value;
+			if (restate && restate.value !== value) restate.value = value;
 			// The opening question can be answered but not un-answered. Going back
 			// to "Choose one to begin" would hide the form while its fields kept
 			// their values and kept computing - figures the reader can no longer
-			// see moving a bill they can. Once answered, the placeholder goes.
-			const select = e.target as HTMLSelectElement;
-			if (select.value) select.querySelector('option[value=""]')?.remove();
+			// see moving a bill they can.
+			if (value) primary?.querySelector('option[value=""]')?.remove();
+			resolvePage();
 			refreshOffers();
 			calculate();
+		};
+
+		document.getElementById('inCategory')?.addEventListener('change', (e) => {
+			onCategoryChanged((e.target as HTMLSelectElement).value);
+		});
+		restate?.addEventListener('change', (e) => {
+			onCategoryChanged((e.target as HTMLSelectElement).value);
 		});
 
 		for (const selectId of ['taxAddIncome', 'taxAddSeparate', 'taxAddDeduction']) {

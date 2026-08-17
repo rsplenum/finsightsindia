@@ -26,8 +26,8 @@ PASS and RISK need a reason. N/A may stand alone.
 
 | rule | verdict | why |
 |---|---|---|
-| dd-001/dont-1 | PASS | Nothing the page could do is lost. All 35 catalogue entries stay reachable; what changed is that they are reached through an add control rather than found on screen. The surface shrank and the offering did not, which is the distinction the whole architecture rests on. |
-| dd-001/dont-2 | PASS | The entry is ONE question and one field, and that is the entry, not the offering. 19 income sources and 16 deductions are one tap away, grouped by the head they fall under. |
+| dd-001/dont-1 | PASS | Nothing the page could do is lost. All 69 catalogue entries stay reachable; what changed is that they are reached through an add control rather than found on screen. The surface shrank and the offering did not, which is the distinction the whole architecture rests on. |
+| dd-001/dont-2 | PASS | The entry is ONE question and one field, and that is the entry, not the offering. 41 income sources and 28 deductions are one tap away, grouped by the head they fall under. |
 | dd-002/dont-1 | PASS | Volume revealed per step is exactly one labelled field. Answering the category reveals one field and one control; adding a source reveals one field. There is no step in this form that reveals a section. |
 | dd-002/dont-2 | PASS | One control per step, by construction. The only step that brings a second is electing a presumptive basis, which brings its own selector — and that selector is the lesson (dd-006/dont-2). |
 | dd-003/dont-1 | N/A | This column states no takeaway at all. It collects facts; the panels beside it draw the conclusion. |
@@ -71,6 +71,9 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-023/dont-1 | PASS | The single column is the design here, not the fallback. One question, then one field, then one control is the same shape at 375 and at 1280; what the wide screen buys is the panels sitting beside the form instead of below it, which is the layout becoming more than itself rather than the phone getting less. |
 | dd-023/dont-2 | PASS | No hover anywhere. Every hint is visible prose under its field, the statute on an excluded field is a visible line, and the add control is a native select — which is the one control a phone renders as a full-screen picker for free. |
 | dd-023/dont-3 | PASS | Nothing in this column is a side-by-side comparison. The one place two things sit next to each other is the presumptive election, and it is a stack of three labelled rows rather than columns. |
+| dd-024/dont-1 | PASS | The form is no longer what the reader lands on. `TaxIntro` says what the page does and asks the category; the form appears when that is answered, so the screen at rest is a welcome rather than a lone select in an empty grid. |
+| dd-024/dont-2 | PASS | The category question moved OUT of this component and into the welcome for exactly this reason. dd-022 governs what the form asks; it never licensed the page to say nothing about what the reader had arrived at. |
+| dd-024/dont-3 | PASS | Answering the category collapses the welcome and resolves the page into this form and the working beside it. The choice is then restated compactly at the top of the form so it can be changed without going back to a screen that no longer exists. |
 
 ## Deliberate choices
 

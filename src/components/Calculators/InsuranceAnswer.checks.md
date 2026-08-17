@@ -76,6 +76,9 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-023/dont-1 | RISK | Honest answer: this was designed at 1280 and checked at 375 afterwards, which is the exact practice dd-023 was written to name. It has not been re-examined as a phone screen. Recorded rather than claimed as compliant, and on the launch gate as a sweep of its own. |
 | dd-023/dont-2 | PASS | Every figure is rendered in place. The explanatory line under a control is visible prose rather than a hover tooltip, so nothing the reader needs is behind a pointer. |
 | dd-023/dont-3 | PASS | The two routes are stated as a verdict in a sentence before they are shown as figures, so the comparison survives being stacked. The sentence is the comparison; the figures support it. |
+| dd-024/dont-1 | RISK | The analyser page opens on a hero and then six form fields at once. It is not empty, so it does not have the tax page fault, but it does not introduce itself either - it asks before it says what it will give back. The overhaul on the gate now inherits dd-024 along with dd-021 and dd-022. |
+| dd-024/dont-2 | N/A |  |
+| dd-024/dont-3 | RISK | The layout is a fixed frame: the form sits where it sat before the reader arrived and the verdict appears inside it. Nothing reorganises around the first answer. Recorded for the overhaul rather than patched here. |
 
 ## Deliberate choices
 

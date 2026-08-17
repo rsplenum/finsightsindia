@@ -142,6 +142,9 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-023/dont-1 | RISK | Honest answer: this was designed at 1280 and checked at 375 afterwards, which is the exact practice dd-023 was written to name. It has not been re-examined as a phone screen. Recorded rather than claimed as compliant, and on the launch gate as a sweep of its own. |
 | dd-023/dont-2 | PASS | Every figure is rendered in place. The explanatory line under a control is visible prose rather than a hover tooltip, so nothing the reader needs is behind a pointer. |
 | dd-023/dont-3 | PASS | The two regime cards are `grid-cols-1 sm:grid-cols-2`, so they stack on a phone - and the verdict is a sentence above them either way, so the reader never has to hold two figures side by side to know which won. |
+| dd-024/dont-1 | PASS | It is not the landing any more. `TaxIntro` meets the reader and hands them the category question, and this appears only once there is income to answer about - so it is never the thing standing alone on an empty page. |
+| dd-024/dont-2 | N/A |  |
+| dd-024/dont-3 | PASS | This component IS part of the reorganisation: it does not exist on the page until the reader has told it something, and it appears above the working when they do. |
 
 ## Deliberate choices
 

@@ -4,7 +4,7 @@
 
 The reasoning, the trigger and Rahul's verbatim words live in the JSON and are the part worth reading twice. This page is the other half: the same lessons reduced to lines you can check a screen against without re-reading an essay. dd-016 exists because a cited principle is not an instruction.
 
-24 entries · 145 rules · 18 entries bind any calculator screen
+25 entries · 154 rules · 19 entries bind any calculator screen
 
 ---
 
@@ -58,6 +58,9 @@ Generate the skeleton with `npm run doctrine:checks <ComponentName>`.
 - `dd-023/dont-1` Don't design at desktop width and check the phone afterwards; passing a mobile audit is not the same as having been designed for one.
 - `dd-023/dont-2` Don't put a figure the reader needs behind a hover state, a tooltip or anything else a thumb cannot reach.
 - `dd-023/dont-3` Don't let a side-by-side arrangement be the only way a comparison reads; on a phone it will be stacked, and it has to still work.
+- `dd-024/dont-1` Don't leave a page mostly empty and call it minimal; a lone control with nothing around it is unfinished, not restrained.
+- `dd-024/dont-2` Don't read 'one question at rest' as licence to say nothing about what the reader has arrived at.
+- `dd-024/dont-3` Don't hold the layout fixed while the reader's situation changes; the screen should reorganise around what they have told it.
 
 ---
 
@@ -93,6 +96,7 @@ Generate the skeleton with `npm run doctrine:checks <ComponentName>`.
 - `dd-001/do-1` Move complexity to a deeper layer and keep it reachable.
 - `dd-001/do-2` Absorb the difficulty of packaging into our work, never the reader's.
 - `dd-001/do-3` Within a filtered set, offer every eligible option rather than a curated shortlist.
+- `dd-001/do-4` Research the offering against the source; a catalogue assembled from memory always passes its own completeness check.
 
 **Don't**
 
@@ -499,3 +503,23 @@ What fails is a figure whose noun sits in a separate block above it while its fr
 - `dd-023/dont-3` Don't let a side-by-side arrangement be the only way a comparison reads; on a phone it will be stacked, and it has to still work.
 
 > **Test.** Open the screen at 375px and ask whether this is the design or a narrowed version of one. If any comparison, table or panel only makes its point once it is wider, it was designed for the desktop and adapted afterwards.
+
+### dd-024 — A screen has a beginning, and it moves as the reader advances
+
+*calculators · every screen · whole product*
+
+**Do**
+
+- `dd-024/do-1` Meet the reader before asking anything: say what this is and what it will do for them, then ask the first question.
+- `dd-024/do-2` Give the page a state before the first answer and a different one after, and let the change between them be visible.
+- `dd-024/do-3` Move the form aside as it is answered so the working can take the space it has earned.
+- `dd-024/do-4` Expose the complexity that serves this reader, and only that - which forbids withholding as much as it forbids piling on.
+- `dd-024/do-5` Take motion from a reference for its register, never its ornament: it follows the reader rather than performing at them.
+
+**Don't**
+
+- `dd-024/dont-1` Don't leave a page mostly empty and call it minimal; a lone control with nothing around it is unfinished, not restrained.
+- `dd-024/dont-2` Don't read 'one question at rest' as licence to say nothing about what the reader has arrived at.
+- `dd-024/dont-3` Don't hold the layout fixed while the reader's situation changes; the screen should reorganise around what they have told it.
+
+> **Test.** Land on the page as a stranger. Before touching anything, can you say what this does for you and why the first question is worth answering? Then answer it: does the page reorganise, or does content merely appear in a frame that was already sitting there half empty?

@@ -1,6 +1,6 @@
 # FinSight — Launch Gate
 
-**Not live. No domain.** 471 tests green · 67 commits on `fix/learning-loop-integrity-and-calculator-correctness`
+**Not live. No domain.** 479 tests green · 68 commits on `fix/learning-loop-integrity-and-calculator-correctness`
 
 This is a list, not a document. Explanations live in commit messages, `design-doctrine.json` and `engineering-solutions.json`. This says what is done and what is next.
 
@@ -25,85 +25,49 @@ planner rungs 5 and 6 · dd-012, dd-013 · T3 started. Detail in
 [`docs/session-2026-08-15.md`](session-2026-08-15.md), the solutions file and
 the commit messages — which is where it belongs once it is no longer *next*.
 
-## Done today · 17 Aug (tax revamp, in progress)
+## Done · 17 Aug
 
-**sol-056 — Chapter VI-A becomes a table, so the dropdown can be exhaustive.**
-The engine could price **three** deduction sections; the catalogue for Rahul's
-dropdown lists **thirteen**. That gap is not a missing feature, it is sol-041 on
-ten sections at once — a field the reader fills in and a bill that does not move.
-`TaxInput.chapterVIA` is now one map and `CHAPTER_VIA_RULES` one table holding
-every ceiling, regime and age gate, returning **a line per section** — claimed,
-allowed, the ceiling that applied, and a reason wherever a claim was cut — which
-is what the Income Computation panel needs. **80TTA/80TTB bar rather than cap
-each other**: a 65-year-old claiming 80TTA has not claimed too much, they have
-claimed under the wrong section. **Professional tax is s.16(iii), not Chapter
-VI-A** — it comes off salary before gross total income is struck, the same
-distinction that moved home loan interest to its head in T6. Field ids are
-**derived** from the rules table, so a new section gets a field, a handler and a
-place in the input set without anyone remembering three files. 411 → 424 tests.
-
-**sol-057 — sol-051's dead-id wall fired on three live fields.** Derived ids are
-invisible to a literal grep. The harvest now also collects the static head of a
-template literal (`` `inDed${section}` `` → `inDed`), minimum four characters so
-it cannot become a blanket amnesty. **A wall that fires on correct code is a wall
-someone switches off**, and then it stops catching the real ones too.
-
-**sol-060 — the insurance analyser stops flattering the route it argues for.**
-Rahul's ruling on the untaxed bond route, built and verified the same day. **This
-unblocks the insurance analyser overhaul**, which had been waiting on it. Detail
-in the *Waiting on Rahul* section below, which now records it as answered.
-
-**Two more of Rahul's rulings, 17 Aug.** *"name is not necessary"* — the Name
-field is dropped from the tax form. It was filed as a RISK against dd-020/dont-2
-and dd-021/dont-2 and **escalated rather than decided**, and the rule was right;
-recorded as a reinforcing instance on dd-020, because building it silently would
-have been defensible and would have cost every future reader one pointless
-question. And the illegible verb on sheet 2 is **"clubbed", negatively**: *"only
-those that can't be clubbed in dropdown-1"*. **That reverses the transcription's
-reading** — block (2) is not an annotation on Dropdown 1, it is a SEPARATE block
-for what Dropdown 1 cannot hold. Capital gains carry four different rates, so
-summing them destroys the only thing the arithmetic cares about. **The layout has
-three input blocks, not two.** The item had been recorded as "does not block the
-build"; that judgement was wrong, and a `[?]` that changes a layout is not a
-footnote.
-
-**`TaxInputForm.checks.md` written — the design, before the component.** Three
-RISKs filed rather than smoothed over. Two were **the same instance seen twice**:
-*Name buys no simplification* (dd-020/dont-2) and *Name cannot change the
-verdict* (dd-021/dont-2). **Both now closed — Rahul dropped the field**, so
-every question the form asks goes on to remove something or move a figure. The
-third is Rahul's own tension — an exhaustive dropdown IS a list of worries if
-presented as one — and is recorded as a judgement to check on the built page,
-not a property the markup guarantees. **The decision that matters most:** a
-field that becomes ineligible when the category changes is **kept**, carrying
-the statute that now excludes it. Deleting it would silently move the tax, which
-is exactly what dd-020/dont-3 forbids.
-
-**sol-059 — the untracked `taxCatalogue.ts` is verified, tested and committed.**
-Its one real idea is kept: **an exclusion is a `statute` string, not a boolean**,
-so dd-020's own test becomes something a machine can ask. Two faults found by
-reading it against `TaxInput` first: **thirteen options had nowhere for their
-rupees to go** (sol-056 gave ten a home; the other two are `pending` *with the
-reason* and are not offered), and **home loan interest appeared twice**, as an
-income source and a deduction, both writing the same field — a reader adding
-both would have typed one number twice and had one silently disregarded.
-Resolved in the reader's favour: it is a deduction, which is where the sheet
-puts it. A Chapter VI-A entry may **not** declare its own regimes; it takes them
-from the engine's table. 21 tests. **The pending queue is a ratchet** — exactly
-`['vda', 'winnings']`, both flat rates that take no share of the basic
-exemption, so neither can ride on the capital-gains path.
-
-**sol-058 — `typeFloor.test.ts` was RED at HEAD and green only in a working
-tree carrying someone else's uncommitted migration.** `npm run verify` passed on
-17 Aug for a committed tree it was not vouching for. The ceiling read 121; HEAD
-holds **213** and the working tree holds **40**, so 121 was never true of either
-— it was a snapshot of a migration that then kept going. Both whole-tree counts
-now come from **committed content** (`git grep HEAD`), the same number in every
-clone. Raising 121 → 213 is not a loosening: **173 of the 213 fall the moment
-the type-floor workstream commits.** Found by verifying the INDEX rather than
-the working tree — HEAD plus the staged diff, in a throwaway worktree.
+**The tax revamp's foundations**, archived: sol-056 … sol-060, and Rahul's two
+rulings of that day — *"name is not necessary"* and the illegible verb resolved
+as **"clubbed", negatively**, which is why the layout has three input blocks and
+not two. **sol-058** is the one still worth re-reading: `typeFloor.test.ts` was
+RED at HEAD and green only in a working tree carrying somebody else's uncommitted
+migration, which is why this project verifies the INDEX and not the desk. Detail
+in [`docs/session-2026-08-17.md`](session-2026-08-17.md).
 
 ## Done today · 18 Aug
+
+**dd-024 · sol-064 · sol-065 — Rahul's four points, all four built.** *"we only
+need to expose the user to complexity that serves them not which they are not
+concerned with."*
+
+**The catalogue was RESEARCHED rather than recalled (sol-064).** It held 19
+income sources and 16 deductions, assembled from what the builder knew; Rahul
+named six omissions in one line without looking anything up. **41 sources and 28
+deductions now**, and **three of the additions could not simply be listed**:
+**s.80CCE** caps 80C, 80CCC and 80CCD(1) at ₹1.5 lakh *between* them, so adding
+them naively would have handed a reader ₹4.5 lakh of deductions that do not
+exist and understated their tax; **s.80CCD(1)**'s ceiling is a share of salary
+for an employee and of gross total income for everyone else, so `capFor` had to
+be given `gti`; and **exempt income had nowhere to go at all** — it is now
+`TaxInput.exemptIncome`, the one field on the form allowed to move no bill,
+with its own row saying so and three tests holding it there. **A reference table
+we consulted was wrong** about 80CCD(2) surviving the new regime; a second source
+settled it, and the survivor list went 1 → 3 (80CCD(2), 80CCH(2), 80JJAA) — an
+assertion that had been true of the engine and false of the Act.
+
+**dd-024 — a screen has a beginning, and it moves (sol-065).** dd-022 was applied
+correctly and the page still opened on *"one narrow toggle and a lot of blank
+space"*. A lone control in a field of white is not minimal, it is unfinished.
+`TaxIntro` now welcomes the reader, and **the category question moved out of the
+form into the welcome**, because answering it is what resolves the page. Register
+from `antigravity.google` at Rahul's direction — **the register, not the
+ornament**; nothing bounces. The page's `Hero` is deleted: it said the same thing
+one section higher. **Two faults surfaced that 479 green tests could not see** —
+the shared card's `.reveal` starts at opacity 0 and is lit by an
+IntersectionObserver, so an element hidden at load came back **invisible**; and
+`transitionend` **does not fire in a backgrounded tab**, so the welcome never
+left. Both found by reading the built page.
 
 **dd-022 · dd-023 · sol-063 — the form opened on ten questions, and Rahul
 corrected the reading that put them there.** *"after the category is selected,

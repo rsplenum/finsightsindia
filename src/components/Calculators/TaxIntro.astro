@@ -1,0 +1,141 @@
+---
+/**
+ * The page's welcome — dd-024.
+ *
+ * The build before this one opened on a single narrow select in a five-column
+ * grid with seven empty columns beside it. dd-022 had been applied correctly
+ * and the result was still wrong: "one question at rest" is a rule about what
+ * is ASKED, and it had been read as a licence to say nothing at all.
+ *
+ * So this meets the reader, says what the thing does, and hands them the first
+ * question. Then it gets out of the way — answering the question collapses it,
+ * and the form and the working take the space.
+ *
+ * Register taken from `antigravity.google` at Rahul's direction: generous
+ * space, one confident headline, a clear hierarchy, restrained motion. THE
+ * REGISTER, NOT THE ORNAMENT. CLAUDE.md's bar on game-UI animation is not
+ * relaxed by a reference to someone else's site; nothing here bounces, flashes
+ * or pulses, and the one transition is disabled under `prefers-reduced-motion`.
+ *
+ * Design settled before the component in `TaxIntro.checks.md`.
+ */
+import { CATEGORIES } from '../../utils/taxCatalogue';
+
+const promises = [
+  {
+    title: 'What it costs you a month',
+    body: 'Not the annual bill. The figure that actually leaves your account, so you can set it against the rest of your month.',
+  },
+  {
+    title: 'Which regime is cheaper, and by how much',
+    body: 'Both are worked out in full, side by side. Most people assume the new one wins; for a good many it does not, and the difference is stated in rupees.',
+  },
+  {
+    title: 'The working, line by line',
+    body: 'Every head of income, every deduction you are eligible for, and what the law actually allowed of each claim — with the reason wherever it allowed less.',
+  },
+];
+---
+
+<section id="taxIntro" class="tax-intro" aria-label="What this calculator does">
+  <div class="max-w-3xl mx-auto text-center space-y-5">
+    <p class="text-sm font-semibold tracking-tight text-navy-600 dark:text-navy-400">
+      Income tax · FY 2025-26 · assessment year 2026-27
+    </p>
+
+    <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-navy-900 dark:text-white leading-[1.1]">
+      Two regimes. One of them is<br class="hidden sm:inline" /> cheaper for you.
+    </h1>
+
+    <p class="text-base sm:text-lg text-navy-600 dark:text-navy-300 leading-relaxed max-w-2xl mx-auto">
+      Tell us what your year looked like and this prices both of them in full — every source of
+      money, every deduction you are entitled to, and what each one actually did to the bill.
+    </p>
+  </div>
+
+  <!--
+    Three promises, not a feature list. Naming the size of the catalogue here
+    would be dd-003/dont-2 exactly - capability mistaken for achievement - and it
+    would make the reader brace for a long form before they had answered
+    anything.
+  -->
+  <div class="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6">
+    {promises.map((p) => (
+      <div class="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-900/40 p-5 space-y-2 text-left">
+        <h3 class="text-base font-bold text-navy-900 dark:text-navy-100 leading-snug">{p.title}</h3>
+        <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">{p.body}</p>
+      </div>
+    ))}
+  </div>
+
+  <!--
+    THE WAY IN, and the only control on the page at rest. It lives here rather
+    than in the form because answering it is what resolves the page: the welcome
+    collapses, the form takes its place and the working appears beside it. The
+    screen reorganises around the reader's first answer (dd-024/dont-3).
+  -->
+  <div class="max-w-md mx-auto space-y-3">
+    <label for="inCategory" class="block text-center text-lg font-bold text-navy-900 dark:text-navy-100">
+      What do you do?
+    </label>
+    <select
+      id="inCategory"
+      class="w-full bg-white dark:bg-navy-900 border border-navy-300 dark:border-navy-700 rounded-xl px-4 py-4 text-base font-medium text-navy-900 dark:text-navy-100 shadow-sm focus:outline-none focus:ring-2 focus:ring-gold-500"
+    >
+      <option value="">Choose one to begin</option>
+      {CATEGORIES.map((c) => <option value={c.id}>{c.label}</option>)}
+    </select>
+    <p class="text-center text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
+      It decides which questions can apply to you, and nothing else. Whatever you tell us
+      afterwards is taxed the same either way.
+    </p>
+  </div>
+</section>
+
+<style>
+  /*
+    The welcome, and the one transition on the page.
+    Space is the design here rather than decoration - the whole complaint dd-024
+    records is that a lone control in a field of white reads as unfinished.
+  */
+  .tax-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    padding: 1rem 0 2rem;
+    /*
+      Collapsing to nothing rather than merely fading: a welcome that stays on
+      the page becomes furniture the reader scrolls past on every recompute.
+      `grid-template-rows` would be the tidier mechanism but it cannot carry the
+      flex gap, so the collapse is driven by the properties that can animate.
+    */
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .tax-intro[data-collapsed='true'] {
+    display: none;
+  }
+
+  .tax-intro[data-leaving='true'] {
+    opacity: 0;
+    transform: translateY(-0.75rem);
+    pointer-events: none;
+  }
+
+  @media (min-width: 640px) {
+    .tax-intro {
+      gap: 3.5rem;
+      padding: 2rem 0 3rem;
+    }
+  }
+
+  /*
+    Motion follows the reader; it never performs at them. Somebody who has asked
+    their system for less of it gets the state change with no movement at all.
+  */
+  @media (prefers-reduced-motion: reduce) {
+    .tax-intro {
+      transition: none;
+    }
+  }
+</style>
