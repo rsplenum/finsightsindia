@@ -25,7 +25,7 @@
   <div class="card-premium rounded-2xl p-6 sm:p-8 space-y-6">
 
     <div>
-      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-400 dark:text-navy-500">
+      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-500 dark:text-navy-400">
         Next question
       </p>
       <h2 id="rungSipGrowthQ" class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 mt-1">
@@ -54,7 +54,7 @@
         <div id="sipBreakevenMark" class="hidden absolute top-0 -translate-x-1/2 pointer-events-none">
           <div class="h-6 w-0.5 bg-rose-500/80 dark:bg-rose-400/80 mx-auto"></div>
           <div id="sipBreakevenLabel"
-               class="mt-0.5 whitespace-nowrap text-[10px] font-semibold text-rose-600 dark:text-rose-400 -translate-x-1/2 relative left-1/2"></div>
+               class="mt-0.5 whitespace-nowrap text-[10px] font-semibold text-rose-700 dark:text-rose-400 -translate-x-1/2 relative left-1/2"></div>
         </div>
         <!-- where the period the reader chose actually sits -->
         <div id="sipAssumedMark" class="hidden absolute top-0 -translate-x-1/2 pointer-events-none">
@@ -79,11 +79,11 @@
           The fund takes
           <span class="block text-xs text-navy-500 dark:text-navy-400">whatever the market does</span>
         </span>
-        <span id="sipgFee" class="text-base font-semibold tabular-nums text-rose-600 dark:text-rose-400">—</span>
+        <span id="sipgFee" class="text-base font-semibold tabular-nums text-rose-700 dark:text-rose-400">—</span>
       </div>
       <div class="flex items-baseline justify-between gap-4 px-4 py-3">
         <span class="text-sm text-navy-700 dark:text-navy-300">Prices rise by</span>
-        <span id="sipgInflation" class="text-base font-semibold tabular-nums text-rose-600 dark:text-rose-400">—</span>
+        <span id="sipgInflation" class="text-base font-semibold tabular-nums text-rose-700 dark:text-rose-400">—</span>
       </div>
       <div class="flex items-baseline justify-between gap-4 px-4 py-3 border-t-2 border-navy-300 dark:border-navy-600">
         <span class="text-sm text-navy-700 dark:text-navy-300">
@@ -254,14 +254,14 @@
       (p.endRealPostTax >= inputs.targetRealWealth
         ? 'text-emerald-700 dark:text-emerald-400'
         : p.endRealPostTax >= inputs.targetRealWealth * 0.75
-          ? 'text-amber-600 dark:text-amber-400'
-          : 'text-rose-600 dark:text-rose-400');
+          ? 'text-amber-700 dark:text-amber-400'
+          : 'text-rose-700 dark:text-rose-400');
 
     const odds = $('sipgOdds') as HTMLElement;
     odds.className = 'text-base font-semibold tabular-nums ' +
       (p.oddsAfterTax >= 0.5 ? 'text-emerald-700 dark:text-emerald-400'
-       : p.oddsAfterTax >= 0.25 ? 'text-amber-600 dark:text-amber-400'
-       : 'text-rose-600 dark:text-rose-400');
+       : p.oddsAfterTax >= 0.25 ? 'text-amber-700 dark:text-amber-400'
+       : 'text-rose-700 dark:text-rose-400');
   }
 
   const slider = $('sipGrowthSlider') as HTMLInputElement | null;

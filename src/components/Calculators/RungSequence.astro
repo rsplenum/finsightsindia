@@ -17,7 +17,7 @@
   <div class="card-premium rounded-2xl p-6 sm:p-8 space-y-6">
 
     <div>
-      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-400 dark:text-navy-500">
+      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-500 dark:text-navy-400">
         Next question
       </p>
       <h2 id="rungSeqQ" class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 mt-1">
@@ -48,7 +48,7 @@
           <div id="seqMark" class="hidden absolute top-0 -translate-x-1/2 pointer-events-none">
             <div class="h-6 w-0.5 bg-rose-500/80 dark:bg-rose-400/80 mx-auto"></div>
             <div id="seqMarkLabel"
-                 class="mt-0.5 whitespace-nowrap text-[10px] font-semibold text-rose-600 dark:text-rose-400 -translate-x-1/2 relative left-1/2"></div>
+                 class="mt-0.5 whitespace-nowrap text-[10px] font-semibold text-rose-700 dark:text-rose-400 -translate-x-1/2 relative left-1/2"></div>
           </div>
         </div>
       </div>
@@ -207,13 +207,13 @@
     if (!p.survived) {
       cushion.textContent = 'nothing';
       $('seqCushionWhen')!.textContent = `the money ran out in year ${p.depletionYear}`;
-      cushion.className = 'text-lg font-bold tabular-nums text-rose-600 dark:text-rose-400';
+      cushion.className = 'text-lg font-bold tabular-nums text-rose-700 dark:text-rose-400';
       $('seqIncome')!.textContent = `stopped in year ${p.depletionYear}`;
       ($('seqIncome') as HTMLElement).className =
-        'text-base font-semibold tabular-nums text-rose-600 dark:text-rose-400';
+        'text-base font-semibold tabular-nums text-rose-700 dark:text-rose-400';
       $('seqFinal')!.textContent = 'nothing';
       ($('seqFinal') as HTMLElement).className =
-        'text-base font-semibold tabular-nums text-rose-600 dark:text-rose-400';
+        'text-base font-semibold tabular-nums text-rose-700 dark:text-rose-400';
       return;
     }
 
@@ -223,8 +223,8 @@
       `in year ${p.minCushionYear} — the point you would have felt it`;
     cushion.className = 'text-lg font-bold tabular-nums ' +
       (yrs >= 12 ? 'text-emerald-700 dark:text-emerald-400'
-       : yrs >= 6 ? 'text-amber-600 dark:text-amber-400'
-       : 'text-rose-600 dark:text-rose-400');
+       : yrs >= 6 ? 'text-amber-700 dark:text-amber-400'
+       : 'text-rose-700 dark:text-rose-400');
 
     $('seqIncome')!.textContent = 'never fell';
     ($('seqIncome') as HTMLElement).className =

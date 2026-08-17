@@ -31,7 +31,7 @@
   <div class="card-premium rounded-2xl p-6 sm:p-8 space-y-6">
 
     <div>
-      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-400 dark:text-navy-500">
+      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-500 dark:text-navy-400">
         Next question
       </p>
       <h2 id="rungSipProtQ" class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 mt-1">
@@ -64,7 +64,7 @@
       </div>
       <div class="bg-white dark:bg-navy-950 px-3 py-3">
         <p class="text-[11px] uppercase tracking-wider text-navy-500 dark:text-navy-400">So you pay</p>
-        <p id="sipProtMarkup" class="text-lg font-bold tabular-nums text-amber-600 dark:text-amber-400 mt-0.5">—</p>
+        <p id="sipProtMarkup" class="text-lg font-bold tabular-nums text-amber-700 dark:text-amber-400 mt-0.5">—</p>
         <p class="text-[11px] text-navy-500 dark:text-navy-400">what it is worth</p>
       </div>
     </div>
@@ -86,7 +86,7 @@
         <div id="sipProtBreakevenMark" class="hidden absolute top-0 -translate-x-1/2 pointer-events-none">
           <div class="h-6 w-0.5 bg-emerald-500/80 dark:bg-emerald-400/80 mx-auto"></div>
           <div id="sipProtBreakevenLabel"
-               class="mt-0.5 whitespace-nowrap text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 -translate-x-1/2 relative left-1/2"></div>
+               class="mt-0.5 whitespace-nowrap text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 -translate-x-1/2 relative left-1/2"></div>
         </div>
         <div id="sipProtAssumedMark" class="hidden absolute top-0 -translate-x-1/2 pointer-events-none">
           <div class="h-6 w-0.5 bg-navy-400/70 dark:bg-navy-500/70 mx-auto"></div>
@@ -137,7 +137,7 @@
           <p class="text-xs text-navy-500 dark:text-navy-400">this often</p>
         </div>
         <div class="bg-white dark:bg-navy-950 px-3 py-3 flex items-center justify-center">
-          <span class="text-sm text-navy-400 dark:text-navy-600">never</span>
+          <span class="text-sm text-navy-500 dark:text-navy-400">never</span>
         </div>
         <div class="bg-white dark:bg-navy-950 px-3 py-3 flex items-center justify-center">
           <span id="sipProtBind" class="text-base font-semibold tabular-nums text-navy-700 dark:text-navy-300">—</span>
@@ -301,7 +301,7 @@
     // worse off. It is applied to the protected column and to nothing else.
     const verdict = (el: HTMLElement, better: boolean, size: string) => {
       el.className = `${size} tabular-nums ` +
-        (better ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400');
+        (better ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400');
     };
     verdict($('sipProtP10H') as HTMLElement, p.p10Protected >= p.p10Unprotected, 'text-lg font-bold');
     verdict($('sipProtP50H') as HTMLElement, p.p50Protected >= p.p50Unprotected, 'text-base font-semibold');

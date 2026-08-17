@@ -142,7 +142,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 									<span class="text-[11px] font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">
 										Or take both from a real period
 									</span>
-									<span class="text-[10px] text-navy-400 dark:text-navy-500">Nifty 50, to {REGIME_PRESETS[0].span.split('\u2013')[1]}</span>
+									<span class="text-[10px] text-navy-500 dark:text-navy-400">Nifty 50, to {REGIME_PRESETS[0].span.split('\u2013')[1]}</span>
 								</div>
 								<div role="radiogroup" aria-label="Take growth and roughness from a real period"
 									 class="grid grid-cols-3 gap-1.5">
@@ -151,7 +151,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 												data-growth={String(p.growth)} data-roughness={String(p.roughness)}
 												class="regime-btn border border-navy-200 dark:border-navy-800 rounded p-1.5 text-left transition-colors hover:bg-navy-100 dark:hover:bg-navy-800">
 											<span class="block text-[9px] font-bold uppercase text-navy-700 dark:text-navy-300">{p.label.replace('The last ', '')}</span>
-											<span class="block text-[10px] tabular-nums text-navy-500 dark:text-navy-400">{p.growth}% · {p.roughness}% swings</span>
+											<span class="block text-[10px] tabular-nums text-navy-600 dark:text-navy-400">{p.growth}% · {p.roughness}% swings</span>
 										</button>
 									))}
 								</div>
@@ -244,7 +244,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 					</div>
 
 					<div id="inputSanityWarning" class="hidden mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/30 rounded-lg text-xs text-amber-800 dark:text-amber-300 leading-relaxed font-sans flex items-start gap-2">
-						<svg class="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+						<svg class="w-4 h-4 text-amber-700 dark:text-amber-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
 						<span id="inputSanityMessage"></span>
 					</div>
 				</form>
@@ -293,7 +293,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 							<!-- Lifestyle Alert Box -->
 							<div id="lifestyleSacrificeAlertBox" class="hidden mt-4 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/30 rounded-lg space-y-2.5 transition-colors duration-200">
 								<div class="flex items-center gap-2">
-									<svg class="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<svg class="w-4 h-4 text-amber-700 dark:text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
 									</svg>
 									<h4 class="text-xs font-bold text-amber-900 dark:text-amber-200 uppercase tracking-wider">Lifestyle Degradation Alert</h4>
@@ -349,13 +349,13 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 									<div><div class="stat-label uppercase tracking-wider">Duration</div><div id="tier2Duration" class="text-sm sm:text-base font-bold text-navy-900 dark:text-navy-100">--</div></div>
 									<div><div class="stat-label uppercase tracking-wider">Total Gross</div><div id="tier2Gross" class="text-sm sm:text-base font-bold text-navy-900 dark:text-navy-100">--</div></div>
 									<div>
-										<div class="stat-label text-rose-600 dark:text-rose-400 uppercase tracking-wider flex items-center gap-1">
+										<div class="stat-label text-rose-700 dark:text-rose-400 uppercase tracking-wider flex items-center gap-1">
 											Taxes Paid
-											<button type="button" id="toggleTaxFormulaBtn" class="text-rose-400 hover:text-rose-600 dark:text-rose-500 dark:hover:text-rose-300">
+											<button type="button" id="toggleTaxFormulaBtn" class="text-rose-400 hover:text-rose-700 dark:text-rose-500 dark:hover:text-rose-300">
 												<svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
 											</button>
 										</div>
-										<div id="tier2Taxes" class="text-sm sm:text-base font-bold text-rose-600 dark:text-rose-400">--</div>
+										<div id="tier2Taxes" class="text-sm sm:text-base font-bold text-rose-700 dark:text-rose-400">--</div>
 									</div>
 									<div><div class="stat-label text-gold-700 dark:text-gold-400 uppercase tracking-wider">Net In-Hand</div><div id="tier2Net" class="text-sm sm:text-base font-bold text-gold-700 dark:text-gold-400">--</div></div>
 									<div><div class="stat-label text-gold-700 dark:text-gold-400 uppercase tracking-wider">Bal Remaining</div><div id="tier2BalanceRemaining" class="text-sm sm:text-base font-bold text-gold-700 dark:text-gold-400">--</div></div>
@@ -386,7 +386,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 								<div class="font-sans flex flex-wrap items-center gap-3 text-navy-600 dark:text-navy-400">
 									<div>Min Paycheck: <span id="valLowestPaycheck" class="text-navy-900 dark:text-navy-100 font-bold">--</span></div><span class="text-navy-300 dark:text-navy-700 hidden sm:inline">•</span>
 									<div>Real Floor: <span id="valRockBottom" class="text-amber-700 dark:text-amber-400 font-bold">--</span></div><span class="text-navy-300 dark:text-navy-700 hidden sm:inline">•</span>
-									<div>Lifetime Sacrifice: <span id="valSacrifice" class="text-rose-600 dark:text-rose-400 font-bold">--</span></div>
+									<div>Lifetime Sacrifice: <span id="valSacrifice" class="text-rose-700 dark:text-rose-400 font-bold">--</span></div>
 								</div>
 							</div>
 
@@ -405,8 +405,8 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 								</div>
 								<div class="flex items-center gap-6 text-xs font-medium self-start sm:self-auto flex-wrap">
 									<span class="flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400"><span class="w-2.5 h-2.5 rounded-full bg-indigo-600 dark:bg-indigo-400"></span> Actual Income</span>
-									<span class="flex items-center gap-1.5 text-amber-600 dark:text-amber-400"><span class="w-2.5 h-2.5 rounded-full bg-amber-600 dark:bg-amber-400"></span> Target Income</span>
-									<span class="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400"><span class="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400"></span> Savings Balance</span>
+									<span class="flex items-center gap-1.5 text-amber-700 dark:text-amber-400"><span class="w-2.5 h-2.5 rounded-full bg-amber-600 dark:bg-amber-400"></span> Target Income</span>
+									<span class="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400"><span class="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400"></span> Savings Balance</span>
 								</div>
 							</div>
 							<div class="relative w-full h-52 bg-white dark:bg-navy-950 rounded-lg p-3 border border-navy-200 dark:border-navy-800">
@@ -427,7 +427,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 								<div class="card-glass rounded-2xl p-4 sm:p-5 space-y-2">
 									<h5 class="text-xs font-semibold text-navy-800 dark:text-navy-200 uppercase tracking-widest">Assumption Fragility (Required CAGR)</h5>
 									<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans mb-3">
-										Your plan demands a <strong class="text-rose-600 dark:text-rose-400">Net Withdrawal Rate of <span id="sensIWR">--%</span></strong> in year one. To survive perpetually without depleting principal, your required gross CAGR is highly sensitive to the market's turbulence:
+										Your plan demands a <strong class="text-rose-700 dark:text-rose-400">Net Withdrawal Rate of <span id="sensIWR">--%</span></strong> in year one. To survive perpetually without depleting principal, your required gross CAGR is highly sensitive to the market's turbulence:
 									</p>
 									<div class="overflow-x-auto rounded-lg border border-navy-200 dark:border-navy-800">
 										<table class="w-full text-xs text-left whitespace-nowrap">
@@ -520,7 +520,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 					<span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-navy-900 dark:bg-navy-100"></span> The Expected Journey</span>
 					<span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-600 dark:bg-rose-400"></span> The Unlucky Start (Market Crash)</span>
 				</div>
-				<span class="text-xs text-navy-400 dark:text-navy-500">10,000 Simulated Lifetimes</span>
+				<span class="text-xs text-navy-500 dark:text-navy-400">10,000 Simulated Lifetimes</span>
 			</div>
             
 			<!-- Diagnostics -->
@@ -532,23 +532,23 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 				<div id="diagnosticsPanel" class="hidden mt-3 p-3 bg-navy-50 dark:bg-navy-900/40 border border-navy-200 dark:border-navy-800 rounded-md text-xs font-mono text-navy-700 dark:text-navy-300">
 					<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
 						<div>
-							<div class="text-navy-400 dark:text-navy-500 mb-1">Mean Final Bal</div>
+							<div class="text-navy-500 dark:text-navy-400 mb-1">Mean Final Bal</div>
 							<div id="diagMean" class="font-semibold">₹0</div>
 						</div>
 						<div>
-							<div class="text-navy-400 dark:text-navy-500 mb-1">Median Final Bal</div>
+							<div class="text-navy-500 dark:text-navy-400 mb-1">Median Final Bal</div>
 							<div id="diagMedian" class="font-semibold">₹0</div>
 						</div>
 						<div>
-							<div class="text-navy-400 dark:text-navy-500 mb-1">Std Deviation</div>
+							<div class="text-navy-500 dark:text-navy-400 mb-1">Std Deviation</div>
 							<div id="diagStdDev" class="font-semibold">₹0</div>
 						</div>
 						<div>
-							<div class="text-navy-400 dark:text-navy-500 mb-1">Skewness</div>
+							<div class="text-navy-500 dark:text-navy-400 mb-1">Skewness</div>
 							<div id="diagSkew" class="font-semibold">0.00</div>
 						</div>
 					</div>
-					<div class="mt-3 text-[10px] text-navy-400 dark:text-navy-500 leading-tight font-sans">
+					<div class="mt-3 text-[10px] text-navy-500 dark:text-navy-400 leading-tight font-sans">
 						*If skewness is positive, the mean is pulled upwards by extreme bull markets. If mean &lt; median, something is mathematically wrong.
 					</div>
 				</div>
@@ -575,7 +575,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 			<!-- DIY Execution Guide -->
 			<div class="mb-6 bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-4 space-y-3">
 				<div class="flex items-center gap-2">
-					<svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+					<svg class="w-4 h-4 text-emerald-700 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
 					<h4 class="text-xs font-bold text-navy-900 dark:text-navy-100 uppercase tracking-widest">DIY Execution & Modalities</h4>
 				</div>
 				<p class="text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans">
@@ -596,8 +596,8 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 					<div id="valProtectedFloor" class="stat-value text-xl text-navy-900 dark:text-navy-100">0% Drop</div>
 				</div>
 				<div class="bg-white dark:bg-navy-950 border border-navy-200 dark:border-navy-800 rounded-lg p-4 space-y-1">
-					<span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Expected Final Balance</span>
-					<div id="valAdjustedYield" class="stat-value text-xl text-emerald-600 dark:text-emerald-400">₹ 0</div>
+					<span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-widest">Expected Final Balance</span>
+					<div id="valAdjustedYield" class="stat-value text-xl text-emerald-700 dark:text-emerald-400">₹ 0</div>
 				</div>
 			</div>
 
@@ -615,8 +615,8 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 							<th class="py-2.5 px-3 text-left font-bold text-navy-700 dark:text-navy-300 whitespace-nowrap">Year</th>
 							<th class="py-2.5 px-3 text-right font-bold text-navy-700 dark:text-navy-300 whitespace-nowrap">You Drew</th>
 							<th class="py-2.5 px-3 text-right font-bold text-navy-700 dark:text-navy-300 whitespace-nowrap">Balance</th>
-							<th class="py-2.5 px-3 text-right font-bold text-rose-600 dark:text-rose-400 whitespace-nowrap">Fee Paid</th>
-							<th class="py-2.5 px-3 text-right font-bold text-emerald-600 dark:text-emerald-400 whitespace-nowrap">Floor Absorbed</th>
+							<th class="py-2.5 px-3 text-right font-bold text-rose-700 dark:text-rose-400 whitespace-nowrap">Fee Paid</th>
+							<th class="py-2.5 px-3 text-right font-bold text-emerald-700 dark:text-emerald-400 whitespace-nowrap">Floor Absorbed</th>
 						</tr>
 					</thead>
 					<tbody id="hedgingLedgerBody" class="divide-y divide-navy-100 dark:divide-white/5 bg-white dark:bg-navy-950">
@@ -887,7 +887,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 
 			if (prevBal <= 0 && currentBal <= 0) {
 				rowBgClass = 'bg-rose-50 dark:bg-rose-950/30';
-				html += `<tr class="${rowBgClass} hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors border-b border-rose-200 dark:border-rose-900/50"><td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-medium text-rose-500 dark:text-rose-400">Year ${yr} ⚠️</td><td colspan="5" class="py-3 px-3 sm:px-4 text-center whitespace-nowrap text-sm font-medium text-rose-500 dark:text-rose-400">Portfolio Depleted</td></tr>`;
+				html += `<tr class="${rowBgClass} hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors border-b border-rose-200 dark:border-rose-900/50"><td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-medium text-rose-700 dark:text-rose-400">Year ${yr} ⚠️</td><td colspan="5" class="py-3 px-3 sm:px-4 text-center whitespace-nowrap text-sm font-medium text-rose-700 dark:text-rose-400">Portfolio Depleted</td></tr>`;
 			} else if (prevBal > 0 && currentBal <= 0) {
 				rowBgClass = 'bg-rose-50 dark:bg-rose-950/30';
 				const grossExtracted = (medianWithdrawalsArray && medianWithdrawalsArray[yr] !== undefined) ? medianWithdrawalsArray[yr] : prevBal;
@@ -895,7 +895,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 				const netExtracted = Math.max(0, grossExtracted - annualTax);
 				totalNetAnnual += netExtracted;
 				totalTaxes += annualTax;
-				html += `<tr class="${rowBgClass} hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors border-b border-rose-200 dark:border-rose-900/50"><td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-semibold text-rose-700 dark:text-rose-300">Year ${yr} ⚠️</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-700 dark:text-gold-400">${tableFormatter.format(Math.round(currentMonthly))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-amber-600 dark:amber-400">${tableFormatter.format(Math.round(netExtracted))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-600 dark:text-rose-400">${tableFormatter.format(Math.round(annualTax))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-400 dark:text-navy-500">-</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-600 dark:text-rose-400">₹0</td></tr>`;
+				html += `<tr class="${rowBgClass} hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors border-b border-rose-200 dark:border-rose-900/50"><td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-semibold text-rose-700 dark:text-rose-300">Year ${yr} ⚠️</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-700 dark:text-gold-400">${tableFormatter.format(Math.round(currentMonthly))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-amber-700 dark:text-amber-400">${tableFormatter.format(Math.round(netExtracted))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-700 dark:text-rose-400">${tableFormatter.format(Math.round(annualTax))}</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-500 dark:text-navy-400">-</td><td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-700 dark:text-rose-400">₹0</td></tr>`;
 			} else {
 				let grossAnnual = currentMonthly * 12;
 				if (medianWithdrawalsArray && medianWithdrawalsArray[yr] !== undefined) grossAnnual = medianWithdrawalsArray[yr];
@@ -914,7 +914,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 					yearLabel = `Year ${yr} <span class="ml-1 px-1.5 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border border-amber-200 dark:border-amber-800">Growth &lt; Withdrawals</span>`;
 				}
 				
-				const growthColorClass = growth >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
+				const growthColorClass = growth >= 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400';
 				const formattedGrowth = growth >= 0 ? `+${tableFormatter.format(Math.round(growth))}` : `-${tableFormatter.format(Math.round(Math.abs(growth)))}`;
 				
 				const progressPct = Math.min(100, Math.max(0, (currentBal / initialCorpus) * 100));
@@ -924,7 +924,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 					<td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-semibold text-navy-800 dark:text-navy-200">${yearLabel}</td>
 					<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-700 dark:text-gold-400">${tableFormatter.format(Math.round(netMonthly))}</td>
 					<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-gold-700 dark:text-gold-400">${tableFormatter.format(Math.round(netAnnual))}</td>
-					<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-600 dark:text-rose-400">${tableFormatter.format(Math.round(annualTax))}</td>
+					<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-rose-700 dark:text-rose-400">${tableFormatter.format(Math.round(annualTax))}</td>
 					<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium ${growthColorClass}">${formattedGrowth}</td>
 					<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-medium text-navy-900 dark:text-navy-100">
 						${tableFormatter.format(Math.round(currentBal))}
@@ -938,7 +938,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 			<td class="py-3 px-3 sm:px-4 text-left whitespace-nowrap text-sm font-bold text-navy-800 dark:text-navy-200">Lifetime Totals</td>
 			<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-bold text-navy-500 dark:text-navy-400">-</td>
 			<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-bold text-gold-700 dark:text-gold-400">${tableFormatter.format(Math.round(totalNetAnnual))}</td>
-			<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-bold text-rose-600 dark:text-rose-400">${tableFormatter.format(Math.round(totalTaxes))}</td>
+			<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-bold text-rose-700 dark:text-rose-400">${tableFormatter.format(Math.round(totalTaxes))}</td>
 			<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-bold text-navy-500 dark:text-navy-400">-</td>
 			<td class="py-3 px-3 sm:px-4 text-right whitespace-nowrap text-sm font-bold text-navy-500 dark:text-navy-400">-</td>
 		</tr>`;
@@ -1059,15 +1059,15 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 			}
 
 			if (successRate >= 90) {
-				enduranceHeroEl.className = "text-3xl sm:text-4xl font-extrabold stat-value tracking-tight font-sans text-emerald-600 dark:text-emerald-400";
+				enduranceHeroEl.className = "text-3xl sm:text-4xl font-extrabold stat-value tracking-tight font-sans text-emerald-700 dark:text-emerald-400";
 				healthBadgeEl.innerText = "HIGHLY SECURE";
 				healthBadgeEl.className = "px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-md badge-safe";
 			} else if (successRate >= 70) {
-				enduranceHeroEl.className = "text-3xl sm:text-4xl font-extrabold stat-value tracking-tight font-sans text-amber-600 dark:text-amber-400";
+				enduranceHeroEl.className = "text-3xl sm:text-4xl font-extrabold stat-value tracking-tight font-sans text-amber-700 dark:text-amber-400";
 				healthBadgeEl.innerText = "MODERATE RISK";
 				healthBadgeEl.className = "px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-md bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300 border border-amber-200 dark:border-amber-800";
 			} else {
-				enduranceHeroEl.className = "text-3xl sm:text-4xl font-extrabold stat-value tracking-tight font-sans text-rose-600 dark:text-rose-400";
+				enduranceHeroEl.className = "text-3xl sm:text-4xl font-extrabold stat-value tracking-tight font-sans text-rose-700 dark:text-rose-400";
 				healthBadgeEl.innerText = "HIGH RISK OF DEPLETION";
 				healthBadgeEl.className = "px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-md bg-rose-100 text-rose-800 dark:bg-rose-950/80 dark:text-rose-300 border border-rose-200 dark:border-rose-800";
 			}
@@ -1183,7 +1183,7 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 				let label = vol <= 5 ? 'Bonds/Index' : vol === 10 ? 'Balanced' : vol === 15 ? 'NIFTY 50' : 'Small Cap';
 				
 				tbodyHtml += `<tr class="${highlight}">
-					<td class="px-4 py-2.5 ${isCurrent ? 'text-gold-700 dark:text-gold-400' : 'text-navy-700 dark:text-navy-300'}">${vol}% <span class="font-sans text-[10px] text-navy-400 ml-1">(${label})</span></td>
+					<td class="px-4 py-2.5 ${isCurrent ? 'text-gold-700 dark:text-gold-400' : 'text-navy-700 dark:text-navy-300'}">${vol}% <span class="font-sans text-[10px] text-navy-500 dark:text-navy-400 ml-1">(${label})</span></td>
 					<td class="px-4 py-2.5 text-right ${isCurrent ? 'text-gold-700 dark:text-gold-400' : 'text-navy-900 dark:text-navy-100'}">${reqCAGR.toFixed(2)}%</td>
 				</tr>`;
 			});
@@ -1271,8 +1271,8 @@ import RungExpert from '../components/Calculators/RungExpert.astro';
 						<td class="py-2.5 px-3 text-left font-bold whitespace-nowrap text-navy-800 dark:text-navy-200">Yr ${yr}</td>
 						<td class="${num} text-navy-600 dark:text-navy-400">${tableFormatter.format(withdrawals[yr] || 0)}</td>
 						<td class="${num} font-medium text-navy-800 dark:text-navy-200">${tableFormatter.format(p50[yr] || 0)}</td>
-						<td class="${num} text-rose-600 dark:text-rose-400">${bsEnabled ? '−' + tableFormatter.format(fees[yr] || 0) : '—'}</td>
-						<td class="${num} ${(absorbed[yr] || 0) > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-navy-400 dark:text-navy-600'}">${bsEnabled ? '+' + tableFormatter.format(absorbed[yr] || 0) : '—'}</td>
+						<td class="${num} text-rose-700 dark:text-rose-400">${bsEnabled ? '−' + tableFormatter.format(fees[yr] || 0) : '—'}</td>
+						<td class="${num} ${(absorbed[yr] || 0) > 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-navy-500 dark:text-navy-400'}">${bsEnabled ? '+' + tableFormatter.format(absorbed[yr] || 0) : '—'}</td>
 					</tr>
 				`;
 			}

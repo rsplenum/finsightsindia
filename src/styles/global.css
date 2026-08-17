@@ -68,11 +68,30 @@
   --color-gold-300: #E8D48B;
   --color-gold-200: #F5EBBC;
 
-  --color-emerald-500: #10B981;
+  /* F-02, second pass. The same split gold got, applied to the three semantic
+     colours. The -500/-400 pairs are the SIGNAL colours: they carry dots, rules,
+     borders, chart series and all dark-theme text, and they stay as they are.
+     None of them can be readable text on a light ground, and neither can the
+     Tailwind stock -600s the pages had been reaching for without a token behind
+     them - stock emerald-600 measures 3.43:1 on its own badge tint and stock
+     amber-600 2.95:1, against the 4.5:1 AA needs.
+
+     The -700s below are the text-on-light tokens, and the only ones. Each was
+     chosen for headroom on the TINTED ground it actually sits on rather than on
+     white, which is the mistake gold-700 was already darkened to avoid: the
+     canonical Tailwind amber-700 #B45309 clears white at 5.02 but lands at 4.64
+     on its own badge, and would have broken the first time anyone deepened the
+     tint. Ratios below are canvas-measured in the browser, composited over the
+     real ground, not computed from the hex in isolation. */
+  --color-emerald-700: #047857;  /* 5.48:1 white · 5.24:1 navy-50 · 4.99:1 on its badge tint */
+  --color-amber-700:   #A15C07;  /* 5.19:1 white · 4.96:1 navy-50 · 4.80:1 on its badge tint */
+  --color-rose-700:    #B91C1C;  /* 6.47:1 white · 6.18:1 navy-50 · 5.98:1 on a warm tint */
+
+  --color-emerald-500: #10B981;  /* signal only - 3.77:1 on white */
   --color-emerald-400: #34D399;
   --color-amber-500: #F59E0B;
   --color-amber-400: #FBBF24;
-  --color-rose-500: #EF4444;
+  --color-rose-500: #EF4444;     /* signal only - 3.76:1 on white */
   --color-rose-400: #F87171;
 }
 
@@ -422,7 +441,7 @@
 
 .btn-ghost:hover {
   border-color: #D4AF37;
-  color: #D4AF37;
+  color: var(--color-gold-500);
   background: rgba(212, 175, 55, 0.04);
 }
 
@@ -433,7 +452,7 @@
 
 :where(.dark) .btn-ghost:hover {
   border-color: #D4AF37;
-  color: #D4AF37;
+  color: var(--color-gold-500);
 }
 
 /* Gold accent button */
@@ -474,13 +493,13 @@
   text-transform: uppercase;
   border-radius: 9999px;
   background: rgba(16, 185, 129, 0.1);
-  color: #059669;
+  color: var(--color-emerald-700);
   border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 :where(.dark) .badge-safe {
   background: rgba(16, 185, 129, 0.15);
-  color: #34D399;
+  color: var(--color-emerald-400);
   border-color: rgba(16, 185, 129, 0.25);
 }
 
@@ -495,13 +514,13 @@
   text-transform: uppercase;
   border-radius: 9999px;
   background: rgba(245, 158, 11, 0.1);
-  color: #D97706;
+  color: var(--color-amber-700);
   border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 :where(.dark) .badge-warning {
   background: rgba(245, 158, 11, 0.15);
-  color: #FBBF24;
+  color: var(--color-amber-400);
   border-color: rgba(245, 158, 11, 0.25);
 }
 
@@ -516,13 +535,13 @@
   text-transform: uppercase;
   border-radius: 9999px;
   background: rgba(239, 68, 68, 0.1);
-  color: #DC2626;
+  color: var(--color-rose-700);
   border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
 :where(.dark) .badge-danger {
   background: rgba(239, 68, 68, 0.15);
-  color: #F87171;
+  color: var(--color-rose-400);
   border-color: rgba(239, 68, 68, 0.25);
 }
 
@@ -537,13 +556,13 @@
   text-transform: uppercase;
   border-radius: 9999px;
   background: rgba(212, 175, 55, 0.1);
-  color: #B8941F;
+  color: var(--color-gold-700);
   border: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 :where(.dark) .badge-gold {
   background: rgba(212, 175, 55, 0.15);
-  color: #D4AF37;
+  color: var(--color-gold-500);
   border-color: rgba(212, 175, 55, 0.25);
 }
 

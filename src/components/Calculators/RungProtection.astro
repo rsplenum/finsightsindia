@@ -26,7 +26,7 @@ import { REGIME_PRESETS } from '../../utils/regimePresets';
   <div class="card-premium rounded-2xl p-6 sm:p-8 space-y-7">
 
     <div>
-      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-400 dark:text-navy-500">
+      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-500 dark:text-navy-400">
         Last question
       </p>
       <h2 id="rungProtectQ" class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 mt-1">
@@ -112,7 +112,7 @@ import { REGIME_PRESETS } from '../../utils/regimePresets';
         <div id="protMark" class="hidden absolute top-0 -translate-x-1/2 pointer-events-none">
           <div class="h-6 w-0.5 bg-rose-500/80 dark:bg-rose-400/80 mx-auto"></div>
           <div id="protMarkLabel"
-               class="mt-0.5 whitespace-nowrap text-[10px] font-semibold text-rose-600 dark:text-rose-400 -translate-x-1/2 relative left-1/2"></div>
+               class="mt-0.5 whitespace-nowrap text-[10px] font-semibold text-rose-700 dark:text-rose-400 -translate-x-1/2 relative left-1/2"></div>
         </div>
         <!-- What the market actually did, marked on the track itself. -->
         {REGIME_PRESETS.map((p) => (
@@ -292,7 +292,7 @@ import { REGIME_PRESETS } from '../../utils/regimePresets';
     // Colour asserts better-or-worse and nothing else (dd-007).
     const tone = (bad: boolean) =>
       'mt-1 text-2xl font-bold tabular-nums ' +
-      (bad ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-700 dark:text-emerald-400');
+      (bad ? 'text-rose-700 dark:text-rose-400' : 'text-emerald-700 dark:text-emerald-400');
     ($('pRuinU') as HTMLElement).className = tone(u > s);
     ($('pRuinP') as HTMLElement).className = tone(s > u);
 
@@ -308,7 +308,7 @@ import { REGIME_PRESETS } from '../../utils/regimePresets';
     } else if (saved < 0) {
       label.textContent = 'So the floor ruins a further';
       val.textContent = `${-saved} of them`;
-      val.className = 'text-lg font-bold tabular-nums text-rose-600 dark:text-rose-400';
+      val.className = 'text-lg font-bold tabular-nums text-rose-700 dark:text-rose-400';
     } else {
       label.textContent = 'So the floor changes';
       val.textContent = 'nothing';

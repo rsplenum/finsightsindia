@@ -20,7 +20,7 @@
   <div class="card-premium rounded-2xl p-6 sm:p-8 space-y-6">
 
     <div>
-      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-400 dark:text-navy-500">
+      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-500 dark:text-navy-400">
         Next question
       </p>
       <h2 id="rungGrowthQ" class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 mt-1">
@@ -49,7 +49,7 @@
         <div id="breakevenMark" class="hidden absolute top-0 -translate-x-1/2 pointer-events-none">
           <div class="h-6 w-0.5 bg-rose-500/80 dark:bg-rose-400/80 mx-auto"></div>
           <div id="breakevenLabel"
-               class="mt-0.5 whitespace-nowrap text-[10px] font-semibold text-rose-600 dark:text-rose-400 -translate-x-1/2 relative left-1/2"></div>
+               class="mt-0.5 whitespace-nowrap text-[10px] font-semibold text-rose-700 dark:text-rose-400 -translate-x-1/2 relative left-1/2"></div>
         </div>
       </div>
     </div>
@@ -58,7 +58,7 @@
     <div class="rounded-xl border border-navy-200 dark:border-navy-700 divide-y divide-navy-200 dark:divide-navy-700 overflow-hidden">
       <div class="flex items-baseline justify-between gap-4 px-4 py-3">
         <span class="text-sm text-navy-700 dark:text-navy-300">Prices rise by</span>
-        <span id="gInflation" class="text-base font-semibold tabular-nums text-rose-600 dark:text-rose-400">—</span>
+        <span id="gInflation" class="text-base font-semibold tabular-nums text-rose-700 dark:text-rose-400">—</span>
       </div>
       <div class="flex items-baseline justify-between gap-4 px-4 py-3">
         <span class="text-sm text-navy-700 dark:text-navy-300">So you are genuinely better off by</span>
@@ -157,14 +157,14 @@
     const head = $('gHeadroom') as HTMLElement;
     head.className = 'text-lg font-bold tabular-nums ' +
       (p.headroom >= 1.5 ? 'text-emerald-700 dark:text-emerald-400'
-       : p.headroom >= 0 ? 'text-amber-600 dark:text-amber-400'
-       : 'text-rose-600 dark:text-rose-400');
+       : p.headroom >= 0 ? 'text-amber-700 dark:text-amber-400'
+       : 'text-rose-700 dark:text-rose-400');
 
     const surv = $('gSurvival') as HTMLElement;
     surv.className = 'text-base font-semibold tabular-nums ' +
       (p.survival >= 0.85 ? 'text-emerald-700 dark:text-emerald-400'
-       : p.survival >= 0.6 ? 'text-amber-600 dark:text-amber-400'
-       : 'text-rose-600 dark:text-rose-400');
+       : p.survival >= 0.6 ? 'text-amber-700 dark:text-amber-400'
+       : 'text-rose-700 dark:text-rose-400');
   }
 
   const slider = $('growthSlider') as HTMLInputElement | null;

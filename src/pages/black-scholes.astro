@@ -103,11 +103,11 @@ import SectionTitle from '../components/SectionTitle.astro';
 					<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 						<!-- Call Option Premium -->
 						<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-5 flex flex-col justify-between">
-							<div class="flex items-center justify-between text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-1">
+							<div class="flex items-center justify-between text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-widest mb-1">
 								<span>Call Premium</span>
 								<span class="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 rounded-md">Bullish</span>
 							</div>
-							<div id="valCallPrice" class="text-3xl sm:text-4xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-2">
+							<div id="valCallPrice" class="text-3xl sm:text-4xl font-extrabold text-emerald-700 dark:text-emerald-400 mt-2">
 								₹0.00
 							</div>
 							<div class="text-xs text-navy-500 dark:text-navy-400 mt-3">Right to BUY at ₹<span id="callStrikeLabel" class="font-bold text-navy-900 dark:text-navy-100">100</span></div>
@@ -115,11 +115,11 @@ import SectionTitle from '../components/SectionTitle.astro';
 
 						<!-- Put Option Premium -->
 						<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-5 flex flex-col justify-between">
-							<div class="flex items-center justify-between text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-widest mb-1">
+							<div class="flex items-center justify-between text-[10px] font-bold text-rose-700 dark:text-rose-400 uppercase tracking-widest mb-1">
 								<span>Put Premium</span>
 								<span class="bg-rose-50 text-rose-700 dark:bg-rose-950/80 dark:text-rose-300 border border-rose-200 dark:border-rose-800 px-2 py-0.5 rounded-md">Bearish / Hedge</span>
 							</div>
-							<div id="valPutPrice" class="text-3xl sm:text-4xl font-extrabold text-rose-600 dark:text-rose-400 mt-2">
+							<div id="valPutPrice" class="text-3xl sm:text-4xl font-extrabold text-rose-700 dark:text-rose-400 mt-2">
 								₹0.00
 							</div>
 							<div class="text-xs text-navy-500 dark:text-navy-400 mt-3">Right to SELL at ₹<span id="putStrikeLabel" class="font-bold text-navy-900 dark:text-navy-100">100</span></div>
@@ -145,11 +145,11 @@ import SectionTitle from '../components/SectionTitle.astro';
 							<div class="space-y-1.5 text-xs text-navy-600 dark:text-navy-400 mt-1">
 								<div class="flex justify-between border-b border-navy-200 dark:border-navy-800 pb-1">
 									<span>Call:</span>
-									<span id="valDeltaCall" class="font-bold text-emerald-600 dark:text-emerald-400">+0.0000</span>
+									<span id="valDeltaCall" class="font-bold text-emerald-700 dark:text-emerald-400">+0.0000</span>
 								</div>
 								<div class="flex justify-between pt-0.5">
 									<span>Put:</span>
-									<span id="valDeltaPut" class="font-bold text-rose-600 dark:text-rose-400">-0.0000</span>
+									<span id="valDeltaPut" class="font-bold text-rose-700 dark:text-rose-400">-0.0000</span>
 								</div>
 							</div>
 							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-3 pt-2 border-t border-navy-200 dark:border-navy-800 leading-tight">
@@ -180,11 +180,11 @@ import SectionTitle from '../components/SectionTitle.astro';
 							<div class="space-y-1.5 text-xs text-navy-600 dark:text-navy-400 mt-1">
 								<div class="flex justify-between border-b border-navy-200 dark:border-navy-800 pb-1">
 									<span>Call:</span>
-									<span id="valThetaCall" class="font-bold text-amber-600 dark:text-amber-400">-₹0.0000</span>
+									<span id="valThetaCall" class="font-bold text-amber-700 dark:text-amber-400">-₹0.0000</span>
 								</div>
 								<div class="flex justify-between pt-0.5">
 									<span>Put:</span>
-									<span id="valThetaPut" class="font-bold text-amber-600 dark:text-amber-400">-₹0.0000</span>
+									<span id="valThetaPut" class="font-bold text-amber-700 dark:text-amber-400">-₹0.0000</span>
 								</div>
 							</div>
 							<div class="text-[10px] text-navy-500 dark:text-navy-400 mt-3 pt-2 border-t border-navy-200 dark:border-navy-800 leading-tight">
@@ -268,7 +268,7 @@ import SectionTitle from '../components/SectionTitle.astro';
 								<tr>
 									<th class="px-2 py-2 text-left border-r border-navy-200 dark:border-navy-800">Days \ IV</th>
 									<th class="px-2 py-2" id="bsCol1">-5%</th>
-									<th class="px-2 py-2 font-bold text-emerald-600 dark:text-emerald-400" id="bsCol2">Current</th>
+									<th class="px-2 py-2 font-bold text-emerald-700 dark:text-emerald-400" id="bsCol2">Current</th>
 									<th class="px-2 py-2" id="bsCol3">+5%</th>
 								</tr>
 							</thead>
@@ -381,7 +381,7 @@ import SectionTitle from '../components/SectionTitle.astro';
 				html += `<tr class="${highlight}">
 					<td class="px-2 py-2.5 text-left border-r border-navy-200 dark:border-navy-800 ${isCurrent ? 'text-gold-700 dark:text-gold-400' : ''}">${d} Days</td>
 					<td class="px-2 py-2.5">₹${p1.toFixed(2)}</td>
-					<td class="px-2 py-2.5 ${isCurrent ? 'text-emerald-600 dark:text-emerald-400' : ''}">₹${p2.toFixed(2)}</td>
+					<td class="px-2 py-2.5 ${isCurrent ? 'text-emerald-700 dark:text-emerald-400' : ''}">₹${p2.toFixed(2)}</td>
 					<td class="px-2 py-2.5">₹${p3.toFixed(2)}</td>
 				</tr>`;
 			});
