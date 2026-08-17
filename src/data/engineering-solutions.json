@@ -589,5 +589,20 @@
       "src/tests/inputContract.test.ts"
     ],
     "found_by": "The suite, immediately, on the first run after the ids became derived."
+  },
+  {
+    "id": "sol-058",
+    "date": "2026-08-17",
+    "category": "Tests / Detection",
+    "status": "fixed",
+    "problem": "`typeFloor.test.ts` was RED at HEAD and green for anyone who happened to have the type-floor workstream's uncommitted migration in their working tree. `npm run verify` passed locally on 17 Aug and the committed tree it was vouching for did not.\n\nThe numbers say it best. `BACKLOG_CEILING` was 121. The committed tree holds 213 and the working tree holds 40, so 121 was never true of either - it was a snapshot of somebody's working tree partway through a migration that then kept going. `HELD_9PX` was 20; HEAD holds 21 and the gate records 17. Three different numbers for one quantity, all of them honestly measured, none of them of the same thing.",
+    "diagnosis": "The file states the principle and then breaks it. Its comment above `SWEPT` is explicit - \"a test that depends on an uncommitted working tree is not a wall, it is a coincidence\" - and `SWEPT` was correctly kept to committed files for exactly that reason. The two WHOLE-TREE constants were then measured by walking the filesystem, which is the uncommitted working tree by another name.\n\nThat is the more interesting half: knowing the rule was not enough, because the rule was applied to the list of files and not to the counts. A principle stated in prose beside the code it does not govern is dd-012's shape - dd-009 and dd-010 were cited by id in the very rung that broke them.\n\nThe count being wrong for the 9px labels matters more than for the backlog: that is the number Rahul is being asked to rule on, and a deferral whose size nobody can state is a deferral that grows.",
+    "solution": "Both whole-tree counts are now read from COMMITTED content - one `git grep` against HEAD - which is the same number in every clone and every CI run regardless of what is lying around unstaged. `BACKLOG_CEILING` is 213 and `HELD_9PX` is 21, both measured at HEAD.\n\nRaising the ceiling from 121 to 213 is not a loosening. 121 was never a figure the committed tree met; the ratchet now holds a number that is true, and 173 of the 213 fall the moment the type-floor workstream commits.\n\nThe cost is stated rather than hidden: a regression introduced in the working tree is caught by the run AFTER it is committed, not before. The `SWEPT` assertion is the immediate wall and is exact and at zero on the five pages where that latency would matter.",
+    "prevention": "A guards-the-guard test. `git grep` exits 1 on no match, which `execFileSync` raises - so ZERO, the state this ratchet exists to reach, would have ERRORED the test rather than passed it, and a measurement that fails on success is one that gets deleted the day it works. It now returns 0 and rethrows anything else, and a nonsense pattern is asserted to come back 0.\n\nDeliberately NOT asserted: that the count still equals the ceiling. It falls the moment the other workstream commits, and a guard that fires on legitimate progress is the disease this solution is curing.",
+    "files": [
+      "src/tests/typeFloor.test.ts",
+      "docs/launch-gate.md"
+    ],
+    "found_by": "Verifying the INDEX rather than the working tree before committing sol-056 - HEAD plus the staged diff, in a throwaway worktree. 414 tests passed and the only two failures were this, failing identically at pristine HEAD."
   }
 ]
