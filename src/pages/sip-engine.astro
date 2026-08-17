@@ -122,7 +122,7 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 						     stating an interpretation is allowed, adding a fourth question to
 						     a three-question contract is not. -->
 						<div class="space-y-2">
-							<span class="text-sm font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">
+							<span class="text-sm font-bold tracking-tight text-navy-500 dark:text-navy-400">
 								What your monthly figure means
 							</span>
 							<select id="sipContributionMode"
@@ -210,7 +210,7 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 							     because a regime is a pair. -->
 							<div class="sm:col-span-2 space-y-2">
 								<div class="flex items-baseline justify-between gap-3">
-									<span class="text-sm font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">
+									<span class="text-sm font-bold tracking-tight text-navy-500 dark:text-navy-400">
 										Or take both from a real period
 									</span>
 									<span class="text-xs text-navy-500 dark:text-navy-400">Nifty 50, to {REGIME_PRESETS[0].span.split('–')[1]}</span>
@@ -236,7 +236,7 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 							     could actually hold, and the percentage follows. -->
 							<div class="sm:col-span-2 space-y-2">
 								<div class="flex items-baseline justify-between gap-3">
-									<span class="text-sm font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">
+									<span class="text-sm font-bold tracking-tight text-navy-500 dark:text-navy-400">
 										What the fund charges you
 									</span>
 									<span class="text-xs text-navy-500 dark:text-navy-400">SEBI caps equity funds at {SEBI_EQUITY_TER_CAP}%</span>
@@ -365,11 +365,11 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 					<div class="border-b border-navy-200 dark:border-navy-800 p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center bg-navy-50 dark:bg-navy-900 gap-3">
 						<div class="flex items-center gap-2 flex-wrap">
 							<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-							<h2 class="text-xs font-bold tracking-widest text-navy-800 dark:text-navy-200 uppercase">What your savings are worth, in today's money</h2>
+							<h2 class="text-xs font-bold tracking-widest text-navy-800 dark:text-navy-200 ">What your savings are worth, in today's money</h2>
 							<!-- The post-tax state lives on the button now, where the one
 							     input reader can find it. It used to be a module-scoped
 							     variable no other surface could see. -->
-							<button id="taxToggleBtn" type="button" aria-pressed="false" class="px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider transition-all duration-200 bg-navy-200 text-navy-800 dark:bg-navy-800 dark:text-navy-200 border border-navy-300 dark:border-navy-700 cursor-pointer">BEFORE TAX</button>
+							<button id="taxToggleBtn" type="button" aria-pressed="false" class="px-2 py-0.5 rounded text-xs font-bold tracking-tight transition-all duration-200 bg-navy-200 text-navy-800 dark:bg-navy-800 dark:text-navy-200 border border-navy-300 dark:border-navy-700 cursor-pointer">Before tax</button>
 						</div>
 
 						<div class="flex flex-wrap items-center gap-2">
@@ -391,7 +391,7 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 								<div id="statNominalEquivalent" class="text-xs text-navy-600 dark:text-navy-400 tracking-tight mt-1">The number on screen that year: ₹ 0</div>
 
 								<div class="mt-4 space-y-1.5 w-full">
-									<div class="flex justify-between text-xs uppercase tracking-widest font-bold">
+									<div class="flex justify-between text-xs tracking-tight font-bold">
 										<span class="text-navy-500 dark:text-navy-400">Yours (<span id="pctSacrifice">0%</span>)</span>
 										<span class="text-emerald-700 dark:text-emerald-400">The market's (<span id="pctCreated">0%</span>)</span>
 									</div>
@@ -427,8 +427,8 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 							<span class="flex items-center gap-1.5"><span class="w-4 border-t-2 border-dashed border-gold-500"></span><span class="font-bold tracking-tight text-navy-900 dark:text-navy-100">Your goal</span></span>
 						</div>
 						<div class="flex gap-2">
-							<button id="downloadPdfBtn" class="btn-ghost px-3 py-1 text-xs uppercase tracking-widest cursor-pointer border border-navy-200 dark:border-navy-800 rounded hover:bg-navy-100 dark:hover:bg-navy-800 transition-colors">↓ Download PDF Report</button>
-							<button id="exportCsvBtn" class="btn-ghost px-3 py-1 text-xs uppercase tracking-widest cursor-pointer border border-navy-200 dark:border-navy-800 rounded hover:bg-navy-100 dark:hover:bg-navy-800 transition-colors">↓ Export CSV</button>
+							<button id="downloadPdfBtn" class="btn-ghost px-3 py-1 text-xs tracking-tight cursor-pointer border border-navy-200 dark:border-navy-800 rounded hover:bg-navy-100 dark:hover:bg-navy-800 transition-colors">↓ Download PDF Report</button>
+							<button id="exportCsvBtn" class="btn-ghost px-3 py-1 text-xs tracking-tight cursor-pointer border border-navy-200 dark:border-navy-800 rounded hover:bg-navy-100 dark:hover:bg-navy-800 transition-colors">↓ Export CSV</button>
 						</div>
 					</div>
 
@@ -443,7 +443,7 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 			<CardPremium glass={true} class="w-full">
 				<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-navy-200 dark:border-navy-800 pb-4 mb-4">
 					<div class="flex flex-col gap-1">
-						<h3 class="text-sm sm:text-base font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">
+						<h3 class="text-sm sm:text-base font-bold tracking-tight text-navy-900 dark:text-navy-100">
 							What the protection cost, and what it absorbed
 						</h3>
 						<p class="text-xs text-navy-500 dark:text-navy-400 mt-0.5 leading-relaxed">
@@ -455,20 +455,20 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 
 				<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
 					<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-4 space-y-1">
-						<span class="text-xs font-bold text-navy-500 dark:text-navy-400 uppercase tracking-widest">Premium, a year</span>
+						<span class="text-xs font-bold text-navy-500 dark:text-navy-400 tracking-tight">Premium, a year</span>
 						<div id="valHedgingDrag" class="stat-value text-xl text-navy-900 dark:text-navy-100">0.00% / Year</div>
 					</div>
 					<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-4 space-y-1">
-						<span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-widest">What the floor paid out</span>
+						<span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 tracking-tight">What the floor paid out</span>
 						<div id="valProtectedFloor" class="stat-value text-xl text-emerald-700 dark:text-emerald-400">₹ 0</div>
 					</div>
 					<div class="bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-800 rounded-lg p-4 space-y-1">
-						<span class="text-xs font-bold text-navy-500 dark:text-navy-400 uppercase tracking-widest">Your return, after inflation</span>
+						<span class="text-xs font-bold text-navy-500 dark:text-navy-400 tracking-tight">Your return, after inflation</span>
 						<div id="valAdjustedYield" class="stat-value text-xl text-navy-900 dark:text-navy-100">0.00% a year</div>
 					</div>
 				</div>
 
-				<SectionTitle title="YEAR-BY-YEAR COST AND PROTECTION LEDGER" />
+				<SectionTitle title="Year-by-year cost and protection ledger" />
 				<p id="ledgerCaption" class="mt-2 text-xs text-navy-500 dark:text-navy-400">
 					Every figure below is in today's money and comes from the simulation itself —
 					the same market paths run twice, once with the floor and once without.
@@ -626,10 +626,10 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 		const btn = taxBtn();
 		if (!btn) return;
 		btn.setAttribute('aria-pressed', String(on));
-		btn.innerText = on ? 'AFTER TAX' : 'BEFORE TAX';
+		btn.innerText = on ? 'After tax' : 'Before tax';
 		btn.className = on
-			? 'px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider transition-all duration-200 bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 cursor-pointer'
-			: 'px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider transition-all duration-200 bg-navy-200 text-navy-800 dark:bg-navy-800 dark:text-navy-200 border border-navy-300 dark:border-navy-700 cursor-pointer';
+			? 'px-2 py-0.5 rounded text-xs font-bold tracking-tight transition-all duration-200 bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 cursor-pointer'
+			: 'px-2 py-0.5 rounded text-xs font-bold tracking-tight transition-all duration-200 bg-navy-200 text-navy-800 dark:bg-navy-800 dark:text-navy-200 border border-navy-300 dark:border-navy-700 cursor-pointer';
 	}
 
 	// ---- rendering ---------------------------------------------------------
@@ -729,7 +729,7 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 		const container = document.getElementById('milestoneTimeline');
 		if (!container) return;
 
-		let html = `<span class="text-navy-500 dark:text-navy-400 uppercase tracking-widest font-bold text-xs mr-1">In today's money, you pass:</span>`;
+		let html = `<span class="text-navy-500 dark:text-navy-400 tracking-tight font-bold text-xs mr-1">In today's money, you pass:</span>`;
 		let hits = 0;
 		for (const target of [5000000, 10000000, 25000000, 50000000, 100000000]) {
 			const hitYear = curve.findIndex((val) => val >= target);

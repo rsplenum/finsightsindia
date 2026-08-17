@@ -4,4 +4,10 @@ export interface Props {
 }
 const { title } = Astro.props;
 ---
-<h4 class="text-xs font-semibold text-navy-500 dark:text-navy-400 tracking-wider uppercase mb-4">{title}</h4>
+<!-- F-03. This was `text-xs uppercase tracking-wider`, which set clauses like
+     "Tax, and how long it must last" in seven words of all-caps. All-caps
+     destroys word shape, which is what a fluent reader actually recognises, so
+     it is a device for ONE label per card — not for headings. Sentence case at
+     a real size reads faster and stops competing with the numbers, which are
+     the thing the reader is meant to find. -->
+<h4 class="text-sm font-semibold text-navy-600 dark:text-navy-300 tracking-tight mb-4">{title}</h4>

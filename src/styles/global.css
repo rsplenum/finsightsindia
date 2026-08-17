@@ -787,20 +787,24 @@
   font-size: 0.8125rem;
 }
 
+/* F-03. These were uppercase and letterspaced, which in a table of numbers puts
+   the header in direct competition with the figures underneath it — and the
+   figures are the thing the reader came for. Sentence case, one step heavier,
+   reads as structure rather than as emphasis. Colours were raw hex here, the
+   same fragility that let .badge-gold keep a failing colour through a codemod
+   (sol-052); they are tokens now. */
 .table-premium thead th {
   padding: 0.75rem 1rem;
   font-weight: 600;
-  font-size: 0.75rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font-size: 0.8125rem;
   text-align: left;
-  color: #64748B;
-  background: #F8FAFC;
-  border-bottom: 2px solid #E2E8F0;
+  color: var(--color-navy-600);
+  background: var(--color-navy-50);
+  border-bottom: 2px solid var(--color-navy-200);
 }
 
 :where(.dark) .table-premium thead th {
-  color: #94A3B8;
+  color: var(--color-navy-300);
   background: rgba(15, 23, 42, 0.5);
   border-bottom-color: rgba(255, 255, 255, 0.08);
 }

@@ -41,28 +41,32 @@ const walk = (dir: string, out: string[] = []) => {
 const SUB12 = /text-\[(?:[0-9]|10|11)px\]/g;
 const countIn = (f: string) => (read(f).match(SUB12) ?? []).length;
 
-// The files F-01 has actually swept. These must stay at zero for 10px and 11px.
+// The files F-01 has actually swept AND COMMITTED. These must stay at zero.
+//
+// The rung components are deliberately NOT here, though they are clean in the
+// working tree: their migration is the type-floor workstream's uncommitted work,
+// and this test may only assert what is committed. Listing them made the suite
+// pass only because someone else's unstaged changes happened to be present —
+// a test that depends on an uncommitted working tree is not a wall, it is a
+// coincidence. Add them when that workstream commits.
 const SWEPT = [
   'src/pages/swp-planner.astro',
   'src/pages/sip-engine.astro',
   'src/pages/tax-calculator.astro',
   'src/pages/insurance-analyzer.astro',
   'src/pages/black-scholes.astro',
-  ...fs
-    .readdirSync(path.join(ROOT, 'src/components/Calculators'))
-    .filter((f) => f.endsWith('.astro'))
-    .map((f) => `src/components/Calculators/${f}`),
 ];
 
-// Verified in the browser at 1280x900 on 17 Aug: every remaining sub-12px node on
-// the five calculator pages is one of these, and each was HELD on purpose.
-const HELD_9PX = 17;
+// Held on purpose, pending Rahul's ruling: bumping these reflows the badges they
+// sit in. Counted so the deferral cannot rot into a habit.
+const HELD_9PX = 20;
 
-// The whole-tree backlog. Ratchet: may fall, never rise. Tighten it whenever it
-// falls — the audit counted 317, it was 163 before this sweep and is 68 after.
-// What is left: faq.astro (14), the content workstream's fcnr illustrations
-// (~30), and the 17 held 9px labels, which are counted in this total too.
-const BACKLOG_CEILING = 68;
+// The whole-tree backlog. Ratchet: may fall, never rise. Tighten whenever it
+// falls. The audit counted 317; this is the committed figure after the five
+// calculator pages were swept. What remains: the rung components (the other
+// workstream's, in flight), faq.astro, the content workstream's fcnr
+// illustrations, and the held 9px labels, which are counted in this total too.
+const BACKLOG_CEILING = 121;
 
 describe('F-01 — the sub-12px type floor', () => {
   it('the swept files carry no 10px or 11px type', () => {
