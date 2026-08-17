@@ -88,6 +88,20 @@ template literal (`` `inDed${section}` `` → `inDed`), minimum four characters 
 it cannot become a blanket amnesty. **A wall that fires on correct code is a wall
 someone switches off**, and then it stops catching the real ones too.
 
+**sol-059 — the untracked `taxCatalogue.ts` is verified, tested and committed.**
+Its one real idea is kept: **an exclusion is a `statute` string, not a boolean**,
+so dd-020's own test becomes something a machine can ask. Two faults found by
+reading it against `TaxInput` first: **thirteen options had nowhere for their
+rupees to go** (sol-056 gave ten a home; the other two are `pending` *with the
+reason* and are not offered), and **home loan interest appeared twice**, as an
+income source and a deduction, both writing the same field — a reader adding
+both would have typed one number twice and had one silently disregarded.
+Resolved in the reader's favour: it is a deduction, which is where the sheet
+puts it. A Chapter VI-A entry may **not** declare its own regimes; it takes them
+from the engine's table. 21 tests. **The pending queue is a ratchet** — exactly
+`['vda', 'winnings']`, both flat rates that take no share of the basic
+exemption, so neither can ride on the capital-gains path.
+
 **sol-058 — `typeFloor.test.ts` was RED at HEAD and green only in a working
 tree carrying someone else's uncommitted migration.** `npm run verify` passed on
 17 Aug for a committed tree it was not vouching for. The ceiling read 121; HEAD
