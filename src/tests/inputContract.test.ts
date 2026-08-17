@@ -353,8 +353,12 @@ describe('sol-051 - no page declares an id that nothing references', () => {
     // Both dead ids above have to survive it, and the derived Chapter VI-A
     // fields have to be admitted by it - otherwise it is either useless or a
     // blanket amnesty.
-    expect(constructedPrefixes).toContain('inDed');
-    expect(isHeld('inDed80C')).toBe(true);
+    // The live example moved when the tax form stopped deriving its ids from
+    // the engine's Chapter VI-A table alone and started deriving every field
+    // from the catalogue. `inDed${section}` became `inFld_${entryId}`; the
+    // widening this asserts is the same one, still narrow.
+    expect(constructedPrefixes).toContain('inFld_');
+    expect(isHeld('inFld_sec80c')).toBe(true);
     expect(isHeld('sacrificeMetric1')).toBe(false);
     expect(isHeld('tier3ActionableFooter')).toBe(false);
   });

@@ -7,13 +7,15 @@ import {
   PENDING_ENTRIES,
   chapterVIASectionOf,
   deductionsFor,
+  incomeBlocksFor,
   incomeSourcesFor,
   regimesForDeduction,
   splitByVisibility,
   whyExcluded,
   type CatalogueEntry,
 } from '../utils/taxCatalogue';
-import { CHAPTER_VIA_RULES, EMPTY_TAX_INPUT } from '../utils/tax';
+import { CHAPTER_VIA_RULES, EMPTY_TAX_INPUT, type TaxInput } from '../utils/tax';
+import { DEFAULT_CHOICES, buildTaxInput } from '../utils/taxInputs';
 
 /**
  * sol-059 — the catalogue, and the three things that make it safe to grow.
@@ -124,6 +126,131 @@ describe('sol-059 / sol-041 — every offered option has somewhere for its rupee
     // silently drop the others.
     const sharing = INCOME_SOURCES.filter((s) => s.target === 'business.netProfit');
     expect(sharing.length).toBeGreaterThan(2);
+  });
+});
+
+/**
+ * Block (2) on Rahul's sheet — "only those that can't be clubbed in dropdown-1".
+ *
+ * The claim a block heading makes has to be true of the arithmetic underneath
+ * it, and there is one mechanical way to check that: a source whose `target` is
+ * shared with another source IS clubbed, because the form sums every active
+ * field aimed at one target. So "cannot be clubbed" and "shares a target" are
+ * contradictories, and the test below is what decided the F&O case rather than
+ * anybody's taste for where it looked better.
+ */
+describe('the third input block — what cannot be clubbed, and why', () => {
+  it('an unclubbable source says what the arithmetic would lose', () => {
+    for (const s of INCOME_SOURCES) {
+      if (!s.unclubbable) continue;
+      expect(
+        s.unclubbable.length,
+        `${s.id} is kept out of the ordinary income block without saying what ` +
+        'summing it would destroy. The reason is the whole content of the claim.'
+      ).toBeGreaterThan(40);
+    }
+  });
+
+  it('nothing claims to be unclubbable while sharing a target with another source', () => {
+    const byTarget = new Map<string, string[]>();
+    for (const s of INCOME_SOURCES) {
+      if (!s.target) continue;
+      byTarget.set(s.target, [...(byTarget.get(s.target) ?? []), s.id]);
+    }
+    const lying = INCOME_SOURCES.filter(
+      (s) => s.unclubbable && (byTarget.get(s.target ?? '') ?? []).length > 1
+    ).map((s) => `${s.id} -> ${s.target}`);
+    expect(
+      lying,
+      'These sit under a heading that says they cannot be added to the other ' +
+      'figures, and the form adds them to another source anyway:\n  ' + lying.join('\n  ')
+    ).toEqual([]);
+  });
+
+  it('every capital gain is in the separate block, and F&O is not', () => {
+    // The direction that matters: four buckets by rate, and summing them would
+    // destroy the rate, which is the only thing the arithmetic cares about.
+    for (const s of INCOME_SOURCES) {
+      if (s.head !== 'capitalGains' || s.pending) continue;
+      expect(s.unclubbable, `${s.id} is a capital gain and must be kept apart`).toBeTruthy();
+    }
+    // And the one Rahul's sheet names that this build does NOT put there. The
+    // engine sees one business profit, so the block heading would be a promise
+    // it does not keep. Recorded on the launch gate rather than smoothed over.
+    const fo = INCOME_SOURCES.find((s) => s.id === 'futuresOptions')!;
+    expect(fo.unclubbable).toBeUndefined();
+  });
+
+  it('both blocks are non-empty for every category', () => {
+    for (const c of CATEGORIES) {
+      const { clubbable, separate } = incomeBlocksFor(c.id);
+      expect(clubbable.length, `${c.id} has no ordinary income sources`).toBeGreaterThan(3);
+      expect(separate.length, `${c.id} has an empty second block`).toBeGreaterThan(0);
+      expect(clubbable.length + separate.length).toBe(incomeSourcesFor(c.id).length);
+    }
+  });
+});
+
+/**
+ * The other half of sol-041's rule, and the half that was still checked by
+ * reading. sol-059's test proves every offered option names a target that
+ * RESOLVES against `TaxInput`. It cannot prove the reader delivers to it — a
+ * target could be spelled correctly and still be dropped on the floor by an
+ * assembly step that forgot the line. That is the same defect the catalogue
+ * exists to prevent, one layer down.
+ */
+describe('sol-061 — every target the catalogue names actually reaches the engine', () => {
+  const at = (input: TaxInput, path: string): unknown => {
+    if (path.startsWith('chapterVIA.')) {
+      return input.chapterVIA[path.slice('chapterVIA.'.length) as keyof typeof input.chapterVIA];
+    }
+    let node: unknown = input;
+    for (const key of path.split('.')) node = (node as Record<string, unknown>)[key];
+    return node;
+  };
+
+  it('a rupee placed on any target arrives at the field it names', () => {
+    const lost: string[] = [];
+    for (const e of ALL) {
+      if (!e.target) continue;
+      const built = buildTaxInput(new Map([[e.target, 12345]]), DEFAULT_CHOICES);
+      if (at(built, e.target) !== 12345) lost.push(`${e.id} -> ${e.target}`);
+    }
+    expect(
+      lost,
+      'A box the reader fills in and a bill that does not move — the target is ' +
+      'named and the reader never carries it:\n  ' + lost.join('\n  ')
+    ).toEqual([]);
+  });
+
+  it('a section is claimed only when a field for it was activated', () => {
+    // The move from PRESENCE to `data-active`. Every eligible field is now on
+    // the page from the start, so presence means nothing; a section merely
+    // rendered must not read as claimed.
+    expect(buildTaxInput(new Map(), DEFAULT_CHOICES).chapterVIA).toEqual({});
+    // And a section activated but left empty IS claimed, as nothing. Same
+    // rupees as never claiming it, and a different sentence on the panel.
+    expect(buildTaxInput(new Map([['chapterVIA.80C', 0]]), DEFAULT_CHOICES).chapterVIA)
+      .toEqual({ '80C': 0 });
+  });
+
+  it('the kind of property follows from what was declared, not from a fourth question', () => {
+    const kind = (m: Map<string, number>) => buildTaxInput(m, DEFAULT_CHOICES).houseProperty.kind;
+    expect(kind(new Map())).toBe('none');
+    expect(kind(new Map([['houseProperty.interest', 200000]]))).toBe('selfOccupied');
+    expect(kind(new Map([['houseProperty.annualRent', 300000]]))).toBe('letOut');
+    // Municipal tax belongs to a let-out property and to nothing else, so
+    // declaring it alone must not leave the figure sitting on a property the
+    // engine thinks does not exist.
+    expect(kind(new Map([['houseProperty.municipalTaxes', 8000]]))).toBe('letOut');
+    // AND AN EMPTY RENT FIELD IS NOT A DECLARATION. Rent is one of the few
+    // fields permanently on screen, so it is active for every reader; keying
+    // off the field rather than the figure turned everyone with a home loan
+    // into a landlord, and a let-out property's interest is uncapped where a
+    // home you live in is capped at Rs 2 lakh.
+    expect(
+      kind(new Map([['houseProperty.annualRent', 0], ['houseProperty.interest', 250000]]))
+    ).toBe('selfOccupied');
   });
 });
 

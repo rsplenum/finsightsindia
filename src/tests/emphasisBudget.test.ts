@@ -42,7 +42,10 @@ const SWEPT = [...rungs, 'src/pages/swp-planner.astro', 'src/pages/sip-engine.as
 
 // Ratchet for the pages awaiting their own rewrite. May fall, never rise.
 const NOT_YET_SWEPT: Record<string, number> = {
-  'src/pages/tax-calculator.astro': 23,
+  // Was 23, and the ceiling said "drop it to zero as its rewrite lands".
+  // sol-061/sol-062 landed it: the page is now four components and a script,
+  // and not one element on it shouts.
+  'src/pages/tax-calculator.astro': 0,
   'src/pages/insurance-analyzer.astro': 24,
   'src/pages/black-scholes.astro': 12,
   'src/pages/faq.astro': 19,

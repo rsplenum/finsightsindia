@@ -430,6 +430,18 @@ export interface HeadDetail {
 export interface TaxRegimeResult {
     /** Sum of the heads BEFORE the standard deduction, HRA or Chapter VI-A. */
     grossIncome: number;
+    /**
+     * GROSS TOTAL INCOME - s.80B(5). The heads after every set-off the year
+     * allows, and the figure Chapter VI-A is then applied to.
+     *
+     * Distinct from `grossIncome` above, which is what the reader EARNED and is
+     * the denominator of the effective rate. This one is what the Act has left
+     * to work with, and the Income Computation panel needs it by name: without
+     * it the panel's rows run from the heads straight to `slabIncome`, and the
+     * deduction total appears to come off a figure that is nowhere on screen -
+     * dd-009/do-1, a figure the reader cannot trace back.
+     */
+    grossTotalIncome: number;
     heads: HeadDetail;
     exemptions: number;
     deductions: number;
@@ -1209,6 +1221,7 @@ function computeRegime(input: TaxInput, regime: Regime): TaxRegimeResult {
 
     return {
         grossIncome,
+        grossTotalIncome: gti,
         heads,
         exemptions: hra,
         deductions: chapterVIA,

@@ -1,0 +1,63 @@
+---
+/**
+ * The first of Rahul's two output panels — sheet 2's own title, and the reason
+ * the sheet exists: *Income Computation*, separate from the tax working, so the
+ * reader follows gross income through to taxable income before a rate touches
+ * anything.
+ *
+ * Design settled before the component in `TaxIncomeComputation.checks.md`.
+ *
+ * Its shape is the FORM'S shape, deliberately. The slab pot first — what clubs
+ * — then the gains taxed on their own terms, because a reader who has just
+ * filled in three blocks should recognise the arithmetic as those three blocks
+ * read back to them rather than as a second taxonomy they have to learn.
+ *
+ * Every row here is written by the page's one script from one engine result.
+ * The rows that carry no figure are removed rather than shown at nil, so the
+ * panel is as long as the reader's own year and no longer.
+ */
+---
+
+<section
+  id="taxIncomeComputation"
+  class="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-900/40 p-5 sm:p-6 space-y-4"
+  aria-label="How your income becomes taxable income"
+>
+  <div class="space-y-1">
+    <h3 class="text-base font-bold text-navy-900 dark:text-navy-100">Income computation</h3>
+    <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
+      What you earned, what the law lets you take off it, and what is left to be taxed.
+    </p>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="w-full text-left text-sm">
+      <thead>
+        <tr class="border-b border-navy-200 dark:border-navy-800 text-navy-600 dark:text-navy-400">
+          <th class="py-2 font-semibold">Item</th>
+          <th id="incColNew" class="py-2 text-right font-semibold w-28">New regime</th>
+          <th id="incColOld" class="py-2 text-right font-semibold w-28">Old regime</th>
+        </tr>
+      </thead>
+      <!--
+        One tbody, filled row by row from the engine result. It is built rather
+        than pre-written because a row exists only when it carries a figure, and
+        because the Chapter VI-A lines are one per section the reader actually
+        claimed — there is no fixed set of them to lay out in advance.
+      -->
+      <tbody
+        id="incRows"
+        class="divide-y divide-navy-200 dark:divide-navy-800 text-navy-900 dark:text-navy-100"
+      ></tbody>
+    </table>
+  </div>
+
+  <!--
+    The one thing this panel says in words rather than in figures: where a claim
+    was cut, and by what. sol-056 returns a line per section carrying claimed,
+    allowed, the ceiling that applied and the reason, which is what these notes
+    are made of. A reader whose four lakh of 80C became one and a half is told
+    so where it happened (dd-009/dont-1).
+  -->
+  <div id="incNotes" class="space-y-2 empty:hidden"></div>
+</section>

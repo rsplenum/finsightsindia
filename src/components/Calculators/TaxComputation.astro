@@ -1,0 +1,114 @@
+---
+/**
+ * The second of Rahul's two output panels. It starts where
+ * `TaxIncomeComputation` stops — at total income, already split into the part
+ * the slabs work on and the part taxed at its own rates — and carries it down
+ * to the figure the reader owes.
+ *
+ * Design settled before the component in `TaxComputation.checks.md`.
+ *
+ * It states the working, not the verdict: `TaxAnswer` is rung 1 and says which
+ * regime is cheaper in a sentence. What emphasis appears here is applied by the
+ * page's one `verdictFor()`, never by a class written in this file — that is
+ * the whole of sol-043, which is why `taxColNew` / `taxColOld` and the two
+ * total cells are handles rather than styled markup.
+ */
+---
+
+<section
+  id="taxComputation"
+  class="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-900/40 p-5 sm:p-6 space-y-4"
+  aria-label="How your taxable income becomes a bill"
+>
+  <div class="space-y-1">
+    <h3 class="text-base font-bold text-navy-900 dark:text-navy-100">Tax computation</h3>
+    <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
+      What the slabs charge, what the rebate gives back, and what is added on top.
+    </p>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="w-full text-left text-sm">
+      <thead>
+        <tr class="border-b border-navy-200 dark:border-navy-800 text-navy-600 dark:text-navy-400">
+          <th class="py-2 font-semibold">Item</th>
+          <th id="taxColNew" class="py-2 text-right font-semibold w-28">New regime</th>
+          <th id="taxColOld" class="py-2 text-right font-semibold w-28">Old regime</th>
+        </tr>
+      </thead>
+      <tbody
+        id="taxRows"
+        class="divide-y divide-navy-200 dark:divide-navy-800 text-navy-900 dark:text-navy-100"
+      ></tbody>
+    </table>
+  </div>
+
+  <!--
+    Marginal relief is the one line whose name explains nothing, so it carries a
+    sentence — and the sentence states the principle rather than the reader's
+    position, so it stays true at every input (dd-008). It is written only when
+    the relief actually bit.
+  -->
+  <p id="taxMarginalNote" class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed empty:hidden"></p>
+
+  <!--
+    The slab working. The engine has always returned it and the page has never
+    shown it: it is the answer to the reader who asks which slab their last
+    rupee fell in, and genuinely optional to everyone else, which is exactly
+    what a disclosure is for.
+  -->
+  <details class="tax-chip rounded-xl border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900/60 px-4 py-3">
+    <summary class="text-sm font-semibold text-navy-900 dark:text-navy-100">Which slab each rupee fell in</summary>
+    <div class="pt-4 space-y-4">
+      <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
+        The two regimes draw their bands in different places, so they are shown as two ladders
+        rather than one table pretending the bands line up. Only gains taxed at their own rates sit
+        outside both.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="space-y-2">
+          <h4 class="text-sm font-semibold text-navy-900 dark:text-navy-100">New regime</h4>
+          <table class="w-full text-left text-sm">
+            <tbody
+              id="slabRowsNew"
+              class="divide-y divide-navy-200 dark:divide-navy-800 text-navy-900 dark:text-navy-100"
+            ></tbody>
+          </table>
+        </div>
+        <div class="space-y-2">
+          <h4 class="text-sm font-semibold text-navy-900 dark:text-navy-100">Old regime</h4>
+          <table class="w-full text-left text-sm">
+            <tbody
+              id="slabRowsOld"
+              class="divide-y divide-navy-200 dark:divide-navy-800 text-navy-900 dark:text-navy-100"
+            ></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </details>
+</section>
+
+<style>
+  .tax-chip > summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .tax-chip > summary::-webkit-details-marker {
+    display: none;
+  }
+  .tax-chip > summary::after {
+    content: '+';
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1;
+    opacity: 0.5;
+  }
+  .tax-chip[open] > summary::after {
+    content: '\2212';
+  }
+</style>

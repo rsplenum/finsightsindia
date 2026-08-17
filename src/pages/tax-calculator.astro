@@ -1,383 +1,87 @@
 ---
-import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import CardPremium from '../components/CardPremium.astro';
-import InputGroup from '../components/InputGroup.astro';
-import SectionTitle from '../components/SectionTitle.astro';
 import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
+import TaxInputForm from '../components/Calculators/TaxInputForm.astro';
+import TaxIncomeComputation from '../components/Calculators/TaxIncomeComputation.astro';
+import TaxComputation from '../components/Calculators/TaxComputation.astro';
 ---
 
-<Layout title="India Direct Tax Code 2025 & Calculators — SWP Intelligence">
-	
-	<Hero 
-		badge="COMPUTATIONAL TAX ENGINE (FY 2025-26)"
-		title="Interactive Slab & Scenario Engine"
-		description="Run institutional-grade math on your gross income. Instantly visualize your effective tax rates, itemized deductions, and mathematically optimal regime choices."
+<Layout title="Income tax calculator, FY 2025-26 — old regime or new">
+
+	<Hero
+		badge="Income tax · FY 2025-26"
+		title="What will you actually pay?"
+		description="Tell us what your year looked like and this works out both regimes at once — every source of income, every deduction you are eligible for, and the monthly bite at the end of it."
 	/>
 
 	<hr class="section-divider" />
-	
+
 	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 space-y-10">
 
 		<div class="max-w-7xl mx-auto"><TaxAnswer /></div>
 
-		<!-- INTERACTIVE INDIA TAX REGIME CALCULATOR PANEL -->
-		<CardPremium class="max-w-7xl mx-auto space-y-6">
-			
-			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-navy-200 dark:border-white/10 pb-4">
-				<div>
-					<span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-widest">INTERACTIVE SLAB ENGINE</span>
-					<SectionTitle title="India Income Tax Calculator (FY 2025-26)" className="mt-1" />
-				</div>
-				<div id="indiaSavingsBadge" class="badge-safe px-3 py-1.5 text-xs font-bold self-start sm:self-auto">
-					New Regime Recommended
-				</div>
-			</div>
+		<!--
+			Rahul's sheet 2: inputs on the left, and TWO output panels on the
+			right rather than one. The income build-up is separate from the tax
+			working, so the reader follows gross income through to taxable income
+			before a rate touches anything.
 
+			On a narrow screen they stack in that same order - the form, then what
+			it did to the income, then what that costs - which is the reading
+			order the sheet draws left to right.
+		-->
+		<CardPremium class="max-w-7xl mx-auto">
 			<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-				
-				<!-- Inputs Column (5/12) -->
-				<div class="lg:col-span-5 space-y-6">
-					
-					<!-- Income & Demographics -->
-					<div>
-						<div class="border-b border-navy-200 dark:border-navy-800 pb-2 mb-4">
-							<h3 class="text-xs font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Income & Demographics</h3>
-						</div>
-						<div class="space-y-4">
-							<InputGroup id="inGrossSalary" label="Gross Salary" tooltip="Total yearly salary before exemptions" prefix="₹" value="15,00,000" />
-							<InputGroup id="inOtherIncome" label="Other Income" tooltip="Interest, capital gains (normal slab rate), house property, etc." prefix="₹" value="0" />
-							<div class="space-y-1">
-								<label class="block text-xs font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">Age Bracket</label>
-								<select id="inAgeBracket" class="w-full bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-lg px-3 py-2 text-sm text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-gold-500">
-									<option value="below60">Below 60 Years</option>
-									<option value="60_80">60 to 80 Years (Senior)</option>
-									<option value="above80">Above 80 Years (Super Senior)</option>
-								</select>
-							</div>
-						</div>
-					</div>
-
-					<!-- HRA Exemption -->
-					<div>
-						<div class="border-b border-navy-200 dark:border-navy-800 pb-2 mb-4">
-							<h3 class="text-xs font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">HRA Exemption (Old Regime)</h3>
-						</div>
-						<div class="space-y-4">
-							<div class="grid grid-cols-2 gap-4">
-								<InputGroup id="inBasicSalary" label="Basic Salary" prefix="₹" value="7,50,000" />
-								<InputGroup id="inHraReceived" label="HRA Received" prefix="₹" value="3,00,000" />
-							</div>
-							<div class="grid grid-cols-2 gap-4 items-end">
-								<InputGroup id="inRentPaid" label="Rent (Annual)" prefix="₹" value="2,40,000" />
-								<div class="space-y-1">
-									<label class="block text-xs font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">City Type</label>
-									<select id="inIsMetro" class="w-full bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-lg px-3 py-2 text-sm text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-gold-500">
-										<option value="true">Metro (50%)</option>
-										<option value="false" selected>Non-Metro (40%)</option>
-									</select>
-								</div>
-							</div>
-							<div class="text-xs text-navy-500 dark:text-navy-400 bg-navy-50 dark:bg-navy-900 p-2 rounded border border-navy-200 dark:border-navy-800 flex justify-between">
-								<span>Computed Exempt HRA:</span>
-								<span id="valHraExempt" class="font-bold text-navy-900 dark:text-navy-100">₹0</span>
-							</div>
-						</div>
-					</div>
-
-					<!-- Itemized Deductions -->
-					<div>
-						<div class="border-b border-navy-200 dark:border-navy-800 pb-2 mb-4">
-							<h3 class="text-xs font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Deductions (Old Regime)</h3>
-						</div>
-						<div class="grid grid-cols-2 gap-4">
-							<InputGroup id="inDed80C" label="Section 80C" tooltip="Max ₹1.5L" prefix="₹" value="1,50,000" />
-							<InputGroup id="inDed80D" label="Section 80D" tooltip="Health Insurance. Max ₹1L." prefix="₹" value="25,000" />
-							<InputGroup id="inDed80CCD1B" label="80CCD(1B)" tooltip="NPS tier-1. Max ₹50k" prefix="₹" value="50,000" />
-						</div>
-						<p id="deductionBoundary" class="mt-3 text-sm text-navy-500 dark:text-navy-400 leading-relaxed"></p>
-					</div>
-
-					<!--
-						THE DISCLOSURE. Each head is a chip, closed by default, so a
-						salaried reader never sees a business field. A chip is NOT a mode
-						(dd-006): opening one ADDS income the reader has, rather than
-						swapping one view of the same data for another. The regime
-						comparison - which genuinely IS the lesson - stays two adjacent
-						columns and never becomes a switch.
-
-						Native <details>, so the disclosure works without script and each
-						summary is the reader's own question rather than a label.
-					-->
-					<div class="space-y-3">
-						<div class="border-b border-navy-200 dark:border-navy-800 pb-2">
-							<h3 class="text-xs font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Do you have any of these too?</h3>
-						</div>
-
-						<details class="tax-chip rounded-lg border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-900/40 px-4 py-3">
-							<summary class="text-xs font-bold text-navy-900 dark:text-navy-100">A home, or a property you rent out</summary>
-							<div class="space-y-4 pt-4">
-								<div class="space-y-1">
-									<label class="block text-xs font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">Which is it?</label>
-									<select id="inHpKind" class="w-full bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-lg px-3 py-2 text-sm text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-gold-500">
-										<option value="none">Neither</option>
-										<option value="selfOccupied" selected>A home I live in</option>
-										<option value="letOut">A property I rent out</option>
-									</select>
-								</div>
-								<div id="hpLetOutFields" class="hidden grid grid-cols-2 gap-4">
-									<InputGroup id="inHpRent" label="Rent (Annual)" prefix="₹" value="0" />
-									<InputGroup id="inHpMunicipalTaxes" label="Municipal Tax Paid" tooltip="Comes off before the 30% standard deduction." prefix="₹" value="0" />
-								</div>
-								<div id="hpInterestField">
-									<InputGroup id="inHomeLoan" label="Loan Interest (Annual)" tooltip="Section 24(b). Capped at ₹2L on a home you live in and allowed only under the old regime; uncapped on a property you rent out." prefix="₹" value="0" />
-								</div>
-								<p id="hpNote" class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed"></p>
-							</div>
-						</details>
-
-						<details class="tax-chip rounded-lg border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-900/40 px-4 py-3">
-							<summary class="text-xs font-bold text-navy-900 dark:text-navy-100">Business or professional income</summary>
-							<div class="space-y-4 pt-4">
-								<div class="grid grid-cols-2 gap-4">
-									<InputGroup id="inBusinessTurnover" label="Business Turnover" tooltip="For the s.44AD presumptive scheme." prefix="₹" value="0" />
-									<InputGroup id="inProfessionalReceipts" label="Professional Receipts" tooltip="For the s.44ADA presumptive scheme." prefix="₹" value="0" />
-								</div>
-								<div class="grid grid-cols-2 gap-4">
-									<InputGroup id="inBusinessProfit" label="Net Profit (books)" prefix="₹" value="0" />
-									<div class="space-y-1">
-										<label class="block text-xs font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">Received via bank (%)</label>
-										<input id="inBusinessDigitalShare" type="number" min="0" max="100" value="100" class="w-full bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-lg px-3 py-2 text-sm text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-gold-500" />
-									</div>
-								</div>
-								<!--
-									dd-006/dont-2: the difference between declaring actual
-									profit and a deemed one IS the lesson here, so both are
-									priced and shown at once rather than one at a time behind
-									the selector below.
-								-->
-								<div id="presumptiveCompare" class="text-sm rounded-lg border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900 p-3 space-y-1.5"></div>
-								<div class="space-y-1">
-									<label class="block text-xs font-bold uppercase tracking-widest text-navy-500 dark:text-navy-400">Tax me on</label>
-									<select id="inBusinessBasis" class="w-full bg-navy-50 dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-lg px-3 py-2 text-sm text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-gold-500">
-										<option value="books">My actual profit</option>
-										<option value="44AD">Deemed profit — s.44AD</option>
-										<option value="44ADA">Deemed profit — s.44ADA</option>
-									</select>
-								</div>
-							</div>
-						</details>
-
-						<details class="tax-chip rounded-lg border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-900/40 px-4 py-3">
-							<summary class="text-xs font-bold text-navy-900 dark:text-navy-100">Capital gains</summary>
-							<div class="space-y-4 pt-4">
-								<div class="grid grid-cols-2 gap-4">
-									<InputGroup id="inCgStcgEquity" label="Equity, held under a year" tooltip="Section 111A. A flat 20%." prefix="₹" value="0" />
-									<InputGroup id="inCgLtcgEquity" label="Equity, held over a year" tooltip="Section 112A. 12.5%, and the first ₹1.25 lakh each year is free." prefix="₹" value="0" />
-								</div>
-								<details class="tax-subchip rounded-lg border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900/60 px-3 py-2">
-									<summary class="text-sm font-semibold text-navy-600 dark:text-navy-300">Property, gold, debt funds, unlisted shares</summary>
-									<div class="grid grid-cols-2 gap-4 pt-3">
-										<InputGroup id="inCgLtcgOther" label="Held long term" tooltip="Section 112. 12.5%." prefix="₹" value="0" />
-										<InputGroup id="inCgStcgOther" label="Held short term" tooltip="NOT section 111A. This is ordinary income at your slab rate, not 20%." prefix="₹" value="0" />
-									</div>
-								</details>
-							</div>
-						</details>
-
-						<details class="tax-chip rounded-lg border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-900/40 px-4 py-3">
-							<summary class="text-xs font-bold text-navy-900 dark:text-navy-100">Losses to set off</summary>
-							<div class="space-y-4 pt-4">
-								<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed">
-									A capital loss can only ever meet a capital gain — never salary, rent or interest.
-								</p>
-								<div class="grid grid-cols-2 gap-4">
-									<InputGroup id="inLossStcgCurrent" label="Short-term loss, this year" prefix="₹" value="0" />
-									<InputGroup id="inLossLtcgCurrent" label="Long-term loss, this year" prefix="₹" value="0" />
-								</div>
-								<details class="tax-subchip rounded-lg border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900/60 px-3 py-2">
-									<summary class="text-sm font-semibold text-navy-600 dark:text-navy-300">Brought forward from earlier years</summary>
-									<div class="space-y-4 pt-3">
-										<p class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed">
-											Carried losses are set off in flat rupees. The law gives no
-											inflation adjustment, so a loss from seven years ago buys far
-											less than the number suggests.
-										</p>
-										<div class="grid grid-cols-2 gap-4">
-											<InputGroup id="inLossBfBusiness" label="Business" prefix="₹" value="0" />
-											<InputGroup id="inLossBfHouseProperty" label="House property" prefix="₹" value="0" />
-											<InputGroup id="inLossBfShortTerm" label="Short-term capital" prefix="₹" value="0" />
-											<InputGroup id="inLossBfLongTerm" label="Long-term capital" prefix="₹" value="0" />
-										</div>
-									</div>
-								</details>
-								<p id="lossNote" class="text-sm text-navy-500 dark:text-navy-400 leading-relaxed"></p>
-							</div>
-						</details>
-					</div>
-				</div>
-
-				<!-- Outputs Column (7/12) -->
+				<div class="lg:col-span-5"><TaxInputForm /></div>
 				<div class="lg:col-span-7 space-y-6">
-					
-					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-						<!-- New Tax Regime Card -->
-						<div id="cardNewRegime" class="p-5 card-premium rounded-lg space-y-3">
-							<div class="flex justify-between items-center text-xs font-bold tracking-widest">
-								<span class="text-navy-500 dark:text-navy-400 uppercase">NEW REGIME</span>
-								<span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-[9px] uppercase">FY 25-26</span>
-							</div>
-							<div class="space-y-1">
-								<div class="text-xs uppercase font-bold tracking-widest text-navy-500 dark:text-navy-400">Total Tax Payable:</div>
-								<div id="valNewTax" class="text-3xl font-bold text-navy-900 dark:text-navy-100">₹ 0</div>
-							</div>
-							<div class="pt-3 border-t border-navy-200 dark:border-white/10 text-xs text-navy-500 dark:text-navy-400 space-y-1.5 uppercase font-bold tracking-widest">
-								<div id="valNewEffectiveRate" class="font-bold text-navy-800 dark:text-navy-200">Effective Rate: 0.0%</div>
-							</div>
-						</div>
-
-						<!-- Old Tax Regime Card -->
-						<div id="cardOldRegime" class="p-5 card-premium rounded-lg space-y-3">
-							<div class="flex justify-between items-center text-xs font-bold tracking-widest">
-								<span class="text-navy-500 dark:text-navy-400 uppercase">OLD REGIME</span>
-								<span class="px-2 py-0.5 rounded bg-navy-200 dark:bg-navy-800 text-navy-600 dark:text-navy-400 text-[9px] uppercase">FY 25-26</span>
-							</div>
-							<div class="space-y-1">
-								<div class="text-xs uppercase font-bold tracking-widest text-navy-500 dark:text-navy-400">Total Tax Payable:</div>
-								<div id="valOldTax" class="text-3xl font-bold text-navy-900 dark:text-navy-100">₹ 0</div>
-							</div>
-							<div class="pt-3 border-t border-navy-200 dark:border-white/10 text-xs text-navy-500 dark:text-navy-400 space-y-1.5 uppercase font-bold tracking-widest">
-								<div id="valOldEffectiveRate" class="font-bold text-navy-800 dark:text-navy-200">Effective Rate: 0.0%</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- Slab Breakdown -->
-					<div class="bg-navy-50 dark:bg-navy-900 rounded-lg border border-navy-200 dark:border-navy-800 p-5 space-y-4">
-						<h3 class="text-xs font-bold uppercase tracking-widest text-navy-900 dark:text-navy-100">Tax Computation Breakdown</h3>
-						<div class="overflow-x-auto">
-							<table class="w-full text-left text-xs">
-								<thead>
-									<tr class="border-b border-navy-200 dark:border-navy-800 text-xs uppercase text-navy-500 dark:text-navy-400 tracking-widest">
-										<th class="py-2">Component</th>
-										<th id="colHeadNew" class="py-2 text-right w-28">New Regime</th>
-										<th id="colHeadOld" class="py-2 text-right w-28">Old Regime</th>
-									</tr>
-								</thead>
-								<tbody class="divide-y divide-navy-200 dark:divide-navy-800 text-navy-900 dark:text-navy-100">
-									<tr>
-										<td class="py-2">Gross Income</td>
-										<td class="py-2 text-right font-mono" id="brNewGross">0</td>
-										<td class="py-2 text-right font-mono" id="brOldGross">0</td>
-									</tr>
-									<tr>
-										<td class="py-2">Exemptions (HRA)</td>
-										<td class="py-2 text-right font-mono text-navy-500 dark:text-navy-400">-</td>
-										<td class="py-2 text-right font-mono" id="brOldExempt">0</td>
-									</tr>
-									<tr>
-										<td class="py-2">Itemized Deductions</td>
-										<td class="py-2 text-right font-mono text-navy-500 dark:text-navy-400">-</td>
-										<td class="py-2 text-right font-mono" id="brOldDed">0</td>
-									</tr>
-									<!--
-										House property is a HEAD, not a deduction. It carries its own
-										row because the loan interest used to be netted off inside
-										"Itemized Deductions", and once it moved head the table would
-										have stopped adding up - the taxable income no longer followed
-										from the rows on screen (dd-009/do-1).
-									-->
-									<tr>
-										<td class="py-2">Income from House Property</td>
-										<td class="py-2 text-right font-mono" id="brNewHp">0</td>
-										<td class="py-2 text-right font-mono" id="brOldHp">0</td>
-									</tr>
-									<tr id="brHpCarryRow" class="hidden">
-										<td class="py-2 pl-4 text-navy-500 dark:text-navy-400">↳ loss carried forward, not used this year</td>
-										<td class="py-2 text-right font-mono text-navy-500" id="brNewHpCarry">0</td>
-										<td class="py-2 text-right font-mono text-navy-500" id="brOldHpCarry">0</td>
-									</tr>
-									<tr>
-										<td class="py-2">Standard Deduction</td>
-										<td class="py-2 text-right font-mono" id="brNewStd">0</td>
-										<td class="py-2 text-right font-mono" id="brOldStd">0</td>
-									</tr>
-									<tr class="font-bold bg-black/5 dark:bg-white/5">
-										<td class="py-2 px-2">Taxable Income</td>
-										<td class="py-2 px-2 text-right font-mono" id="brNewTaxable">0</td>
-										<td class="py-2 px-2 text-right font-mono" id="brOldTaxable">0</td>
-									</tr>
-									<tr>
-										<td class="py-2">Base Tax (per Slabs)</td>
-										<td class="py-2 text-right font-mono" id="brNewBase">0</td>
-										<td class="py-2 text-right font-mono" id="brOldBase">0</td>
-									</tr>
-									<!--
-										Capital gains at special rates never touch the slabs, so they
-										cannot be folded into the row above without making it a figure
-										that no longer follows from the slab table (dd-009/do-1).
-									-->
-									<tr id="brCgRow" class="hidden">
-										<td class="py-2">Tax on Capital Gains (own rates)</td>
-										<td class="py-2 text-right font-mono" id="brNewCg">0</td>
-										<td class="py-2 text-right font-mono" id="brOldCg">0</td>
-									</tr>
-									<tr>
-										<td class="py-2">Sec 87A Rebate</td>
-										<td class="py-2 text-right font-mono text-emerald-700 dark:text-emerald-400" id="brNewRebate">0</td>
-										<td class="py-2 text-right font-mono text-emerald-700 dark:text-emerald-400" id="brOldRebate">0</td>
-									</tr>
-									<tr>
-										<td class="py-2">Surcharge</td>
-										<td class="py-2 text-right font-mono" id="brNewSur">0</td>
-										<td class="py-2 text-right font-mono" id="brOldSur">0</td>
-									</tr>
-									<tr>
-										<td class="py-2">Marginal Relief</td>
-										<td class="py-2 text-right font-mono text-emerald-700 dark:text-emerald-400" id="brNewMarginal">0</td>
-										<td class="py-2 text-right font-mono text-emerald-700 dark:text-emerald-400" id="brOldMarginal">0</td>
-									</tr>
-									<tr>
-										<td class="py-2">Health & Ed Cess (4%)</td>
-										<td class="py-2 text-right font-mono" id="brNewCess">0</td>
-										<td class="py-2 text-right font-mono" id="brOldCess">0</td>
-									</tr>
-									<tr class="font-black text-sm text-navy-900 dark:text-white">
-										<td class="py-3">Total Tax Liability</td>
-										<td class="py-3 text-right font-mono" id="brNewTotal">0</td>
-										<td class="py-3 text-right font-mono" id="brOldTotal">0</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-					
+					<TaxIncomeComputation />
+					<TaxComputation />
 				</div>
 			</div>
-
 		</CardPremium>
 
 	</main>
 </Layout>
 
 <script>
-	import { calculateIndiaTaxEngine } from '../utils/tax';
+	import { calculateIndiaTaxEngine, type TaxRegimeResult } from '../utils/tax';
 	import { buildTaxAnswer } from '../utils/taxAnswer';
 	import { readTaxInputs, MONEY_FIELD_IDS, CHOICE_FIELD_IDS } from '../utils/taxInputs';
+	import {
+		CATEGORIES,
+		DEDUCTIONS,
+		HEAD_LABEL,
+		INCOME_SOURCES,
+		incomeSourcesFor,
+		whyExcluded,
+		type CatalogueEntry,
+	} from '../utils/taxCatalogue';
 	import { tableFormatter, setupFormattingField } from '../utils/formatters';
+
+	// ---------------------------------------------------------------- formatting
 
 	function formatRupee(val: number): string {
 		if (isNaN(val)) return '₹0';
-		return `${tableFormatter.format(Math.round(val))}`;
+		// `|| 0` normalises negative zero. A house property head that contributed
+		// nothing was printing `-₹0`, which reads as a rounded-away debt rather
+		// than as nothing at all.
+		return `${tableFormatter.format(Math.round(val) || 0)}`;
 	}
-    
-    function formatNegative(val: number): string {
-        if (val === 0) return '0';
-        return `-${formatRupee(val)}`;
-    }
 
-	const setText = (id: string, v: string) => { const e = document.getElementById(id); if (e) e.innerText = v; };
+	function formatNegative(val: number): string {
+		// A cell that reads `0` where every other cell reads `₹0` has lost its
+		// frame for the sake of two characters - dd-019/dont-1. A nil deduction is
+		// a rupee figure like any other.
+		if (Math.round(val) === 0) return '₹0';
+		return `-${formatRupee(val)}`;
+	}
+
+	const setText = (id: string, v: string) => {
+		const e = document.getElementById(id);
+		if (e) e.innerText = v;
+	};
 
 	/** Rupees the way a person says them, for prose rather than a table. */
 	function inWords(n: number): string {
@@ -385,6 +89,523 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 		if (n >= 100000) return `₹${(n / 100000).toFixed(2)} lakh`;
 		return formatRupee(n);
 	}
+
+	// ---------------------------------------------------------------- the form
+	//
+	// THE ONE RULE THAT GOVERNS THIS SECTION. The category decides what the form
+	// OFFERS and never what it holds. A field the reader has already answered
+	// stays on screen when it stops being eligible, carrying the statute that now
+	// excludes it, because removing it would change the tax for a reason the
+	// screen never gave - dd-020/dont-3.
+	//
+	// A field is ACTIVE exactly when it is on screen, and `readTaxInputs()` reads
+	// that attribute rather than presence: every eligible field is rendered by the
+	// server, so presence means nothing at all.
+
+	const ALL_ENTRIES: CatalogueEntry[] = [...INCOME_SOURCES, ...DEDUCTIONS];
+	const entryById = new Map(ALL_ENTRIES.map((e) => [e.id, e]));
+
+	const category = () =>
+		(document.getElementById('inCategory') as HTMLSelectElement | null)?.value ?? 'salaried';
+
+	const fieldNodes = () =>
+		[...document.querySelectorAll<HTMLElement>('.tax-field')];
+
+	const inputOf = (wrap: HTMLElement) =>
+		wrap.querySelector('input') as HTMLInputElement | null;
+
+	const isEligible = (entry: CatalogueEntry, cat: string) =>
+		!(entry.excluded ?? []).some((x) => x.category === cat);
+
+	/** Has the reader answered this field? A typed zero is an answer (sol-041). */
+	const hasAnswer = (wrap: HTMLElement) => (inputOf(wrap)?.value ?? '').trim() !== '';
+
+	/**
+	 * Show a field, and therefore activate it. Kept as one function because the
+	 * two must never come apart: a field on screen that reads as inactive is a box
+	 * the reader fills in and a bill that does not move.
+	 */
+	function setShown(wrap: HTMLElement, shown: boolean) {
+		wrap.hidden = !shown;
+		const input = inputOf(wrap);
+		if (input) input.dataset.active = shown ? 'true' : 'false';
+	}
+
+	/**
+	 * Apply the category to every field on the form, then rebuild the dropdowns.
+	 *
+	 * Order matters: a field is shown if it is permanently visible and eligible,
+	 * OR if it is already active. The second half is what keeps an answered field
+	 * alive across a category change.
+	 */
+	function refreshOffers() {
+		const cat = category();
+		setText('categoryHint', CATEGORIES.find((c) => c.id === cat)?.hint ?? '');
+
+		const shownIds = new Set<string>();
+
+		for (const wrap of fieldNodes()) {
+			const id = wrap.dataset.field!;
+			const entry = entryById.get(id);
+			if (!entry) continue;
+
+			const eligible = isEligible(entry, cat);
+			const common = wrap.dataset.common === 'true';
+			const wasActive = inputOf(wrap)?.dataset.active === 'true';
+
+			// An answered field survives everything. An unanswered one that has
+			// stopped being offered goes quietly, because it moves no money and so
+			// nothing can change behind the reader's back.
+			const keep = wasActive && (eligible || hasAnswer(wrap));
+			const shown = keep || (common && eligible);
+			setShown(wrap, shown);
+			if (shown) shownIds.add(id);
+
+			// The statute, where a field is on screen that this category could not
+			// have chosen. Never asserted by us: it is the provision the catalogue
+			// names, which is what makes dd-020 checkable rather than a promise.
+			const statuteEl = wrap.querySelector<HTMLElement>('.tax-field-statute');
+			const statute = shown && !eligible ? whyExcluded(id, cat) : null;
+			if (statuteEl) {
+				statuteEl.innerText = statute
+					? `You have entered a figure here, so it is still being counted. ${statute}`
+					: '';
+				statuteEl.hidden = !statute;
+			}
+
+			// Removable when it is not one of the permanently visible ones this
+			// category is entitled to.
+			const drop = wrap.querySelector<HTMLElement>('.tax-field-drop');
+			if (drop) drop.hidden = !shown || (common && eligible);
+		}
+
+		rebuildAdders(cat, shownIds);
+		document.getElementById('taxPresumptiveControls')!.hidden =
+			!shownIds.has('presumptive44AD') && !shownIds.has('presumptive44ADA');
+	}
+
+	/**
+	 * The three dropdowns - EXHAUSTIVE within the eligible set (dd-001/do-3).
+	 *
+	 * "Only the most common options should be permanently visible" is answered by
+	 * what stays on screen, never by what exists here. Everything a category may
+	 * lawfully declare is one click away.
+	 */
+	function rebuildAdders(cat: string, shownIds: Set<string>) {
+		const eligibleIncome = new Set(incomeSourcesFor(cat).map((s) => s.id));
+
+		const fill = (
+			selectId: string,
+			groups: Array<{ label: string; entries: CatalogueEntry[] }>
+		) => {
+			const select = document.getElementById(selectId) as HTMLSelectElement | null;
+			if (!select) return;
+			select.innerHTML = '';
+			const placeholder = document.createElement('option');
+			placeholder.value = '';
+			placeholder.innerText = 'Choose…';
+			select.appendChild(placeholder);
+
+			for (const group of groups) {
+				const available = group.entries.filter((e) => !shownIds.has(e.id));
+				if (!available.length) continue;
+				const optgroup = document.createElement('optgroup');
+				optgroup.label = group.label;
+				for (const e of available) {
+					const option = document.createElement('option');
+					option.value = e.id;
+					option.innerText = e.label;
+					optgroup.appendChild(option);
+				}
+				select.appendChild(optgroup);
+			}
+			// A dropdown with nothing left in it is a control that does nothing, so
+			// it says so rather than sitting there looking broken.
+			select.disabled = select.options.length <= 1;
+			if (select.disabled) placeholder.innerText = 'You have added everything on offer';
+		};
+
+		const bySource = (want: 'clubbable' | 'separate') =>
+			(Object.keys(HEAD_LABEL) as Array<keyof typeof HEAD_LABEL>)
+				.map((head) => ({
+					label: HEAD_LABEL[head],
+					entries: INCOME_SOURCES.filter(
+						(s) =>
+							s.head === head &&
+							eligibleIncome.has(s.id) &&
+							(want === 'separate' ? Boolean(s.unclubbable) : !s.unclubbable)
+					) as CatalogueEntry[],
+				}))
+				.filter((g) => g.entries.length > 0);
+
+		fill('taxAddIncome', bySource('clubbable'));
+		fill('taxAddSeparate', bySource('separate'));
+		fill('taxAddDeduction', [
+			{
+				label: 'Deductions',
+				entries: DEDUCTIONS.filter((d) => d.target && isEligible(d, cat)) as CatalogueEntry[],
+			},
+		]);
+	}
+
+	function wrapFor(entryId: string) {
+		return document.querySelector<HTMLElement>(`.tax-field[data-field="${entryId}"]`);
+	}
+
+	function addEntry(entryId: string) {
+		const wrap = wrapFor(entryId);
+		if (!wrap) return;
+		setShown(wrap, true);
+
+		// Electing a presumptive basis IS choosing to be taxed on it. Leaving the
+		// selector on "my actual profit" while the reader types a turnover would be
+		// a field that moves no money - sol-041, in the view layer.
+		const basis = document.getElementById('inBusinessBasis') as HTMLSelectElement | null;
+		if (basis && (entryId === 'presumptive44AD' || entryId === 'presumptive44ADA')) {
+			basis.value = entryId === 'presumptive44AD' ? '44AD' : '44ADA';
+		}
+
+		refreshOffers();
+		inputOf(wrap)?.focus();
+		calculate();
+	}
+
+	function dropEntry(entryId: string) {
+		const wrap = wrapFor(entryId);
+		if (!wrap) return;
+		const input = inputOf(wrap);
+		if (input) input.value = '';
+		setShown(wrap, false);
+
+		const basis = document.getElementById('inBusinessBasis') as HTMLSelectElement | null;
+		if (basis && (entryId === 'presumptive44AD' || entryId === 'presumptive44ADA')) {
+			basis.value = 'books';
+		}
+
+		refreshOffers();
+		calculate();
+	}
+
+	// ---------------------------------------------------------------- the panels
+
+	type Row = {
+		label: string;
+		newVal: string;
+		oldVal: string;
+		/** `sub` and `total` carry a rule above them; `minor` is an indented aside. */
+		kind?: 'sub' | 'total' | 'minor';
+		newId?: string;
+		oldId?: string;
+	};
+
+	function renderRows(tbodyId: string, rows: Row[]) {
+		const body = document.getElementById(tbodyId);
+		if (!body) return;
+		body.innerHTML = rows
+			.map((r) => {
+				const rowClass =
+					r.kind === 'total'
+						? 'font-bold text-navy-900 dark:text-white'
+						: r.kind === 'sub'
+							? 'font-semibold bg-black/5 dark:bg-white/5'
+							: r.kind === 'minor'
+								? 'text-navy-600 dark:text-navy-400'
+								: '';
+				const pad = r.kind === 'minor' ? ' pl-4' : '';
+				const cell = (value: string, id?: string) =>
+					`<td class="py-2 text-right tabular-nums"${id ? ` id="${id}"` : ''}>${value}</td>`;
+				return (
+					`<tr class="${rowClass}">` +
+					`<td class="py-2${pad}">${r.label}</td>` +
+					cell(r.newVal, r.newId) +
+					cell(r.oldVal, r.oldId) +
+					'</tr>'
+				);
+			})
+			.join('');
+	}
+
+	/** Both regimes, or nothing: a row exists only when it carries a figure. */
+	const anyOf = (n: number, o: number) => Math.round(n) !== 0 || Math.round(o) !== 0;
+
+	/**
+	 * What the rows above gross total income add up to, so the panel can show the
+	 * losses that were set against them rather than silently failing to reconcile.
+	 * dd-009/dont-1 - a subtotal must follow from what is on screen.
+	 */
+	function slabRowsTotal(r: TaxRegimeResult): number {
+		const h = r.heads;
+		const hp = h.housePropertyIncome >= 0 ? h.housePropertyIncome : -h.housePropertySetOff;
+		return h.salary + hp + h.business + h.otherSources + r.capitalGains.slabTaxed;
+	}
+
+	function renderIncomeComputation(input: ReturnType<typeof readTaxInputs>, result: ReturnType<typeof calculateIndiaTaxEngine>) {
+		const n = result.newRegime;
+		const o = result.oldRegime;
+		const rows: Row[] = [];
+		const add = (label: string, nv: number, ov: number, kind?: Row['kind'], negative = false) => {
+			if (kind !== 'total' && kind !== 'sub' && !anyOf(nv, ov)) return;
+			rows.push({
+				label,
+				newVal: negative ? formatNegative(nv) : formatRupee(nv),
+				oldVal: negative ? formatNegative(ov) : formatRupee(ov),
+				kind,
+			});
+		};
+
+		if (input.grossSalary > 0) {
+			add('Salary, before anything comes off', input.grossSalary, input.grossSalary);
+			add('House rent allowance exempt', n.exemptions, o.exemptions, undefined, true);
+			add('Standard deduction', n.standardDeduction, o.standardDeduction, undefined, true);
+			add('Professional tax', n.professionalTax, o.professionalTax, undefined, true);
+			add('Income from salary', n.heads.salary, o.heads.salary, 'sub');
+		}
+
+		const hp = (r: TaxRegimeResult) =>
+			r.heads.housePropertyIncome >= 0 ? r.heads.housePropertyIncome : -r.heads.housePropertySetOff;
+		add('House property', hp(n), hp(o));
+		add(
+			'of which carried to next year, unused',
+			n.heads.housePropertyCarriedForward,
+			o.heads.housePropertyCarriedForward,
+			'minor'
+		);
+		add('Business or profession', n.heads.business, o.heads.business);
+		add(
+			'of which a loss with nowhere to go this year',
+			n.heads.businessLossNotSetOff,
+			o.heads.businessLossNotSetOff,
+			'minor'
+		);
+		add('Other sources', n.heads.otherSources, o.heads.otherSources);
+		add(
+			'Short-term gains taxed at your slab rate',
+			n.capitalGains.slabTaxed,
+			o.capitalGains.slabTaxed
+		);
+		add(
+			'Losses the law lets you set against these',
+			slabRowsTotal(n) - n.grossTotalIncome,
+			slabRowsTotal(o) - o.grossTotalIncome,
+			undefined,
+			true
+		);
+		add('Gross total income', n.grossTotalIncome, o.grossTotalIncome, 'sub');
+
+		// Chapter VI-A, a line per section the reader claimed. sol-056 built these
+		// so the panel could say what happened to each rather than print one total
+		// that silently absorbed the difference.
+		const sections = [...new Set([...n.chapterVIADetail.lines, ...o.chapterVIADetail.lines].map((l) => l.section))];
+		for (const section of sections) {
+			const nl = n.chapterVIADetail.lines.find((l) => l.section === section);
+			const ol = o.chapterVIADetail.lines.find((l) => l.section === section);
+			if (!(nl?.claimed || ol?.claimed)) continue;
+			add(`Deduction under s.${section}`, nl?.allowed ?? 0, ol?.allowed ?? 0, undefined, true);
+		}
+		add(
+			'Restricted so deductions cannot exceed income',
+			n.chapterVIADetail.clampedByGti,
+			o.chapterVIADetail.clampedByGti
+		);
+		add('Income taxed at slab rates', n.slabIncome, o.slabIncome, 'sub');
+
+		// THE ROW IS THE GAIN, NOT THE PART OF IT THAT WAS TAXED. `specialRateIncome`
+		// is the gain, so a bucket row showing `taxed` would leave the subtotal
+		// unreachable from the rows above it - ₹1,75,000 standing under a total of
+		// ₹3,00,000, which is precisely the figure-that-does-not-follow this panel
+		// exists to prevent. What the exemptions took comes off on its own line.
+		const gains: Array<[string, 'stcg111A' | 'ltcg112A' | 'ltcg112']> = [
+			['Gains on shares held under a year, at 20%', 'stcg111A'],
+			['Gains on shares held over a year, at 12.5%', 'ltcg112A'],
+			['Gains on other assets, long term, at 12.5%', 'ltcg112'],
+		];
+		for (const [label, key] of gains) {
+			const nd = n.capitalGains[key];
+			const od = o.capitalGains[key];
+			add(label, nd.gain, od.gain);
+			add(
+				'of which exempt under s.112A, and not taxed',
+				nd.ownExemption,
+				od.ownExemption,
+				'minor'
+			);
+			add(
+				'of which covered by the basic exemption your other income did not use',
+				nd.basicExemptionUsed,
+				od.basicExemptionUsed,
+				'minor'
+			);
+		}
+		add(
+			'Gains taxed at their own rates',
+			n.capitalGains.specialRateIncome,
+			o.capitalGains.specialRateIncome,
+			anyOf(n.capitalGains.specialRateIncome, o.capitalGains.specialRateIncome) ? 'sub' : undefined
+		);
+
+		add('Total income', n.taxableIncome, o.taxableIncome, 'total');
+		renderRows('incRows', rows);
+		renderIncomeNotes(input, result);
+	}
+
+	/** The words. A figure that was cut says so where it happened, not later. */
+	function renderIncomeNotes(input: ReturnType<typeof readTaxInputs>, result: ReturnType<typeof calculateIndiaTaxEngine>) {
+		const notes: string[] = [];
+		const n = result.newRegime;
+		const o = result.oldRegime;
+
+		if (input.houseProperty.kind === 'selfOccupied' && o.heads.housePropertyIncome < 0) {
+			notes.push(
+				`A home you live in earns nothing, so this interest is a loss of ` +
+					`${formatRupee(-o.heads.housePropertyIncome)} — worth claiming only under the old ` +
+					`regime. The new regime allows none of it, which is the single biggest reason a ` +
+					`borrower stays on the old one.`
+			);
+		} else if (input.houseProperty.kind === 'letOut' && n.heads.housePropertyIncome > 0) {
+			notes.push(
+				`Rent, less the municipal tax you paid, less 30%, less the interest: ` +
+					`${formatRupee(n.heads.housePropertyIncome)} of income from the property.`
+			);
+		} else if (input.houseProperty.kind === 'letOut' && n.heads.housePropertyIncome < 0) {
+			notes.push(
+				`The interest costs you more than the rent brings in, so this property is a loss of ` +
+					`${formatRupee(-n.heads.housePropertyIncome)}. On a property you let out the interest ` +
+					`itself is uncapped — it is the LOSS that gets capped, at ₹2 lakh a year against your ` +
+					`other income, and the rest carries forward.`
+			);
+		}
+
+		// An elected presumptive basis DISPLACES the books rather than adding to
+		// them, so a reader who typed a profit and sees a different one on this
+		// panel has been handed a figure that does not follow from what they
+		// entered - dd-009/dont-1. The election is stated where the difference
+		// appears, not only in the form beside the control.
+		const bd = n.heads.businessDetail;
+		if (input.business.basis !== 'books' && bd.booksProfit !== n.heads.business) {
+			notes.push(
+				`You have elected to be taxed on the deemed profit under s.${input.business.basis}, so ` +
+					`the ${formatRupee(bd.booksProfit)} in your books is not what is being charged — ` +
+					`${formatRupee(n.heads.business)} is. Both are priced beside the election.`
+			);
+		}
+
+		// One note per REASON rather than one per section. A reader claiming 80C,
+		// 80D and 80CCD(1B) under the new regime does not need to be told three
+		// times that s.115BAC withdrew them; they need to be told once, with the
+		// sections named. Grouping by the engine's own reason string does that
+		// without the page having to know which reasons exist.
+		for (const [regime, result] of [['New regime', n], ['Old regime', o]] as const) {
+			const byReason = new Map<string, string[]>();
+			for (const line of result.chapterVIADetail.lines) {
+				if (!line.claimed || !line.reason || line.allowed >= line.claimed) continue;
+				byReason.set(line.reason, [...(byReason.get(line.reason) ?? []), `s.${line.section}`]);
+			}
+			for (const [reason, sections] of byReason) {
+				const claimed = result.chapterVIADetail.lines
+					.filter((l) => sections.includes(`s.${l.section}`))
+					.reduce((sum, l) => sum + l.claimed - l.allowed, 0);
+				notes.push(
+					`${regime}: ${reason} That costs you ${formatRupee(claimed)} of what you claimed under ` +
+						`${sections.join(', ')}.`
+				);
+			}
+		}
+
+		if (o.chapterVIADetail.clampedByGti > 0 || n.chapterVIADetail.clampedByGti > 0) {
+			notes.push(
+				'Chapter VI-A can reduce your income to nil but never below it, so the part of your ' +
+					'claim that had no income left to come off was restricted rather than carried anywhere.'
+			);
+		}
+
+		const exemptGains =
+			o.capitalGains.ltcg112A.ownExemption + o.capitalGains.basicExemptionAbsorbed;
+		if (exemptGains > 0) {
+			const parts: string[] = [];
+			if (o.capitalGains.ltcg112A.ownExemption > 0) {
+				parts.push(
+					`${formatRupee(o.capitalGains.ltcg112A.ownExemption)} of your long-term share gains is ` +
+						`exempt under s.112A's own yearly allowance`
+				);
+			}
+			if (o.capitalGains.basicExemptionAbsorbed > 0) {
+				parts.push(
+					`${formatRupee(o.capitalGains.basicExemptionAbsorbed)} was covered by the part of your ` +
+						`basic exemption your other income did not use`
+				);
+			}
+			notes.push(`${parts.join(', and ')}. That is why the gains taxed are less than the gains made.`);
+		}
+
+		if (o.losses.capitalLossBarredFromOtherHeads) {
+			notes.push(
+				'A capital loss you could not use is carried forward rather than set against your ' +
+					'salary or your interest. s.71 bars it from every head but its own.'
+			);
+		}
+
+		const notesEl = document.getElementById('incNotes');
+		if (!notesEl) return;
+		notesEl.innerHTML = '';
+		for (const text of notes) {
+			const p = document.createElement('p');
+			p.className = 'text-sm text-navy-600 dark:text-navy-400 leading-relaxed';
+			p.innerText = text;
+			notesEl.appendChild(p);
+		}
+	}
+
+	function renderTaxComputation(result: ReturnType<typeof calculateIndiaTaxEngine>) {
+		const n = result.newRegime;
+		const o = result.oldRegime;
+		const rows: Row[] = [];
+		const add = (label: string, nv: number, ov: number, kind?: Row['kind'], negative = false, ids?: [string, string]) => {
+			if (!kind && !anyOf(nv, ov)) return;
+			rows.push({
+				label,
+				newVal: negative ? formatNegative(nv) : formatRupee(nv),
+				oldVal: negative ? formatNegative(ov) : formatRupee(ov),
+				kind,
+				newId: ids?.[0],
+				oldId: ids?.[1],
+			});
+		};
+
+		rows.push({
+			label: 'Tax on income at slab rates',
+			newVal: formatRupee(n.slabTax),
+			oldVal: formatRupee(o.slabTax),
+		});
+		add('Tax on gains at their own rates', n.specialRateTax, o.specialRateTax);
+		add('Rebate under s.87A', n.rebate87A, o.rebate87A, undefined, true);
+		add('Surcharge', n.surcharge, o.surcharge);
+		add('Marginal relief', n.marginalRelief, o.marginalRelief, undefined, true);
+		add('Health and education cess, 4%', n.cess, o.cess);
+		add('Total tax', n.totalTax, o.totalTax, 'total', false, ['taxTotalNew', 'taxTotalOld']);
+
+		renderRows('taxRows', rows);
+
+		setText(
+			'taxMarginalNote',
+			n.marginalRelief > 0 || o.marginalRelief > 0
+				? 'Marginal relief is the rule that crossing a threshold must never cost more than the ' +
+						'income that crossed it. Where the extra tax would exceed the extra income, the ' +
+						'difference is given back.'
+				: ''
+		);
+
+		const slabRow = (s: { range: string; rate: string; tax: number }) =>
+			`<tr><td class="py-2">${s.range}</td><td class="py-2 text-navy-600 dark:text-navy-400">${s.rate}</td>` +
+			`<td class="py-2 text-right tabular-nums">${formatRupee(s.tax)}</td></tr>`;
+		const slabsInto = (id: string, r: TaxRegimeResult) => {
+			const body = document.getElementById(id);
+			if (body) body.innerHTML = r.slabs.map(slabRow).join('');
+		};
+		slabsInto('slabRowsNew', n);
+		slabsInto('slabRowsOld', o);
+	}
+
+	// ---------------------------------------------------------------- the answer
 
 	function renderAnswer(model: ReturnType<typeof buildTaxAnswer>) {
 		const { verdict, breakEven } = model;
@@ -396,10 +617,10 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 		setText('ansRate', `${b.effectiveRate}%`);
 
 		// The effective rate divides by TOTAL INCOME, which a loss reduces. A
-		// reader earning 15 lakh who is told "income of 13,00,000" has been
-		// handed a question the screen must answer in the same breath
-		// (dd-009/dont-1), so the gap is reconciled inline whenever it exists -
-		// and the clause disappears when there is nothing to explain.
+		// reader earning 15 lakh who is told "income of 13,00,000" has been handed
+		// a question the screen must answer in the same breath (dd-009/dont-1), so
+		// the gap is reconciled inline whenever it exists - and the clause
+		// disappears when there is nothing to explain.
 		const h = b.heads;
 		const earned =
 			h.salary + b.standardDeduction + b.exemptions +
@@ -451,75 +672,60 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 	/**
 	 * sol-043. EVERY emphasis on this page is applied here, from one verdict.
 	 *
-	 * It used to be five independent decisions written into the markup - emerald
-	 * text, font-weight 900, DEFAULT/OPTIONAL captions, an emerald column header
-	 * and an emerald total - all fixed at "the new regime is the answer". At
-	 * maxed deductions, or on an ordinary ₹2 lakh home loan, the badge read "OLD
-	 * REGIME SAVES ..." while the losing bill stayed the boldest, greenest number
-	 * on the screen. Nothing here may decide for itself.
+	 * It used to be five independent decisions written into the markup, all fixed
+	 * at "the new regime is the answer". At maxed deductions, or on an ordinary
+	 * ₹2 lakh home loan, the badge read "OLD REGIME SAVES ..." while the losing
+	 * bill stayed the boldest, greenest number on the screen. Nothing in the
+	 * markup may decide this for itself.
 	 */
 	function applyVerdict(verdict: ReturnType<typeof buildTaxAnswer>['verdict']) {
 		const WIN = ['ring-2', 'ring-emerald-500/60', 'border-emerald-500/40'];
 		const WIN_TEXT = ['text-emerald-700', 'dark:text-emerald-400', 'font-black'];
 
-		for (const [regime, cardId, ansCardId, tagId, valId, colId, totalId] of [
-			['new', 'cardNewRegime', 'ansCardNew', 'ansTagNew', 'valNewTax', 'colHeadNew', 'brNewTotal'],
-			['old', 'cardOldRegime', 'ansCardOld', 'ansTagOld', 'valOldTax', 'colHeadOld', 'brOldTotal'],
+		for (const [regime, ansCardId, tagId, incColId, taxColId, totalId] of [
+			['new', 'ansCardNew', 'ansTagNew', 'incColNew', 'taxColNew', 'taxTotalNew'],
+			['old', 'ansCardOld', 'ansTagOld', 'incColOld', 'taxColOld', 'taxTotalOld'],
 		] as const) {
 			const won = verdict.winner === regime;
-			for (const id of [cardId, ansCardId]) {
+			const card = document.getElementById(ansCardId);
+			if (card) WIN.forEach((c) => card.classList.toggle(c, won));
+			for (const id of [incColId, taxColId, totalId]) {
 				const e = document.getElementById(id);
-				if (e) WIN.forEach(c => e.classList.toggle(c, won));
-			}
-			for (const id of [valId, colId, totalId]) {
-				const e = document.getElementById(id);
-				if (e) WIN_TEXT.forEach(c => e.classList.toggle(c, won));
+				if (e) WIN_TEXT.forEach((c) => e.classList.toggle(c, won));
 			}
 			const tag = document.getElementById(tagId);
 			if (tag) {
 				tag.innerText = won ? 'Cheaper for you' : '';
 				tag.className = won
-					? 'text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
-					: 'text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded';
+					? 'text-xs font-bold tracking-tight px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
+					: 'text-xs font-bold tracking-tight px-2 py-0.5 rounded';
 			}
 		}
 	}
 
-	/** The copy inside each chip that depends on what the engine actually did. */
-	function renderChipNotes(result: ReturnType<typeof calculateIndiaTaxEngine>) {
-		const kind = (document.getElementById('inHpKind') as HTMLSelectElement | null)?.value;
-		document.getElementById('hpLetOutFields')?.classList.toggle('hidden', kind !== 'letOut');
-		// The interest field goes with the property. Leaving it on screen under
-		// "Neither" lets the reader type a number that silently does nothing -
-		// the sol-041 shape, in the view layer rather than the reader.
-		document.getElementById('hpInterestField')?.classList.toggle('hidden', kind === 'none');
-
-		const hpNew = result.newRegime.heads.housePropertyIncome;
-		const hpOld = result.oldRegime.heads.housePropertyIncome;
-		setText(
-			'hpNote',
-			kind === 'selfOccupied' && hpOld < 0
-				? `A home you live in earns nothing, so this interest is a loss of ${formatRupee(-hpOld)} — worth claiming only under the old regime. The new regime allows none of it, which is the single biggest reason a borrower stays on the old one.`
-				: kind === 'letOut' && hpNew !== 0
-					? `Rent less municipal tax, less 30%, less the interest: ${formatRupee(hpNew)}. Interest is uncapped here — it is the LOSS that gets capped, at ₹2 lakh a year against your other income.`
-					: ''
-		);
+	/** The copy inside the form that depends on what the engine actually did. */
+	function renderFormNotes(result: ReturnType<typeof calculateIndiaTaxEngine>) {
+		setText('valHraExempt', formatRupee(result.oldRegime.exemptions));
 
 		// Both presumptive bases, side by side, from one turnover figure.
+		// dd-006/dont-2: the difference between declaring an actual profit and a
+		// deemed one IS the lesson here, so both are priced and shown at once.
 		const d = result.newRegime.heads.businessDetail;
 		const cmp = document.getElementById('presumptiveCompare');
 		if (cmp) {
 			const row = (label: string, value: string, note: string) =>
-				`<div class="flex justify-between gap-3"><span class="text-navy-500 dark:text-navy-400">${label}</span><span class="font-bold tabular-nums text-navy-900 dark:text-navy-100">${value}</span></div>${note ? `<div class="text-navy-500 dark:text-navy-400">${note}</div>` : ''}`;
+				`<div class="flex justify-between gap-3"><span class="text-navy-600 dark:text-navy-400">${label}</span>` +
+				`<span class="font-bold tabular-nums text-navy-900 dark:text-navy-100">${value}</span></div>` +
+				(note ? `<div class="text-navy-600 dark:text-navy-400">${note}</div>` : '');
 			cmp.innerHTML =
 				row('Your actual profit', formatRupee(d.booksProfit), '') +
 				row(
-					`Deemed under 44AD (${(d.ad44.effectiveRate * 100).toFixed(1)}%)`,
+					`Deemed under s.44AD, at ${(d.ad44.effectiveRate * 100).toFixed(1)}%`,
 					d.ad44.available ? formatRupee(d.ad44.deemedProfit) : '—',
 					d.ad44.available ? '' : d.ad44.unavailableReason
 				) +
 				row(
-					'Deemed under 44ADA (50%)',
+					'Deemed under s.44ADA, at 50%',
 					d.ada44.available ? formatRupee(d.ada44.deemedProfit) : '—',
 					d.ada44.available ? '' : d.ada44.unavailableReason
 				);
@@ -527,7 +733,8 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 
 		const L = result.newRegime.losses;
 		const carried =
-			L.shortTerm.carriedForward + L.longTerm.carriedForward + L.business.carriedForward + L.houseProperty.carriedForward;
+			L.shortTerm.carriedForward + L.longTerm.carriedForward +
+			L.business.carriedForward + L.houseProperty.carriedForward;
 		setText(
 			'lossNote',
 			carried > 0
@@ -536,153 +743,54 @@ import TaxAnswer from '../components/Calculators/TaxAnswer.astro';
 		);
 	}
 
-	function calculateIndiaTax() {
+	// ---------------------------------------------------------------- the loop
+
+	function calculate() {
 		// The page is a view: read, compute, render. Every field on it is read by
 		// `readTaxInputs()` and by nothing else - see taxInputs.ts for why that
 		// matters before the second surface exists rather than after.
-		const model = buildTaxAnswer(readTaxInputs());
-		const result = model.result;
+		const input = readTaxInputs();
+		const model = buildTaxAnswer(input);
 		renderAnswer(model);
 		applyVerdict(model.verdict);
-		renderChipNotes(result);
-
-		// Update UI DOM - Top level
-		const newTaxEl = document.getElementById('valNewTax');
-		const oldTaxEl = document.getElementById('valOldTax');
-		const newEffEl = document.getElementById('valNewEffectiveRate');
-		const oldEffEl = document.getElementById('valOldEffectiveRate');
-		const badgeEl = document.getElementById('indiaSavingsBadge');
-
-		if (newTaxEl) newTaxEl.innerText = formatRupee(result.newRegime.totalTax);
-		if (oldTaxEl) oldTaxEl.innerText = formatRupee(result.oldRegime.totalTax);
-		if (newEffEl) newEffEl.innerText = `Effective Rate: ${result.newRegime.effectiveRate}%`;
-		if (oldEffEl) oldEffEl.innerText = `Effective Rate: ${result.oldRegime.effectiveRate}%`;
-
-        // Update HRA Exempt tag
-        const hraTag = document.getElementById('valHraExempt');
-        if (hraTag) hraTag.innerText = formatRupee(result.oldRegime.exemptions); // Since HRA is the only exemption currently
-
-        // Update Breakdown Table
-        const setHtml = (id: string, val: string) => { const el = document.getElementById(id); if (el) el.innerText = val; };
-        
-        setHtml('brNewGross', formatRupee(result.newRegime.grossIncome));
-        setHtml('brOldGross', formatRupee(result.oldRegime.grossIncome));
-        
-        setHtml('brOldExempt', formatNegative(result.oldRegime.exemptions));
-        setHtml('brOldDed', formatNegative(result.oldRegime.deductions));
-
-        // What the head actually contributed: its income if positive, or only
-        // the part of its loss the set-off rules allowed. Showing the full loss
-        // here would be a figure that never reached the taxable income.
-        const hpContribution = (h: typeof result.newRegime.heads) =>
-            h.housePropertyIncome >= 0 ? formatRupee(h.housePropertyIncome) : formatNegative(h.housePropertySetOff);
-        setHtml('brNewHp', hpContribution(result.newRegime.heads));
-        setHtml('brOldHp', hpContribution(result.oldRegime.heads));
-
-        // The unused part of a loss is stated rather than dropped. Under the new
-        // regime that is the WHOLE loss - s.115BAC allows none of it against
-        // other heads - and a reader comparing the columns deserves to see why
-        // the two differ by more than the deductions explain.
-        const carry = Math.max(
-            result.newRegime.heads.housePropertyCarriedForward,
-            result.oldRegime.heads.housePropertyCarriedForward
-        );
-        document.getElementById('brHpCarryRow')?.classList.toggle('hidden', carry <= 0);
-        setHtml('brNewHpCarry', formatRupee(result.newRegime.heads.housePropertyCarriedForward));
-        setHtml('brOldHpCarry', formatRupee(result.oldRegime.heads.housePropertyCarriedForward));
-        
-        setHtml('brNewStd', formatNegative(result.newRegime.standardDeduction));
-        setHtml('brOldStd', formatNegative(result.oldRegime.standardDeduction));
-        
-        setHtml('brNewTaxable', formatRupee(result.newRegime.taxableIncome));
-        setHtml('brOldTaxable', formatRupee(result.oldRegime.taxableIncome));
-        
-        // The slab tax alone, so the row still follows from the slab table
-        // above it. `baseTax` now also carries the special-rate tax, which gets
-        // its own row rather than being hidden inside this one.
-        setHtml('brNewBase', formatRupee(result.newRegime.slabTax - result.newRegime.rebate87A));
-        setHtml('brOldBase', formatRupee(result.oldRegime.slabTax - result.oldRegime.rebate87A));
-
-        const anyCg = result.newRegime.specialRateTax > 0 || result.oldRegime.specialRateTax > 0;
-        document.getElementById('brCgRow')?.classList.toggle('hidden', !anyCg);
-        setHtml('brNewCg', formatRupee(result.newRegime.specialRateTax));
-        setHtml('brOldCg', formatRupee(result.oldRegime.specialRateTax));
-        
-        setHtml('brNewRebate', formatNegative(result.newRegime.rebate87A));
-        setHtml('brOldRebate', formatNegative(result.oldRegime.rebate87A));
-        
-        setHtml('brNewSur', formatRupee(result.newRegime.surcharge));
-        setHtml('brOldSur', formatRupee(result.oldRegime.surcharge));
-        
-        setHtml('brNewMarginal', formatNegative(result.newRegime.marginalRelief));
-        setHtml('brOldMarginal', formatNegative(result.oldRegime.marginalRelief));
-        
-        setHtml('brNewCess', formatRupee(result.newRegime.cess));
-        setHtml('brOldCess', formatRupee(result.oldRegime.cess));
-        
-        setHtml('brNewTotal', formatRupee(result.newRegime.totalTax));
-        setHtml('brOldTotal', formatRupee(result.oldRegime.totalTax));
-
-		if (badgeEl) {
-			if (result.isNewBetter) {
-				badgeEl.innerText = `New Regime Saves ${formatRupee(result.savingsAmount)}`;
-				badgeEl.className = "badge-safe px-3 py-1.5 text-xs font-bold self-start sm:self-auto";
-			} else if (result.isOldBetter) {
-				badgeEl.innerText = `Old Regime Saves ${formatRupee(result.savingsAmount)}`;
-				badgeEl.className = "badge-warning px-3 py-1.5 text-xs font-bold self-start sm:self-auto";
-			} else {
-				badgeEl.innerText = "Both Regimes Equal Tax";
-				badgeEl.className = "px-3 py-1.5 text-xs font-bold self-start sm:self-auto rounded bg-navy-200 dark:bg-navy-800 text-navy-600 dark:text-navy-400 border border-navy-300 dark:border-white/10 uppercase tracking-widest";
-			}
-		}
+		renderIncomeComputation(input, model.result);
+		renderTaxComputation(model.result);
+		renderFormNotes(model.result);
 	}
 
 	document.addEventListener('DOMContentLoaded', () => {
-		// The field lists come from the reader too. A page that keeps its own
-		// copy is a page where a field can be added to the form and to the
-		// input set and still never trigger a recompute.
-		MONEY_FIELD_IDS.forEach(id => {
+		// The field lists come from the reader too. A page that keeps its own copy
+		// is a page where a field can be added to the form and to the input set and
+		// still never trigger a recompute.
+		MONEY_FIELD_IDS.forEach((id) => {
 			const el = document.getElementById(id);
-			if (el) setupFormattingField(el as HTMLInputElement, calculateIndiaTax);
+			if (el) setupFormattingField(el as HTMLInputElement, calculate);
 		});
 
-		CHOICE_FIELD_IDS.forEach(id => {
-			document.getElementById(id)?.addEventListener('change', calculateIndiaTax);
+		CHOICE_FIELD_IDS.forEach((id) => {
+			document.getElementById(id)?.addEventListener('change', calculate);
 		});
 
-		calculateIndiaTax();
+		document.getElementById('inCategory')?.addEventListener('change', () => {
+			refreshOffers();
+			calculate();
+		});
+
+		for (const selectId of ['taxAddIncome', 'taxAddSeparate', 'taxAddDeduction']) {
+			document.getElementById(selectId)?.addEventListener('change', (e) => {
+				const select = e.target as HTMLSelectElement;
+				const id = select.value;
+				select.value = '';
+				if (id) addEntry(id);
+			});
+		}
+
+		document.getElementById('taxInputForm')?.addEventListener('click', (e) => {
+			const drop = (e.target as HTMLElement).closest<HTMLElement>('.tax-field-drop');
+			if (drop?.dataset.drop) dropEntry(drop.dataset.drop);
+		});
+
+		refreshOffers();
+		calculate();
 	});
 </script>
-
-<style>
-	/*
-		The chips. Plain CSS rather than @apply: Tailwind v4 needs an @reference
-		in a scoped style block, and the rest of this codebase puts utilities on
-		the element anyway. Only the marker needs CSS at all.
-	*/
-	.tax-chip > summary,
-	.tax-subchip > summary {
-		cursor: pointer;
-		list-style: none;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 0.5rem;
-	}
-	.tax-chip > summary::-webkit-details-marker,
-	.tax-subchip > summary::-webkit-details-marker {
-		display: none;
-	}
-	.tax-chip > summary::after,
-	.tax-subchip > summary::after {
-		content: '+';
-		font-weight: 400;
-		font-size: 1rem;
-		line-height: 1;
-		opacity: 0.5;
-	}
-	.tax-chip[open] > summary::after,
-	.tax-subchip[open] > summary::after {
-		content: '\2212';
-	}
-</style>

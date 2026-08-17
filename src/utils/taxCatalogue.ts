@@ -125,6 +125,25 @@ export interface CatalogueEntry {
 
 export interface IncomeSource extends CatalogueEntry {
   head: Head;
+  /**
+   * WHY THIS SOURCE CANNOT BE CLUBBED WITH THE OTHERS — and it is a reason
+   * string rather than a boolean, for the same rule as `Exclusion.statute`: you
+   * cannot take a source out of the ordinary income block without saying what
+   * the arithmetic would lose if it stayed.
+   *
+   * This is Rahul's block (2), settled on 17 Aug when he read back the one
+   * illegible word on sheet 2: *"only those that can't be clubbed in
+   * dropdown-1"*. Dropdown 1's sources ADD UP — salary, pension and arrears are
+   * one figure to the slabs, and five kinds of business income are one profit.
+   * These cannot join them, because summing them would destroy the only thing
+   * the arithmetic cares about.
+   *
+   * A source that shares its `target` with another is clubbed BY CONSTRUCTION —
+   * the form sums them into one field — so claiming it cannot be clubbed would
+   * be a promise the engine does not keep. `taxCatalogue.test.ts` enforces
+   * exactly that, and it is what decides the F&O case rather than taste.
+   */
+  unclubbable?: string;
 }
 
 /**
@@ -178,6 +197,8 @@ export const INCOME_SOURCES: IncomeSource[] = [
     id: 'presumptive44AD', head: 'businessProfession', target: 'business.turnover',
     label: 'Presumptive business income (44AD)',
     hint: 'Declare a deemed profit — 6% of banked turnover, 8% of cash — instead of keeping full books. Enter the turnover; the engine costs both bases and shows you the difference.',
+    unclubbable:
+      'This is turnover, not profit, and a deemed profit is struck from it by a statutory percentage. Adding turnover to a profit would tax the same trade twice over and at the wrong figure.',
     excluded: [
       { category: 'salaried', statute: 's.44AD applies to an eligible BUSINESS. A salaried filer has no eligible business, so the election is not available.' },
       { category: 'professional', statute: 's.44AD(6) excludes a person carrying on a profession referred to in s.44AA(1); professionals elect under s.44ADA instead.' },
@@ -187,6 +208,8 @@ export const INCOME_SOURCES: IncomeSource[] = [
     id: 'presumptive44ADA', head: 'businessProfession', target: 'business.professionalReceipts',
     label: 'Presumptive professional income (44ADA)',
     hint: 'Declare 50% of gross receipts as profit instead of keeping full books. Enter the receipts, not the profit.',
+    unclubbable:
+      'These are gross receipts, not profit. Half of them is deemed to be the profit, so adding them to a profit figure would count the practice twice and at a figure the section never meant.',
     excluded: [
       { category: 'salaried', statute: 's.44ADA applies to a resident carrying on a profession referred to in s.44AA(1). A salaried filer is not carrying on that profession.' },
       { category: 'business', statute: 's.44ADA is confined to the professions listed in s.44AA(1); a trading or manufacturing business elects under s.44AD instead.' },
@@ -199,6 +222,16 @@ export const INCOME_SOURCES: IncomeSource[] = [
     // Deliberately available to EVERY category, including salaried. dd-020/do-3
     // names this exact case: uncommon for a salaried filer, entirely lawful, and
     // hiding it would mean the reader it fits never learns it was there.
+    //
+    // AND DELIBERATELY NOT `unclubbable`, THOUGH RAHUL'S SHEET LISTS IT IN BLOCK
+    // (2). It shares `business.netProfit` with four other sources, so the form
+    // sums it with them and the engine sees one profit. Putting it in the block
+    // headed "these cannot be added to the figures above" would tell the reader
+    // something the arithmetic does not do. The separation he has in mind is
+    // real in the Act - F&O is non-speculative where intraday is speculative,
+    // and their losses do not meet the same income - but it is a separation the
+    // ENGINE does not yet make, so the honest place to record it is the launch
+    // gate, not a block heading. On the gate, for Rahul.
     excluded: [],
   },
   {
@@ -222,21 +255,29 @@ export const INCOME_SOURCES: IncomeSource[] = [
     id: 'stcg111A', head: 'capitalGains', common: true, target: 'capitalGains.stcg111A',
     label: 'Short-term gains on shares or equity funds',
     hint: 'Listed equity held 12 months or less, sold on an exchange. Taxed at a flat 20% under s.111A.',
+    unclubbable:
+      'It carries its own flat rate under s.111A. Added to your salary it would be charged at your slab rate instead, which is the rate this section exists to displace.',
   },
   {
     id: 'ltcg112A', head: 'capitalGains', common: true, target: 'capitalGains.ltcg112A',
     label: 'Long-term gains on shares or equity funds',
     hint: 'Listed equity held over 12 months. 12.5% under s.112A, with the first ₹1.25 lakh of gains exempt.',
+    unclubbable:
+      'It has both its own rate and its own yearly exemption under s.112A. Summed with anything else, the exemption would be spent on income that was never entitled to it.',
   },
   {
     id: 'stcgOther', head: 'capitalGains', target: 'capitalGains.stcgSlab',
     label: 'Short-term gains on other assets',
     hint: 'Property, gold, debt funds, unlisted shares held under the long-term threshold. Taxed at your slab rate, not at 20%.',
+    unclubbable:
+      'It is taxed at your slab rate, but it is still a capital gain: a capital loss may be set against it and against nothing else. Folded into ordinary income, a loss you are entitled to use would have nowhere to go.',
   },
   {
     id: 'ltcgOther', head: 'capitalGains', target: 'capitalGains.ltcg112',
     label: 'Long-term gains on other assets',
     hint: 'Property, gold or unlisted shares held past the long-term threshold. 12.5% under s.112.',
+    unclubbable:
+      'It carries its own flat rate under s.112. Added to your other income it would be charged at your slab rate, which for most owners of property or gold is the higher one.',
   },
   {
     id: 'vda', head: 'capitalGains',
@@ -414,6 +455,19 @@ export const regimesForDeduction = (d: Deduction): readonly Regime[] => {
 /** Everything this category may lawfully declare. Exhaustive — dd-001/do-3. */
 export const incomeSourcesFor = (category: string): IncomeSource[] =>
   INCOME_SOURCES.filter((s) => !s.pending && !isExcluded(s, category));
+
+/**
+ * The two income blocks on Rahul's sheet: what adds up, and what must be kept
+ * apart. `separate` is block (2) — *"only those that can't be clubbed in
+ * dropdown-1"* — and its members say why, one by one.
+ */
+export const incomeBlocksFor = (category: string): { clubbable: IncomeSource[]; separate: IncomeSource[] } => {
+  const eligible = incomeSourcesFor(category);
+  return {
+    clubbable: eligible.filter((s) => !s.unclubbable),
+    separate: eligible.filter((s) => s.unclubbable),
+  };
+};
 
 /** Everything this category may lawfully claim, in this regime. */
 export const deductionsFor = (category: string, regime: Regime): Deduction[] =>
