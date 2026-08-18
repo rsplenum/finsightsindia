@@ -565,6 +565,86 @@ import InsuranceDiyPlan from '../components/Calculators/InsuranceDiyPlan.astro';
 		setText('frictionGst', tableFormatter.format(Math.round(r.frictions.gstPaid)));
 		setText('frictionCommission', tableFormatter.format(Math.round(r.frictions.estCommission)));
 
+		// 3-Way Premium Decomposition
+		const d = r.premiumDecomposition;
+		setText('decompCostMortality', money(d.mortalityCost));
+		setText('decompCostFriction', money(d.intermediaryFrictionCost));
+		setText('decompCostInvested', money(d.netInvestedCapital));
+
+		setText('decompPctMortality', `${d.mortalityPct}%`);
+		setText('decompPctFriction', `${d.intermediaryFrictionPct}%`);
+		setText('decompPctInvested', `${d.netInvestedPct}%`);
+
+		const barMort = el('decompBarMortality');
+		const barFric = el('decompBarFriction');
+		const barInv = el('decompBarInvested');
+		if (barMort) barMort.style.width = `${d.mortalityPct}%`;
+		if (barFric) barFric.style.width = `${d.intermediaryFrictionPct}%`;
+		if (barInv) barInv.style.width = `${d.netInvestedPct}%`;
+
+		// Sunk-Cost / Surrender & Paid-Up Arbitrage Matrix
+		const s = r.surrenderAnalysis;
+		const surrenderSec = el('insuranceSurrenderSection');
+		if (surrenderSec) {
+			surrenderSec.hidden = !s;
+			if (s) {
+				setText('surrenderPaidToDate', money(s.totalPremiumsPaidToDate));
+				setText('surrenderYearsLabel', `Across ${s.premiumsPaidSoFar} year${s.premiumsPaidSoFar > 1 ? 's' : ''}`);
+				setText('surrenderValueToday', money(s.estimatedSurrenderValue));
+				setText('surrenderSsvFactor', `${s.ssvFactorPct}% of paid premiums`);
+				setText('surrenderHaircut', money(s.surrenderHaircutLoss));
+
+				setText('surrenderOptANominal', money(s.optionASurrenderAndReinvest.terminalCorpus));
+				setText('surrenderOptAReal', money(s.optionASurrenderAndReinvest.terminalCorpusReal));
+
+				setText('surrenderOptBNominal', money(s.optionBPaidUp.terminalCorpus));
+				setText('surrenderOptBReal', money(s.optionBPaidUp.terminalCorpusReal));
+
+				setText('surrenderOptCNominal', money(s.optionCHoldToMaturity.terminalPayoutsTotal));
+				setText('surrenderOptCReal', money(s.optionCHoldToMaturity.terminalCorpusReal));
+
+				const badge = el('surrenderVerdictBadge');
+				const banner = el('surrenderArbitrageBanner');
+
+				const rowA = el('surrenderRowOptA');
+				const rowB = el('surrenderRowOptB');
+				const rowC = el('surrenderRowOptC');
+				[rowA, rowB, rowC].forEach((row) => row?.classList.remove('bg-emerald-50/70', 'dark:bg-emerald-950/30', 'font-bold'));
+
+				if (s.recommendedAction === 'SURRENDER_AND_PIVOT') {
+					if (badge) {
+						badge.innerText = 'Option A Wins: Surrender & Reinvest';
+						badge.className = 'px-2.5 py-1 text-xs font-bold tracking-tight rounded-md bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300';
+					}
+					rowA?.classList.add('bg-emerald-50/70', 'dark:bg-emerald-950/30');
+					if (banner) {
+						banner.className = 'p-4 rounded-xl border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/50 dark:bg-emerald-950/20 text-sm leading-relaxed text-emerald-900 dark:text-emerald-200';
+						banner.innerHTML = `<strong>Mathematical Verdict: Surrender & Pivot.</strong> Even after suffering an immediate sunk-cost haircut of <strong>${money(s.surrenderHaircutLoss)}</strong> today, compound growth on your remaining cashout plus future saved premiums delivers <strong class="font-bold text-emerald-700 dark:text-emerald-400">+${money(s.arbitrageDeltaVsHold)}</strong> (+${money(s.arbitrageDeltaVsHoldReal)} in today's purchasing power) more than holding to maturity.`;
+					}
+				} else if (s.recommendedAction === 'MAKE_PAID_UP') {
+					if (badge) {
+						badge.innerText = 'Option B Wins: Make Paid-Up';
+						badge.className = 'px-2.5 py-1 text-xs font-bold tracking-tight rounded-md bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300';
+					}
+					rowB?.classList.add('bg-emerald-50/70', 'dark:bg-emerald-950/30');
+					if (banner) {
+						banner.className = 'p-4 rounded-xl border border-blue-200 dark:border-blue-900/50 bg-blue-50/50 dark:bg-blue-950/20 text-sm leading-relaxed text-blue-900 dark:text-blue-200';
+						banner.innerHTML = `<strong>Mathematical Verdict: Make Policy Paid-Up.</strong> Avoid the immediate surrender penalty by locking in a reduced pro-rata benefit of ${money(s.optionBPaidUp.reducedPayoutsTotal)}, and redirect all future premiums to your index replica. This creates <strong class="font-bold text-blue-700 dark:text-blue-400">+${money(s.arbitrageDeltaVsHold)}</strong> more wealth than continuing to pay full premiums.`;
+					}
+				} else {
+					if (badge) {
+						badge.innerText = 'Option C Wins: Hold to Maturity';
+						badge.className = 'px-2.5 py-1 text-xs font-bold tracking-tight rounded-md bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300';
+					}
+					rowC?.classList.add('bg-emerald-50/70', 'dark:bg-emerald-950/30');
+					if (banner) {
+						banner.className = 'p-4 rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/50 dark:bg-amber-950/20 text-sm leading-relaxed text-amber-900 dark:text-amber-200';
+						banner.innerHTML = `<strong>Mathematical Verdict: Hold to Maturity.</strong> You are near the end of your paying term or maturity horizon. Exiting now would lock in an unnecessary penalty that cannot be recouped in the remaining time. Hold the policy to maturity to collect full benefits.`;
+					}
+				}
+			}
+		}
+
 		renderCashflowChart(r.ledger);
 	}
 
@@ -781,7 +861,7 @@ import InsuranceDiyPlan from '../components/Calculators/InsuranceDiyPlan.astro';
 			onShapeChanged((e.target as HTMLSelectElement).value);
 		});
 
-		for (const selectId of ['insAddPayout', 'insAddCover']) {
+		for (const selectId of ['insAddPay', 'insAddPayout', 'insAddCover']) {
 			document.getElementById(selectId)?.addEventListener('change', (e) => {
 				const select = e.target as HTMLSelectElement;
 				const id = select.value;

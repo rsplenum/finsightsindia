@@ -167,7 +167,69 @@ export interface PolicyInputs {
    * clock so that the same policy yields the same number twice; the reader's
    * page passes today.
    */
-  startDate: Date;
+  /**
+   * For existing policies: how many policy years have elapsed since start.
+   * Zero if evaluating a new policy.
+   */
+  currentPolicyYear?: number;
+  /**
+   * For existing policies: how many full annual premiums have been paid so far.
+   */
+  premiumsPaidSoFar?: number;
+  /** The policy's start date, for exact day counts. Defaults to today if omitted. */
+  startDate?: Date;
+}
+
+export interface PremiumDecomposition {
+  /** Gross annual premium */
+  annualPremium: number;
+  /** Pure Risk / Term Cover portion per year */
+  mortalityCost: number;
+  mortalityPct: number;
+  /** Intermediary Loading, GST & Distribution Friction (annualized over PPT) */
+  intermediaryFrictionCost: number;
+  intermediaryFrictionPct: number;
+  /** Net Invested Principal compounding inside policy fund */
+  netInvestedCapital: number;
+  netInvestedPct: number;
+}
+
+export type SurrenderAction = 'SURRENDER_AND_PIVOT' | 'MAKE_PAID_UP' | 'HOLD_TO_MATURITY';
+
+export interface SurrenderResult {
+  currentPolicyYear: number;
+  premiumsPaidSoFar: number;
+  totalPremiumsPaidToDate: number;
+  /** Estimated Special Surrender Value available today under IRDAI curves */
+  estimatedSurrenderValue: number;
+  ssvFactorPct: number;
+  /** Sunk-cost haircut suffered if surrendered today */
+  surrenderHaircutLoss: number;
+
+  /** Option A: Surrender today and invest SSV + future saved premiums into replica */
+  optionASurrenderAndReinvest: {
+    terminalCorpus: number;
+    terminalCorpusReal: number;
+  };
+  /** Option B: Make paid-up (zero future premiums), collect reduced payout + invest saved future premiums into replica */
+  optionBPaidUp: {
+    reducedPayoutsTotal: number;
+    savedPremiumsCorpus: number;
+    terminalCorpus: number;
+    terminalCorpusReal: number;
+  };
+  /** Option C: Continue policy to maturity */
+  optionCHoldToMaturity: {
+    remainingPremiumsToPay: number;
+    terminalPayoutsTotal: number;
+    terminalCorpusReal: number;
+  };
+
+  /** Best mathematical action */
+  recommendedAction: SurrenderAction;
+  /** Net wealth gain (or loss if negative) of best action vs holding to maturity */
+  arbitrageDeltaVsHold: number;
+  arbitrageDeltaVsHoldReal: number;
 }
 
 export interface LedgerRow {
@@ -407,9 +469,11 @@ export interface ReplicationResult {
   frictions: {
     /** GST paid across the premium term. */
     gstPaid: number;
-    /** Estimated first-year commission. */
+    /** Estimated first-year distributor commission. */
     estCommission: number;
   };
+  surrenderAnalysis?: SurrenderResult;
+  premiumDecomposition: PremiumDecomposition;
 }
 
 /**
@@ -870,5 +934,173 @@ export function analyseReplication(inputs: PolicyInputs): ReplicationResult {
     ledger,
     sensitivity,
     frictions: frictionsOf(inputs),
+    premiumDecomposition: decomposePremium(inputs),
+    surrenderAnalysis: analyzeSurrenderArbitrage(inputs, ledger),
   };
 }
+
+/**
+ * Decomposes an annual policy premium into its 3 constituent cash flow allocations:
+ * 1. Pure Mortality Cost (what term insurance charges for the same Sum Assured)
+ * 2. Intermediary Loading & Tax Friction (GST + distributor commissions + administrative expenses)
+ * 3. Net Invested Capital (actual capital working in the underlying fund)
+ */
+export function decomposePremium(inputs: PolicyInputs): PremiumDecomposition {
+  const annualPremium = inputs.premium;
+  if (annualPremium <= 0) {
+    return {
+      annualPremium: 0,
+      mortalityCost: 0,
+      mortalityPct: 0,
+      intermediaryFrictionCost: 0,
+      intermediaryFrictionPct: 0,
+      netInvestedCapital: 0,
+      netInvestedPct: 0,
+    };
+  }
+
+  const mortalityCost = Math.min(annualPremium, inputs.termCost + inputs.accidentCost);
+  const frictions = frictionsOf(inputs);
+  const annualGst = frictions.gstPaid / (inputs.ppt || 1);
+  const annualCommissionEst = frictions.estCommission / (inputs.ppt || 1);
+
+  // Intermediary friction is GST + distributor payout loading
+  const totalFrictionEst = annualGst + annualCommissionEst;
+  const intermediaryFrictionCost = Math.min(
+    Math.max(0, annualPremium - mortalityCost),
+    totalFrictionEst
+  );
+
+  const netInvestedCapital = Math.max(0, annualPremium - mortalityCost - intermediaryFrictionCost);
+
+  return {
+    annualPremium,
+    mortalityCost: Math.round(mortalityCost),
+    mortalityPct: Number(((mortalityCost / annualPremium) * 100).toFixed(1)),
+    intermediaryFrictionCost: Math.round(intermediaryFrictionCost),
+    intermediaryFrictionPct: Number(((intermediaryFrictionCost / annualPremium) * 100).toFixed(1)),
+    netInvestedCapital: Math.round(netInvestedCapital),
+    netInvestedPct: Number(((netInvestedCapital / annualPremium) * 100).toFixed(1)),
+  };
+}
+
+/**
+ * Evaluates the Sunk-Cost / Surrender & Paid-Up Arbitrage for existing policyholders.
+ * Computes IRDAI Special Surrender Value (SSV) and compares 3 alternative trajectories:
+ * - Option A: Surrender today, take SSV, and invest SSV + future saved premiums in replica.
+ * - Option B: Make policy paid-up (zero future premiums), collect reduced benefit + invest saved premiums.
+ * - Option C: Continue policy to maturity.
+ */
+export function analyzeSurrenderArbitrage(
+  inputs: PolicyInputs,
+  ledger: LedgerRow[]
+): SurrenderResult | undefined {
+  const currentYear = inputs.currentPolicyYear ?? 0;
+  const premiumsPaid = inputs.premiumsPaidSoFar ?? 0;
+
+  if (currentYear <= 0 || premiumsPaid <= 0) return undefined;
+
+  const totalPremiumsPaidToDate = inputs.premium * premiumsPaid;
+  const { totalYears } = horizonOf(inputs);
+  const remainingYears = Math.max(0, totalYears - currentYear);
+  const remainingPPT = Math.max(0, inputs.ppt - premiumsPaid);
+  const investablePremium = investableCapitalOf(inputs);
+  const netEquityRate = (inputs.equityRate - inputs.equityFeePct) / 100;
+  const infl = inputs.inflationRate / 100;
+
+  // 1. IRDAI Special Surrender Value (SSV) factor scale
+  let ssvFactor = 0;
+  if (premiumsPaid === 1) {
+    ssvFactor = 0.0; // 0% in Year 1
+  } else if (premiumsPaid <= 3) {
+    ssvFactor = 0.35; // 35% for Years 2-3
+  } else if (premiumsPaid <= 7) {
+    ssvFactor = 0.50; // 50% for Years 4-7
+  } else {
+    // 50% + 5% for each year past Year 7, max 90%
+    ssvFactor = Math.min(0.90, 0.50 + (premiumsPaid - 7) * 0.05);
+  }
+
+  const estimatedSurrenderValue = Math.round(totalPremiumsPaidToDate * ssvFactor);
+  const surrenderHaircutLoss = totalPremiumsPaidToDate - estimatedSurrenderValue;
+
+  // 2. Option A: Surrender & Reinvest
+  // Start with SSV at currentYear, add future saved investable premiums, compound to totalYears
+  let optionACorpus = estimatedSurrenderValue;
+  for (let yr = 1; yr <= remainingYears; yr++) {
+    const isPayingYear = yr <= remainingPPT;
+    if (isPayingYear) {
+      optionACorpus += investablePremium;
+    }
+    optionACorpus *= 1 + netEquityRate;
+  }
+  const optionACorpusReal = optionACorpus / Math.pow(1 + infl, remainingYears);
+
+  // 3. Option B: Make Paid-Up
+  // Policy benefits scale down proportionally to (premiumsPaid / PPT)
+  const paidUpFactor = Math.min(1, premiumsPaid / (inputs.ppt || 1));
+  const totalNetPolicyPayouts = ledger.reduce((sum, r) => sum + r.payoutNet, 0);
+  const reducedPayoutsTotal = Math.round(totalNetPolicyPayouts * paidUpFactor);
+
+  // Future premiums are saved and invested into replica
+  let savedPremiumsCorpus = 0;
+  for (let yr = 1; yr <= remainingYears; yr++) {
+    const isPayingYear = yr <= remainingPPT;
+    if (isPayingYear) {
+      savedPremiumsCorpus += investablePremium;
+    }
+    savedPremiumsCorpus *= 1 + netEquityRate;
+  }
+  const optionBCorpus = Math.round(reducedPayoutsTotal + savedPremiumsCorpus);
+  const optionBCorpusReal = optionBCorpus / Math.pow(1 + infl, remainingYears);
+
+  // 4. Option C: Hold to Maturity
+  const remainingPremiumsToPay = remainingPPT * inputs.premium;
+  const optionCTerminal = totalNetPolicyPayouts;
+  const optionCTerminalReal = optionCTerminal / Math.pow(1 + infl, remainingYears);
+
+  // 5. Verdict & Recommendation
+  let recommendedAction: SurrenderAction;
+  let arbitrageDeltaVsHold = 0;
+
+  if (optionACorpus >= optionBCorpus && optionACorpus > optionCTerminal) {
+    recommendedAction = 'SURRENDER_AND_PIVOT';
+    arbitrageDeltaVsHold = Math.round(optionACorpus - optionCTerminal);
+  } else if (optionBCorpus > optionACorpus && optionBCorpus > optionCTerminal) {
+    recommendedAction = 'MAKE_PAID_UP';
+    arbitrageDeltaVsHold = Math.round(optionBCorpus - optionCTerminal);
+  } else {
+    recommendedAction = 'HOLD_TO_MATURITY';
+    arbitrageDeltaVsHold = Math.round(optionCTerminal - Math.max(optionACorpus, optionBCorpus));
+  }
+
+  const arbitrageDeltaVsHoldReal = arbitrageDeltaVsHold / Math.pow(1 + infl, remainingYears);
+
+  return {
+    currentPolicyYear: currentYear,
+    premiumsPaidSoFar: premiumsPaid,
+    totalPremiumsPaidToDate,
+    estimatedSurrenderValue,
+    ssvFactorPct: Number((ssvFactor * 100).toFixed(0)),
+    surrenderHaircutLoss,
+    optionASurrenderAndReinvest: {
+      terminalCorpus: Math.round(optionACorpus),
+      terminalCorpusReal: Math.round(optionACorpusReal),
+    },
+    optionBPaidUp: {
+      reducedPayoutsTotal,
+      savedPremiumsCorpus: Math.round(savedPremiumsCorpus),
+      terminalCorpus: optionBCorpus,
+      terminalCorpusReal: Math.round(optionBCorpusReal),
+    },
+    optionCHoldToMaturity: {
+      remainingPremiumsToPay,
+      terminalPayoutsTotal: Math.round(optionCTerminal),
+      terminalCorpusReal: Math.round(optionCTerminalReal),
+    },
+    recommendedAction,
+    arbitrageDeltaVsHold,
+    arbitrageDeltaVsHoldReal: Math.round(arbitrageDeltaVsHoldReal),
+  };
+}
+

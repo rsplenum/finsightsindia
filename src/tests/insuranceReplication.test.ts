@@ -889,3 +889,112 @@ describe('the two figures the page must not work out for itself', () => {
     expect(charged.growthFeeCost).toBeGreaterThan(feesAlone);
   });
 });
+
+describe('3-way premium decomposition (mortality vs friction vs net invested capital)', () => {
+  it('splits premium into pure cover, intermediary loading/GST, and net invested capital', () => {
+    const r = analyseReplication(shipped);
+    const d = r.premiumDecomposition;
+
+    expect(d.annualPremium).toBe(100000);
+    expect(d.mortalityCost).toBe(17000); // 12,000 term + 5,000 accident
+    expect(d.mortalityPct).toBe(17.0);
+
+    // GST + Commission annualized over 10 years PPT
+    // gstPaid = 24,750 / 10 = 2,475; commission = 20,000 / 10 = 2,000 -> 4,475
+    expect(d.intermediaryFrictionCost).toBe(4475);
+    expect(d.intermediaryFrictionPct).toBe(4.5);
+
+    // Net capital = 100,000 - 17,000 - 4,475 = 78,525
+    expect(d.netInvestedCapital).toBe(78525);
+    expect(d.netInvestedPct).toBe(78.5);
+
+    // Total parts sum to 100%
+    expect(d.mortalityCost + d.intermediaryFrictionCost + d.netInvestedCapital).toBe(d.annualPremium);
+    expect(d.mortalityPct + d.intermediaryFrictionPct + d.netInvestedPct).toBeCloseTo(100.0, 1);
+  });
+
+  it('handles zero premium gracefully', () => {
+    const r = analyseReplication(at({ premium: 0 }));
+    const d = r.premiumDecomposition;
+    expect(d.annualPremium).toBe(0);
+    expect(d.mortalityCost).toBe(0);
+    expect(d.intermediaryFrictionCost).toBe(0);
+    expect(d.netInvestedCapital).toBe(0);
+  });
+});
+
+describe('sunk-cost / surrender & paid-up arbitrage solver', () => {
+  it('returns undefined when evaluating a new policy (currentPolicyYear = 0)', () => {
+    const r = analyseReplication(shipped);
+    expect(r.surrenderAnalysis).toBeUndefined();
+  });
+
+  it('evaluates IRDAI Special Surrender Value (SSV) curve accurately across policy ages', () => {
+    // Year 1: 0% SSV
+    const yr1 = analyseReplication(at({ currentPolicyYear: 1, premiumsPaidSoFar: 1 })).surrenderAnalysis!;
+    expect(yr1).toBeDefined();
+    expect(yr1.ssvFactorPct).toBe(0);
+    expect(yr1.estimatedSurrenderValue).toBe(0);
+    expect(yr1.surrenderHaircutLoss).toBe(100000);
+
+    // Year 3: 35% SSV
+    const yr3 = analyseReplication(at({ currentPolicyYear: 3, premiumsPaidSoFar: 3 })).surrenderAnalysis!;
+    expect(yr3.ssvFactorPct).toBe(35);
+    expect(yr3.totalPremiumsPaidToDate).toBe(300000);
+    expect(yr3.estimatedSurrenderValue).toBe(105000);
+    expect(yr3.surrenderHaircutLoss).toBe(195000);
+
+    // Year 5: 50% SSV
+    const yr5 = analyseReplication(at({ currentPolicyYear: 5, premiumsPaidSoFar: 5 })).surrenderAnalysis!;
+    expect(yr5.ssvFactorPct).toBe(50);
+    expect(yr5.totalPremiumsPaidToDate).toBe(500000);
+    expect(yr5.estimatedSurrenderValue).toBe(250000);
+    expect(yr5.surrenderHaircutLoss).toBe(250000);
+
+    // Year 10: 50% + 3*5% = 65% SSV
+    const yr10 = analyseReplication(at({ currentPolicyYear: 10, premiumsPaidSoFar: 10 })).surrenderAnalysis!;
+    expect(yr10.ssvFactorPct).toBe(65);
+    expect(yr10.totalPremiumsPaidToDate).toBe(1000000);
+    expect(yr10.estimatedSurrenderValue).toBe(650000);
+    expect(yr10.surrenderHaircutLoss).toBe(350000);
+  });
+
+  it('proves surrender & pivot creates massive wealth surplus over holding a sub-5% policy with 25 years left', () => {
+    const poorPolicy = at({
+      premium: 100000,
+      ppt: 10,
+      payoutStartYear: 11,
+      payoutYears: 20,
+      payoutAmount: 60000, // Very low 3-4% yield policy
+      maturityBenefit: 500000,
+      currentPolicyYear: 5,
+      premiumsPaidSoFar: 5,
+    });
+
+    const r = analyseReplication(poorPolicy);
+    const s = r.surrenderAnalysis!;
+
+    expect(s.recommendedAction).toBe('SURRENDER_AND_PIVOT');
+    expect(s.arbitrageDeltaVsHold).toBeGreaterThan(0);
+    expect(s.optionASurrenderAndReinvest.terminalCorpus).toBeGreaterThan(s.optionCHoldToMaturity.terminalPayoutsTotal);
+  });
+
+  it('recommends holding to maturity when near the end (e.g. year 19 of 20) where haircut cannot be recouped', () => {
+    const nearMaturity = at({
+      premium: 100000,
+      ppt: 10,
+      payoutStartYear: 11,
+      payoutYears: 10,
+      payoutAmount: 150000,
+      maturityBenefit: 2000000,
+      currentPolicyYear: 19,
+      premiumsPaidSoFar: 10, // All premiums already paid
+    });
+
+    const r = analyseReplication(nearMaturity);
+    const s = r.surrenderAnalysis!;
+
+    expect(s.recommendedAction).toBe('HOLD_TO_MATURITY');
+  });
+});
+

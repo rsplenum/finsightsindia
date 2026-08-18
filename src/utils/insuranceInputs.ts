@@ -58,8 +58,42 @@ export const POLICY_SHAPES: ShapeSpec[] = [
   },
 ];
 
+export interface PolicyArchetype {
+  id: string;
+  name: string;
+  popularPlans: string;
+  shape: PolicyShape;
+  hint: string;
+}
+
+export const POLICY_ARCHETYPES: PolicyArchetype[] = [
+  {
+    id: 'guaranteed_income',
+    name: 'Guaranteed Regular Income',
+    popularPlans: 'HDFC Sanchay Plus, ICICI Pru GIFT, Tata AIA Fortune Guarantee',
+    shape: 'income',
+    hint: 'Pay for a fixed term (e.g. 10 yrs), receive guaranteed regular income every year thereafter.',
+  },
+  {
+    id: 'endowment_savings',
+    name: 'Endowment / Lump Sum Maturity',
+    popularPlans: 'LIC Jeevan Labh, LIC Jeevan Anand, SBI Smart Platina',
+    shape: 'lumpSum',
+    hint: 'Pay for a set number of years, receive one single lump sum maturity payout at the end.',
+  },
+  {
+    id: 'money_back',
+    name: 'Money-Back / Hybrid Plan',
+    popularPlans: 'LIC 20-Year Money Back, Max Life Guaranteed Income',
+    shape: 'both',
+    hint: 'Receive periodic survival payouts during the policy term, plus a final lump sum at maturity.',
+  },
+];
+
 /** The form's field ids. */
 const F = {
+  status: 'inPolicyStatus',
+  yearsPaid: 'inYearsPaid',
   shape: 'inPolicyShape',
   shapeRestate: 'inPolicyShapeRestate',
   premium: 'inPremium',
@@ -91,6 +125,8 @@ export const MONEY_FIELD_IDS = [
 ] as const;
 
 export const CHOICE_FIELD_IDS = [
+  F.status,
+  F.yearsPaid,
   F.shape,
   F.shapeRestate,
   F.ppt,
@@ -149,7 +185,10 @@ export const DEFAULT_INFLATION_PCT = 6.0;
 export const TERM_COST_PER_CRORE = 12000;
 export const ACCIDENT_COST_PER_CRORE = 10000;
 
-const el = (id: string) => document.getElementById(id) as HTMLInputElement | null;
+const el = (id: string) =>
+  typeof document !== 'undefined'
+    ? (document.getElementById(id) as HTMLInputElement | null)
+    : null;
 
 const raw = (id: string): string => (el(id)?.value ?? '').trim();
 
@@ -221,6 +260,10 @@ export interface SpineStep {
   waitingFor: string;
 }
 
+export function isExistingPolicy(): boolean {
+  return (el(F.status) as HTMLSelectElement | null)?.value === 'existing';
+}
+
 export function spineFor(shape: PolicyShape | null): SpineStep[] {
   if (!shape) return [];
 
@@ -228,6 +271,10 @@ export function spineFor(shape: PolicyShape | null): SpineStep[] {
     { field: F.premium, waitingFor: 'what you pay for this policy each year' },
     { field: F.ppt, waitingFor: 'how many years you pay it for' },
   ];
+
+  if (isExistingPolicy()) {
+    steps.push({ field: F.yearsPaid, waitingFor: 'how many annual premiums you have paid so far' });
+  }
 
   if (hasIncome(shape)) {
     steps.push(
@@ -305,6 +352,8 @@ export function readPolicyInputs(now: Date = new Date()): PolicyInputs {
   const incomeYears = hasIncome(shape) ? int(F.payoutYears) : 1;
   const startYear = hasIncome(shape) ? int(F.payoutStart) : int(F.maturityYear);
 
+  const yearsPaid = int(F.yearsPaid);
+
   return {
     premium: money(F.premium),
     ppt: int(F.ppt),
@@ -324,6 +373,8 @@ export function readPolicyInputs(now: Date = new Date()): PolicyInputs {
     ltcgRatePct: LTCG_RATE_PCT,
     ltcgExemption: LTCG_EXEMPTION,
     startDate: now,
+    currentPolicyYear: yearsPaid > 0 ? yearsPaid : 0,
+    premiumsPaidSoFar: yearsPaid > 0 ? yearsPaid : 0,
   };
 }
 

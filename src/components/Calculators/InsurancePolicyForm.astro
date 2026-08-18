@@ -77,6 +77,15 @@ const fields: Field[] = [
     kind: 'count',
   },
   {
+    id: 'inYearsPaid',
+    block: 'pay',
+    label: 'How many annual premiums have you paid so far?',
+    hint: 'If you already own this policy, enter the number of years paid. We will evaluate Special Surrender Value (SSV), Paid-Up options, and whether continuing or exiting is optimal.',
+    kind: 'count',
+    optional: true,
+    addLabel: 'I am already paying for this policy',
+  },
+  {
     id: 'inPayout',
     block: 'back',
     label: 'The income it pays you, each year',
@@ -149,8 +158,8 @@ const blocks: Array<{ id: Block; title: string; lede: string; addLabel: string; 
     id: 'pay',
     title: 'What you pay',
     lede: 'The money going out, and for how long.',
-    addLabel: '',
-    selectId: '',
+    addLabel: 'Add details about premiums already paid',
+    selectId: 'insAddPay',
   },
   {
     id: 'back',
