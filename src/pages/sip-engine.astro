@@ -874,13 +874,14 @@ import RungSipExpert from '../components/Calculators/RungSipExpert.astro';
 						borderWidth: 1, titleColor: '#f8fafc', bodyColor: '#e2e8f0', padding: 12,
 						callbacks: {
 							label: (context: any) => {
+								// D-3, and dd-013/dont-2. This was a verbatim copy of
+								// `formatShortRupee` living in a chart callback, so the same
+								// rupee figure rendered one way in the tooltip and another in
+								// every card on the page the moment the shared one changed —
+								// which is exactly what happened when the rupee convention
+								// was finally implemented.
 								const val = context.raw;
-								let formatted = val;
-								if (typeof val === 'number') {
-									if (val >= 10000000) formatted = `₹ ${(val / 10000000).toFixed(2)} Cr`;
-									else if (val >= 100000) formatted = `₹ ${(val / 100000).toFixed(2)} Lakh`;
-									else formatted = `₹ ${Math.round(val).toLocaleString('en-IN')}`;
-								}
+								const formatted = typeof val === 'number' ? formatShortRupee(val) : val;
 								return ` ${context.dataset.label}: ${formatted}`;
 							},
 						},

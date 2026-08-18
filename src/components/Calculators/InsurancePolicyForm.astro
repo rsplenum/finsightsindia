@@ -1,0 +1,439 @@
+---
+/**
+ * The insurance analyser's input column, rebuilt 18 Aug against dd-021,
+ * dd-022, dd-023 and dd-024.
+ *
+ * IT OPENS AT ONE FIELD. The shape question is answered in `InsuranceIntro`,
+ * and what appears here is one question: what you pay for this policy each
+ * year. Answer it and the next question arrives. At any moment there is exactly
+ * one unanswered question on the screen.
+ *
+ * THE ONE DEVIATION FROM dd-022, AND IT IS STATED RATHER THAN SLID PAST.
+ * dd-022/do-2 says every field after the primary one arrives because the reader
+ * asked for it by name. That is exactly right on the tax form, where each field
+ * is an optional fact about a life — a reader either has rental income or does
+ * not. An insurance policy is not like that: premium, term, payout, payout year
+ * and sum assured are not optional, they are what a policy IS, and an add
+ * dropdown offering "Premium payment term" as a thing you may add would
+ * misrepresent the arithmetic. So this form is a SPINE, not a catalogue, and
+ * the add control is kept for what is genuinely optional — an escalating
+ * income, and accident cover. Recorded as a RISK in the checks file and on the
+ * launch gate for Rahul, not claimed as compliance.
+ *
+ * NOTHING IS PRE-FILLED. The form this replaces defaulted all six boxes, so a
+ * reader who had typed nothing was shown a confident verdict about a policy
+ * nobody owns. A default in a money field is our policy standing in for theirs.
+ *
+ * THE TOOLTIPS ARE GONE. Six `tooltip=` attributes became six visible hints. A
+ * figure a thumb cannot reach is a figure that was not given (dd-023/dont-2).
+ *
+ * THE SINGLE COLUMN IS THE DESIGN (dd-023), not the fallback. One question at a
+ * time is the same shape at 375 and at 1280; what a wide screen buys is the
+ * working sitting beside the form rather than below it.
+ *
+ * Design settled before the component in `InsurancePolicyForm.checks.md`.
+ */
+import {
+  POLICY_SHAPES,
+  SLAB_RATES_PCT,
+  DEFAULT_INFLATION_PCT,
+  SAFE_RATE_PCT,
+  EQUITY_RATE_PCT,
+  TERM_COST_PER_CRORE,
+  ACCIDENT_COST_PER_CRORE,
+} from '../../utils/insuranceInputs';
+import { FUND_COST_PLANS, DEFAULT_FUND_COST, ACTIVE_FUND_CAVEAT } from '../../utils/fundCosts';
+
+type Block = 'pay' | 'back' | 'protect' | 'you';
+
+interface Field {
+  id: string;
+  block: Block;
+  label: string;
+  hint: string;
+  /** 'money' gets a rupee prefix; 'count' is a plain number; 'percent' a rate. */
+  kind: 'money' | 'count' | 'percent';
+  /** Which policy shapes this question can apply to. Empty means all of them. */
+  shapes?: string[];
+  /** Optional fields arrive from the add control instead of from the spine. */
+  optional?: boolean;
+  /** The add control's wording for an optional field. */
+  addLabel?: string;
+}
+
+const fields: Field[] = [
+  {
+    id: 'inPremium',
+    block: 'pay',
+    label: 'What you pay for it, each year',
+    hint: 'The whole amount that leaves your bank account, GST included — the figure on the renewal notice, not the one before tax.',
+    kind: 'money',
+  },
+  {
+    id: 'inPPT',
+    block: 'pay',
+    label: 'For how many years do you pay it?',
+    hint: 'The premium paying term. Often shorter than the policy itself — you might pay for ten years on a policy that runs for thirty.',
+    kind: 'count',
+  },
+  {
+    id: 'inPayout',
+    block: 'back',
+    label: 'The income it pays you, each year',
+    hint: 'What lands in your account in the first year the income starts.',
+    kind: 'money',
+    shapes: ['income', 'both'],
+  },
+  {
+    id: 'inPayoutStart',
+    block: 'back',
+    label: 'The policy year that income starts',
+    hint: 'Counted from the day the policy began. If you pay for ten years and the income starts the year after, this is 11.',
+    kind: 'count',
+    shapes: ['income', 'both'],
+  },
+  {
+    id: 'inPayoutYears',
+    block: 'back',
+    label: 'For how many years does the income run?',
+    hint: 'Some plans pay for a fixed period, some until a stated age. Count the payments.',
+    kind: 'count',
+    shapes: ['income', 'both'],
+  },
+  {
+    id: 'inMaturity',
+    block: 'back',
+    label: 'The lump sum at the end',
+    hint: 'The maturity amount, including any terminal bonus. Type 0 if the policy pays no final amount.',
+    kind: 'money',
+    shapes: ['lumpSum', 'both'],
+  },
+  {
+    id: 'inMaturityYear',
+    block: 'back',
+    label: 'The policy year it pays out',
+    hint: 'The policy term. If you pay for ten years and it matures in the twentieth, this is 20.',
+    kind: 'count',
+    shapes: ['lumpSum'],
+  },
+  {
+    id: 'inPayoutGrowth',
+    block: 'back',
+    label: 'The income goes up each year',
+    hint: 'As a percentage of the STARTING income, added every year — so 5% on an income of ₹1,00,000 means ₹1,05,000 in the second year, ₹1,10,000 in the third. That is how these policies word it. Leave this off if your income is level.',
+    kind: 'percent',
+    shapes: ['income', 'both'],
+    optional: true,
+    addLabel: 'My income increases each year',
+  },
+  {
+    id: 'inTermCover',
+    block: 'protect',
+    label: 'Life cover on this policy',
+    hint: 'The death benefit — what your family would receive. It is also what decides whether the policy is tax-free in your hands, so it matters twice.',
+    kind: 'money',
+  },
+  {
+    id: 'inAccidentCover',
+    block: 'protect',
+    label: 'Accident or health cover on this policy',
+    hint: 'Any accidental death, disability or critical illness rider attached to the policy. Replacing it costs money too, and leaving it out would make doing this yourself look cheaper than it is.',
+    kind: 'money',
+    optional: true,
+    addLabel: 'It carries an accident or health rider',
+  },
+];
+
+const blocks: Array<{ id: Block; title: string; lede: string; addLabel: string; selectId: string }> = [
+  {
+    id: 'pay',
+    title: 'What you pay',
+    lede: 'The money going out, and for how long.',
+    addLabel: '',
+    selectId: '',
+  },
+  {
+    id: 'back',
+    title: 'What it pays back',
+    lede: 'The money coming in, and when.',
+    addLabel: 'Add more about the payouts',
+    selectId: 'insAddPayout',
+  },
+  {
+    id: 'protect',
+    title: 'What it protects',
+    lede: 'Buying this cover on its own is the other half of the comparison, so what it costs has to be priced.',
+    addLabel: 'Add another cover',
+    selectId: 'insAddCover',
+  },
+  {
+    id: 'you',
+    title: 'And one thing about you',
+    lede: '',
+    addLabel: '',
+    selectId: '',
+  },
+];
+
+const selectClass =
+  'w-full bg-white dark:bg-navy-900 border border-navy-200 dark:border-navy-700 rounded-xl px-3 py-3 text-base text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-navy-500 dark:focus:ring-navy-400';
+const inputClass =
+  'w-full bg-white dark:bg-navy-900 border border-navy-200 dark:border-navy-700 text-base font-medium text-navy-900 dark:text-navy-100 rounded-xl pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-navy-500 dark:focus:ring-navy-400 transition-all shadow-sm';
+const labelClass = 'block text-sm font-semibold text-navy-700 dark:text-navy-300';
+---
+
+<section id="insurancePolicyForm" class="space-y-8" aria-label="What you have to tell us about your policy">
+  <!--
+    THE SHAPE QUESTION IS NOT HERE. It lives in `InsuranceIntro`, because
+    answering it is what resolves the page from a welcome into a workbench
+    (dd-024). What stays here is the answer, restated compactly so the reader
+    can change it without going back to a screen that has collapsed — and its
+    hint, which says what the choice means in policy-document words.
+  -->
+  <div class="space-y-2 border-b border-navy-200 dark:border-navy-800 pb-5">
+    <label for="inPolicyShapeRestate" class={labelClass}>This policy pays back</label>
+    <select id="inPolicyShapeRestate" class={selectClass}>
+      {POLICY_SHAPES.map((s) => <option value={s.id}>{s.label}</option>)}
+    </select>
+    <p id="shapeHint" class="text-sm leading-snug text-navy-600 dark:text-navy-400 empty:hidden"></p>
+  </div>
+
+  <div id="insuranceFormBody" class="space-y-8" hidden>
+    {blocks.map((block) => (
+      <div class="ins-block space-y-4" data-block={block.id} hidden>
+        <div class="space-y-1">
+          <h3 class="text-base font-bold text-navy-900 dark:text-navy-100">{block.title}</h3>
+          {block.lede && (
+            <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">{block.lede}</p>
+          )}
+        </div>
+
+        <div id={`insFields_${block.id}`} class="space-y-5 empty:hidden">
+          {fields.filter((f) => f.block === block.id).map((f) => (
+            <div
+              class="ins-field space-y-1.5"
+              data-field={f.id}
+              data-optional={f.optional ? 'true' : 'false'}
+              data-shapes={(f.shapes ?? []).join(' ')}
+              hidden
+            >
+              <div class="flex items-baseline justify-between gap-3">
+                <label for={f.id} class={labelClass}>{f.label}</label>
+                {f.optional && (
+                  <button
+                    type="button"
+                    class="ins-field-drop text-sm font-semibold text-navy-500 dark:text-navy-400 hover:text-rose-700 dark:hover:text-rose-400"
+                    data-drop={f.id}
+                  >Remove</button>
+                )}
+              </div>
+              <div class="relative flex items-center">
+                {f.kind === 'money' && (
+                  <span class="absolute left-3.5 text-base font-medium text-navy-500 dark:text-navy-400 select-none">₹</span>
+                )}
+                {f.kind === 'percent' && (
+                  <span class="absolute right-3.5 text-base font-medium text-navy-500 dark:text-navy-400 select-none">%</span>
+                )}
+                <input
+                  id={f.id}
+                  name={f.id}
+                  type="text"
+                  inputmode={f.kind === 'percent' ? 'decimal' : 'numeric'}
+                  value=""
+                  class={`${inputClass} ${f.kind === 'money' ? 'pl-9' : 'pl-4'}`}
+                />
+              </div>
+              <p class="text-sm leading-snug text-navy-600 dark:text-navy-400">{f.hint}</p>
+            </div>
+          ))}
+        </div>
+
+        {/*
+          THE ADD CONTROL, and it is the last child of its block on purpose. An
+          added field is appended before it, so it travels down under whatever
+          was just added — which is where the reader is already looking
+          (dd-022/do-3).
+
+          A native select, because on a phone that is a full-screen picker for
+          free, needs no hover, and is the largest tap target on the screen
+          (dd-023/do-4).
+        */}
+        {block.selectId && (
+          <div class="ins-add" hidden>
+            <label for={block.selectId} class="sr-only">{block.addLabel}</label>
+            <select id={block.selectId} class="ins-add-select" data-add-label={block.addLabel}>
+              <option value="">{`＋  ${block.addLabel}`}</option>
+            </select>
+          </div>
+        )}
+
+        {block.id === 'you' && (
+          <div class="ins-field space-y-1.5" data-field="inSlabRate" data-optional="false" data-shapes="" hidden>
+            <label for="inSlabRate" class={labelClass}>The income tax slab you are in</label>
+            {/*
+              NO PRE-SELECTED SLAB. sol-060 defaulted this to 20% and reasoned
+              that any default flatters somebody — 10% flatters the replica, 30%
+              flatters the policy — so the middle was the only one that is not an
+              argument. That reasoning was correct for a form where every box
+              arrived pre-filled and there was no such thing as an unanswered
+              question. This form HAS one, and Rahul's words were "ask them to
+              choose a slab. 10, 20, 30." A neutral default is not asking. The
+              constant survives as the engine's fallback so it can never see a
+              missing rate, but nothing is chosen on the reader's behalf.
+            */}
+            <select id="inSlabRate" class={selectClass}>
+              <option value="">Choose your rate</option>
+              {SLAB_RATES_PCT.map((r) => <option value={r}>{r}%</option>)}
+            </select>
+            <p class="text-sm leading-snug text-navy-600 dark:text-navy-400">
+              Doing this yourself means earning interest or capital gains, and both are taxed.
+              Your rate decides how much of the do-it-yourself route you actually keep, so
+              guessing it for you would put our number inside your own comparison.
+            </p>
+          </div>
+        )}
+      </div>
+    ))}
+
+    <!--
+      THE ASSUMPTIONS, and they are a named block rather than a gear icon. They
+      are numbers WE chose that change the reader's answer, so they are stated
+      and correctable. The old page hid two of them behind a button called
+      "Advanced" and left the other two — the fund's fee and the policy's own
+      tax — out of existence entirely.
+    -->
+    <details class="ins-chip rounded-xl border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-900/40 px-4 py-3">
+      <summary class="text-sm font-semibold text-navy-900 dark:text-navy-100">What we have assumed</summary>
+      <div class="space-y-5 pt-4">
+        <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
+          Four numbers are ours rather than yours. They are here so you can correct them, and
+          because a figure you cannot see is one you cannot check.
+        </p>
+
+        <div class="space-y-2">
+          <label for="inFundPlan" class={labelClass}>What the fund charges you</label>
+          <select id="inFundPlan" class={selectClass}>
+            {FUND_COST_PLANS.map((p) => (
+              <option value={p.id} selected={p.id === DEFAULT_FUND_COST.id}>
+                {p.label} — {p.expenseRatio}% a year
+              </option>
+            ))}
+          </select>
+          <p class="text-sm leading-snug text-navy-600 dark:text-navy-400">
+            {ACTIVE_FUND_CAVEAT}
+          </p>
+          <p class="text-sm leading-snug text-navy-600 dark:text-navy-400">
+            The bond route is charged nothing, and that zero is a fact rather than an omission:
+            a government bond bought direct has no annual charge. A fund does, every year,
+            whatever the market does.
+          </p>
+        </div>
+
+        <div class="space-y-2">
+          <label for="inInflation" class={labelClass}>How fast prices rise, each year</label>
+          <div class="relative flex items-center">
+            <input id="inInflation" type="text" inputmode="decimal" value={DEFAULT_INFLATION_PCT} class={`${selectClass} pr-9`} />
+            <span class="absolute right-3.5 text-base font-medium text-navy-500 dark:text-navy-400 select-none">%</span>
+          </div>
+          <p class="text-sm leading-snug text-navy-600 dark:text-navy-400">
+            This decides what the figures will be worth by the time they arrive. It does not
+            decide who wins — both routes and the policy are all measured against the same
+            rising prices.
+          </p>
+        </div>
+
+        <div class="space-y-2">
+          <label for="inTermCostOverride" class={labelClass}>What the life cover costs, each year</label>
+          <div class="relative flex items-center">
+            <span class="absolute left-3.5 text-base font-medium text-navy-500 dark:text-navy-400 select-none">₹</span>
+            <input id="inTermCostOverride" type="text" inputmode="numeric" value="" class={`${selectClass} pl-9`} />
+          </div>
+          <p class="text-sm leading-snug text-navy-600 dark:text-navy-400">
+            Priced from the cover you entered at about ₹{TERM_COST_PER_CRORE.toLocaleString('en-IN')} a
+            year per ₹1 crore, all in — roughly what a healthy non-smoker in their thirties pays.
+            If you have a real quote, use it.
+          </p>
+        </div>
+
+        <div class="space-y-2">
+          <label for="inAccidentCostOverride" class={labelClass}>What the accident or health cover costs, each year</label>
+          <div class="relative flex items-center">
+            <span class="absolute left-3.5 text-base font-medium text-navy-500 dark:text-navy-400 select-none">₹</span>
+            <input id="inAccidentCostOverride" type="text" inputmode="numeric" value="" class={`${selectClass} pl-9`} />
+          </div>
+          <p class="text-sm leading-snug text-navy-600 dark:text-navy-400">
+            About ₹{ACCIDENT_COST_PER_CRORE.toLocaleString('en-IN')} a year per ₹1 crore of rider cover.
+          </p>
+        </div>
+
+        <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed border-t border-navy-200 dark:border-navy-800 pt-4">
+          The two returns are ours as well and are not adjustable here: {SAFE_RATE_PCT}% a year on
+          government bonds and {EQUITY_RATE_PCT}% on an index fund, before the fund's fee. Neither
+          is computed from a series held in this project, so they are stated plainly rather than
+          dressed up as measured — and the sensitivity table below shows what happens when the
+          second one is wrong.
+        </p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<style>
+  /*
+    Plain CSS rather than @apply: Tailwind v4 needs an @reference in a scoped
+    style block, and the rest of this codebase puts utilities on the element.
+
+    THE ADD CONTROL. It has to read as a button and behave as a picker, because
+    a native select is the one control a phone renders full-screen for free —
+    no hover, no custom menu, and the largest tap target on the page (dd-023).
+  */
+  .ins-add-select {
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    border: 1px dashed var(--color-navy-300, #cbd5e1);
+    border-radius: 0.75rem;
+    background: transparent;
+    padding: 0.875rem 1rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-navy-700, #334155);
+    text-align: left;
+    cursor: pointer;
+  }
+  .ins-add-select:focus {
+    outline: 2px solid var(--color-navy-500, #64748b);
+    outline-offset: 2px;
+  }
+  .ins-add-select:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+  :root.dark .ins-add-select,
+  html.dark .ins-add-select {
+    border-color: var(--color-navy-700, #334155);
+    color: var(--color-navy-300, #cbd5e1);
+  }
+
+  .ins-chip > summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .ins-chip > summary::-webkit-details-marker {
+    display: none;
+  }
+  .ins-chip > summary::after {
+    content: '+';
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1;
+    opacity: 0.5;
+  }
+  .ins-chip[open] > summary::after {
+    content: '\2212';
+  }
+</style>

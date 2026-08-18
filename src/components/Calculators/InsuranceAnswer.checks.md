@@ -41,7 +41,7 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-004/dont-2 | PASS | The words real and nominal do not appear. It says "in today's prices" and "in the rupees of the day", which is the distinction in the reader's own words. |
 | dd-005/dont-1 | PASS | It names the one comparison and puts it on screen. The frictions and the sensitivity table are pushes on one side of it, and are reachable below rather than listed as worries here. |
 | dd-006/dont-1 | PASS | The sentence skeleton is fixed. Only the slotted values move, and the verdict clause swaps only when the verdict genuinely changes kind — funded versus ran out, which is a different answer, not a rewording of the same one. |
-| dd-006/dont-2 | RISK | The unbundle toggle is still a page-wide mode, and the difference it hides — what the protection costs — is close to being the lesson. Mitigated rather than solved: the cover's cost is now stated IN the Answer whichever way the toggle sits, so the number is never only behind the switch. Removing the toggle in favour of adjacency is on the gate. |
+| dd-006/dont-2 | PASS | **Cleared 18 Aug.** The unbundle toggle is gone. It was a page-wide mode hiding the one thing that is the lesson — what the protection costs — and with it off the page printed a comparison it had to disclaim in the same breath. What the cover costs is now a permanent named row on this component, in both moneys, whatever else is set. Recorded as a removed capability in `InsurancePolicyForm.checks.md` and on the gate for Rahul. |
 | dd-007/dont-1 | PASS | Three sizes, each asserting something: the verdict clause is the largest because it is the answer, the two money figures are equal to each other because they are the same quantity in two moneys, and the supporting line is smallest. |
 | dd-007/dont-2 | PASS | The two DIY routes are rendered as equals below; nothing in the Answer implies the growth route is the recommended one, which the old emerald-versus-indigo styling quietly did. |
 | dd-008/dont-1 | PASS | Values live in fixed slots. The prose states the principle — same income either way, the difference is what is left — which stays true at every position of every input. |
@@ -60,25 +60,25 @@ PASS and RISK need a reason. N/A may stand alone.
 | dd-017/dont-4 | N/A | |
 | dd-017/dont-5 | PASS | The goal and the contribution are both shown in both moneys, adjacently, and the sentence says which is which rather than leaving the reader to assume they are comparable. |
 | dd-019/dont-1 | PASS | Within this component the parts are bound: the card names its quantity once ("Left over at the end") and each of the two rows beneath carries its own frame on the same line as its figure. The defect F-12 names is cross-surface and is answered in dont-2. |
-| dd-019/dont-2 | RISK | F-12. This component's "in today's prices" is one of at least four on the insurance page wearing that phrase for different quantities - the surplus here, the total payout under "THE SAME MONEY" at insurance-analyzer.astro:195, the unpaid income, and the last premium. Two bold figures 500px apart share a label while counting different things, so the reader's first thought is that one is a typo. Fix is the noun on the same line as each figure; scheduled, not yet done. |
-| dd-019/dont-3 | RISK | The same instance, and it is the reason this rule exists beyond T8. The frame here is CORRECT - T8 was applied properly - and the screen is still ambiguous, because the frame disambiguated the unit and left the quantity to be inferred from position. |
+| dd-019/dont-2 | PASS | **F-12 closed, 18 Aug.** The phrase is now a COLUMN HEADER over a table whose rows name their own quantity — the adjacent-columns arrangement dd-019's own note says explicitly passes — so it appears once per table instead of four times beside four unrelated figures. "THE SAME MONEY" is deleted. The fix was structural rather than verbal, because the old frames were already correct. |
+| dd-019/dont-3 | PASS | **Cleared with dont-2.** The point stands and is why the fix is a table rather than better wording: a correct frame was never the problem. Every figure now sits at the intersection of a row that names what it counts and a column that names whose money it is. |
 | dd-019/dont-4 | N/A | The "THE SAME MONEY" heading itself lives in insurance-analyzer.astro, which carries no checks file; tracked under F-12. |
 | dd-020/dont-1 | N/A | The inputs are properties of one policy - premium, term, sum assured - not a menu filtered by who the reader is. There is no eligibility list to prune. |
 | dd-020/dont-2 | N/A | No category or status question is asked, so none is being asked without buying a simplification. |
 | dd-020/dont-3 | N/A | No category filter exists on this surface, so none can change the surplus or the year the money runs out. |
-| dd-021/dont-1 | RISK | This is the entry the rule was written against. The page was built to argue the policy is beatable, and the thesis has already reached the defaults: the safe DIY route is charged NO TAX AT ALL while the growth route pays 12.5% LTCG, which flatters the very route the page uses to win. Rahul's brief is the correction - the maths reveals, it does not argue. Open in the gate; the overhaul is queued behind the token sweep. |
-| dd-021/dont-2 | RISK | The input set is not yet the minimum the brief specifies, and it is missing one the verdict genuinely needs: accident or health cover. The brief's list is annual premium, number of outgoing payments, when income starts and whether it grows, life cover, accident/health cover. Replicating a bundle without pricing its accident leg understates the DIY cost and so tilts the verdict. |
+| dd-021/dont-1 | PASS | **Cleared 18 Aug, and not by one fix.** sol-060 taxed the safe route. This session found three more figures of zero typed in by omission: the growth route paid no fund fee where the bond route's zero is a genuine fact; the policy's payouts were assumed exempt under s.10(10D) whatever its cover; and an escalating income was priced as level. Two of those favour the policy and one favours the replica. Verified on the built page: fed a good policy it prints **Keep the policy** without hedging, and the do-it-yourself panel still prints in full beside it. |
+| dd-021/dont-2 | PASS | **Cleared 18 Aug, and the brief's premise turned out to be stale.** Accident cover has been priced since sol-039 — `accidentCost` is in `investableCapitalOf` and the field was on the form. What the engine genuinely could not express was the brief's other half, *"and whether they grow"*: `payoutGrowthPct` is new. The input set is now the brief's list exactly, and the one input that cannot move the verdict — inflation, which discounts both sides identically — sits in the assumptions block labelled as what it is. |
 | dd-021/dont-3 | PASS | This part already holds. sol-040 gave the page one verdictFor() driving the heading, the figure, the colour, the badge and the sentence, so the screen states who wins rather than leaving the reader to subtract two numbers and decide. |
-| dd-022/dont-1 | RISK | This component holds no fields, but the page it heads lays its whole six-field form out at once, which is what dd-022 forbids. The analyser overhaul is the next item on the launch gate and this entry now governs it: category first, one field, and the rest added. |
+| dd-022/dont-1 | PASS | **Cleared 18 Aug.** The page now opens on ONE control — verified on the built page, `main` holds exactly one visible control at rest — and the form that follows asks one question at a time. The one deviation from dd-022's literal wording is the spine, and it is recorded as a RISK in `InsurancePolicyForm.checks.md` and on the gate for Rahul rather than being absorbed here. |
 | dd-022/dont-2 | N/A |  |
-| dd-022/dont-3 | RISK | Same instance as dont-1 seen from the other side. The analyser form is laid out rather than built, so its length is our list of inputs and not the reader s situation. To be fixed in the overhaul, not here. |
+| dd-022/dont-3 | PASS | **Cleared 18 Aug.** The form's length is the reader's policy: an endowment holder answers six questions and a hybrid with an escalating income and a rider answers ten. Verified by walking both shapes on the built page. Nothing is pre-filled either, which was the other half of the same fault — the old form showed a verdict about a policy nobody owns. |
 | dd-022/dont-4 | N/A |  |
-| dd-023/dont-1 | RISK | Honest answer: this was designed at 1280 and checked at 375 afterwards, which is the exact practice dd-023 was written to name. It has not been re-examined as a phone screen. Recorded rather than claimed as compliant, and on the launch gate as a sweep of its own. |
+| dd-023/dont-1 | PASS | **Rebuilt narrow-first, 18 Aug.** The whole surface was designed at 375 and only then given a wide layout, and it was measured there first: 0 horizontal overflow, 0 pieces of type below 12px, 0 clipped select labels. Three option labels were shortened because they were wider than their boxes at 375 — a native select clips rather than wraps, so a long label is one the reader cannot read. That fault would not have been found by a desktop design checked afterwards. |
 | dd-023/dont-2 | PASS | Every figure is rendered in place. The explanatory line under a control is visible prose rather than a hover tooltip, so nothing the reader needs is behind a pointer. |
 | dd-023/dont-3 | PASS | The two routes are stated as a verdict in a sentence before they are shown as figures, so the comparison survives being stacked. The sentence is the comparison; the figures support it. |
-| dd-024/dont-1 | RISK | The analyser page opens on a hero and then six form fields at once. It is not empty, so it does not have the tax page fault, but it does not introduce itself either - it asks before it says what it will give back. The overhaul on the gate now inherits dd-024 along with dd-021 and dd-022. |
+| dd-024/dont-1 | PASS | **Cleared 18 Aug.** `InsuranceIntro` meets the reader, states the two questions the tool answers and promises both verdicts are printable, then hands over the first question. The old hero — "unmask the true annualized yield (XIRR)" — is deleted: it announced a verdict before asking anything, which is dd-021 as a matter of tone. |
 | dd-024/dont-2 | N/A |  |
-| dd-024/dont-3 | RISK | The layout is a fixed frame: the form sits where it sat before the reader arrived and the verdict appears inside it. Nothing reorganises around the first answer. Recorded for the overhaul rather than patched here. |
+| dd-024/dont-3 | PASS | **Cleared 18 Aug.** Answering the opening question collapses the welcome entirely and the workbench takes its place — verified on the built page, including that the shared card's `.reveal` is lit explicitly so a workbench hidden at load does not come back invisible, and that a timer sits behind `transitionend` because it does not fire in a backgrounded tab. Both are sol-065's findings, applied here rather than rediscovered. |
 
 ## Deliberate choices
 
@@ -98,10 +98,11 @@ PASS and RISK need a reason. N/A may stand alone.
 
 ## Open — for Rahul
 
-- **The unbundle toggle should probably become adjacency** (dd-006). Both
-  states are worth seeing at once: what the cover costs is the entire subject.
-  Not done here because it is a layout change to a card the T5 brief did not
-  scope.
-- **The safe route is charged no tax** while the growth route pays LTCG. Fixing
-  it needs a slab assumption we do not have an input for, and it moves the
-  verdict on the safe card. Listed on the gate as yours.
+Both of the items that stood here are closed. The toggle is gone rather than
+made adjacent, and the safe route has been taxed since sol-060. What is open
+now belongs to the components built alongside this one:
+
+- **The spine, not the catalogue** — `InsurancePolicyForm.checks.md`.
+- **Whether the do-it-yourself panel may ever name a product** —
+  `InsuranceDiyPlan.checks.md`.
+- **The ₹5 lakh premium rule is stated, not applied** — `InsuranceRoutes.checks.md`.

@@ -1,0 +1,156 @@
+---
+/**
+ * The insurance analyser's welcome — dd-024.
+ *
+ * WHAT IT REPLACES MATTERS. The page opened on `Hero`: badge "Smart Policy
+ * Reality Check", title "Guaranteed Income ROI Analyzer", and a description
+ * carrying XIRR, inflation-adjusted and DIY term replication arbitrage. Four
+ * pieces of the analyst's vocabulary before the reader had been told anything,
+ * and then six form fields at once. F-13 flagged "TRUE YIELD (XIRR)"; the hero
+ * was the same fault one section higher.
+ *
+ * And it announced a verdict before asking a question — "unmask" the true
+ * yield. The reader arrives suspicious of the policy AND of us, often about a
+ * decision already made and hard to undo, and a page that has plainly already
+ * decided is a page they are right to discount. That is dd-021 as a matter of
+ * tone rather than arithmetic: the tool must be as willing to say the policy is
+ * good as to say it is poor, and the welcome is where it either earns that or
+ * loses it.
+ *
+ * So: meet the reader, say what the two questions are, promise both answers are
+ * printable, hand over the first question. Then get out of the way — answering
+ * it collapses this and the workbench takes the space.
+ *
+ * Register from `antigravity.google` at Rahul's direction, the same as
+ * `TaxIntro`: generous space, one confident headline, restrained motion. THE
+ * REGISTER, NOT THE ORNAMENT. Nothing bounces, flashes or pulses.
+ *
+ * Design settled before the component in `InsuranceIntro.checks.md`.
+ */
+import { POLICY_SHAPES } from '../../utils/insuranceInputs';
+
+/**
+ * The brief's three outputs, in the brief's order. If the page ever stops
+ * delivering one of them, this welcome is a lie the reader can check.
+ */
+const promises = [
+  {
+    title: 'What it really pays you',
+    body: 'Premiums out, income back, the amount at the end — collapsed into one rate a year, after tax, so you can set it against anything else you could have done with the money.',
+  },
+  {
+    title: 'What the same thing costs, assembled by hand',
+    body: 'The same life cover, the same accident cover, the rest invested. Priced honestly: both routes are charged the same taxes and the same fees.',
+  },
+  {
+    title: 'Which one wins, and by how much',
+    body: 'Said outright, either way. Plenty of these policies are poor and some are genuinely good, and the arithmetic is allowed to say so.',
+  },
+];
+---
+
+<section id="insuranceIntro" class="insurance-intro" aria-label="What this analyser does">
+  <div class="max-w-3xl mx-auto text-center space-y-5">
+    <p class="text-sm font-semibold tracking-tight text-navy-600 dark:text-navy-400">
+      Guaranteed income · money-back · endowment policies
+    </p>
+
+    <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-navy-900 dark:text-white leading-[1.1]">
+      What is this policy<br class="hidden sm:inline" /> actually paying you?
+    </h1>
+
+    <p class="text-base sm:text-lg text-navy-600 dark:text-navy-300 leading-relaxed max-w-2xl mx-auto">
+      A policy that also invests is two things in one wrapper — protection, and a place to put
+      money. Tell us what yours promises and this prices them apart, so you can see what each
+      one is really costing you.
+    </p>
+  </div>
+
+  <!--
+    Three promises, not a feature list. Naming how many policy shapes we handle
+    or how many assumptions we model would be dd-003/dont-2 exactly — capability
+    read as achievement — and it would make the reader brace for a long form
+    before they had answered anything.
+  -->
+  <div class="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6">
+    {promises.map((p) => (
+      <div class="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-900/40 p-5 space-y-2 text-left">
+        <h2 class="text-base font-bold text-navy-900 dark:text-navy-100 leading-snug">{p.title}</h2>
+        <p class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">{p.body}</p>
+      </div>
+    ))}
+  </div>
+
+  <!--
+    THE WAY IN, and the only control on the page at rest. It lives here rather
+    than in the form because answering it is what resolves the page: this
+    collapses, the form takes its place and the working appears beside it. The
+    screen reorganises around the reader's first answer (dd-024/dont-3).
+
+    It is also a real dd-020 filter and not a piece of ceremony — an endowment
+    has no annual income, so the three income questions cannot apply to it, and
+    a pure money-back plan has no maturity year to ask about.
+  -->
+  <div class="max-w-md mx-auto space-y-3">
+    <label for="inPolicyShape" class="block text-center text-lg font-bold text-navy-900 dark:text-navy-100">
+      What does this policy give back, and when?
+    </label>
+    <select
+      id="inPolicyShape"
+      class="w-full bg-white dark:bg-navy-900 border border-navy-300 dark:border-navy-700 rounded-xl px-4 py-4 text-base font-medium text-navy-900 dark:text-navy-100 shadow-sm focus:outline-none focus:ring-2 focus:ring-gold-500"
+    >
+      <option value="">Choose one to begin</option>
+      {POLICY_SHAPES.map((s) => <option value={s.id}>{s.label}</option>)}
+    </select>
+    <p class="text-center text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
+      It decides which questions can apply to your policy, and nothing else. It is on the first
+      page of your policy document, under the benefits.
+    </p>
+  </div>
+</section>
+
+<style>
+  /*
+    The welcome, and the one transition on the page. Space is the design here
+    rather than decoration — dd-024's whole complaint is that a lone control in
+    a field of white reads as unfinished.
+  */
+  .insurance-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    padding: 1rem 0 2rem;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  /*
+    Collapsing to nothing rather than merely fading: a welcome that stays in the
+    flow becomes furniture the reader scrolls past on every recompute.
+  */
+  .insurance-intro[data-collapsed='true'] {
+    display: none;
+  }
+
+  .insurance-intro[data-leaving='true'] {
+    opacity: 0;
+    transform: translateY(-0.75rem);
+    pointer-events: none;
+  }
+
+  @media (min-width: 640px) {
+    .insurance-intro {
+      gap: 3.5rem;
+      padding: 2rem 0 3rem;
+    }
+  }
+
+  /*
+    Motion follows the reader; it never performs at them. Somebody who has asked
+    their system for less of it gets the state change with no movement at all.
+  */
+  @media (prefers-reduced-motion: reduce) {
+    .insurance-intro {
+      transition: none;
+    }
+  }
+</style>

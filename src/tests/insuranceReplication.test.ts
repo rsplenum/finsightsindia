@@ -8,12 +8,15 @@ import {
   frictionsOf,
   verdictFor,
   grossUpForTax,
+  payoutInYear,
+  payoutTaxationOf,
   LTCG_RATE_PCT,
   LTCG_EXEMPTION,
   type PolicyInputs,
   type Taxation,
 } from '../utils/insuranceReplication';
-import { DEFAULT_SLAB_PCT, SLAB_RATES_PCT } from '../utils/insuranceInputs';
+import { DEFAULT_SLAB_PCT, SLAB_RATES_PCT, spineFor } from '../utils/insuranceInputs';
+import { DEFAULT_FUND_COST } from '../utils/fundCosts';
 
 /** The two taxations the page uses, plus the untaxed one kept only for tests. */
 const CG: Taxation = {
@@ -53,7 +56,18 @@ const shipped: PolicyInputs = {
   payoutStartYear: 11,
   payoutYears: 20,
   payoutAmount: 120000,
+  // A LEVEL INCOME AND A COSTLESS FUND, on purpose. Both are new parameters and
+  // both are set to the value that leaves the walk exactly as it was, so every
+  // characterization figure below still measures what it measured when it was
+  // written. What each new parameter DOES is asserted separately, in its own
+  // describe block, against the page's real defaults.
+  payoutGrowthPct: 0,
+  equityFeePct: 0,
   maturityBenefit: 1000000,
+  // Rs 1 crore of life cover against a Rs 1 lakh premium - one percent, well
+  // inside s.10(10D)'s ten. The shipped policy is exempt, which is the ordinary
+  // case and the one these figures were measured in.
+  sumAssured: 10000000,
   inflationRate: 6,
   safeRate: 7.1,
   equityRate: 12,
@@ -487,11 +501,18 @@ describe('the maturity benefit input', () => {
 
 describe('real break-even, on its own', () => {
   it('is the first year cumulative real payouts overtake cumulative real premiums', () => {
-    const rows = [
-      { year: 1, premiumOut: 100, payoutIn: 0, net: -100, realValue: 0, realPremium: 100 },
-      { year: 2, premiumOut: 0, payoutIn: 60, net: 60, realValue: 60, realPremium: 0 },
-      { year: 3, premiumOut: 0, payoutIn: 60, net: 60, realValue: 60, realPremium: 0 },
-    ];
+    const row = (year: number, premiumOut: number, payout: number) => ({
+      year,
+      premiumOut,
+      payoutIn: payout,
+      payoutTax: 0,
+      payoutNet: payout,
+      net: payout - premiumOut,
+      realValue: payout,
+      realNet: payout,
+      realPremium: premiumOut,
+    });
+    const rows = [row(1, 100, 0), row(2, 0, 60), row(3, 0, 60)];
     expect(realBreakEvenYear(rows)).toBe(3);
     expect(realBreakEvenYear(rows.slice(0, 2))).toBeNull();
   });
@@ -594,5 +615,277 @@ describe('sol-060 — interest is taxed as it accrues, not when it is withdrawn'
     const r = analyseReplication(shipped);
     expect(r.safe.taxDrag).toBeGreaterThan(0);
     expect(r.growth.taxDrag).toBeGreaterThan(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// The three costs the overhaul added, 18 Aug. Each of them was a figure of zero
+// typed in by omission, and dd-021's test is that a route charged something the
+// other is spared is a route the design is arguing against.
+
+describe('the fund fee - the growth route was owning its fund for nothing', () => {
+  it('the page does not ship a costless fund', () => {
+    // The whole defect in one line: sol-028's fault a third time. If this ever
+    // reads zero again, the growth route is being flattered against a bond
+    // route whose zero is a fact.
+    expect(DEFAULT_FUND_COST.expenseRatio).toBeGreaterThan(0);
+  });
+
+  it('costs the growth route real money over the policy s life', () => {
+    const free = analyseReplication(at({ equityFeePct: 0 }));
+    const charged = analyseReplication(at({ equityFeePct: DEFAULT_FUND_COST.expenseRatio }));
+
+    expect(outcome(charged.growth)).toBeLessThan(outcome(free.growth));
+    // Not a rounding difference. A fifth of a percent, charged every year for
+    // thirty years on a balance that is compounding, is the point of the fix.
+    expect(outcome(free.growth) - outcome(charged.growth)).toBeGreaterThan(100000);
+  });
+
+  it('leaves the safe route alone, because a government bond has no annual charge', () => {
+    const free = analyseReplication(at({ equityFeePct: 0 }));
+    const charged = analyseReplication(at({ equityFeePct: 1.75 }));
+    expect(charged.safe.finalBalance).toBeCloseTo(free.safe.finalBalance, 6);
+  });
+
+  it('charges the sensitivity table the same fee as the headline', () => {
+    // dd-013/dont-2. A table built at the gross rate beside a headline built at
+    // the net one is one quantity with two values, and the reader would find it
+    // by noticing that the row marked as theirs disagreed with the card above.
+    const fee = 0.8;
+    const r = analyseReplication(at({ equityFeePct: fee, equityRate: 12 }));
+    const ownRow = r.sensitivity.find((row) => row.isBaseline)!;
+    expect(ownRow.rate).toBe(12);
+    expect(ownRow.surplus).toBeCloseTo(r.growth.finalBalance, 6);
+  });
+});
+
+describe('an income that grows - simple escalation on the starting income', () => {
+  it('is level when the escalation is zero', () => {
+    const rows = buildLedger(at({ payoutGrowthPct: 0 }));
+    expect(payoutInYear(at({ payoutGrowthPct: 0 }), 11)).toBe(120000);
+    expect(payoutInYear(at({ payoutGrowthPct: 0 }), 20)).toBe(120000);
+    expect(rows[10].payoutIn).toBe(120000);
+  });
+
+  it('adds the same step every year, not a compounding one', () => {
+    // 5% SIMPLE: year one pays the base, year eleven pays base + 10 x 5%.
+    // Compounding would give 1.05^10 = 1.629 and the difference is not small,
+    // which is exactly why the reading is stated on the field rather than left
+    // for the reader to assume.
+    const inputs = at({ payoutGrowthPct: 5 });
+    expect(payoutInYear(inputs, 11)).toBe(120000);
+    expect(payoutInYear(inputs, 12)).toBeCloseTo(126000, 6);
+    expect(payoutInYear(inputs, 21)).toBeCloseTo(120000 * 1.5, 6);
+  });
+
+  it('pays nothing outside the payout window, whatever the escalation', () => {
+    const inputs = at({ payoutGrowthPct: 5 });
+    expect(payoutInYear(inputs, 10)).toBe(0);
+    expect(payoutInYear(inputs, 31)).toBe(0);
+  });
+
+  it('makes the policy worth more, and the engine says so', () => {
+    // The direction is the whole point: a rising income was being priced as a
+    // level one, which understated the policy. This correction favours the
+    // product, which is what dd-021 requires of a tool that is not arguing.
+    const level = analyseReplication(at({ payoutGrowthPct: 0 }));
+    const rising = analyseReplication(at({ payoutGrowthPct: 5 }));
+    expect(rising.policy.xirrPct).toBeGreaterThan(level.policy.xirrPct);
+    expect(outcome(rising.growth)).toBeLessThan(outcome(level.growth));
+  });
+});
+
+describe('s.10(10D) - the policy s own tax, which was assumed away', () => {
+  it('exempts an ordinary policy, where the premium is well inside a tenth of the cover', () => {
+    const t = payoutTaxationOf(shipped);
+    expect(t.exempt).toBe(true);
+    expect(t.taxableFraction).toBe(0);
+    expect(analyseReplication(shipped).policy.taxOnPayouts).toBe(0);
+  });
+
+  it('withdraws the exemption when the cover is token beside the premium', () => {
+    // Rs 1 lakh a year against Rs 5 lakh of cover: the premium is a fifth of the
+    // sum assured, twice the statutory tenth. This is what a savings plan sold
+    // as an investment actually looks like, and it is the shape this tool exists
+    // to examine.
+    const t = payoutTaxationOf(at({ sumAssured: 500000 }));
+    expect(t.exempt).toBe(false);
+    expect(t.reason).toBeTruthy();
+    expect(t.taxableFraction).toBeGreaterThan(0);
+    expect(t.taxableFraction).toBeLessThan(1);
+  });
+
+  it('taxes only the income inside the proceeds, never the premiums back', () => {
+    // Conservation: the taxable fraction times the gross payout is the gross
+    // payout less every rupee of premium the reader put in.
+    const inputs = at({ sumAssured: 500000 });
+    const r = analyseReplication(inputs);
+    const gross = r.policy.totalNominalPayout;
+    const premiums = inputs.premium * inputs.ppt;
+    const taxed = gross * payoutTaxationOf(inputs).taxableFraction;
+    expect(taxed).toBeCloseTo(gross - premiums, 4);
+  });
+
+  it('has nothing to tax where the policy pays back less than it took', () => {
+    const t = payoutTaxationOf(at({ sumAssured: 100000, payoutAmount: 0, maturityBenefit: 500000 }));
+    expect(t.exempt).toBe(false);
+    expect(t.taxableFraction).toBe(0);
+  });
+
+  it('makes the replica fund what the reader KEEPS, not what the brochure states', () => {
+    // The premise the whole page rests on is that both routes pay the identical
+    // income. Once the policy s payout can be taxed, matching the gross figure
+    // would quietly make the replica do more work for the same verdict.
+    const rows = buildLedger(at({ sumAssured: 500000 }));
+    const payingYear = rows[10];
+    expect(payingYear.payoutTax).toBeGreaterThan(0);
+    expect(payingYear.payoutNet).toBeCloseTo(payingYear.payoutIn - payingYear.payoutTax, 6);
+    expect(payingYear.payoutNet).toBeLessThan(payingYear.payoutIn);
+  });
+
+  it('reports both yields, and they part company exactly when the exemption does', () => {
+    const exempt = analyseReplication(shipped);
+    expect(exempt.policy.xirrPct).toBeCloseTo(exempt.policy.xirrPreTaxPct, 9);
+    expect(exempt.policy.taxFree).toBe(true);
+
+    const taxed = analyseReplication(at({ sumAssured: 500000 }));
+    expect(taxed.policy.taxFree).toBe(false);
+    expect(taxed.policy.xirrPct).toBeLessThan(taxed.policy.xirrPreTaxPct);
+  });
+
+  it('a bigger slab costs a taxable policy more and an exempt one nothing', () => {
+    const exemptLow = analyseReplication(at({ slabRatePct: 10 }));
+    const exemptHigh = analyseReplication(at({ slabRatePct: 30 }));
+    expect(exemptHigh.policy.xirrPct).toBeCloseTo(exemptLow.policy.xirrPct, 9);
+
+    const taxedLow = analyseReplication(at({ sumAssured: 500000, slabRatePct: 10 }));
+    const taxedHigh = analyseReplication(at({ sumAssured: 500000, slabRatePct: 30 }));
+    expect(taxedHigh.policy.xirrPct).toBeLessThan(taxedLow.policy.xirrPct);
+  });
+
+  it('break-even is measured on what the reader keeps', () => {
+    const exemptYear = analyseReplication(shipped).policy.breakEvenYear;
+    const taxedYear = analyseReplication(at({ sumAssured: 500000 })).policy.breakEvenYear;
+    // Later, or never. A policy whose proceeds are taxed takes longer to repay
+    // its own premiums, and measuring on the gross figure would have said it
+    // repaid them on the same day it always did.
+    if (exemptYear !== null && taxedYear !== null) expect(taxedYear).toBeGreaterThanOrEqual(exemptYear);
+    else expect(taxedYear).toBeNull();
+  });
+});
+
+describe('dd-021 - the corrections do not all point one way', () => {
+  it('two of the three favour the policy and one favours the replica', () => {
+    const base = at({ payoutGrowthPct: 0, equityFeePct: 0, sumAssured: 10000000 });
+
+    // The fund fee takes money off the replica: it favours the POLICY.
+    const withFee = analyseReplication({ ...base, equityFeePct: 0.2 });
+    expect(outcome(withFee.growth)).toBeLessThan(outcome(analyseReplication(base).growth));
+
+    // An escalating income makes the policy pay more: it favours the POLICY.
+    const withGrowth = analyseReplication({ ...base, payoutGrowthPct: 5 });
+    expect(withGrowth.policy.xirrPct).toBeGreaterThan(analyseReplication(base).policy.xirrPct);
+
+    // s.10(10D) takes money off the policy: it favours the REPLICA.
+    const taxed = analyseReplication({ ...base, sumAssured: 500000 });
+    expect(taxed.policy.xirrPct).toBeLessThan(analyseReplication(base).policy.xirrPct);
+  });
+
+  it('can print a verdict for the policy from a policy that deserves one', () => {
+    // The brief's own test: "Feed it a genuinely good policy. Does the screen
+    // say so, plainly, without hedging?" A tool that can only produce one answer
+    // is advocacy, so this asserts that the other answer is reachable at all.
+    const good = at({
+      payoutAmount: 260000,
+      payoutGrowthPct: 5,
+      maturityBenefit: 2000000,
+      equityFeePct: 1.75,
+    });
+    const r = analyseReplication(good);
+    expect(verdictFor(r.growth).kind).toBe('shortfall');
+    expect(verdictFor(r.safe).kind).toBe('shortfall');
+    expect(r.policy.xirrPct).toBeGreaterThan(good.equityRate - good.equityFeePct);
+  });
+});
+
+describe('the spine - which questions this policy shape actually needs', () => {
+  it('asks nothing until the shape is known', () => {
+    expect(spineFor(null)).toEqual([]);
+  });
+
+  it('never asks an endowment when its income starts', () => {
+    const fields = spineFor('lumpSum').map((s) => s.field);
+    expect(fields).not.toContain('inPayout');
+    expect(fields).not.toContain('inPayoutStart');
+    expect(fields).not.toContain('inPayoutYears');
+    // It has to say WHEN it pays, though - that is the question the shape swaps in.
+    expect(fields).toContain('inMaturityYear');
+  });
+
+  it('never asks a pure money-back plan for a maturity amount', () => {
+    const fields = spineFor('income').map((s) => s.field);
+    expect(fields).not.toContain('inMaturity');
+    expect(fields).not.toContain('inMaturityYear');
+    expect(fields).toContain('inPayoutStart');
+  });
+
+  it('asks a hybrid for both, but only asks WHEN once', () => {
+    // dd-020/dont-2: the maturity of a policy that also pays an income lands in
+    // the last income year, so asking for its year again would be a question
+    // that removes nothing.
+    const fields = spineFor('both').map((s) => s.field);
+    expect(fields).toContain('inPayoutStart');
+    expect(fields).toContain('inMaturity');
+    expect(fields).not.toContain('inMaturityYear');
+  });
+
+  it('ends every shape on the cover and the slab', () => {
+    for (const shape of ['income', 'lumpSum', 'both'] as const) {
+      const fields = spineFor(shape).map((s) => s.field);
+      expect(fields.slice(-2)).toEqual(['inTermCover', 'inSlabRate']);
+    }
+  });
+
+  it('every step says what it is waiting for, in words a reader could read', () => {
+    for (const shape of ['income', 'lumpSum', 'both'] as const) {
+      for (const step of spineFor(shape)) {
+        expect(step.waitingFor.length).toBeGreaterThan(10);
+        expect(step.waitingFor).not.toMatch(/[A-Z]{4,}|_|\bin[A-Z]/);
+      }
+    }
+  });
+});
+
+describe('the two figures the page must not work out for itself', () => {
+  it('discounts the cover cost on the premium s own timing', () => {
+    // dd-013/dont-1: a view that computes a figure is a second engine waiting
+    // to disagree with the first. The cover is bought at the START of each year,
+    // like the premium it comes out of, so year one is not discounted at all.
+    const r = analyseReplication(shipped);
+    expect(r.riskCostPaid).toBe((shipped.termCost + shipped.accidentCost) * shipped.ppt);
+    expect(r.riskCostPaidReal).toBeLessThan(r.riskCostPaid);
+
+    const infl = shipped.inflationRate / 100;
+    let expected = 0;
+    for (let yr = 1; yr <= shipped.ppt; yr++) {
+      expected += (shipped.termCost + shipped.accidentCost) / Math.pow(1 + infl, yr - 1);
+    }
+    expect(r.riskCostPaidReal).toBeCloseTo(expected, 6);
+  });
+
+  it('measures what the fee cost, compounding included, rather than adding it up', () => {
+    const free = analyseReplication(at({ equityFeePct: 0 }));
+    const charged = analyseReplication(at({ equityFeePct: 0.2 }));
+
+    expect(free.growthFeeCost).toBe(0);
+    expect(charged.growthFeeCost).toBeGreaterThan(0);
+    // It is the difference between the two walks, which is the fee plus every
+    // rupee of growth it would have earned - much more than the fee alone.
+    expect(charged.growthFeeCost).toBeCloseTo(
+      outcome(free.growth) - outcome(charged.growth),
+      4
+    );
+    const feesAlone = 0.002 * charged.investableCapital * charged.inputs.ppt;
+    expect(charged.growthFeeCost).toBeGreaterThan(feesAlone);
   });
 });

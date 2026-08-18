@@ -5,15 +5,38 @@ export function parseFormattedNumber(val: string | number | undefined | null): n
 	return parseFloat(val.toString().replace(/,/g, '')) || 0;
 }
 
+/**
+ * Rupees the way a person says them. D-3, answered by Rahul on 16 August:
+ *
+ *   "the word, not the abbreviation. No space after the symbol. One decimal
+ *    above a lakh - Rs 1.28 crore, Rs 89.1 lakh, Rs 59,190."
+ *
+ * THE RULING WAS RECORDED AND NOT IMPLEMENTED. This function was still printing
+ * "Rs 55.86 Lakh" and "Rs 1.28 Cr" - a space after the symbol, a capital on the
+ * unit, two decimals where one was asked for, and "Cr", which is the
+ * trading-desk abbreviation D-3 exists to remove. It is the terminal aesthetic
+ * the whole rebuild is walking away from, surviving in the one place every page
+ * passes through.
+ *
+ * The three worked examples in the ruling are reproduced exactly: two decimals
+ * at crore, one at lakh, whole grouped rupees below. That is the reading that
+ * satisfies all three of the figures he wrote down; "one decimal above a lakh"
+ * read literally would have given Rs 1.3 crore, which is not the example he gave.
+ *
+ * `rupeeConvention.test.ts` holds it, because a convention with no detector is
+ * one that drifts back (dd-011/do-1).
+ */
 export function formatShortRupee(val: number): string {
 	const absVal = Math.abs(val);
-	if (absVal >= 10000000) return `₹ ${(val / 10000000).toFixed(2)} Cr`;
-	if (absVal >= 100000) return `₹ ${(val / 100000).toFixed(2)} Lakh`;
-	// Whole rupees below a lakh. Above it the figure is already rounded to two
-	// decimals of its unit, so only this branch could ever leak paise - and it
-	// did, printing "₹ 59,189.846" on the insurance page the first time a
+	// The sign belongs outside the symbol: "-₹11.08 lakh", never "₹-11.08 lakh".
+	const sign = val < 0 ? '-' : '';
+	if (absVal >= 10000000) return `${sign}₹${(absVal / 10000000).toFixed(2)} crore`;
+	if (absVal >= 100000) return `${sign}₹${(absVal / 100000).toFixed(1)} lakh`;
+	// Whole rupees below a lakh. Above it the figure is already rounded to a
+	// decimal or two of its unit, so only this branch could ever leak paise - and
+	// it did, printing "₹ 59,189.846" on the insurance page the first time a
 	// computed rather than typed figure reached it.
-	return `₹ ${Math.round(val).toLocaleString('en-IN')}`;
+	return `${sign}₹${Math.round(absVal).toLocaleString('en-IN')}`;
 }
 
 export const tableFormatter = new Intl.NumberFormat('en-IN', {

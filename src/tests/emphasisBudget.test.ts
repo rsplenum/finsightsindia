@@ -46,7 +46,12 @@ const NOT_YET_SWEPT: Record<string, number> = {
   // sol-061/sol-062 landed it: the page is now four components and a script,
   // and not one element on it shouts.
   'src/pages/tax-calculator.astro': 0,
-  'src/pages/insurance-analyzer.astro': 24,
+  // Was 24, and the ceiling said "drop it to zero as its rewrite lands".
+  // sol-066 landed it: the page is now five components and a script, and not
+  // one element on it shouts. The verdict badges keep their caps through
+  // `badge-safe` / `badge-danger`, which is the one-per-card device this rule
+  // sanctions rather than an exception to it.
+  'src/pages/insurance-analyzer.astro': 0,
   'src/pages/black-scholes.astro': 12,
   'src/pages/faq.astro': 19,
   'src/pages/index.astro': 10,

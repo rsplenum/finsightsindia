@@ -1,0 +1,226 @@
+---
+/**
+ * The working, below the verdict: what the policy itself does, what each of the
+ * two do-it-yourself routes does, what the policy costs in friction, and how
+ * fragile the whole thing is to the one assumption that is not a fact.
+ *
+ * WHY THIS IS ONE COMPONENT AND NOT FIVE CARDS. The old page scattered this
+ * across an "Engine A" card, two "Engine B / C" cards, a bottom line, a
+ * frictions X-ray and a sensitivity table — each with its own heading style,
+ * and between them FOUR DIFFERENT QUANTITIES wearing the phrase "in today's
+ * prices" (F-12). Two bold figures 500px apart shared a label while counting
+ * different things, so a reader's first thought was that one was a typo. That
+ * was not a wording defect: it was five surfaces each labelling its own figure
+ * correctly, with nobody responsible for whether they could be told apart.
+ *
+ * So the frames are column headers over tables whose rows name their quantity —
+ * T8's adjacent-columns pattern, which dd-019's own note says explicitly does
+ * pass — and the phrase appears once per table rather than once per figure.
+ *
+ * THE THREE COSTS THIS SURFACE ADDED, all of them figures of zero typed in by
+ * omission:
+ *
+ *  - the fund's expense ratio, which the growth route was not paying while the
+ *    bond route's zero was a genuine fact (sol-028's fault a third time);
+ *  - s.10(10D), which was assumed to exempt every policy whatever its cover;
+ *  - an escalating income, which was priced as though it were level.
+ *
+ * Two of those favour the policy and one favours the replica. That is not a
+ * balancing act — each was fixed because it was wrong — but it is the evidence
+ * for dd-021 that the corrections were not all pointing one way.
+ *
+ * Design settled before the component in `InsuranceRoutes.checks.md`.
+ */
+import { SAFE_RATE_PCT, EQUITY_RATE_PCT } from '../../utils/insuranceInputs';
+
+const cardClass =
+  'rounded-2xl border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-950 p-5 sm:p-6 space-y-4';
+const headingClass = 'text-base font-bold text-navy-900 dark:text-navy-100';
+const ledeClass = 'text-sm text-navy-600 dark:text-navy-400 leading-relaxed';
+const frameHeadClass = 'py-2 text-right text-sm font-semibold text-navy-600 dark:text-navy-400';
+const rowHeadClass = 'py-2 pr-3 text-sm text-navy-700 dark:text-navy-300 align-baseline';
+const cellClass = 'py-2 pl-3 text-right text-sm font-bold tabular-nums text-navy-900 dark:text-navy-100 align-baseline';
+---
+
+<div id="insuranceRoutes" class="space-y-6">
+
+  <!-- 1. The policy, on its own terms. -->
+  <section class={cardClass} aria-label="What the policy itself does">
+    <div class="space-y-1">
+      <h3 class={headingClass}>What this policy does</h3>
+      <p class={ledeClass}>
+        Everything you pay in, and everything it hands back, set against what those rupees will
+        actually buy by the time they arrive.
+      </p>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="border-b border-navy-200 dark:border-navy-800">
+            <th class="py-2 pr-3 text-sm font-semibold text-navy-600 dark:text-navy-400">Over the whole policy</th>
+            <th class={frameHeadClass}>in the rupees of each year</th>
+            <th class={frameHeadClass}>in today's prices</th>
+          </tr>
+        </thead>
+        <tbody id="policyLedgerRows" class="divide-y divide-navy-100 dark:divide-navy-900"></tbody>
+      </table>
+    </div>
+
+    <p id="policyTaxLine" class="text-sm leading-relaxed text-navy-600 dark:text-navy-400 empty:hidden"></p>
+    <p id="policyBreakEvenLine" class="text-sm leading-relaxed text-navy-600 dark:text-navy-400 empty:hidden"></p>
+  </section>
+
+  <!-- 2. The two replicas. Stacked at 375; side by side only when there is room. -->
+  <section class="space-y-4" aria-label="The two do-it-yourself routes">
+    <div class="space-y-1">
+      <h3 class={headingClass}>Doing it yourself, two ways</h3>
+      <p class={ledeClass}>
+        Buy the same cover on the open market, invest what is left of each premium, and take out
+        exactly what the policy would have paid you, in exactly the years it would have paid it.
+        The only difference between these two is where the money in the middle sits.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div class={`${cardClass} flex flex-col`}>
+        <div class="flex items-start justify-between gap-3">
+          <div class="space-y-0.5">
+            <h4 class={headingClass}>The safe route</h4>
+            <p class="text-sm text-navy-600 dark:text-navy-400">Term cover, and government bonds at {SAFE_RATE_PCT}%</p>
+          </div>
+          <span id="safeBadge" class="shrink-0 px-2 py-0.5 text-xs font-bold tracking-tight rounded bg-navy-100 dark:bg-navy-800 text-navy-600 dark:text-navy-400">—</span>
+        </div>
+        <div class="space-y-1 pt-2">
+          <p id="safeLabel" class="text-sm font-semibold text-navy-600 dark:text-navy-400">Left over at the end</p>
+          <p id="safeFigure" class="text-2xl font-extrabold tracking-tight tabular-nums text-navy-900 dark:text-navy-100">₹0</p>
+          <p id="safeFigureReal" class="text-sm text-navy-600 dark:text-navy-400">&nbsp;</p>
+        </div>
+        <p id="safeText" class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed pt-2">&nbsp;</p>
+        <dl class="mt-auto pt-4 border-t border-navy-100 dark:border-navy-800 space-y-1.5 text-sm">
+          <div class="flex items-baseline justify-between gap-3">
+            <dt class="text-navy-600 dark:text-navy-400">Cover bought, over the paying years</dt>
+            <dd id="safeRiskCost" class="font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
+          </div>
+          <div class="flex items-baseline justify-between gap-3">
+            <dt class="text-navy-600 dark:text-navy-400">Tax on the interest, as it was earned</dt>
+            <dd id="safeTaxDrag" class="font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
+          </div>
+          <div class="flex items-baseline justify-between gap-3">
+            <dt class="text-navy-600 dark:text-navy-400">What the bonds charge to hold</dt>
+            <dd class="font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class={`${cardClass} flex flex-col`}>
+        <div class="flex items-start justify-between gap-3">
+          <div class="space-y-0.5">
+            <h4 class={headingClass}>The growth route</h4>
+            <p class="text-sm text-navy-600 dark:text-navy-400">Term cover, and an index fund at {EQUITY_RATE_PCT}%</p>
+          </div>
+          <!-- dd-007: two routes shown as equals. Only one of them used to carry a badge. -->
+          <span id="growthBadge" class="shrink-0 px-2 py-0.5 text-xs font-bold tracking-tight rounded bg-navy-100 dark:bg-navy-800 text-navy-600 dark:text-navy-400">—</span>
+        </div>
+        <div class="space-y-1 pt-2">
+          <p id="growthLabel" class="text-sm font-semibold text-navy-600 dark:text-navy-400">Left over at the end</p>
+          <p id="growthFigure" class="text-2xl font-extrabold tracking-tight tabular-nums text-navy-900 dark:text-navy-100">₹0</p>
+          <p id="growthFigureReal" class="text-sm text-navy-600 dark:text-navy-400">&nbsp;</p>
+        </div>
+        <p id="growthText" class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed pt-2">&nbsp;</p>
+        <dl class="mt-auto pt-4 border-t border-navy-100 dark:border-navy-800 space-y-1.5 text-sm">
+          <div class="flex items-baseline justify-between gap-3">
+            <dt class="text-navy-600 dark:text-navy-400">Cover bought, over the paying years</dt>
+            <dd id="growthRiskCost" class="font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
+          </div>
+          <div class="flex items-baseline justify-between gap-3">
+            <dt class="text-navy-600 dark:text-navy-400">Tax on the gains, as they were sold</dt>
+            <dd id="growthTaxDrag" class="font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
+          </div>
+          <!--
+            THE ROW THAT DID NOT EXIST. A reader told the fund returns 12% and
+            shown a balance built at 11.8% has been handed a figure that does not
+            follow from a stated assumption (dd-009/dont-1). The fee is its own
+            line, with the plan that produced it named.
+          -->
+          <div class="flex items-baseline justify-between gap-3">
+            <dt class="text-navy-600 dark:text-navy-400">What the fund charges to hold</dt>
+            <dd id="growthFeeDrag" class="font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <p id="routesTakeaway" class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed rounded-xl border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900 px-4 py-3"></p>
+  </section>
+
+  <!-- 3. What the policy costs before it invests a rupee. -->
+  <section class={cardClass} aria-label="What the policy costs in friction">
+    <div class="space-y-1">
+      <h3 class={headingClass}>What comes off before anything is invested</h3>
+      <p class={ledeClass}>
+        Neither of these is hidden and neither is illegal. They are simply not on the brochure,
+        and they are the reason a guaranteed return can be lower than the bond it is built on.
+      </p>
+    </div>
+    <dl class="space-y-3">
+      <div class="flex items-baseline justify-between gap-4 border-b border-navy-100 dark:border-navy-900 pb-3">
+        <dt class="text-sm text-navy-700 dark:text-navy-300">
+          Tax paid on the premiums, over the paying years
+          <span class="block text-sm text-navy-600 dark:text-navy-400">Around 4.5% in the first year and 2.25% after it</span>
+        </dt>
+        <dd id="frictionGst" class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
+      </div>
+      <div class="flex items-baseline justify-between gap-4">
+        <dt class="text-sm text-navy-700 dark:text-navy-300">
+          Estimated commission, in the first year
+          <span class="block text-sm text-navy-600 dark:text-navy-400">Paid to whoever sold it to you, out of what you paid in. An estimate, not a disclosure.</span>
+        </dt>
+        <dd id="frictionCommission" class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- 4. The one assumption that is not a fact. -->
+  <section class={cardClass} aria-label="How fragile the comparison is">
+    <div class="space-y-1">
+      <h3 class={headingClass}>What if the market does not deliver {EQUITY_RATE_PCT}%?</h3>
+      <p class={ledeClass}>
+        The policy's income is a contract and the index fund's is not. Here is the same
+        comparison at returns either side of the one assumed — and note that a lower return does
+        not merely leave less over, it can mean the income stops arriving at all.
+      </p>
+    </div>
+    <div class="overflow-x-auto rounded-xl border border-navy-200 dark:border-navy-800">
+      <table class="w-full text-left border-collapse">
+        <thead class="bg-navy-50 dark:bg-navy-900">
+          <tr>
+            <th class="px-3 py-2.5 text-sm font-semibold text-navy-600 dark:text-navy-400">If the index returns</th>
+            <th class="px-3 py-2.5 text-right text-sm font-semibold text-navy-600 dark:text-navy-400">Left over at the end</th>
+            <th class="px-3 py-2.5 text-right text-sm font-semibold text-navy-600 dark:text-navy-400">Did it fund the promise?</th>
+          </tr>
+        </thead>
+        <tbody id="insuranceSensitivityBody" class="divide-y divide-navy-100 dark:divide-navy-800"></tbody>
+      </table>
+    </div>
+    <p class={ledeClass}>
+      Each row is charged the same fund fee as the comparison above, so the rate in the first
+      column is what the index does and not what you keep.
+    </p>
+  </section>
+
+  <!-- 5. The shape of the whole thing, at a glance. -->
+  <section class={cardClass} aria-label="The cash flow, year by year">
+    <div class="space-y-1">
+      <h3 class={headingClass}>The shape of it, year by year</h3>
+      <p class={ledeClass}>
+        Money out, then money back. The years of paying are the reason the comparison exists:
+        that is when the alternative is compounding.
+      </p>
+    </div>
+    <div class="relative w-full h-[250px]">
+      <canvas id="cashflowChart" class="w-full h-full"></canvas>
+    </div>
+  </section>
+
+</div>

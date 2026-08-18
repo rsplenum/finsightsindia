@@ -1,0 +1,175 @@
+---
+/**
+ * The third of the brief's three outputs, and the one the page never had at all.
+ *
+ *   "then displays how to do DIY generally, that opens oppoutunity to promote
+ *    genuinely beneficial and advantageous products."  — Rahul, 16 Aug 2026
+ *
+ * dd-021/do-4 states the principle: a verdict the reader cannot act on is half
+ * delivered. The old page ended at a number. A reader persuaded that unbundling
+ * wins was then left to work out, alone, what sum assured to buy, from whom,
+ * what to do with the difference, and how to take an income out of it later —
+ * which is the entire reason people buy the bundled product in the first place.
+ * The bundle is not sold on its returns. It is sold on the fact that somebody
+ * else does the assembling.
+ *
+ * IT MUST PRINT WHEN THE POLICY WINS TOO. The obvious failure here is a panel
+ * that only exists when the replica wins, which would make the whole page an
+ * advertisement for the conclusion it reaches (dd-021/dont-1). The four steps
+ * and the four figures are the same either way; what changes is the closing
+ * sentence — how to do it, or what you would be giving up.
+ *
+ * AND IT NAMES WHAT THE POLICY DOES BETTER. A panel listing only the replica's
+ * advantages is the same advocacy facing the other way. Four of them, in the
+ * body at the same weight as the steps, because a reader who discovers them
+ * later concludes the page was selling something.
+ *
+ * NO PRODUCT IS NAMED AND NO LINK IS PLACED. Rahul's note says this opens the
+ * opportunity to promote genuinely beneficial products. That opportunity is
+ * real and it is not this session's to take: a recommendation shipped inside a
+ * tool whose whole claim is neutrality has to be his decision, with whatever
+ * disclosure it carries. On the launch gate for him.
+ *
+ * Design settled before the component in `InsuranceDiyPlan.checks.md`.
+ */
+
+const stepClass =
+  'rounded-2xl border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-950 p-5 sm:p-6 space-y-3';
+const numberClass =
+  'inline-flex items-center justify-center w-7 h-7 rounded-lg bg-navy-100 dark:bg-navy-800 text-navy-900 dark:text-navy-100 text-sm font-bold tabular-nums shrink-0';
+const bodyClass = 'text-sm text-navy-600 dark:text-navy-400 leading-relaxed';
+const figureRowClass =
+  'flex items-baseline justify-between gap-3 border-t border-navy-100 dark:border-navy-900 pt-3';
+const figureLabelClass = 'text-sm text-navy-700 dark:text-navy-300';
+const figureClass = 'text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100 shrink-0';
+---
+
+<section id="insuranceDiyPlan" class="space-y-5" aria-label="How to do this yourself">
+  <div class="space-y-2">
+    <h3 class="text-xl font-bold text-navy-900 dark:text-navy-100">
+      How you would actually do this yourself
+    </h3>
+    <p id="diyLede" class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed max-w-2xl">
+      &nbsp;
+    </p>
+  </div>
+
+  <div class="space-y-4">
+    <div class={stepClass}>
+      <div class="flex items-start gap-3">
+        <span class={numberClass}>1</span>
+        <h4 class="text-base font-bold text-navy-900 dark:text-navy-100 leading-snug">
+          Buy the life cover on its own
+        </h4>
+      </div>
+      <p class={bodyClass}>
+        A pure term plan, for the same sum your policy insures you for. It pays out if you die
+        and nothing otherwise, which is why it costs a fraction of a policy that also saves.
+        Buy it before you cancel anything: cover you have applied for is not cover you have.
+      </p>
+      <div class={figureRowClass}>
+        <span class={figureLabelClass}>Cover to buy</span>
+        <span id="diyTermCover" class={figureClass}>₹0</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-3">
+        <span class={figureLabelClass}>What it should cost, each year</span>
+        <span id="diyTermCost" class={figureClass}>₹0</span>
+      </div>
+    </div>
+
+    <div id="diyAccidentStep" class={stepClass}>
+      <div class="flex items-start gap-3">
+        <span class={numberClass}>2</span>
+        <h4 class="text-base font-bold text-navy-900 dark:text-navy-100 leading-snug">
+          Replace the accident or health cover
+        </h4>
+      </div>
+      <p class={bodyClass}>
+        A rider bought as a standalone policy, for the same amount. This step is the one most
+        often skipped, and skipping it is how a do-it-yourself plan ends up looking cheaper than
+        it is — you would be dropping protection, not paying less for the same thing.
+      </p>
+      <div class={figureRowClass}>
+        <span class={figureLabelClass}>Cover to buy</span>
+        <span id="diyAccidentCover" class={figureClass}>₹0</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-3">
+        <span class={figureLabelClass}>What it should cost, each year</span>
+        <span id="diyAccidentCost" class={figureClass}>₹0</span>
+      </div>
+    </div>
+
+    <div class={stepClass}>
+      <div class="flex items-start gap-3">
+        <span class={numberClass}>3</span>
+        <h4 class="text-base font-bold text-navy-900 dark:text-navy-100 leading-snug">
+          Invest what is left, every year, without fail
+        </h4>
+      </div>
+      <p class={bodyClass}>
+        The cover comes out of the premium first, and what remains is what you invest. Do it on
+        the same date every year so it is a commitment rather than a decision. The fund's fee is
+        charged whatever the market does, so it is the one part of this you control outright.
+      </p>
+      <p id="diyInvestNote" class={bodyClass}></p>
+      <div class={figureRowClass}>
+        <span class={figureLabelClass}>To invest, each year</span>
+        <span id="diyInvestable" class={figureClass}>₹0</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-3">
+        <span class={figureLabelClass}>For how many years</span>
+        <span id="diyInvestYears" class={figureClass}>0</span>
+      </div>
+      <p id="diyInvestDecay" class={bodyClass}></p>
+    </div>
+
+    <div class={stepClass}>
+      <div class="flex items-start gap-3">
+        <span class={numberClass}>4</span>
+        <h4 class="text-base font-bold text-navy-900 dark:text-navy-100 leading-snug">
+          Take the income out when the policy would have paid it
+        </h4>
+      </div>
+      <p id="diyWithdrawBody" class={bodyClass}></p>
+      <div class={figureRowClass}>
+        <span class={figureLabelClass}>To take out, in the first year it is due</span>
+        <span id="diyFirstWithdrawal" class={figureClass}>₹0</span>
+      </div>
+      <div class="flex items-baseline justify-between gap-3">
+        <span class={figureLabelClass}>Tax you would pay across the whole withdrawal period</span>
+        <span id="diyWithdrawTax" class={figureClass}>₹0</span>
+      </div>
+    </div>
+  </div>
+
+  <!--
+    NOT A DISCLAIMER. These sit in the body at the weight of the steps, because
+    a reader who discovers them later concludes the page was selling something —
+    and because three of the four are genuinely the policy's advantages, which
+    dd-021 requires this page to be as willing to print as its faults.
+  -->
+  <div class="rounded-2xl border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900 p-5 sm:p-6 space-y-3">
+    <h4 class="text-base font-bold text-navy-900 dark:text-navy-100">
+      What the policy does that this does not
+    </h4>
+    <ul class="space-y-3">
+      <li class={bodyClass}>
+        <strong class="font-semibold text-navy-900 dark:text-navy-100">The policy's number is a
+        contract. This one is an assumption.</strong> The guaranteed income arrives whatever the
+        market does. An index fund's does not, and the table above shows what a few points either
+        way costs you.
+      </li>
+      <li id="diyTaxAdvantage" class={bodyClass}></li>
+      <li class={bodyClass}>
+        <strong class="font-semibold text-navy-900 dark:text-navy-100">The policy is hard to
+        stop.</strong> That is a real cost when you need the money and a real benefit when you
+        would otherwise have spent it. Only you know which of those describes you.
+      </li>
+      <li class={bodyClass}>
+        <strong class="font-semibold text-navy-900 dark:text-navy-100">This needs you to keep
+        doing it</strong> for as long as the policy would have run, including the years the market
+        falls and stopping feels sensible. That is the part the arithmetic cannot price.
+      </li>
+    </ul>
+  </div>
+</section>
