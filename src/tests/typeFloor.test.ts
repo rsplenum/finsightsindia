@@ -85,18 +85,22 @@ const committedMatches = (pattern: string): number => {
 // Held on purpose, pending Rahul's ruling: bumping these reflows the badges they
 // sit in. Counted so the deferral cannot rot into a habit.
 //
-// 21, not the 17 the gate records and not the 20 this file recorded. All three
-// were true of somebody's working tree at some moment, which is exactly the
-// fault sol-058 fixes — and it matters more here than anywhere, because this is
-// the number Rahul is being asked to rule on.
-const HELD_9PX = 21;
+// 14, measured at HEAD after sol-066. It has been 21, 20 and 17 in this file or
+// on the gate at various moments, which is exactly the fault sol-058 fixes — and
+// it matters more here than anywhere, because this is the number Rahul is being
+// asked to rule on. The fall from 21 is not a sweep: the tax revamp took the
+// regime chips (sol-061) and the insurance overhaul took its two plus one on
+// `InsuranceAnswer` (sol-066). What is left is real and is named on the gate:
+// CAUTIOUS/BALANCED/BOLD on the SIP page, the five Greeks on the options page,
+// one on the planner, two on `TaxAnswer`, one illustration.
+const HELD_9PX = 14;
 
 // The whole-tree backlog, as committed. Ratchet: may fall, never rise. Tighten
 // whenever it falls. The audit counted 317. What remains at HEAD: the rung
 // components (the type-floor workstream's, in flight — 173 of these 213 go the
 // moment they commit), faq.astro, the content workstream's fcnr illustrations,
 // and the held 9px labels, which are counted in this total too.
-const BACKLOG_CEILING = 213;
+const BACKLOG_CEILING = 201;
 
 describe('F-01 — the sub-12px type floor', () => {
   it('the committed count is real (guards the guard)', () => {
