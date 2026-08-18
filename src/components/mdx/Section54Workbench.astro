@@ -8,7 +8,7 @@ import InputGroup from '../InputGroup.astro';
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
         </div>
         <div>
-            <h3 class="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest m-0">The Section 54 Simulator</h3>
+            <h3 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest m-0">The Section 54 Simulator</h3>
         </div>
 	</div>
 
@@ -33,12 +33,12 @@ import InputGroup from '../InputGroup.astro';
 
     <div class="p-5 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800/80 mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-            <div class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Base Capital Gain</div>
+            <div class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Base Capital Gain</div>
             <div id="wbSec54BaseGain" class="text-xl font-medium text-slate-900 dark:text-white">₹1,00,00,000</div>
         </div>
         <div class="w-px h-10 bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
         <div>
-            <div class="text-[10px] font-bold text-rose-500 dark:text-rose-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+            <div class="text-xs font-bold text-rose-500 dark:text-rose-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
                 Initial Tax Demand (12.5%)
             </div>
@@ -55,7 +55,7 @@ import InputGroup from '../InputGroup.astro';
             value="0"
             type="number"
             formattedId="wbSec54Shield1Amt"
-            formattedClass="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800/50"
+            formattedClass="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800/50"
             formattedDefault="Shields ₹0 of gain"
         />
         <InputGroup 
@@ -67,7 +67,7 @@ import InputGroup from '../InputGroup.astro';
             type="number"
             max="5000000"
             formattedId="wbSec54Shield2Amt"
-            formattedClass="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800/50"
+            formattedClass="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800/50"
             formattedDefault="Shields ₹0 of gain"
         />
     </div>
@@ -144,7 +144,7 @@ import InputGroup from '../InputGroup.astro';
             if (finalTax <= 0) {
                 // Erased state
                 elFinalBox.className = "p-6 rounded-2xl border transition-colors duration-300 border-emerald-200 bg-emerald-50 dark:border-emerald-900/50 dark:bg-emerald-950/20 flex flex-col sm:flex-row justify-between items-center gap-4";
-                elFinalLabel.className = "text-[11px] font-bold uppercase tracking-widest mb-1 transition-colors duration-300 text-emerald-700 dark:text-emerald-400";
+                elFinalLabel.className = "text-sm font-bold uppercase tracking-widest mb-1 transition-colors duration-300 text-emerald-700 dark:text-emerald-400";
                 elFinalSubLabel.className = "text-[12px] opacity-80 transition-colors duration-300 text-emerald-600 dark:text-emerald-500";
                 elFinalSubLabel.innerText = "Tax demand completely erased.";
                 elFinalTax.className = "text-4xl font-light tracking-tight transition-colors duration-300 text-emerald-600 dark:text-emerald-400";

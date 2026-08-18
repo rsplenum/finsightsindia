@@ -1,0 +1,77 @@
+---
+// Ill06AllocationProblem.astro
+// Visual brief: The ₹100 Crore / ₹150 Crore Allocation Problem across dynamic investor cohorts
+---
+
+<div class="my-10 bg-slate-50 dark:bg-navy-900/90 border border-slate-200 dark:border-navy-800 rounded-xl overflow-hidden shadow-sm not-prose font-sans w-full max-w-3xl mx-auto">
+  <div class="px-6 py-4 border-b border-slate-200 dark:border-navy-800 bg-slate-100/60 dark:bg-navy-950/60 flex items-center justify-between">
+    <div>
+      <div class="text-xs uppercase tracking-widest text-rose-600 dark:text-rose-400 font-semibold">Editorial Visual 06</div>
+      <h3 class="text-base text-slate-900 dark:text-white font-semibold m-0">The Allocation Dilemma</h3>
+    </div>
+    <span class="text-xs font-mono px-2.5 py-1 bg-rose-500/10 text-rose-600 dark:text-rose-400 rounded border border-rose-500/20 font-medium">Inter-Temporal Shift</span>
+  </div>
+
+  <div class="p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Year 1 -->
+      <div class="p-4 rounded-lg bg-white dark:bg-navy-800/60 border border-emerald-300 dark:border-emerald-800/50">
+        <div class="flex items-center justify-between border-b border-slate-100 dark:border-navy-700 pb-2 mb-3">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Year 1</span>
+          <span class="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded">+₹100 Cr Profit</span>
+        </div>
+        <div class="space-y-2">
+          <div class="flex items-center justify-between p-2 rounded bg-slate-50 dark:bg-navy-900 text-xs">
+            <span class="font-medium text-slate-700 dark:text-slate-300">Investor A</span>
+            <span class="text-emerald-600 font-mono font-semibold">+₹33.3 Cr</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded bg-slate-50 dark:bg-navy-900 text-xs">
+            <span class="font-medium text-slate-700 dark:text-slate-300">Investor B</span>
+            <span class="text-emerald-600 font-mono font-semibold">+₹33.3 Cr</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded bg-slate-50 dark:bg-navy-900 text-xs">
+            <span class="font-medium text-slate-700 dark:text-slate-300">Investor C</span>
+            <span class="text-emerald-600 font-mono font-semibold">+₹33.3 Cr</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Year 2 -->
+      <div class="p-4 rounded-lg bg-white dark:bg-navy-800/60 border border-rose-300 dark:border-rose-800/50">
+        <div class="flex items-center justify-between border-b border-slate-100 dark:border-navy-700 pb-2 mb-3">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Year 2</span>
+          <span class="text-xs font-mono font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 px-2 py-0.5 rounded">-₹150 Cr Loss</span>
+        </div>
+        <div class="space-y-2">
+          <div class="flex items-center justify-between p-2 rounded bg-slate-100/80 dark:bg-navy-900/60 text-xs opacity-60">
+            <span class="font-medium text-slate-500">Investor A</span>
+            <span class="text-slate-500 font-mono text-[11px]">EXITED</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded bg-slate-50 dark:bg-navy-900 text-xs">
+            <span class="font-medium text-slate-700 dark:text-slate-300">Investor B</span>
+            <span class="text-rose-600 font-mono font-semibold">Remains</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded bg-slate-50 dark:bg-navy-900 text-xs">
+            <span class="font-medium text-slate-700 dark:text-slate-300">Investor C</span>
+            <span class="text-rose-600 font-mono font-semibold">Remains</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 text-xs">
+            <span class="font-medium text-amber-700 dark:text-amber-300">Investor D</span>
+            <span class="text-amber-600 font-mono text-[11px] font-bold">NEW ENTRANT</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- The Problem Box -->
+    <div class="mt-5 p-4 rounded-lg bg-navy-900 text-white dark:bg-navy-950 border border-slate-800 text-center">
+      <div class="text-xs font-mono uppercase tracking-widest text-amber-400 font-semibold mb-1">The Statutory Question</div>
+      <p class="text-sm font-bold m-0">Who is entitled to claim the ₹150 Crore loss set-off?</p>
+      <p class="text-xs text-slate-300 m-0 mt-1">Section 224 mandates strict holding-period rules and distinguishes business losses from capital losses to prevent loss-trading arbitrage.</p>
+    </div>
+  </div>
+
+  <div class="px-6 py-3 bg-slate-100/50 dark:bg-navy-950/40 border-t border-slate-200 dark:border-navy-800 text-center">
+    <p class="text-xs italic text-slate-500 dark:text-slate-400 m-0">Transparency creates an allocation problem. Income belongs to economic owners, but economic ownership changes over time.</p>
+  </div>
+</div>

@@ -11,7 +11,7 @@ const directTaxCollection = defineCollection({
     updatedDate: z.string(),
     statutoryAct: z.string(),
     statutoryAct2025: z.string().optional(),
-    coverImage: z.string(),
+    coverImage: z.string().optional(),
     summary: z.string(),
   }),
 });

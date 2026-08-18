@@ -1,0 +1,61 @@
+---
+
+---
+
+<div class="my-10 p-8 bg-slate-50 dark:bg-[#0B1120] rounded-xl border border-slate-200 dark:border-navy-700 shadow-sm relative overflow-hidden">
+  {/* Background schematic */}
+  <div class="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0); background-size: 24px 24px;"></div>
+  
+  <div class="text-xs font-bold tracking-widest text-slate-400 dark:text-navy-400 uppercase mb-8 text-center relative z-10">Industrial Control Room</div>
+
+  <div class="flex flex-col lg:flex-row items-center justify-center gap-12 relative z-10">
+    
+    {/* Digital Counter */}
+    <div class="bg-slate-900 dark:bg-black rounded-lg p-6 border-4 border-slate-700 dark:border-navy-800 shadow-inner flex flex-col items-center min-w-[200px]">
+      <div class="text-xs text-slate-400 tracking-widest uppercase font-bold mb-3">Mobilisation</div>
+      <div class="flex items-center gap-2">
+        <div class="text-slate-600 dark:text-slate-700 text-xl font-bold line-through opacity-50">$10bn</div>
+        
+      </div>
+      <div class="flex items-center gap-2 mt-1">
+        <div class="text-slate-500 dark:text-slate-600 text-xl font-bold line-through opacity-50">$25bn</div>
+        
+      </div>
+      <div class="flex items-center gap-2 mt-1">
+        <div class="text-slate-400 dark:text-slate-500 text-xl font-bold line-through opacity-50">$40bn</div>
+        
+      </div>
+      <div class="text-emerald-400 text-4xl font-black mt-4 tracking-tight drop-shadow-[0_0_10px_rgba(52,211,153,0.5)]">$52.3bn</div>
+    </div>
+
+    {/* The Lever */}
+    <div class="flex flex-col items-center">
+      <div class="text-sm font-bold tracking-widest text-slate-800 dark:text-white uppercase mb-6 text-center">FCNR Swap Incentive</div>
+      
+      <div class="relative h-64 w-24 bg-slate-200 dark:bg-navy-900 rounded-full border-4 border-slate-300 dark:border-navy-700 shadow-inner flex flex-col justify-between items-center py-6">
+        {/* Stages */}
+        <div class="text-xs font-bold text-rose-500 dark:text-rose-400 z-10">CLOSED</div>
+        <div class="text-xs font-bold text-emerald-500 dark:text-emerald-400 z-10">ACTIVE</div>
+        <div class="text-xs font-bold text-slate-400 z-10">LOW</div>
+        
+        {/* Track */}
+        <div class="absolute inset-y-8 w-2 bg-slate-800 dark:bg-black rounded-full"></div>
+        
+        {/* The Handle (Moving toward closed) */}
+        <div class="absolute top-12 w-16 h-10 bg-gradient-to-r from-slate-400 to-slate-500 dark:from-navy-500 dark:to-navy-600 rounded shadow-md border border-slate-300 dark:border-navy-400 flex items-center justify-center cursor-pointer transition-all duration-500 ease-in-out">
+          <div class="w-8 h-1 bg-white/30 rounded-full"></div>
+        </div>
+        
+        {/* Arrow indicating motion */}
+        <div class="absolute top-24 -right-12 text-rose-500 dark:text-rose-400 flex flex-col items-center">
+          
+          <span class="text-[10px] font-bold uppercase mt-1">Closing</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-10 border-t border-slate-200 dark:border-navy-700 pt-4 max-w-2xl mx-auto text-center relative z-10">
+    <p class="text-sm text-slate-600 dark:text-slate-400 italic">The objective was never to maximise dollar inflows indefinitely. It was to attract enough foreign currency to change the external position, then remove the extraordinary incentive.</p>
+  </div>
+</div>

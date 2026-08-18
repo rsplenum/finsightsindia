@@ -4,6 +4,7 @@ import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import fs from 'node:fs';
 import path from 'node:path';
+import { execSync } from 'node:child_process';
 
 // Fetch all MDX articles from the Content Collection
 const allArticles = await getCollection('direct-tax');
@@ -13,16 +14,27 @@ const articlesWithTime = allArticles.map(art => {
 	let timestamp = 0;
 	try {
 		const fullPath = path.join(process.cwd(), 'src/content/direct-tax', art.id + (art.id.endsWith('.mdx') ? '' : '.mdx'));
-		const stats = fs.statSync(fullPath);
-		timestamp = stats.mtimeMs || stats.birthtimeMs || 0;
+		// Use --reverse to get the creation date (oldest commit) instead of the most recent modification time
+		const gitTime = execSync(`git log --format=%at --reverse -- "${fullPath}" | head -n 1`).toString().trim();
+		if (gitTime) {
+			timestamp = parseInt(gitTime) * 1000;
+		} else {
+			const stats = fs.statSync(fullPath);
+			timestamp = stats.birthtimeMs || stats.mtimeMs || 0;
+		}
 	} catch(e) {
 		timestamp = 0;
 	}
 	return { ...art, timestamp };
 });
 
-// Sort Latest first
-articlesWithTime.sort((a, b) => b.timestamp - a.timestamp);
+// Sort Latest first (descending timestamp). Fallback to ID for deterministic order.
+articlesWithTime.sort((a, b) => {
+	if (b.timestamp !== a.timestamp) {
+		return b.timestamp - a.timestamp;
+	}
+	return a.id.localeCompare(b.id);
+});
 
 const articlesList = articlesWithTime;
 const totalArticles = articlesList.length;
@@ -302,9 +314,13 @@ const extractCoverFromMDX = (body) => {
 			
 			cardsArray.sort((a, b) => {
 				if (currentSort === 'latest') {
-					return parseFloat(b.getAttribute('data-timestamp') || '0') - parseFloat(a.getAttribute('data-timestamp') || '0');
+					const diff = parseFloat(b.getAttribute('data-timestamp') || '0') - parseFloat(a.getAttribute('data-timestamp') || '0');
+					if (diff !== 0) return diff;
+					return (a.getAttribute('data-title') || '').localeCompare(b.getAttribute('data-title') || '');
 				} else if (currentSort === 'oldest') {
-					return parseFloat(a.getAttribute('data-timestamp') || '0') - parseFloat(b.getAttribute('data-timestamp') || '0');
+					const diff = parseFloat(a.getAttribute('data-timestamp') || '0') - parseFloat(b.getAttribute('data-timestamp') || '0');
+					if (diff !== 0) return diff;
+					return (a.getAttribute('data-title') || '').localeCompare(b.getAttribute('data-title') || '');
 				} else if (currentSort === 'az') {
 					return (a.getAttribute('data-title') || '').localeCompare(b.getAttribute('data-title') || '');
 				} else {

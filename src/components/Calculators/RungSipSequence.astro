@@ -27,7 +27,7 @@
   <div class="card-premium rounded-2xl p-6 sm:p-8 space-y-6">
 
     <div>
-      <p class="text-[11px] font-semibold uppercase tracking-[0.11em] text-navy-500 dark:text-navy-400">
+      <p class="text-sm font-semibold uppercase tracking-[0.11em] text-navy-500 dark:text-navy-400">
         Next question
       </p>
       <h2 id="rungSipSeqQ" class="text-xl sm:text-2xl font-bold tracking-tight text-navy-900 dark:text-navy-100 mt-1">
@@ -183,7 +183,7 @@
       row.className = 'flex items-center gap-2';
 
       const yr = document.createElement('span');
-      yr.className = 'w-16 shrink-0 text-[11px] tabular-nums text-navy-500 dark:text-navy-400';
+      yr.className = 'w-16 shrink-0 text-sm tabular-nums text-navy-500 dark:text-navy-400';
       yr.textContent = `year ${q.startYear}`;
 
       const track = document.createElement('div');
@@ -198,7 +198,7 @@
       track.appendChild(fill);
 
       const val = document.createElement('span');
-      val.className = 'w-20 shrink-0 text-right text-[11px] tabular-nums text-navy-600 dark:text-navy-400';
+      val.className = 'w-20 shrink-0 text-right text-sm tabular-nums text-navy-600 dark:text-navy-400';
       val.textContent = span(q.setbackYears);
 
       row.append(yr, track, val);

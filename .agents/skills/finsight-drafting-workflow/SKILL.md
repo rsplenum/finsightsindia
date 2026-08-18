@@ -64,9 +64,11 @@ When starting a new article pipeline, you (the Orchestrator) must use the `defin
   **The Mandate (Invariant):** You must move the reader from an initial state of uncertainty to a materially better mental model and decision capability.
   **The Floor (Non-negotiable):** Legal accuracy, current law, source integrity, conceptual clarity, no hallucinated numbers, no fake citations.
   
-  **The Gold Standard:** The benchmark for structure, tone, and pacing is `src/content/direct-tax/the-loss-that-never-happened.mdx`. Emulate its 'Chess Grandmaster' tone, bespoke narrative subheadings, and stealth learning.
+  **The Gold Standard (Dual Benchmark):** 
+  1. For **structural pacing, authoritative flow, and analogies**, your absolute benchmark is `src/content/direct-tax/the-loss-that-never-happened.mdx`. Emulate its 'Chess Grandmaster' tone and bespoke narrative subheadings.
+  2. For **narrative anchoring and explaining the "Why"**, your absolute benchmark is `src/content/direct-tax/the-price-you-didnt-receive.mdx`. Notice how it grounds abstract tax mechanics in human conflict (Arjun Mehta's sale) and explicitly uncovers the State's perspective (Information Asymmetry) before delving into the technical mechanics.
 
-  Rules: NO SUMMARIZATION. Follow the 'No Haste' doctrine. Prefer clear, plain English headers (Bespoke only, no generic templates). **CRITICAL:** Do NOT use internal dossier labels as actual MDX headers. **ILLUSTRATIONS:** You MUST mandate the use of contextual HTML/CSS illustrations. Do not use generic SVGs or `[SVG_PROPOSAL]` tags. Build bespoke, magazine-style editorial infographics natively using Astro/React/Tailwind. Do NOT append YouTube scripts. Metaphors must be structural. End with a concrete next action. You MUST adhere to the Shared Ban List."
+  Rules: NO SUMMARIZATION. Follow the 'No Haste' doctrine. Prefer clear, plain English headers (Bespoke only, no generic templates). **CRITICAL:** Do NOT use internal dossier labels as actual MDX headers. **ILLUSTRATIONS:** You MUST mandate the use of contextual HTML/CSS illustrations. Do not use generic SVGs or `[SVG_PROPOSAL]` tags. Build bespoke, magazine-style editorial infographics natively using Astro/React/Tailwind. Do NOT append YouTube scripts. Metaphors must be structural. End with a concrete next action. You MUST adhere to the Shared Ban List. NEVER produce 'lazy AI slop' characterized by choppy, isolated, half-line sentences without cohesive paragraph flow."
 
 ### 3. `content_evaluator`
 - **Role:** Editor-in-Chief. **Guards the Floor. Does not judge the ceiling.**
@@ -99,7 +101,8 @@ When starting a new article pipeline, you (the Orchestrator) must use the `defin
     M2(NO banned filler/melodrama/scripts), 
     M3(NO generic headers - all must be bespoke, rejecting explicit dossier labels as headers), 
     M4(Statutory Currency Preserved), 
-    M5(Contains bespoke HTML/CSS illustrations, NOT SVGs or `[SVG_PROPOSAL]` tags).
+    M5(Contains bespoke HTML/CSS illustrations, NOT SVGs or `[SVG_PROPOSAL]` tags),
+    M6(PROSE INTEGRITY: The draft MUST use cohesive, flowing paragraphs. If the draft contains choppy, single-sentence paragraphs or fragmented AI slop that destroys pacing, it FAILS immediately).
 
   M4 (was M13), new: if the approved dossier identified a 2025 Act equivalent section
   under R2, the draft MUST state it in reader-friendly language (e.g., "as of

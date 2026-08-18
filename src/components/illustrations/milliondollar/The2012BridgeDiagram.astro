@@ -1,0 +1,61 @@
+---
+// The2012BridgeDiagram.astro
+---
+
+<div class="my-12 bg-slate-50 dark:bg-navy-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-2xl not-prose font-sans w-full max-w-2xl mx-auto">
+  
+  <div class="px-6 py-5 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex justify-between items-center">
+    <div>
+      <div class="text-xs uppercase tracking-widest text-emerald-600 dark:text-emerald-400 font-semibold mb-1">Illustration 4</div>
+      <h3 class="text-lg text-slate-900 dark:text-white font-medium m-0">The 2012 Bridge</h3>
+    </div>
+    <div class="text-xs font-mono bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-1 rounded">Constraint: $1M / FY</div>
+  </div>
+
+  <div class="p-8 relative">
+    
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      
+      <!-- NRO Block -->
+      <div class="w-full md:w-1/3 bg-slate-100 dark:bg-slate-800/60 border border-slate-300 dark:border-slate-700 p-5 rounded-lg text-center relative shadow-sm">
+        <div class="text-xl font-bold text-slate-800 dark:text-slate-200 font-mono mb-2">NRO</div>
+        <div class="text-xs text-slate-500 dark:text-slate-400">Restricted-repatriability wealth</div>
+      </div>
+
+      <!-- The Bridge -->
+      <div class="w-full md:w-1/3 flex flex-col items-center relative py-6 md:py-0">
+        <!-- Connecting Line for Mobile (vertical) -->
+        <div class="absolute top-0 bottom-0 left-1/2 w-[2px] bg-indigo-200 dark:bg-indigo-800/50 md:hidden -z-10"></div>
+        <!-- Connecting Line for Desktop (horizontal) -->
+        <div class="absolute top-1/2 left-0 right-0 h-[2px] bg-indigo-200 dark:bg-indigo-800/50 hidden md:block -z-10 -translate-y-1/2"></div>
+        
+        <div class="bg-indigo-100 dark:bg-indigo-900/40 border border-indigo-300 dark:border-indigo-700/50 px-4 py-3 rounded-full text-center shadow-md relative z-10 whitespace-nowrap">
+          <div class="text-xs font-bold text-indigo-700 dark:text-indigo-400 uppercase tracking-wider mb-1">2012 Reform</div>
+          <div class="text-xs text-indigo-600 dark:text-indigo-300/80 uppercase">Controlled Bridge</div>
+        </div>
+      </div>
+
+      <!-- NRE Block -->
+      <div class="w-full md:w-1/3 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/50 p-5 rounded-lg text-center shadow-sm relative">
+        <div class="text-xl font-bold text-emerald-700 dark:text-emerald-400 font-mono mb-2">NRE</div>
+        <div class="text-xs text-emerald-600 dark:text-emerald-500/80">Repatriable rupee wealth</div>
+        
+        <!-- Arrow out to foreign currency -->
+        <div class="absolute -bottom-8 left-1/2 w-[2px] h-6 bg-emerald-200 dark:bg-emerald-800/50 hidden md:block">
+           <div class="absolute -bottom-1 left-1/2 w-2 h-2 border-b-2 border-r-2 border-emerald-300 dark:border-emerald-700 transform rotate-45 -translate-x-1/2"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Foreign Assets Destination (Desktop only layout piece) -->
+    <div class="hidden md:flex justify-end mt-8">
+      <div class="w-1/3 text-center pt-2">
+         <div class="text-xs font-medium text-slate-500 dark:text-slate-400 border border-dashed border-slate-300 dark:border-slate-700 rounded-full px-3 py-1 inline-block">
+            Foreign Exchange / Overseas Assets
+         </div>
+      </div>
+    </div>
+
+  </div>
+</div>

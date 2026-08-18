@@ -1834,5 +1834,39 @@
         "audio": "Retail P2P lending is mathematically broken. Learn the corporate entity structuring loopholes that HNI investors use to bypass this trap on FinSight INDIA. Link in bio."
       }
     ]
+  },
+  {
+    "id": "reel-055",
+    "title": "The Fund That Disappears: The AIF Pass-Through Trap",
+    "articleSlug": "the-fund-that-disappears",
+    "duration": "90s",
+    "hook": "You invested \u20b95 Crore in an AIF hedge fund and made \u20b92 Crore profit. But did you know the tax department might tax the fund at a brutal 39% Maximum Marginal Rate before you ever see the cash?",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Presenter standing before a luxury fund presentation deck. Text pop-up: \"Category I vs Category III\".",
+        "audio": "You invest 5 Crores in an AIF and make 2 Crores profit. You think you are paying capital gains tax. But when the tax return arrives, the taxman treats your fund like an operating business. Welcome to the Category III trap."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "Diagram illustrating Section 224 Look-Through. Green line passing through Cat I & II, hitting a wall at Cat III.",
+        "audio": "Here is what most HNIs do not realise: India tax law has an invisible boundary. Category I and II AIFs get statutory pass-through under Section 224. The fund disappears, and you pay tax directly. But Category III hedge funds? Excluded."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "Split screen showing \"Gross Return 18%\" vs \"Net IRR 10.5%\". Red MMR callout.",
+        "audio": "Because Cat III funds trade derivatives and use leverage, tax authorities classify them as a business. The trustee gets slapped with the Maximum Marginal Rate of over 39%. That 3% extra tax leakage eats nearly 1 Crore of compounding over 10 years."
+      },
+      {
+        "time": "0:55 - 1:15",
+        "visual": "Decision tree graphic highlighting \"GIFT IFSC\" and \"Determinate Trust Deeds\".",
+        "audio": "Before you sign an AIF subscription agreement, check two things: Is the trust deed determinate, and is there an IFSC window? That single structural check can save you millions in friction."
+      },
+      {
+        "time": "1:15 - 1:30",
+        "visual": "FinSight India logo and article link graphic.",
+        "audio": "Read the full forensic deconstruction of AIF pass-through taxation on FinSight India. Link in bio."
+      }
+    ]
   }
 ]

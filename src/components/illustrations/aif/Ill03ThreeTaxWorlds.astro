@@ -1,0 +1,78 @@
+---
+// Ill03ThreeTaxWorlds.astro
+// Visual brief: Three Tax Worlds — Entity Tax vs Pass-Through vs Representative
+---
+
+<div class="my-10 bg-slate-50 dark:bg-navy-900/90 border border-slate-200 dark:border-navy-800 rounded-xl overflow-hidden shadow-sm not-prose font-sans w-full max-w-3xl mx-auto">
+  <div class="px-6 py-4 border-b border-slate-200 dark:border-navy-800 bg-slate-100/60 dark:bg-navy-950/60 flex items-center justify-between">
+    <div>
+      <div class="text-xs uppercase tracking-widest text-indigo-600 dark:text-indigo-400 font-semibold">Editorial Visual 03</div>
+      <h3 class="text-base text-slate-900 dark:text-white font-semibold m-0">Three Tax Worlds: Where Does the Boundary Sit?</h3>
+    </div>
+    <span class="text-xs font-mono px-2.5 py-1 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded border border-indigo-500/20 font-medium">Tax Jurisprudence</span>
+  </div>
+
+  <div class="p-6">
+    <!-- Top Source -->
+    <div class="flex justify-center mb-6">
+      <div class="px-5 py-2 rounded-full bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-700 text-emerald-800 dark:text-emerald-300 font-mono font-bold text-sm shadow-sm">
+        ₹100 PROFIT
+      </div>
+    </div>
+
+    <!-- 3 World Columns -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- World 1: Entity Taxation -->
+      <div class="p-4 rounded-lg bg-white dark:bg-navy-800/60 border border-slate-200 dark:border-navy-700 flex flex-col justify-between">
+        <div>
+          <div class="text-xs uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wider">World 1</div>
+          <h4 class="text-sm font-bold text-slate-900 dark:text-white mt-1">Entity Taxation</h4>
+          <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+            The fund is treated as an opaque, standalone legal person. The fund computes income, pays tax directly, and passes net residuals.
+          </p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 dark:border-navy-700">
+          <div class="px-3 py-2 bg-slate-100 dark:bg-navy-900 rounded text-center text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+            Fund pays tax
+          </div>
+        </div>
+      </div>
+
+      <!-- World 2: Transparency / Pass-Through -->
+      <div class="p-4 rounded-lg bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800/60 flex flex-col justify-between">
+        <div>
+          <div class="text-xs uppercase font-bold text-blue-600 dark:text-blue-400 tracking-wider">World 2 (Cat I/II)</div>
+          <h4 class="text-sm font-bold text-slate-900 dark:text-white mt-1">Pass-Through (Transparency)</h4>
+          <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+            The law looks completely through the fund. The fund is an invisible conduit. The investor is taxed directly on the underlying character.
+          </p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-blue-100 dark:border-blue-900/40">
+          <div class="px-3 py-2 bg-blue-100 dark:bg-blue-900/50 rounded text-center text-xs font-mono font-semibold text-blue-700 dark:text-blue-300">
+            Investor pays tax
+          </div>
+        </div>
+      </div>
+
+      <!-- World 3: Representative Assessee -->
+      <div class="p-4 rounded-lg bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/60 flex flex-col justify-between">
+        <div>
+          <div class="text-xs uppercase font-bold text-amber-600 dark:text-amber-400 tracking-wider">World 3 (Cat III Trust)</div>
+          <h4 class="text-sm font-bold text-slate-900 dark:text-white mt-1">Representative Assessee</h4>
+          <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+            The trustee holds legal title and acts as the tax interface, assessed in a representative capacity on behalf of the beneficiaries.
+          </p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-amber-100 dark:border-amber-900/40">
+          <div class="px-3 py-2 bg-amber-100 dark:bg-amber-900/50 rounded text-center text-xs font-mono font-semibold text-amber-800 dark:text-amber-300">
+            Trustee assessed
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="px-6 py-3 bg-slate-100/50 dark:bg-navy-950/40 border-t border-slate-200 dark:border-navy-800 text-center">
+    <p class="text-xs italic text-slate-500 dark:text-slate-400 m-0">Three ways to answer the same question: where should the tax boundary sit?</p>
+  </div>
+</div>
