@@ -176,6 +176,18 @@ export interface PolicyInputs {
    * For existing policies: how many full annual premiums have been paid so far.
    */
   premiumsPaidSoFar?: number;
+  /** Irregular custom milestone payouts (e.g. Traditional Money-Back plans). */
+  customPayouts?: Array<{ year: number; amount: number }>;
+  /** Dedicated rider premium (Critical Illness / Accident) embedded in gross premium. */
+  riderPremium?: number;
+  /** Joint Life policy covering spouse as well. */
+  isJointLife?: boolean;
+  /** Age of spouse if joint life policy. */
+  spouseAge?: number;
+  /** Return model: guaranteed, ULIP (market-linked), or Par (with-profits bonus). */
+  returnModel?: 'guaranteed' | 'ulip' | 'par_bonus';
+  /** Assumed annual growth rate for ULIP / Par illustrations (e.g. 4% or 8%). */
+  assumedReturnPct?: number;
   /** The policy's start date, for exact day counts. Defaults to today if omitted. */
   startDate?: Date;
 }
@@ -330,6 +342,10 @@ export function payoutTaxationOf(inputs: PolicyInputs): {
  * stated rather than put to the reader as a question.
  */
 export function payoutInYear(inputs: PolicyInputs, year: number): number {
+  if (inputs.customPayouts && inputs.customPayouts.length > 0) {
+    const match = inputs.customPayouts.find((p) => p.year === year);
+    return match ? match.amount : 0;
+  }
   const { payoutEndYear } = horizonOf(inputs);
   if (year < inputs.payoutStartYear || year > payoutEndYear) return 0;
   const elapsed = year - inputs.payoutStartYear;
@@ -491,8 +507,35 @@ const MISSED_PAYMENT_TOLERANCE = 1;
 
 /** The last year in which money moves either way. */
 export function horizonOf(inputs: PolicyInputs): { payoutEndYear: number; totalYears: number } {
-  const payoutEndYear = inputs.payoutStartYear + inputs.payoutYears - 1;
+  let payoutEndYear = inputs.payoutStartYear + inputs.payoutYears - 1;
+  if (inputs.customPayouts && inputs.customPayouts.length > 0) {
+    const maxMilestoneYear = Math.max(...inputs.customPayouts.map((p) => p.year));
+    payoutEndYear = Math.max(payoutEndYear, maxMilestoneYear);
+  }
   return { payoutEndYear, totalYears: Math.max(inputs.ppt, payoutEndYear) };
+}
+
+/**
+ * Projects the variable maturity benefit for ULIPs and Participating policies
+ * based on standard IRDAI illustration rates (e.g. 4% or 8%), minus fund management
+ * / mortality / administrative expense friction.
+ */
+export function projectVariableMaturity(
+  annualInvestablePremium: number,
+  ppt: number,
+  totalYears: number,
+  assumedRatePct: number,
+  annualExpenseDragPct: number = 1.35
+): number {
+  const netRate = Math.max(0, (assumedRatePct - annualExpenseDragPct) / 100);
+  let corpus = 0;
+  for (let yr = 1; yr <= totalYears; yr++) {
+    if (yr <= ppt) {
+      corpus += annualInvestablePremium;
+    }
+    corpus *= 1 + netRate;
+  }
+  return Math.round(corpus);
 }
 
 /**
@@ -510,10 +553,25 @@ export function buildLedger(inputs: PolicyInputs): LedgerRow[] {
   const slab = inputs.slabRatePct / 100;
   const rows: LedgerRow[] = [];
 
+  let effectiveMaturity = inputs.maturityBenefit;
+  if (
+    effectiveMaturity === 0 &&
+    (inputs.returnModel === 'ulip' || inputs.returnModel === 'par_bonus') &&
+    inputs.assumedReturnPct
+  ) {
+    const baseInvestable = Math.max(0, inputs.premium - (inputs.riderPremium ?? 0));
+    effectiveMaturity = projectVariableMaturity(
+      baseInvestable,
+      inputs.ppt,
+      totalYears,
+      inputs.assumedReturnPct
+    );
+  }
+
   for (let yr = 1; yr <= totalYears; yr++) {
     const premiumOut = yr <= inputs.ppt ? inputs.premium : 0;
     let payoutIn = payoutInYear(inputs, yr);
-    if (yr === payoutEndYear) payoutIn += inputs.maturityBenefit;
+    if (yr === payoutEndYear) payoutIn += effectiveMaturity;
 
     // Zero in the ordinary case: most of these policies are exempt, and the
     // screen says so rather than leaving a silent nil where a tax might be.
@@ -771,9 +829,12 @@ export function grossUpForTax(
   return Math.max(want, (want - exemptionLeft * rate) / denominator);
 }
 
-/** What is left of the premium once the replacement cover is paid for. Never negative. */
+/** What is left of the premium once the replacement cover and riders are paid for. Never negative. */
 export function investableCapitalOf(inputs: PolicyInputs): number {
-  return Math.max(0, inputs.premium - (inputs.termCost + inputs.accidentCost));
+  return Math.max(
+    0,
+    inputs.premium - (inputs.termCost + inputs.accidentCost + (inputs.riderPremium ?? 0))
+  );
 }
 
 /**
@@ -959,7 +1020,8 @@ export function decomposePremium(inputs: PolicyInputs): PremiumDecomposition {
     };
   }
 
-  const mortalityCost = Math.min(annualPremium, inputs.termCost + inputs.accidentCost);
+  const riderCost = inputs.riderPremium ?? 0;
+  const mortalityCost = Math.min(annualPremium, inputs.termCost + inputs.accidentCost + riderCost);
   const frictions = frictionsOf(inputs);
   const annualGst = frictions.gstPaid / (inputs.ppt || 1);
   const annualCommissionEst = frictions.estCommission / (inputs.ppt || 1);

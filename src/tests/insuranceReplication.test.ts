@@ -3,9 +3,11 @@ import {
   analyseReplication,
   replicate,
   buildLedger,
+  horizonOf,
   realBreakEvenYear,
   investableCapitalOf,
   frictionsOf,
+  decomposePremium,
   verdictFor,
   grossUpForTax,
   payoutInYear,
@@ -15,7 +17,13 @@ import {
   type PolicyInputs,
   type Taxation,
 } from '../utils/insuranceReplication';
-import { DEFAULT_SLAB_PCT, SLAB_RATES_PCT, spineFor } from '../utils/insuranceInputs';
+import {
+  DEFAULT_SLAB_PCT,
+  SLAB_RATES_PCT,
+  TERM_COST_PER_CRORE,
+  costForCover,
+  spineFor,
+} from '../utils/insuranceInputs';
 import { DEFAULT_FUND_COST } from '../utils/fundCosts';
 
 /** The two taxations the page uses, plus the untaxed one kept only for tests. */
@@ -995,6 +1003,72 @@ describe('sunk-cost / surrender & paid-up arbitrage solver', () => {
     const s = r.surrenderAnalysis!;
 
     expect(s.recommendedAction).toBe('HOLD_TO_MATURITY');
+  });
+
+  describe('Special Insurance Categories: Riders, Joint Life, Milestone Payouts & ULIP/Par', () => {
+    it('accurately parses irregular milestone payouts for Traditional Money-Back policies', () => {
+      const moneyBack = at({
+        premium: 100000,
+        ppt: 10,
+        payoutStartYear: 5,
+        payoutYears: 1,
+        payoutAmount: 0,
+        maturityBenefit: 0,
+        customPayouts: [
+          { year: 5, amount: 150000 },
+          { year: 10, amount: 150000 },
+          { year: 15, amount: 150000 },
+          { year: 20, amount: 500000 },
+        ],
+      });
+
+      const r = analyseReplication(moneyBack);
+      expect(horizonOf(moneyBack).totalYears).toBe(20);
+      expect(r.payoutEndYear).toBe(20);
+      expect(r.ledger[4].payoutIn).toBe(150000); // Year 5
+      expect(r.ledger[9].payoutIn).toBe(150000); // Year 10
+      expect(r.ledger[14].payoutIn).toBe(150000); // Year 15
+      expect(r.ledger[19].payoutIn).toBe(500000); // Year 20
+      expect(r.ledger[6].payoutIn).toBe(0); // Non-milestone year 7
+    });
+
+    it('unbundles rider premiums into mortality/pure protection costs', () => {
+      const policyWithRider = at({
+        premium: 150000,
+        riderPremium: 25000,
+        termCost: 12000,
+        accidentCost: 1000,
+      });
+
+      const decomp = decomposePremium(policyWithRider);
+      expect(decomp.mortalityCost).toBe(12000 + 1000 + 25000);
+      expect(investableCapitalOf(policyWithRider)).toBe(150000 - 38000);
+    });
+
+    it('adjusts term cover cost for joint life coverage by 1.25x', () => {
+      const individualCost = costForCover(10000000, TERM_COST_PER_CRORE, false);
+      const jointLifeCost = costForCover(10000000, TERM_COST_PER_CRORE, true);
+
+      expect(individualCost).toBe(12000);
+      expect(jointLifeCost).toBe(15000);
+    });
+
+    it('computes variable maturity projection for ULIP/Par illustrations', () => {
+      const ulip = at({
+        premium: 100000,
+        ppt: 10,
+        payoutStartYear: 20,
+        payoutYears: 1,
+        payoutAmount: 0,
+        maturityBenefit: 0,
+        returnModel: 'ulip',
+        assumedReturnPct: 8,
+      });
+
+      const r = analyseReplication(ulip);
+      expect(r.ledger[19].payoutIn).toBeGreaterThan(1500000);
+      expect(r.policy.totalNominalPayout).toBe(r.ledger[19].payoutIn);
+    });
   });
 });
 

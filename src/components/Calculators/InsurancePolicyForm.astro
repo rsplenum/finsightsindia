@@ -51,8 +51,8 @@ interface Field {
   block: Block;
   label: string;
   hint: string;
-  /** 'money' gets a rupee prefix; 'count' is a plain number; 'percent' a rate. */
-  kind: 'money' | 'count' | 'percent';
+  /** 'money' gets a rupee prefix; 'count' is a plain number; 'percent' a rate; 'boolean' is a checkbox; 'custom' is a custom widget. */
+  kind: 'money' | 'count' | 'percent' | 'boolean' | 'custom';
   /** Which policy shapes this question can apply to. Empty means all of them. */
   shapes?: string[];
   /** Optional fields arrive from the add control instead of from the spine. */
@@ -84,6 +84,15 @@ const fields: Field[] = [
     kind: 'count',
     optional: true,
     addLabel: 'I am already paying for this policy',
+  },
+  {
+    id: 'inRiderPremium',
+    block: 'pay',
+    label: 'Rider premium included in total amount',
+    hint: 'If your annual premium includes extra charges specifically for Critical Illness, Accidental Disability or Health riders, enter it here. We unbundle pure risk costs from investable capital.',
+    kind: 'money',
+    optional: true,
+    addLabel: 'My premium includes a Critical Illness / Health rider',
   },
   {
     id: 'inPayout',
@@ -136,6 +145,25 @@ const fields: Field[] = [
     addLabel: 'My income increases each year',
   },
   {
+    id: 'inAssumedReturn',
+    block: 'back',
+    label: 'Assumed Return / Bonus Rate (for ULIP or Par Plan)',
+    hint: 'For Unit Linked (ULIP) or Participating Endowment plans where payouts depend on market performance or annual bonuses. IRDAI standard illustration benchmarks are 4% and 8% p.a.',
+    kind: 'percent',
+    optional: true,
+    addLabel: 'Returns depend on market / bonuses (ULIP / Par plan)',
+  },
+  {
+    id: 'inMilestoneSchedule',
+    block: 'back',
+    label: 'Irregular Milestone Payouts (Money-Back)',
+    hint: 'For traditional money-back policies that pay lump sums at milestone years.',
+    kind: 'custom',
+    shapes: ['income', 'both'],
+    optional: true,
+    addLabel: 'Irregular milestone payouts (Money-Back plan)',
+  },
+  {
     id: 'inTermCover',
     block: 'protect',
     label: 'Life cover on this policy',
@@ -150,6 +178,15 @@ const fields: Field[] = [
     kind: 'money',
     optional: true,
     addLabel: 'It carries an accident or health rider',
+  },
+  {
+    id: 'inJointLife',
+    block: 'protect',
+    label: 'Joint-Life Cover (covers spouse as well)',
+    hint: 'If this policy provides dual life cover or continues until the second death of you or your spouse, check this option. Term cover replacement will reflect joint-life mortality rates.',
+    kind: 'boolean',
+    optional: true,
+    addLabel: 'This is a Joint-Life policy (covers spouse)',
   },
 ];
 
@@ -236,22 +273,61 @@ const labelClass = 'block text-sm font-semibold text-navy-700 dark:text-navy-300
                   >Remove</button>
                 )}
               </div>
-              <div class="relative flex items-center">
-                {f.kind === 'money' && (
-                  <span class="absolute left-3.5 text-base font-medium text-navy-500 dark:text-navy-400 select-none">₹</span>
-                )}
-                {f.kind === 'percent' && (
-                  <span class="absolute right-3.5 text-base font-medium text-navy-500 dark:text-navy-400 select-none">%</span>
-                )}
-                <input
-                  id={f.id}
-                  name={f.id}
-                  type="text"
-                  inputmode={f.kind === 'percent' ? 'decimal' : 'numeric'}
-                  value=""
-                  class={`${inputClass} ${f.kind === 'money' ? 'pl-9' : 'pl-4'}`}
-                />
-              </div>
+              {f.kind === 'boolean' ? (
+                <div class="flex items-center gap-3 py-2">
+                  <input
+                    id={f.id}
+                    name={f.id}
+                    type="checkbox"
+                    class="w-5 h-5 rounded border-navy-300 dark:border-navy-700 text-navy-900 focus:ring-navy-500 cursor-pointer"
+                  />
+                  <span class="text-sm font-semibold text-navy-800 dark:text-navy-200">
+                    Enable joint-life cover (+25% term cover cost for dual life)
+                  </span>
+                </div>
+              ) : f.id === 'inMilestoneSchedule' ? (
+                <div id="milestoneScheduleBox" class="space-y-3 pt-1">
+                  <div id="milestoneRowsContainer" class="space-y-3">
+                    <div class="milestone-row flex items-center gap-3">
+                      <div class="w-1/3">
+                        <label class="block text-xs font-semibold text-navy-600 dark:text-navy-400 mb-1">Policy Year</label>
+                        <input type="text" inputmode="numeric" placeholder="5" class={`milestone-year ${inputClass}`} />
+                      </div>
+                      <div class="w-2/3">
+                        <label class="block text-xs font-semibold text-navy-600 dark:text-navy-400 mb-1">Payout Amount</label>
+                        <div class="relative flex items-center">
+                          <span class="absolute left-3.5 text-base font-medium text-navy-500 dark:text-navy-400 select-none">₹</span>
+                          <input type="text" inputmode="numeric" placeholder="1,00,000" class={`milestone-amount ${inputClass} pl-9`} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    id="btnAddMilestoneRow"
+                    class="inline-flex items-center gap-1.5 text-sm font-semibold text-navy-700 dark:text-navy-300 hover:text-navy-950 dark:hover:text-white py-1"
+                  >
+                    <span>＋ Add another milestone payout</span>
+                  </button>
+                </div>
+              ) : (
+                <div class="relative flex items-center">
+                  {f.kind === 'money' && (
+                    <span class="absolute left-3.5 text-base font-medium text-navy-500 dark:text-navy-400 select-none">₹</span>
+                  )}
+                  {f.kind === 'percent' && (
+                    <span class="absolute right-3.5 text-base font-medium text-navy-500 dark:text-navy-400 select-none">%</span>
+                  )}
+                  <input
+                    id={f.id}
+                    name={f.id}
+                    type="text"
+                    inputmode={f.kind === 'percent' ? 'decimal' : 'numeric'}
+                    value=""
+                    class={`${inputClass} ${f.kind === 'money' ? 'pl-9' : 'pl-4'}`}
+                  />
+                </div>
+              )}
               <p class="text-sm leading-snug text-navy-600 dark:text-navy-400">{f.hint}</p>
             </div>
           ))}

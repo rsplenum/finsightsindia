@@ -98,6 +98,7 @@ const F = {
   shapeRestate: 'inPolicyShapeRestate',
   premium: 'inPremium',
   ppt: 'inPPT',
+  riderPremium: 'inRiderPremium',
   payoutStart: 'inPayoutStart',
   payoutYears: 'inPayoutYears',
   payout: 'inPayout',
@@ -106,6 +107,9 @@ const F = {
   maturityYear: 'inMaturityYear',
   termCover: 'inTermCover',
   accidentCover: 'inAccidentCover',
+  jointLife: 'inJointLife',
+  returnModel: 'inReturnModel',
+  assumedReturn: 'inAssumedReturn',
   inflation: 'inInflation',
   fundPlan: 'inFundPlan',
   termCost: 'inTermCostOverride',
@@ -116,6 +120,7 @@ const F = {
 /** Every id the page has to listen to, so a new field cannot be added and stay dead. */
 export const MONEY_FIELD_IDS = [
   F.premium,
+  F.riderPremium,
   F.payout,
   F.maturity,
   F.termCover,
@@ -134,6 +139,9 @@ export const CHOICE_FIELD_IDS = [
   F.payoutYears,
   F.payoutGrowth,
   F.maturityYear,
+  F.jointLife,
+  F.returnModel,
+  F.assumedReturn,
   F.inflation,
   F.fundPlan,
   F.slabRate,
@@ -340,6 +348,33 @@ export function readinessOf(): Readiness {
   return { shape, steps, answered, next, complete: shape !== null && next === null };
 }
 
+export function isJointLife(): boolean {
+  return (el(F.jointLife) as HTMLInputElement | null)?.checked ?? false;
+}
+
+export function readCustomPayouts(): Array<{ year: number; amount: number }> | undefined {
+  if (typeof document === 'undefined') return undefined;
+  const container = document.getElementById('milestoneRowsContainer');
+  if (!container) return undefined;
+  const rows = container.querySelectorAll('.milestone-row');
+  if (!rows || rows.length === 0) return undefined;
+
+  const payouts: Array<{ year: number; amount: number }> = [];
+  rows.forEach((row) => {
+    const yrInput = row.querySelector('.milestone-year') as HTMLInputElement | null;
+    const amtInput = row.querySelector('.milestone-amount') as HTMLInputElement | null;
+    if (yrInput && amtInput) {
+      const yr = parseInt(yrInput.value, 10);
+      const amt = parseFormattedNumber(amtInput.value);
+      if (Number.isFinite(yr) && yr > 0 && Number.isFinite(amt) && amt > 0) {
+        payouts.push({ year: yr, amount: amt });
+      }
+    }
+  });
+
+  return payouts.length > 0 ? payouts : undefined;
+}
+
 /** Read the one true input set. Every surface on the page goes through this. */
 export function readPolicyInputs(now: Date = new Date()): PolicyInputs {
   const shape = policyShape();
@@ -353,6 +388,15 @@ export function readPolicyInputs(now: Date = new Date()): PolicyInputs {
   const startYear = hasIncome(shape) ? int(F.payoutStart) : int(F.maturityYear);
 
   const yearsPaid = int(F.yearsPaid);
+  const riderPrem = money(F.riderPremium);
+  const jointLife = isJointLife();
+  const returnModelVal = (el(F.returnModel) as HTMLSelectElement | null)?.value as
+    | 'guaranteed'
+    | 'ulip'
+    | 'par_bonus'
+    | undefined;
+  const assumedReturnVal = num(F.assumedReturn, 8);
+  const customPayouts = readCustomPayouts();
 
   return {
     premium: money(F.premium),
@@ -375,6 +419,11 @@ export function readPolicyInputs(now: Date = new Date()): PolicyInputs {
     startDate: now,
     currentPolicyYear: yearsPaid > 0 ? yearsPaid : 0,
     premiumsPaidSoFar: yearsPaid > 0 ? yearsPaid : 0,
+    riderPremium: riderPrem > 0 ? riderPrem : undefined,
+    isJointLife: jointLife,
+    returnModel: returnModelVal,
+    assumedReturnPct: assumedReturnVal,
+    customPayouts,
   };
 }
 
@@ -392,6 +441,7 @@ export function readPolicyInputs(now: Date = new Date()): PolicyInputs {
 export function syncRiskCostsFromCover(): void {
   const termCover = money(F.termCover);
   const accidentCover = money(F.accidentCover);
+  const jointLife = isJointLife();
 
   const write = (id: string, value: number) => {
     const target = el(id);
@@ -399,11 +449,11 @@ export function syncRiskCostsFromCover(): void {
     target.value = Math.round(value).toLocaleString('en-IN');
   };
 
-  write(F.termCost, costForCover(termCover, TERM_COST_PER_CRORE));
+  write(F.termCost, costForCover(termCover, TERM_COST_PER_CRORE, jointLife));
   write(F.accidentCost, costForCover(accidentCover, ACCIDENT_COST_PER_CRORE));
 }
 
 /** Annual premium for a given sum assured, at a given rate per crore. */
-export function costForCover(cover: number, ratePerCrore: number): number {
-  return (cover / 10000000) * ratePerCrore;
+export function costForCover(cover: number, ratePerCrore: number, isJointLife: boolean = false): number {
+  return (cover / 10000000) * ratePerCrore * (isJointLife ? 1.25 : 1.0);
 }
