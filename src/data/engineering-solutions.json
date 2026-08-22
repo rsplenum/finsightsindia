@@ -780,5 +780,46 @@
       "src/pages/sip-engine.astro",
       "src/tests/rupeeConvention.test.ts"
     ]
+  },
+  {
+    "id": "sol-069",
+    "date": "2026-08-21",
+    "category": "User Experience / Defaults",
+    "status": "fixed",
+    "problem": "Rahul reversed the decision from sol-060 regarding the tax slab default. He asked: \"Why don't you just assume a 20% tax slab unless other wise told.\" The lack of a default was causing the engine to halt on preset policies because the slab was left empty, leaving the right side of the screen blank.",
+    "diagnosis": "The strict adherence to \"no neutral default\" in sol-060 broke the UX for the preset policy loader, as it intentionally omitted pre-filling the slab rate. This left users puzzling over a blank analysis screen.",
+    "solution": "Restored 20% as the default selected option in the inSlabRate dropdown. Removed the hidden attribute so it is visible in the About you block. The preset loader now successfully triggers the full calculation without stalling.",
+    "lesson": "A philosophical rule (\"a neutral default is not asking\") must yield to the functional requirement of progressive disclosure and immediate value. If the page halts on an empty box, the user assumes the tool is broken, not that it is politely waiting for their input.",
+    "files": [
+      "src/components/Calculators/InsurancePolicyForm.astro"
+    ]
+  },
+  {
+    "id": "sol-070",
+    "title": "Analyzer Preset Collapsible Un-cluttering",
+    "symptom": "When a user loads a preset policy from a pSEO landing page or the dropdown, the entire manual form populates and stays visible on the left side, presenting a wall of inputs that overwhelms the user when they simply wanted the headline result.",
+    "fix": "Moved the 'Build it manually' policy shape selector and the entire InsurancePolicyForm inside a <details> collapsible block. The loading JS now explicitly removes the 'open' attribute from this <details> element upon applying a preset, keeping the form out of the way while still allowing tinkers to expand it. Additionally, a dynamic, plain-English summary of the loaded policy is now rendered right below the intro, explaining exactly what the policy asks for and pays out in a single readable sentence.",
+    "author": "Antigravity"
+  },
+  {
+    "id": "sol-071",
+    "title": "Analyzer Result Restructure - Narrative Flow",
+    "symptom": "The three key promises ('What it really pays you', 'What the same thing costs', and 'Which one wins') were stuck as static text in the left-hand intro column, disconnected from the actual results. Meanwhile, the right-hand column presented the verdict first, followed by the policy/DIY mechanics, breaking the logical 'anxiety to certainty' narrative flow.",
+    "fix": "Fundamentally restructured the right-hand column. Removed the static promise cards from the left column entirely and transformed them into the actual section headers of the results column. The flow is now chronological: (1) What it really pays you (Policy mechanics + Yield calculation), (2) What the same thing costs (DIY Safe/Growth mechanics), and finally (3) Which one wins (The Hero Verdict). The `InsuranceAnswerWrap` component was moved below `InsuranceRoutes` to achieve this.",
+    "author": "Antigravity"
+  },
+  {
+    "id": "sol-072",
+    "title": "Cashflow Chart Redesign and Interactivity",
+    "symptom": "The cashflow chart was hidden at the very bottom of the results page. It also lacked a way to switch between nominal and inflation-adjusted (real) values, and didn't show what the actual premiums and payouts broke down into.",
+    "fix": "Moved the cashflow chart from the right-hand `InsuranceRoutes` into the left-hand `InsuranceIntro`, directly below the new dynamic text summary. Added a toggle for 'Nominal / Real' which dynamically scales the bars. Added an `onClick` handler to the chart bars which renders a detailed breakdown of that year's cashflow: premiums are split into Life Cover, GST/Commission, and Net Invested; payouts are split into Gross, Tax, and Net In-Hand. The preset loader was moved to the very top to precede this flow.",
+    "author": "Antigravity"
+  },
+  {
+    "id": "sol-073",
+    "title": "Chart.js Initialization and Tailwind 'hidden' Class Collision",
+    "symptom": "After refactoring the Insurance Analyzer to hide the dynamic summary and chart sections until the engine completes, the entire left-hand side remained blank. After a partial fix, the summary text appeared but the chart was replaced by an empty white box.",
+    "fix": "Fixed two compounding UI bugs: 1) Tailwind's `.hidden` class sets `display: none !important`, which overrides Javascript's `el.hidden = false` DOM API. We stripped `class=\"hidden\"` and replaced it with the native HTML `hidden` attribute so our `show()` utility can toggle it successfully. 2) Re-declared `let cashflowChartInstance: any = null;` at the module level. Without it, the async `import('chart.js/auto')` threw a silent ReferenceError when checking `if (cashflowChartInstance)`, causing the chart initialization to silently abort and leave a 0x0 empty canvas.",
+    "author": "Antigravity"
   }
 ]

@@ -353,27 +353,14 @@ const labelClass = 'block text-sm font-semibold text-navy-700 dark:text-navy-300
         )}
 
         {block.id === 'you' && (
-          <div class="ins-field space-y-1.5" data-field="inSlabRate" data-optional="false" data-shapes="" hidden>
+          <div class="ins-field space-y-1.5" data-field="inSlabRate" data-optional="false" data-shapes="">
             <label for="inSlabRate" class={labelClass}>The income tax slab you are in</label>
-            {/*
-              NO PRE-SELECTED SLAB. sol-060 defaulted this to 20% and reasoned
-              that any default flatters somebody — 10% flatters the replica, 30%
-              flatters the policy — so the middle was the only one that is not an
-              argument. That reasoning was correct for a form where every box
-              arrived pre-filled and there was no such thing as an unanswered
-              question. This form HAS one, and Rahul's words were "ask them to
-              choose a slab. 10, 20, 30." A neutral default is not asking. The
-              constant survives as the engine's fallback so it can never see a
-              missing rate, but nothing is chosen on the reader's behalf.
-            */}
             <select id="inSlabRate" class={selectClass}>
-              <option value="">Choose your rate</option>
-              {SLAB_RATES_PCT.map((r) => <option value={r}>{r}%</option>)}
+              {SLAB_RATES_PCT.map((r) => <option value={r} selected={r === 20}>{r}%</option>)}
             </select>
             <p class="text-sm leading-snug text-navy-600 dark:text-navy-400">
               Doing this yourself means earning interest or capital gains, and both are taxed.
-              Your rate decides how much of the do-it-yourself route you actually keep, so
-              guessing it for you would put our number inside your own comparison.
+              Your rate decides how much of the do-it-yourself route you actually keep.
             </p>
           </div>
         )}

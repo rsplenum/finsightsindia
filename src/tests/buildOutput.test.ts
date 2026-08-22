@@ -46,7 +46,7 @@ describe.skipIf(!hasDist)('built output', () => {
       .readdirSync('src/pages', { withFileTypes: true })
       .filter((e) => e.isFile() && e.name.endsWith('.astro'))
       .map((e) => e.name.replace(/\.astro$/, ''))
-      .filter((n) => n !== 'index');
+      .filter((n) => n !== 'index' && !n.startsWith('['));
 
     const missing = routes.filter(
       (r) => !fs.existsSync(path.join(DIST, r, 'index.html')) &&

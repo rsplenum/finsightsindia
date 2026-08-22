@@ -1,0 +1,1125 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import CardPremium from '../CardPremium.astro';
+import InsuranceIntro from './InsuranceIntro.astro';
+import InsuranceAnswer from './InsuranceAnswer.astro';
+import InsurancePolicyForm from './InsurancePolicyForm.astro';
+import InsuranceRoutes from './InsuranceRoutes.astro';
+import InsuranceDiyPlan from './InsuranceDiyPlan.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  prefillData?: {
+    id: string;
+    age: number;
+    premium: number;
+    sumAssured?: number;
+    termYears?: number;
+    payoutAmount?: number;
+    payoutYears?: number;
+    interestRate?: number;
+    coolingOff?: number;
+    payoutStartYear?: number;
+  } | null;
+}
+
+const { 
+  title = "Insurance Analyzer — FinSight India",
+  description = "A ruthless breakdown of what your policy is really paying you.",
+  prefillData = null
+} = Astro.props;
+---
+<Layout title={title} description={description}>
+
+  {prefillData && (
+    <script id="pseo-prefill-data" type="application/json" set:html={JSON.stringify(prefillData)}></script>
+  )}
+
+	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+		<CardPremium class="w-full">
+			<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+				
+				<!-- LEFT COLUMN -->
+				<div class="lg:col-span-5 flex flex-col space-y-12">
+					<InsuranceIntro />
+					
+					<details id="manualFormDetails" class="group border-t border-navy-200 dark:border-navy-800 mt-8" open>
+						<summary class="flex items-center justify-between cursor-pointer list-none py-4 text-base font-bold text-navy-900 dark:text-navy-100">
+							<span>Build it manually from the brochure</span>
+							<span class="transform transition-transform group-open:rotate-180 text-navy-400">
+								<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+								</svg>
+							</span>
+						</summary>
+						<div class="pt-4">
+							<InsurancePolicyForm />
+						</div>
+					</details>
+				</div>
+				
+				<!-- RIGHT COLUMN -->
+				<div class="lg:col-span-7">
+					
+					<div id="insuranceWaitingState" class="flex flex-col items-center justify-center text-center p-12 bg-slate-50 dark:bg-navy-900/50 rounded-2xl border-2 border-dashed border-slate-200 dark:border-navy-800 h-full min-h-[400px]">
+						<div class="w-48 h-48 mb-6 relative">
+							<!-- Static Editorial Illustration -->
+								<svg viewBox="0 0 200 200" class="w-full h-full text-navy-300 dark:text-navy-600 drop-shadow-sm">
+									<g transform="translate(20, 20)">
+										<!-- Timeline Axis -->
+										<line x1="0" y1="140" x2="160" y2="140" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4" />
+										
+										<!-- Inflows (Premium) -->
+										<rect x="20" y="80" width="20" height="60" fill="currentColor" opacity="0.1" />
+										<rect x="20" y="80" width="20" height="60" fill="none" stroke="currentColor" stroke-width="2" />
+										
+										<rect x="50" y="80" width="20" height="60" fill="currentColor" opacity="0.1" />
+										<rect x="50" y="80" width="20" height="60" fill="none" stroke="currentColor" stroke-width="2" />
+										
+										<!-- Outflows (Income) -->
+										<rect x="100" y="140" width="20" height="30" fill="currentColor" opacity="0.1" />
+										<rect x="100" y="140" width="20" height="30" fill="none" stroke="currentColor" stroke-width="2" />
+										
+										<rect x="130" y="140" width="20" height="40" fill="currentColor" opacity="0.1" />
+										<rect x="130" y="140" width="20" height="40" fill="none" stroke="currentColor" stroke-width="2" />
+										
+										<!-- Connectors -->
+										<path d="M 40 70 Q 75 40 110 130" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2" />
+										
+										<!-- Abstract structure node -->
+										<circle cx="75" cy="40" r="4" fill="currentColor" />
+									</g>
+								</svg>
+						</div>
+						<h3 class="text-xl font-bold text-navy-900 dark:text-white mb-2">Build your policy</h3>
+						<p id="insuranceWaiting" class="text-base text-navy-600 dark:text-navy-400 leading-relaxed">Choose what this policy pays back to begin.</p>
+					</div>
+					
+					<div id="insuranceWorking" class="space-y-8" hidden>
+						<InsuranceRoutes />
+						<div id="insuranceAnswerWrap" hidden><InsuranceAnswer /></div>
+						<InsuranceDiyPlan />
+					</div>
+				</div>
+				
+			</div>
+		</CardPremium>
+	</main>
+</Layout>
+
+<script>
+	import { formatShortRupee, tableFormatter, setupFormattingField } from '../../utils/formatters';
+	import {
+		analyseReplication,
+		verdictFor,
+		payoutInYear,
+		S10_10D_AGGREGATE_PREMIUM_LIMIT,
+		type LedgerRow,
+		type ReplicationResult,
+		type RouteResult,
+	} from '../../utils/insuranceReplication';
+	import {
+		readPolicyInputs,
+		readinessOf,
+		policyShape,
+		hasIncome,
+		hasLumpSum,
+		fundPlan,
+		spineFor,
+		syncRiskCostsFromCover,
+		POLICY_SHAPES,
+		MONEY_FIELD_IDS,
+		CHOICE_FIELD_IDS,
+	} from '../../utils/insuranceInputs';
+	import { debounce } from '../../utils/debounce';
+
+	// This file is a view. The arithmetic lives in insuranceReplication.ts and
+	// the form is read only by insuranceInputs.ts; nothing below computes a
+	// figure of its own. sol-039, and it is why the overhaul was cheap.
+
+	const el = (id: string) => document.getElementById(id);
+	const setText = (id: string, text: string) => {
+		const e = el(id);
+		if (e) e.innerText = text;
+	};
+	const show = (id: string, on: boolean) => {
+		const e = el(id);
+		if (e) e.hidden = !on;
+	};
+
+	/** Rupees the way a person says them, for prose rather than a table. */
+	const money = (n: number) => formatShortRupee(n);
+
+	// ---------------------------------------------------------------- the states
+
+	/**
+	 * The page has two states, and the change between them is the design (dd-024).
+	 *
+	 * The collapse ends in `display: none` rather than a zero-height box, because
+	 * a welcome that stays in the flow becomes furniture the reader scrolls past
+	 * on every recompute.
+	 */
+	function resolvePage() {
+		const intro = el('insuranceIntro');
+		const workbench = el('insuranceWorkbench');
+		if (!intro || !workbench) return;
+		if (!policyShape() || intro.dataset.collapsed === 'true') return;
+
+		workbench.hidden = false;
+		// The shared card carries `.reveal`, which starts at opacity 0 and is lit
+		// by an IntersectionObserver on load. An element that was `hidden` at load
+		// never intersected, so the whole workbench came back invisible. Lighting
+		// it here is the fix; the observer keeps its job for everything else.
+		workbench
+			.querySelectorAll('.reveal, .reveal-scale')
+			.forEach((node) => node.classList.add('visible'));
+
+		intro.dataset.leaving = 'true';
+
+		let done = false;
+		const finish = () => {
+			if (done) return;
+			done = true;
+			intro.dataset.collapsed = 'true';
+			workbench.scrollIntoView({ block: 'start', behavior: 'smooth' });
+		};
+
+		// `transitionend` is the signal, and a timer is the guarantee. The event
+		// does not fire in a backgrounded tab, under some reduced-motion settings,
+		// or if the element stops transitioning for any reason — and every one of
+		// those failures would leave the welcome sitting on the page for good,
+		// which is worse than losing the animation. sol-065 found this the hard way.
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) finish();
+		else {
+			intro.addEventListener('transitionend', finish, { once: true });
+			window.setTimeout(finish, 600);
+		}
+	}
+
+	// ---------------------------------------------------------------- the form
+	//
+	// THE SPINE. Each question appears when the one before it is answered, so at
+	// any moment there is exactly one unanswered question on the screen. The
+	// order and the membership come from `spineFor()` — the form, the readiness
+	// note and the reader's progress all read the same list, so they cannot
+	// disagree about which question is next (dd-013/dont-2, applied to state).
+
+	/** The optional fields the reader has asked for. */
+	const added = new Set<string>();
+
+	const fieldNodes = () => [...document.querySelectorAll<HTMLElement>('.ins-field')];
+	const wrapFor = (id: string) =>
+		document.querySelector<HTMLElement>(`.ins-field[data-field="${id}"]`);
+
+	const appliesToShape = (wrap: HTMLElement, shape: string) => {
+		const shapes = (wrap.dataset.shapes ?? '').trim();
+		return shapes === '' || shapes.split(/\s+/).includes(shape);
+	};
+
+	function refreshFields() {
+		const shape = policyShape();
+		const body = el('insuranceFormBody');
+
+		// NOTHING EXISTS BEFORE THE SHAPE. Until we know what the policy pays
+		// back, every field we could show is one that might not apply to it, and
+		// showing it is asking a question we already know may be wrong (dd-022).
+		if (body) body.hidden = !shape;
+		setText('shapeHint', POLICY_SHAPES.find((s) => s.id === shape)?.hint ?? '');
+		if (!shape) return;
+
+		const readiness = readinessOf();
+		const spine = spineFor(shape).map((s) => s.field);
+		// Every answered question, plus the one being asked. Nothing beyond it.
+		const reached = new Set(spine.slice(0, readiness.answered + 1));
+
+		// A BLOCK'S TURN COMES WHEN ITS OWN SPINE QUESTIONS ARE ANSWERED. Computed
+		// first, because it governs the optional fields as well as the add control
+		// that offers them: a rider question that arrives before the life cover
+		// question is the form asking things out of order, and an added field that
+		// outlives the shape it belongs to is a box the reader fills in while the
+		// verdict does not move — presence without effect, which is sol-041's
+		// fault wearing a different hat.
+		const blockReady = new Map<string, boolean>();
+		for (const block of document.querySelectorAll<HTMLElement>('.ins-block')) {
+			blockReady.set(
+				block.dataset.block!,
+				[...block.querySelectorAll<HTMLElement>('.ins-field')]
+					.filter((f) => f.dataset.optional !== 'true' && appliesToShape(f, shape))
+					.every((f) => spine.indexOf(f.dataset.field!) < readiness.answered)
+			);
+		}
+
+		for (const wrap of fieldNodes()) {
+			const id = wrap.dataset.field!;
+			const optional = wrap.dataset.optional === 'true';
+			const applies = appliesToShape(wrap, shape);
+			const blockId = wrap.closest<HTMLElement>('.ins-block')?.dataset.block ?? '';
+
+			// An optional field the reader added KEEPS ITS VALUE across a shape
+			// change, so switching back restores it and nothing is lost behind their
+			// back. What it does not do is stay on screen for a shape it cannot
+			// apply to: an endowment has no annual income, so "the income goes up
+			// each year" is a question about something that does not exist, and
+			// `readPolicyInputs` would rightly ignore whatever was typed into it.
+			wrap.hidden = optional
+				? !(added.has(id) && applies && blockReady.get(blockId))
+				: !(applies && reached.has(id));
+		}
+
+		// A block exists when it has something in it.
+		for (const block of document.querySelectorAll<HTMLElement>('.ins-block')) {
+			const visible = [...block.querySelectorAll<HTMLElement>('.ins-field')].some(
+				(f) => !f.hidden
+			);
+			block.hidden = !visible;
+
+			// THE ADD CONTROL WAITS ITS TURN too, so the reader is never looking at
+			// an open question and an invitation to add another at the same time —
+			// which would be two things asked at once by another name.
+			const add = block.querySelector<HTMLElement>('.ins-add');
+			if (!add) continue;
+			add.hidden = !visible || !blockReady.get(block.dataset.block!);
+		}
+
+		rebuildAdders(shape);
+	}
+
+	/** The add controls, holding exactly what is optional, applicable and not yet added. */
+	function rebuildAdders(shape: string) {
+		for (const block of document.querySelectorAll<HTMLElement>('.ins-block')) {
+			const select = block.querySelector<HTMLSelectElement>('.ins-add-select');
+			if (!select) continue;
+
+			const available = [...block.querySelectorAll<HTMLElement>('.ins-field')].filter(
+				(f) =>
+					f.dataset.optional === 'true' &&
+					appliesToShape(f, shape) &&
+					!added.has(f.dataset.field!)
+			);
+
+			select.innerHTML = '';
+			const placeholder = document.createElement('option');
+			placeholder.value = '';
+			// The control reads as an add button and behaves as a picker, so its
+			// resting text is the invitation rather than the word "Choose".
+			placeholder.innerText = `＋  ${select.dataset.addLabel ?? 'Add'}`;
+			select.appendChild(placeholder);
+
+			for (const wrap of available) {
+				const option = document.createElement('option');
+				option.value = wrap.dataset.field!;
+				option.innerText =
+					wrap.querySelector('label')?.innerText ?? wrap.dataset.field!;
+				select.appendChild(option);
+			}
+
+			// A control with nothing left in it does nothing, so it says so rather
+			// than sitting there looking tappable.
+			select.disabled = available.length === 0;
+			if (select.disabled) placeholder.innerText = 'Nothing else to add here';
+			// Hide the whole row when it is spent, rather than leaving a dead
+			// control below the form for the rest of the session.
+			const wrapper = select.closest<HTMLElement>('.ins-add');
+			if (wrapper && available.length === 0) wrapper.hidden = true;
+		}
+	}
+
+	function addField(id: string) {
+		const wrap = wrapFor(id);
+		if (!wrap) return;
+		added.add(id);
+		// THE FIELD LANDS WHERE THE ADD CONTROL WAS, and the control moves down
+		// under it — the add control is the last child of the block, so appending
+		// the field to the field list keeps the invitation below the last thing
+		// the reader added (dd-022/do-3).
+		wrap.parentElement?.appendChild(wrap);
+		refreshFields();
+		wrap.querySelector('input')?.focus();
+		calculate();
+	}
+
+	function dropField(id: string) {
+		const wrap = wrapFor(id);
+		if (!wrap) return;
+		added.delete(id);
+		const input = wrap.querySelector('input');
+		if (input) {
+			if (input.type === 'checkbox') {
+				input.checked = false;
+			} else {
+				input.value = '';
+			}
+		}
+		if (id === 'inMilestoneSchedule') {
+			const container = document.getElementById('milestoneRowsContainer');
+			if (container) {
+				container.querySelectorAll<HTMLInputElement>('.milestone-year, .milestone-amount').forEach((inp) => {
+					inp.value = '';
+				});
+			}
+		}
+		syncRiskCostsFromCover();
+		refreshFields();
+		calculate();
+	}
+
+	// ---------------------------------------------------------------- the answer
+
+	/** The one place a route's verdict becomes words and colours. */
+	function renderRoute(route: RouteResult, ids: {
+		label: string; figure: string; real: string; badge: string; text: string;
+		riskCost: string; taxDrag: string;
+		fundedLine: string; shortLine: string;
+	}) {
+		const v = verdictFor(route);
+		const good = 'text-emerald-700 dark:text-emerald-400';
+		const bad = 'text-rose-700 dark:text-rose-400';
+		const figureClass = 'text-2xl font-extrabold tracking-tight tabular-nums mt-1 ';
+
+		setText(ids.riskCost, money(route.riskCostPaid));
+		setText(ids.taxDrag, money(route.taxDrag));
+
+		const figure = el(ids.figure);
+		const badge = el(ids.badge);
+
+		if (v.kind === 'shortfall') {
+			setText(ids.label, 'Income it could not pay');
+			if (figure) {
+				figure.innerText = money(v.unfunded);
+				figure.className = figureClass + bad;
+			}
+			setText(ids.real, `${money(v.unfundedReal)} of that, in today's prices`);
+			if (badge) {
+				badge.innerText = `Runs out in year ${v.exhaustedInYear}`;
+				badge.className = 'badge-danger';
+			}
+			setText(ids.text, ids.shortLine);
+			return;
+		}
+
+		setText(ids.label, 'Left over at the end');
+		if (figure) {
+			figure.innerText = money(v.kind === 'surplus' ? v.amount : 0);
+			figure.className = figureClass + good;
+		}
+		setText(
+			ids.real,
+			v.kind === 'surplus'
+				? `${money(v.amountReal)} of that, in today's prices`
+				: 'nothing meaningful left over'
+		);
+		if (badge) {
+			badge.innerText = 'Funds the promise';
+			badge.className = 'badge-safe';
+		}
+		setText(ids.text, ids.fundedLine);
+	}
+
+	/**
+	 * Layer 1. The comparison the whole page reduces to, in one sentence.
+	 *
+	 * The growth route is the one the headline speaks for, because it is the
+	 * route a person unbundling would actually take — the safe route is the floor
+	 * beneath it and keeps its own card.
+	 */
+	function renderAnswer(r: ReplicationResult) {
+		const v = verdictFor(r.growth);
+		const good = 'text-emerald-700 dark:text-emerald-400';
+		const bad = 'text-rose-700 dark:text-rose-400';
+		const figureClass = 'text-xl sm:text-2xl font-extrabold tracking-tight tabular-nums ';
+
+		const badge = el('answerBadge');
+		const headline = el('answerHeadline');
+		const nominal = el('answerFigureNominal');
+		const real = el('answerFigureReal');
+
+		// WHAT THE POLICY PAYS BACK IS NOT ALWAYS AN INCOME. An endowment hands
+		// over one amount once, and telling its holder they "collect the same
+		// income in the same years" is a sentence about somebody else's policy.
+		const shape = policyShape();
+		const promised = hasIncome(shape) ? 'income' : 'amount';
+		const whenClause = hasIncome(shape) ? 'in the same years' : 'in the same year';
+
+		if (v.kind === 'shortfall') {
+			if (badge) {
+				badge.innerText = 'Keep the policy';
+				badge.className = 'badge-warning';
+			}
+			if (headline) {
+				headline.innerHTML =
+					`This policy pays back more than you could replicate on your own. ` +
+					`Buying the cover separately and investing the rest runs out of money in ` +
+					`<strong class="font-bold ${bad}">year ${v.exhaustedInYear}</strong>, leaving ` +
+					`<strong class="font-bold ${bad}">${money(v.unfunded)}</strong> of the ${promised} unpaid.`;
+			}
+			setText('answerFigureLabel', `The ${promised} the do-it-yourself route could not pay`);
+			if (nominal) { nominal.innerText = money(v.unfunded); nominal.className = figureClass + bad; }
+			if (real) { real.innerText = money(v.unfundedReal); real.className = figureClass + bad; }
+		} else {
+			const amount = v.kind === 'surplus' ? v.amount : 0;
+			const amountReal = v.kind === 'surplus' ? v.amountReal : 0;
+			if (badge) {
+				badge.innerText = 'Do it yourself';
+				badge.className = 'badge-safe';
+			}
+			if (headline) {
+				headline.innerHTML =
+					`Buy the cover on its own and invest the difference. You collect the same ` +
+					`${promised} this policy promises, ${whenClause}, and finish with ` +
+					`<strong class="font-bold ${good}">${money(amount)}</strong> more — ` +
+					`<strong class="font-bold ${good}">${money(amountReal)}</strong> in today's prices.`;
+			}
+			setText('answerFigureLabel', 'Left over at the end');
+			if (nominal) { nominal.innerText = money(amount); nominal.className = figureClass + good; }
+			if (real) { real.innerText = money(amountReal); real.className = figureClass + good; }
+		}
+
+		setText('answerCoverCost', money(r.riskCostPaid));
+		setText('answerCoverCostReal', money(r.riskCostPaidReal));
+		setText(
+			'answerCoverNote',
+			`Over ${r.inputs.ppt} years, for the same life and accident cover this policy carries, ` +
+				`bought separately at market rates. It comes out of the premium before anything is ` +
+				`invested, which is why the do-it-yourself route invests ${money(r.investableCapital)} ` +
+				`a year and not the whole ${money(r.inputs.premium)}.`
+		);
+
+		setText('answerYield', `${r.policy.xirrPct.toFixed(2)}%`);
+		setText(
+			'answerYieldNote',
+			`Against ${r.inputs.inflationRate}% inflation, ${r.inputs.safeRate}% on government bonds, ` +
+				`and ${r.inputs.equityRate}% assumed on an index fund before its ` +
+				`${r.inputs.equityFeePct}% fee.`
+		);
+
+		// THE POLICY'S REAL ADVANTAGE, printed whether or not it applies. Where
+		// s.10(10D) exempts the proceeds, this rate is worth more than the same
+		// rate from a bond — and almost nothing else will tell a policyholder so.
+		// Where the exemption is lost, the same line says that instead. A tool
+		// willing to print only one of those two is advocacy (dd-021/dont-1).
+		const taxNote = el('answerTaxNote');
+		if (taxNote) {
+			if (r.policy.taxFree) {
+				const gross = r.inputs.slabRatePct > 0
+					? r.policy.xirrPct / (1 - r.inputs.slabRatePct / 100)
+					: r.policy.xirrPct;
+				taxNote.innerHTML =
+					`<strong class="font-semibold text-navy-900 dark:text-navy-100">And it is tax-free ` +
+					`in your hands.</strong> Your premium is within a tenth of the life cover, so ` +
+					`s.10(10D) exempts what this policy pays back. To keep this much after tax at your ` +
+					`${r.inputs.slabRatePct}% slab, an ordinary interest-paying investment would have to ` +
+					`earn about ${gross.toFixed(2)}% a year.` +
+					(r.inputs.premium > S10_10D_AGGREGATE_PREMIUM_LIMIT
+						? ` One caution: for policies taken out on or after 1 April 2023 the exemption also ` +
+							`goes where your premiums across all such policies pass ₹5 lakh a year, and yours ` +
+							`is above that. We do not know when this policy was issued, so it is not applied here.`
+						: '');
+			} else {
+				taxNote.innerHTML =
+					`<strong class="font-semibold text-navy-900 dark:text-navy-100">And it is not ` +
+					`tax-free.</strong> ${r.policy.taxableReason} Before that tax the policy returns ` +
+					`${r.policy.xirrPreTaxPct.toFixed(2)}% a year; after it, ${r.policy.xirrPct.toFixed(2)}%. ` +
+					`That costs you ${money(r.policy.taxOnPayouts)} across the policy's life, and it is our ` +
+					`reading of how the tax falls rather than a figure the Act sets out year by year.`;
+			}
+		}
+
+		setText(
+			'answerPremiumDecay',
+			`Your premium is fixed at ${money(r.inputs.premium)} a year for ${r.inputs.ppt} years. ` +
+				`The policy never raises it, so the last instalment costs you ` +
+				`${money(r.policy.lastPremiumReal)} in today's prices — the commitment gets lighter ` +
+				`every year, and so does what it buys.`
+		);
+	}
+
+	// ---------------------------------------------------------------- the working
+
+	function renderRoutes(r: ReplicationResult) {
+		const rows: Array<[string, number, number]> = [
+			['Paid in, over the paying years', r.inputs.premium * r.inputs.ppt, r.ledger.reduce((s, l) => s + l.realPremium, 0)],
+			['Paid back, over the whole policy', r.policy.totalNominalPayout, r.policy.totalRealPayout],
+		];
+		if (!r.policy.taxFree) {
+			rows.push(['Of that, kept after tax', r.policy.totalNetPayout, r.ledger.reduce((s, l) => s + l.realNet, 0)]);
+		}
+
+		const body = el('policyLedgerRows');
+		if (body) {
+			body.innerHTML = rows
+				.map(
+					([label, nominal, real]) =>
+						`<tr><th scope="row" class="py-2 pr-3 text-sm font-normal text-navy-700 dark:text-navy-300 align-baseline">${label}</th>` +
+						`<td class="py-2 pl-3 text-right text-sm font-bold tabular-nums text-navy-900 dark:text-navy-100">${money(nominal)}</td>` +
+						`<td class="py-2 pl-3 text-right text-sm font-bold tabular-nums text-navy-900 dark:text-navy-100">${money(real)}</td></tr>`
+				)
+				.join('');
+		}
+
+		setText(
+			'policyTaxLine',
+			r.policy.taxFree
+				? ''
+				: `${r.policy.taxableReason} What is taxed is the income inside the proceeds — everything ` +
+					`above the premiums you put in — at your ${r.inputs.slabRatePct}% slab.`
+		);
+
+		setText(
+			'policyBreakEvenLine',
+			r.policy.breakEvenYear === null
+				? `Measured in what those rupees will actually buy, this policy never repays the premiums ` +
+					`you put into it within its own life.`
+				: `Measured in what those rupees will actually buy, the policy has repaid the premiums you ` +
+					`put in by year ${r.policy.breakEvenYear}.`
+		);
+
+		renderRoute(r.safe, {
+			label: 'safeLabel', figure: 'safeFigure', real: 'safeFigureReal',
+			badge: 'safeBadge', text: 'safeText',
+			riskCost: 'safeRiskCost', taxDrag: 'safeTaxDrag',
+			fundedLine: 'Buying the cover separately and putting the rest in government bonds funds every rupee this policy hands you.',
+			shortLine: `Government bonds at ${r.inputs.safeRate}% cannot keep up with this policy — it pays back more than they earn, once your slab has taken its share of the interest each year.`,
+		});
+
+		renderRoute(r.growth, {
+			label: 'growthLabel', figure: 'growthFigure', real: 'growthFigureReal',
+			badge: 'growthBadge', text: 'growthText',
+			riskCost: 'growthRiskCost', taxDrag: 'growthTaxDrag',
+			fundedLine: 'Buying the cover separately and putting the rest in an index fund funds every rupee this policy hands you.',
+			shortLine: 'The income is demanded faster than the fund can grow into it — the early payments come out before the compounding has happened.',
+		});
+
+		setText('growthFeeDrag', money(r.growthFeeCost));
+
+		const v = verdictFor(r.growth);
+		setText(
+			'routesTakeaway',
+			`Buying the same cover on the open market costs ${money(r.riskCostPaid)} over ` +
+				`${r.inputs.ppt} years, leaving ${money(r.investableCapital)} of each premium to invest. ` +
+				(v.kind === 'shortfall'
+					? `Even in an index fund the money still runs out — in year ${v.exhaustedInYear}, with ` +
+						`${money(v.unfunded)} of the income never arriving. On these figures the policy is ` +
+						`the better of the two.`
+					: v.kind === 'surplus'
+						? `In an index fund that funds every rupee this policy hands you and finishes with ` +
+							`${money(v.amount)} over — ${money(v.amountReal)} in today's prices. The fund's ` +
+							`own fee took ${money(r.growthFeeCost)} of that before you saw it.`
+						: `In an index fund that funds every rupee this policy hands you, with nothing ` +
+							`meaningful left over.`)
+		);
+
+		const sens = el('insuranceSensitivityBody');
+		if (sens) {
+			sens.innerHTML = r.sensitivity
+				.map((row) => {
+					const rv = row.verdict;
+					const good = 'text-emerald-700 dark:text-emerald-400';
+					const bad = 'text-rose-700 dark:text-rose-400';
+					const highlight = row.isBaseline ? 'bg-gold-50 dark:bg-gold-900/20 font-bold' : '';
+					const leftOver = rv.kind === 'shortfall' ? '—' : money(row.surplus);
+					// The rupee figure lives in the column beside this one; repeating it
+					// here says nothing the reader cannot already see (dd-009).
+					const outcome = rv.kind === 'shortfall'
+						? `Runs out in year ${rv.exhaustedInYear} · ${money(rv.unfunded)} unpaid`
+						: 'Funds every rupee';
+					return `<tr class="${highlight}">` +
+						`<td class="px-3 py-2.5 text-sm tabular-nums ${row.isBaseline ? 'text-gold-700 dark:text-gold-400' : 'text-navy-700 dark:text-navy-300'}">${row.rate}%${row.isBaseline ? ' · what we assumed' : ''}</td>` +
+						`<td class="px-3 py-2.5 text-right text-sm tabular-nums ${row.isBaseline ? 'text-gold-700 dark:text-gold-400' : 'text-navy-900 dark:text-navy-100'}">${leftOver}</td>` +
+						`<td class="px-3 py-2.5 text-right text-sm ${rv.tone === 'good' ? good : bad}">${outcome}</td></tr>`;
+				})
+				.join('');
+		}
+
+		setText('frictionGst', tableFormatter.format(Math.round(r.frictions.gstPaid)));
+		setText('frictionCommission', tableFormatter.format(Math.round(r.frictions.estCommission)));
+
+		// 3-Way Premium Decomposition
+		const d = r.premiumDecomposition;
+		setText('decompCostMortality', money(d.mortalityCost));
+		setText('decompCostFriction', money(d.intermediaryFrictionCost));
+		setText('decompCostInvested', money(d.netInvestedCapital));
+
+		setText('decompPctMortality', `${d.mortalityPct}%`);
+		setText('decompPctFriction', `${d.intermediaryFrictionPct}%`);
+		setText('decompPctInvested', `${d.netInvestedPct}%`);
+
+		const barMort = el('decompBarMortality');
+		const barFric = el('decompBarFriction');
+		const barInv = el('decompBarInvested');
+		if (barMort) barMort.style.width = `${d.mortalityPct}%`;
+		if (barFric) barFric.style.width = `${d.intermediaryFrictionPct}%`;
+		if (barInv) barInv.style.width = `${d.netInvestedPct}%`;
+
+		// Sunk-Cost / Surrender & Paid-Up Arbitrage Matrix
+		const s = r.surrenderAnalysis;
+		const surrenderSec = el('insuranceSurrenderSection');
+		if (surrenderSec) {
+			surrenderSec.hidden = !s;
+			if (s) {
+				setText('surrenderPaidToDate', money(s.totalPremiumsPaidToDate));
+				setText('surrenderYearsLabel', `Across ${s.premiumsPaidSoFar} year${s.premiumsPaidSoFar > 1 ? 's' : ''}`);
+				setText('surrenderValueToday', money(s.estimatedSurrenderValue));
+				setText('surrenderSsvFactor', `${s.ssvFactorPct}% of paid premiums`);
+				setText('surrenderHaircut', money(s.surrenderHaircutLoss));
+
+				setText('surrenderOptANominal', money(s.optionASurrenderAndReinvest.terminalCorpus));
+				setText('surrenderOptAReal', money(s.optionASurrenderAndReinvest.terminalCorpusReal));
+
+				setText('surrenderOptBNominal', money(s.optionBPaidUp.terminalCorpus));
+				setText('surrenderOptBReal', money(s.optionBPaidUp.terminalCorpusReal));
+
+				setText('surrenderOptCNominal', money(s.optionCHoldToMaturity.terminalPayoutsTotal));
+				setText('surrenderOptCReal', money(s.optionCHoldToMaturity.terminalCorpusReal));
+
+				const badge = el('surrenderVerdictBadge');
+				const banner = el('surrenderArbitrageBanner');
+
+				const rowA = el('surrenderRowOptA');
+				const rowB = el('surrenderRowOptB');
+				const rowC = el('surrenderRowOptC');
+				[rowA, rowB, rowC].forEach((row) => row?.classList.remove('bg-emerald-50/70', 'dark:bg-emerald-950/30', 'font-bold'));
+
+				if (s.recommendedAction === 'SURRENDER_AND_PIVOT') {
+					if (badge) {
+						badge.innerText = 'Option A Wins: Surrender & Reinvest';
+						badge.className = 'px-2.5 py-1 text-xs font-bold tracking-tight rounded-md bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300';
+					}
+					rowA?.classList.add('bg-emerald-50/70', 'dark:bg-emerald-950/30');
+					if (banner) {
+						banner.className = 'p-4 rounded-xl border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/50 dark:bg-emerald-950/20 text-sm leading-relaxed text-emerald-900 dark:text-emerald-200';
+						banner.innerHTML = `<strong>Mathematical Verdict: Surrender & Pivot.</strong> Even after suffering an immediate sunk-cost haircut of <strong>${money(s.surrenderHaircutLoss)}</strong> today, compound growth on your remaining cashout plus future saved premiums delivers <strong class="font-bold text-emerald-700 dark:text-emerald-400">+${money(s.arbitrageDeltaVsHold)}</strong> (+${money(s.arbitrageDeltaVsHoldReal)} in today's purchasing power) more than holding to maturity.`;
+					}
+				} else if (s.recommendedAction === 'MAKE_PAID_UP') {
+					if (badge) {
+						badge.innerText = 'Option B Wins: Make Paid-Up';
+						badge.className = 'px-2.5 py-1 text-xs font-bold tracking-tight rounded-md bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300';
+					}
+					rowB?.classList.add('bg-emerald-50/70', 'dark:bg-emerald-950/30');
+					if (banner) {
+						banner.className = 'p-4 rounded-xl border border-blue-200 dark:border-blue-900/50 bg-blue-50/50 dark:bg-blue-950/20 text-sm leading-relaxed text-blue-900 dark:text-blue-200';
+						banner.innerHTML = `<strong>Mathematical Verdict: Make Policy Paid-Up.</strong> Avoid the immediate surrender penalty by locking in a reduced pro-rata benefit of ${money(s.optionBPaidUp.reducedPayoutsTotal)}, and redirect all future premiums to your index replica. This creates <strong class="font-bold text-blue-700 dark:text-blue-400">+${money(s.arbitrageDeltaVsHold)}</strong> more wealth than continuing to pay full premiums.`;
+					}
+				} else {
+					if (badge) {
+						badge.innerText = 'Option C Wins: Hold to Maturity';
+						badge.className = 'px-2.5 py-1 text-xs font-bold tracking-tight rounded-md bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300';
+					}
+					rowC?.classList.add('bg-emerald-50/70', 'dark:bg-emerald-950/30');
+					if (banner) {
+						banner.className = 'p-4 rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/50 dark:bg-amber-950/20 text-sm leading-relaxed text-amber-900 dark:text-amber-200';
+						banner.innerHTML = `<strong>Mathematical Verdict: Hold to Maturity.</strong> You are near the end of your paying term or maturity horizon. Exiting now would lock in an unnecessary penalty that cannot be recouped in the remaining time. Hold the policy to maturity to collect full benefits.`;
+					}
+				}
+			}
+		}
+
+		renderCashflowChart(r.ledger);
+	}
+
+	// ---------------------------------------------------------------- the plan
+
+	function renderPlan(r: ReplicationResult) {
+		const shape = policyShape();
+		const v = verdictFor(r.growth);
+		const plan = fundPlan();
+
+		setText(
+			'diyLede',
+			v.kind === 'shortfall'
+				? `The arithmetic favours the policy here, so this is what you would be giving up rather ` +
+					`than a recommendation. It is set out in full anyway: a comparison you cannot check ` +
+					`step by step is one you have to take on trust.`
+				: `Four steps, priced from your own figures. Do them in this order — the cover has to be ` +
+					`in place before anything else changes.`
+		);
+
+		setText('diyTermCover', money(r.inputs.sumAssured));
+		setText('diyTermCost', money(r.inputs.termCost));
+
+		// The accident step disappears where the policy carries no such cover.
+		// A step priced at nil is a question the reader has to read and dismiss.
+		show('diyAccidentStep', r.inputs.accidentCost > 0);
+		setText('diyAccidentCover', money(r.inputs.accidentCost > 0 ? coverFor('inAccidentCover') : 0));
+		setText('diyAccidentCost', money(r.inputs.accidentCost));
+
+		setText('diyInvestable', money(r.investableCapital));
+		setText('diyInvestYears', `${r.inputs.ppt}`);
+		setText(
+			'diyInvestNote',
+			`At the plan assumed here — ${plan.label.toLowerCase()}, ${plan.expenseRatio}% a year — the ` +
+				`fee alone costs ${money(r.growthFeeCost)} across the life of this plan, counting the ` +
+				`growth it would have earned. That is the cheapest thing on this page to change.`
+		);
+		setText(
+			'diyInvestDecay',
+			`This amount is level in cash terms, matching the policy's level premium, so the two stay ` +
+				`comparable. It also means the last instalment asks less of you than the first: ` +
+				`${money(r.policy.lastPremiumReal)} of today's money against ${money(r.inputs.premium)}.`
+		);
+
+		const firstPayoutYear = r.inputs.payoutStartYear;
+		const firstRow = r.ledger.find((l) => l.year === firstPayoutYear);
+		setText('diyFirstWithdrawal', money(firstRow?.payoutNet ?? 0));
+		setText('diyWithdrawTax', money(r.growth.taxDrag));
+		setText(
+			'diyWithdrawBody',
+			hasIncome(shape)
+				? `From policy year ${firstPayoutYear}, sell enough units to hand yourself what the policy ` +
+					`would have paid — and sell enough to cover the tax as well, so what reaches your ` +
+					`account is the same figure either way. Gains above ₹1.25 lakh a year are taxed at ` +
+					`12.5%, and that yearly allowance is why selling a little each year costs less than ` +
+					`selling a lot at once.`
+				: `In policy year ${firstPayoutYear}, redeem the whole holding. Gains above ₹1.25 lakh in ` +
+					`a year are taxed at 12.5% — which is the one argument for taking it out across two ` +
+					`tax years rather than one, if the sum is large.`
+		);
+
+		const advantage = el('diyTaxAdvantage');
+		if (advantage) {
+			advantage.innerHTML = r.policy.taxFree
+				? `<strong class="font-semibold text-navy-900 dark:text-navy-100">The policy's money ` +
+					`arrives tax-free and this does not.</strong> s.10(10D) exempts what your policy pays ` +
+					`back, while the route above pays ${money(r.growth.taxDrag)} in capital gains tax over ` +
+					`its life. That is a real advantage and it is already inside every figure on this page.`
+				: `<strong class="font-semibold text-navy-900 dark:text-navy-100">The tax advantage this ` +
+					`policy is usually sold on does not apply here.</strong> Your premium is more than a ` +
+					`tenth of the life cover, so s.10(10D) does not exempt it — which removes the one thing ` +
+					`a bundled policy can offer that a fund cannot.`;
+		}
+	}
+
+	/** The reader's own figure, read back for display only — never for arithmetic. */
+	function coverFor(id: string): number {
+		const input = document.getElementById(id) as HTMLInputElement | null;
+		return Number((input?.value ?? '').replace(/[^0-9.]/g, '')) || 0;
+	}
+
+	// ---------------------------------------------------------------- the chart
+
+	
+
+	
+	
+	let cashflowChartInstance: any = null;
+	let chartListenersAttached = false;
+
+	function renderCashflowChart(r: ReplicationResult) {
+		const canvas = document.getElementById('cashflowChart') as HTMLCanvasElement | null;
+		if (!canvas) return;
+
+		import('chart.js/auto').then(({ Chart }) => {
+			if (cashflowChartInstance) {
+				cashflowChartInstance.destroy();
+				cashflowChartInstance = null;
+			}
+
+			const ctx = canvas.getContext('2d');
+			if (!ctx) return;
+
+			// Handle Nominal/Real toggles
+			const isReal = document.getElementById('toggleReal')?.classList.contains('bg-white');
+			const ledger = r.ledger;
+
+			const labels = ledger.map((l: any) => `Yr ${l.year}`);
+			let data: number[];
+			
+			if (isReal) {
+				data = ledger.map((l: any) => { const n = l.realNet - l.realPremium; return Math.sign(n) * Math.sqrt(Math.abs(n)); });
+			} else {
+				data = ledger.map((l: any) => Math.sign(l.net) * Math.sqrt(Math.abs(l.net)));
+			}
+
+			const bg = data.map((v: number) => (v < 0 ? 'rgba(244, 63, 94, 0.8)' : 'rgba(16, 185, 129, 0.8)'));
+
+			const isDark = document.documentElement.classList.contains('dark');
+			const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : '#e2e8f0';
+			const tickTextColor = isDark ? '#a1a1aa' : '#64748b';
+
+			cashflowChartInstance = new Chart(ctx, {
+				type: 'bar',
+				data: { labels, datasets: [{ label: 'Cash flow', data, backgroundColor: bg, borderRadius: 4 }] },
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						legend: { display: false },
+						tooltip: {
+							callbacks: {
+								label: (ctx: any) => {
+									const idx = ctx.dataIndex;
+									const row = ledger[idx];
+									const val = isReal ? (row.realNet - row.realPremium) : row.net;
+									return `${val < 0 ? 'Out' : 'In'}: ${formatShortRupee(Math.abs(val))}`;
+								}
+							}
+						}
+					},
+					onClick: (e: any, elements: any) => {
+						if (!elements.length) return;
+						const idx = elements[0].index;
+						showChartBreakdown(ledger[idx], isReal ?? false, r.premiumDecomposition);
+					},
+					scales: {
+						y: {
+							border: { display: false },
+							grid: { color: gridColor },
+							ticks: { color: tickTextColor, callback: () => '' }
+						},
+						x: {
+							border: { display: false },
+							grid: { display: false },
+							ticks: { color: tickTextColor, maxRotation: 0, maxTicksLimit: 8 }
+						}
+					}
+				}
+			});
+
+			if (!chartListenersAttached) {
+				chartListenersAttached = true;
+				document.getElementById('toggleNominal')?.addEventListener('click', (e) => {
+					document.getElementById('toggleNominal')?.classList.add('bg-white', 'dark:bg-navy-700', 'shadow-sm', 'text-navy-900', 'dark:text-white');
+					document.getElementById('toggleNominal')?.classList.remove('text-navy-600', 'dark:text-navy-400');
+					document.getElementById('toggleReal')?.classList.remove('bg-white', 'dark:bg-navy-700', 'shadow-sm', 'text-navy-900', 'dark:text-white');
+					document.getElementById('toggleReal')?.classList.add('text-navy-600', 'dark:text-navy-400');
+					renderCashflowChart(r);
+				});
+				document.getElementById('toggleReal')?.addEventListener('click', (e) => {
+					document.getElementById('toggleReal')?.classList.add('bg-white', 'dark:bg-navy-700', 'shadow-sm', 'text-navy-900', 'dark:text-white');
+					document.getElementById('toggleReal')?.classList.remove('text-navy-600', 'dark:text-navy-400');
+					document.getElementById('toggleNominal')?.classList.remove('bg-white', 'dark:bg-navy-700', 'shadow-sm', 'text-navy-900', 'dark:text-white');
+					document.getElementById('toggleNominal')?.classList.add('text-navy-600', 'dark:text-navy-400');
+					renderCashflowChart(r);
+				});
+			}
+		});
+	}
+
+	function showChartBreakdown(row: LedgerRow, isReal: boolean, decomp: any) {
+		const bd = document.getElementById('chartBreakdown');
+		const year = document.getElementById('breakdownTitle');
+		const content = document.getElementById('breakdownContent');
+		if (!bd || !year || !content) return;
+
+		year.textContent = `Year ${row.year}`;
+		
+		let html = '';
+		const money = (val: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val);
+
+		if (row.net < 0) {
+			const premium = isReal ? row.realPremium : row.premiumOut;
+			const ratio = premium / decomp.annualPremium;
+			const mortality = decomp.mortalityCost * ratio;
+			const friction = decomp.intermediaryFrictionCost * ratio;
+			const invested = decomp.netInvestedCapital * ratio;
+			
+			html = `
+				<div class="col-span-2 flex justify-between border-b border-navy-200 dark:border-navy-700 pb-2 mb-1">
+					<span class="text-navy-600 dark:text-navy-400">Total Premium</span>
+					<span class="font-bold text-rose-700 dark:text-rose-400">${money(premium)}</span>
+				</div>
+				<div class="flex justify-between col-span-2">
+					<span class="text-navy-600 dark:text-navy-400">Life Cover Premium</span>
+					<span class="font-medium text-navy-900 dark:text-white">${money(mortality)}</span>
+				</div>
+				<div class="flex justify-between col-span-2">
+					<span class="text-navy-600 dark:text-navy-400">GST & Commission</span>
+					<span class="font-medium text-navy-900 dark:text-white">${money(friction)}</span>
+				</div>
+				<div class="flex justify-between col-span-2 pt-2 mt-1 border-t border-navy-100 dark:border-navy-800">
+					<span class="font-semibold text-emerald-700 dark:text-emerald-400">Net Invested</span>
+					<span class="font-bold text-emerald-700 dark:text-emerald-400">${money(invested)}</span>
+				</div>
+			`;
+		} else if (row.net > 0) {
+			const gross = isReal ? row.realValue : row.payoutIn;
+			const net = isReal ? row.realNet : row.payoutNet;
+			const tax = gross - net;
+			
+			html = `
+				<div class="col-span-2 flex justify-between border-b border-navy-200 dark:border-navy-700 pb-2 mb-1">
+					<span class="text-navy-600 dark:text-navy-400">Gross Payout</span>
+					<span class="font-medium text-navy-900 dark:text-white">${money(gross)}</span>
+				</div>
+				<div class="flex justify-between col-span-2">
+					<span class="text-navy-600 dark:text-navy-400">Tax Deducted</span>
+					<span class="font-medium text-rose-700 dark:text-rose-400">${tax > 0 ? money(tax) : '₹0'}</span>
+				</div>
+				<div class="flex justify-between col-span-2 pt-2 mt-1 border-t border-navy-100 dark:border-navy-800">
+					<span class="font-semibold text-emerald-700 dark:text-emerald-400">Net In-Hand</span>
+					<span class="font-bold text-emerald-700 dark:text-emerald-400">${money(net)}</span>
+				</div>
+			`;
+		} else {
+			html = `<div class="col-span-2 text-center text-navy-500 py-2">No cashflow this year.</div>`;
+		}
+		
+		content.innerHTML = html;
+		bd.classList.remove('hidden');
+		document.getElementById('closeBreakdown')?.addEventListener('click', () => bd.classList.add('hidden'), { once: true });
+		}
+
+	function calculate() {
+		const readiness = readinessOf();
+
+		show('insuranceAnswerWrap', readiness.complete);
+		show('insuranceWorking', readiness.complete);
+		show('insuranceWaiting', !readiness.complete);
+		show('insuranceWaitingState', !readiness.complete);
+		show('policySummaryWrap', readiness.complete);
+
+		if (!readiness.complete) {
+			setText(
+				'insuranceWaiting',
+				readiness.next
+					? `The working appears here as soon as you tell us ${readiness.next.waitingFor}. Question ${readiness.answered + 1} of ${readiness.steps.length}.`
+					: 'Choose what this policy pays back to begin.'
+			);
+			return;
+		}
+
+		const r = analyseReplication(readPolicyInputs());
+		renderAnswer(r);
+		renderRoutes(r);
+		renderPlan(r);
+		renderCashflowChart(r);
+		
+		const inputs = r.inputs;
+		let coolingOff = inputs.payoutStartYear - inputs.ppt - 1;
+		if (coolingOff < 0) coolingOff = 0;
+		const payoutYears = inputs.payoutYears;
+		
+		const sumNode = document.getElementById('policySummary');
+		if (sumNode) {
+			let shapeId = policyShape();
+			let summary = '';
+			const p = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(inputs.premium);
+			const out = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(inputs.payoutAmount);
+			const mat = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(inputs.maturityBenefit);
+			
+			if (shapeId === 'both') {
+				summary = `This policy asks for <strong class="text-navy-900 dark:text-white">${p}</strong> per year for <strong class="text-navy-900 dark:text-white">${inputs.ppt} years</strong>. `;
+				if (coolingOff > 0) summary += `Then there is a cooling-off period of <strong class="text-navy-900 dark:text-white">${coolingOff} years</strong> (in which you don't pay them and they don't pay you). `;
+				summary += `Then it pays an estimated <strong class="text-navy-900 dark:text-white">${out}</strong> per year for the next <strong class="text-navy-900 dark:text-white">${payoutYears} years</strong>, and a lumpsum of <strong class="text-navy-900 dark:text-white">${mat}</strong> at the end.`;
+			} else if (shapeId === 'income') {
+				summary = `This policy asks for <strong class="text-navy-900 dark:text-white">${p}</strong> per year for <strong class="text-navy-900 dark:text-white">${inputs.ppt} years</strong>. `;
+				if (coolingOff > 0) summary += `Then there is a cooling-off period of <strong class="text-navy-900 dark:text-white">${coolingOff} years</strong>. `;
+				summary += `Then it pays an estimated <strong class="text-navy-900 dark:text-white">${out}</strong> per year for the next <strong class="text-navy-900 dark:text-white">${payoutYears} years</strong>.`;
+			} else if (shapeId === 'lumpSum') {
+				summary = `This policy asks for <strong class="text-navy-900 dark:text-white">${p}</strong> per year for <strong class="text-navy-900 dark:text-white">${inputs.ppt} years</strong>. `;
+				summary += `Then it pays an estimated lumpsum of <strong class="text-navy-900 dark:text-white">${mat}</strong> at the end of year ${inputs.payoutStartYear}.`;
+			}
+			sumNode.innerHTML = summary;
+			const wrap = document.getElementById('policySummaryWrap');
+		}
+	}
+
+	function onShapeChanged(value: string) {
+		const primary = document.getElementById('inPolicyShape') as HTMLSelectElement | null;
+		const restate = document.getElementById('inPolicyShapeRestate') as HTMLSelectElement | null;
+		if (primary && primary.value !== value) primary.value = value;
+		if (restate && restate.value !== value) restate.value = value;
+		if (value) primary?.querySelector('option[value=""]')?.remove();
+		refreshFields();
+		calculate();
+	}
+
+	document.addEventListener('DOMContentLoaded', () => {
+		// `live` on purpose: this page's recompute is a thirty-year deterministic
+		// walk, not a simulation, so it can afford to keep up with the reader.
+		// Without it the form had two behaviours — the term fields answered as you
+		// typed, the money fields sat still until you clicked away, and half the
+		// page looked broken.
+		MONEY_FIELD_IDS.forEach((id) => {
+			const node = document.getElementById(id);
+			if (!node) return;
+			setupFormattingField(node as HTMLInputElement, () => {
+				// The two cover fields reprice the replacement premiums first.
+				if (id === 'inTermCover' || id === 'inAccidentCover') syncRiskCostsFromCover();
+				refreshFields();
+				calculate();
+			}, { live: true });
+		});
+
+		// Once the reader has typed a premium of their own it is THEIR number, and
+		// repricing it because they adjusted the sum assured afterwards would be
+		// the page arguing with them.
+		['inTermCostOverride', 'inAccidentCostOverride'].forEach((id) => {
+			document.getElementById(id)?.addEventListener('input', (e) => {
+				(e.target as HTMLElement).dataset.edited = 'true';
+			});
+		});
+
+		CHOICE_FIELD_IDS.forEach((id) => {
+			const node = document.getElementById(id);
+			if (!node || id === 'inPolicyShape' || id === 'inPolicyShapeRestate') return;
+			node.addEventListener('input', debounce(() => { refreshFields(); calculate(); }, 250));
+			node.addEventListener('change', () => { refreshFields(); calculate(); });
+		});
+
+		document.getElementById('inPolicyShape')?.addEventListener('change', (e) => {
+			onShapeChanged((e.target as HTMLSelectElement).value);
+		});
+		document.getElementById('inPolicyShapeRestate')?.addEventListener('change', (e) => {
+			onShapeChanged((e.target as HTMLSelectElement).value);
+		});
+
+		for (const selectId of ['insAddPay', 'insAddPayout', 'insAddCover']) {
+			document.getElementById(selectId)?.addEventListener('change', (e) => {
+				const select = e.target as HTMLSelectElement;
+				const id = select.value;
+				select.value = '';
+				if (id) addField(id);
+			});
+		}
+
+		document.getElementById('insurancePolicyForm')?.addEventListener('click', (e) => {
+			const drop = (e.target as HTMLElement).closest<HTMLElement>('.ins-field-drop');
+			if (drop?.dataset.drop) dropField(drop.dataset.drop);
+		});
+
+		function bindMilestoneRow(row: HTMLElement) {
+			const amtInput = row.querySelector('.milestone-amount') as HTMLInputElement | null;
+			const yrInput = row.querySelector('.milestone-year') as HTMLInputElement | null;
+			if (amtInput) {
+				setupFormattingField(amtInput, () => { calculate(); }, { live: true });
+			}
+			if (yrInput) {
+				yrInput.addEventListener('input', debounce(() => { calculate(); }, 250));
+			}
+		}
+
+		document.querySelectorAll<HTMLElement>('.milestone-row').forEach(bindMilestoneRow);
+
+		document.getElementById('btnAddMilestoneRow')?.addEventListener('click', () => {
+			const container = document.getElementById('milestoneRowsContainer');
+			if (!container) return;
+			const newRow = document.createElement('div');
+			newRow.className = 'milestone-row flex items-center gap-3';
+			const inputClass = 'w-full bg-white dark:bg-navy-900 border border-navy-200 dark:border-navy-700 text-base font-medium text-navy-900 dark:text-navy-100 rounded-xl pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-navy-500 dark:focus:ring-navy-400 transition-all shadow-sm';
+			newRow.innerHTML = `
+				<div class="w-1/3">
+					<label class="block text-xs font-semibold text-navy-600 dark:text-navy-400 mb-1">Policy Year</label>
+					<input type="text" inputmode="numeric" placeholder="10" class="milestone-year ${inputClass}" />
+				</div>
+				<div class="w-2/3">
+					<label class="block text-xs font-semibold text-navy-600 dark:text-navy-400 mb-1">Payout Amount</label>
+					<div class="relative flex items-center">
+						<span class="absolute left-3.5 text-base font-medium text-navy-500 dark:text-navy-400 select-none">₹</span>
+						<input type="text" inputmode="numeric" placeholder="1,00,000" class="milestone-amount ${inputClass} pl-9" />
+					</div>
+				</div>
+			`;
+			container.appendChild(newRow);
+			bindMilestoneRow(newRow);
+		});
+
+		document.getElementById('inJointLife')?.addEventListener('change', () => {
+			syncRiskCostsFromCover();
+			calculate();
+		});
+
+		refreshFields();
+		calculate();
+	});
+</script>

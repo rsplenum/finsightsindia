@@ -47,11 +47,22 @@ const cellClass = 'py-2 pl-3 text-right text-sm font-bold tabular-nums text-navy
   <!-- 1. The policy, on its own terms. -->
   <section class={cardClass} aria-label="What the policy itself does">
     <div class="space-y-1">
-      <h3 class={headingClass}>What this policy does</h3>
+      <h3 class={headingClass}>What it really pays you</h3>
       <p class={ledeClass}>
-        Everything you pay in, and everything it hands back, set against what those rupees will
-        actually buy by the time they arrive.
+        Premiums out, income back, the amount at the end — collapsed into one rate a year, after tax, so you can set it against anything else you could have done with the money.
       </p>
+
+      <!-- Migrated from InsuranceAnswer -->
+      <div class="mt-4 rounded-xl border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900 p-5 space-y-2">
+        <p class="text-sm font-semibold text-navy-600 dark:text-navy-400">
+          What this policy pays you back, a year, after tax
+        </p>
+        <p class="text-3xl font-extrabold tracking-tight tabular-nums text-navy-900 dark:text-navy-100">
+          <span id="answerYield">0.00%</span>
+        </p>
+        <p id="answerYieldNote" class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed">&nbsp;</p>
+        <p id="answerTaxNote" class="text-sm leading-relaxed text-navy-600 dark:text-navy-400 empty:hidden"></p>
+      </div>
     </div>
 
     <div class="overflow-x-auto">
@@ -74,11 +85,9 @@ const cellClass = 'py-2 pl-3 text-right text-sm font-bold tabular-nums text-navy
   <!-- 2. The two replicas. Stacked at 375; side by side only when there is room. -->
   <section class="space-y-4" aria-label="The two do-it-yourself routes">
     <div class="space-y-1">
-      <h3 class={headingClass}>Doing it yourself, two ways</h3>
+      <h3 class={headingClass}>What the same thing costs, assembled by hand</h3>
       <p class={ledeClass}>
-        Buy the same cover on the open market, invest what is left of each premium, and take out
-        exactly what the policy would have paid you, in exactly the years it would have paid it.
-        The only difference between these two is where the money in the middle sits.
+        The same life cover, the same accident cover, the rest invested. Priced honestly: both routes are charged the same taxes and the same fees.
       </p>
     </div>
 
@@ -316,18 +325,6 @@ const cellClass = 'py-2 pl-3 text-right text-sm font-bold tabular-nums text-navy
     </p>
   </section>
 
-  <!-- 6. The shape of the whole thing, at a glance. -->
-  <section class={cardClass} aria-label="The cash flow, year by year">
-    <div class="space-y-1">
-      <h3 class={headingClass}>The shape of it, year by year</h3>
-      <p class={ledeClass}>
-        Money out, then money back. The years of paying are the reason the comparison exists:
-        that is when the alternative is compounding.
-      </p>
-    </div>
-    <div class="relative w-full h-[250px]">
-      <canvas id="cashflowChart" class="w-full h-full"></canvas>
-    </div>
-  </section>
+  
 
 </div>

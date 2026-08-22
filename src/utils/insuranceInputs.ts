@@ -239,7 +239,7 @@ const slabRate = (): number => {
 
 /** Which shape the reader picked, or null before they have. */
 export function policyShape(): PolicyShape | null {
-  const v = (el(F.shape) as HTMLSelectElement | null)?.value ?? '';
+  const v = ((el(F.shape) || el(F.shapeRestate)) as HTMLSelectElement | null)?.value ?? '';
   return POLICY_SHAPES.some((s) => s.id === v) ? (v as PolicyShape) : null;
 }
 
