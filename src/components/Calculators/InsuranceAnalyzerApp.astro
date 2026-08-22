@@ -803,8 +803,10 @@ const {
 	
 	let cashflowChartInstance: any = null;
 	let chartListenersAttached = false;
+	let latestChartResult: ReplicationResult | null = null;
 
 	function renderCashflowChart(r: ReplicationResult) {
+		latestChartResult = r;
 		const canvas = document.getElementById('cashflowChart') as HTMLCanvasElement | null;
 		if (!canvas) return;
 
@@ -817,9 +819,10 @@ const {
 			const ctx = canvas.getContext('2d');
 			if (!ctx) return;
 
-			// Handle Nominal/Real toggles
-			const isReal = document.getElementById('toggleReal')?.classList.contains('bg-white');
-			const ledger = r.ledger;
+			// Use latestChartResult so toggles always read current data
+			const currentR = latestChartResult!;
+			const isReal = document.getElementById('toggleReal')?.classList.contains('bg-white') ?? false;
+			const ledger = currentR.ledger;
 
 			const labels = ledger.map((l: any) => `Yr ${l.year}`);
 			let data: number[];
@@ -858,7 +861,7 @@ const {
 					onClick: (e: any, elements: any) => {
 						if (!elements.length) return;
 						const idx = elements[0].index;
-						showChartBreakdown(ledger[idx], isReal ?? false, r.premiumDecomposition);
+						showChartBreakdown(ledger[idx], isReal ?? false, currentR.premiumDecomposition);
 					},
 					scales: {
 						y: {
@@ -884,19 +887,24 @@ const {
 
 			if (!chartListenersAttached) {
 				chartListenersAttached = true;
-				document.getElementById('toggleNominal')?.addEventListener('click', (e) => {
+
+				const reRender = () => {
+					if (latestChartResult) renderCashflowChart(latestChartResult);
+				};
+
+				document.getElementById('toggleNominal')?.addEventListener('click', () => {
 					document.getElementById('toggleNominal')?.classList.add('bg-white', 'dark:bg-navy-700', 'shadow-sm', 'text-navy-900', 'dark:text-white');
 					document.getElementById('toggleNominal')?.classList.remove('text-navy-600', 'dark:text-navy-400');
 					document.getElementById('toggleReal')?.classList.remove('bg-white', 'dark:bg-navy-700', 'shadow-sm', 'text-navy-900', 'dark:text-white');
 					document.getElementById('toggleReal')?.classList.add('text-navy-600', 'dark:text-navy-400');
-					renderCashflowChart(r);
+					reRender();
 				});
-				document.getElementById('toggleReal')?.addEventListener('click', (e) => {
+				document.getElementById('toggleReal')?.addEventListener('click', () => {
 					document.getElementById('toggleReal')?.classList.add('bg-white', 'dark:bg-navy-700', 'shadow-sm', 'text-navy-900', 'dark:text-white');
 					document.getElementById('toggleReal')?.classList.remove('text-navy-600', 'dark:text-navy-400');
 					document.getElementById('toggleNominal')?.classList.remove('bg-white', 'dark:bg-navy-700', 'shadow-sm', 'text-navy-900', 'dark:text-white');
 					document.getElementById('toggleNominal')?.classList.add('text-navy-600', 'dark:text-navy-400');
-					renderCashflowChart(r);
+					reRender();
 				});
 			}
 		});
