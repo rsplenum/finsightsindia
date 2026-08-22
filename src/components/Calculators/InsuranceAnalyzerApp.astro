@@ -875,6 +875,13 @@ const {
 				}
 			});
 
+			// Make bars show pointer cursor on hover
+			canvas.style.cursor = 'default';
+			canvas.addEventListener('mousemove', (evt) => {
+				const points = cashflowChartInstance?.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, false);
+				canvas.style.cursor = points && points.length ? 'pointer' : 'default';
+			});
+
 			if (!chartListenersAttached) {
 				chartListenersAttached = true;
 				document.getElementById('toggleNominal')?.addEventListener('click', (e) => {
@@ -897,67 +904,118 @@ const {
 
 	function showChartBreakdown(row: LedgerRow, isReal: boolean, decomp: any) {
 		const bd = document.getElementById('chartBreakdown');
-		const year = document.getElementById('breakdownTitle');
+		const titleEl = document.getElementById('breakdownTitle');
 		const content = document.getElementById('breakdownContent');
-		if (!bd || !year || !content) return;
+		if (!bd || !titleEl || !content) return;
 
-		year.textContent = `Year ${row.year}`;
-		
+		const m = (val: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(Math.abs(val));
+		const pct = (part: number, whole: number) => whole > 0 ? Math.round((part / whole) * 100) : 0;
+
 		let html = '';
-		const money = (val: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val);
 
-		if (row.net < 0) {
+		if (row.premiumOut > 0 && row.payoutIn <= 0) {
+			// ── PAYING YEAR: You → Insurer ──
 			const premium = isReal ? row.realPremium : row.premiumOut;
-			const ratio = premium / decomp.annualPremium;
+			const ratio = decomp.annualPremium > 0 ? premium / decomp.annualPremium : 0;
 			const mortality = decomp.mortalityCost * ratio;
 			const friction = decomp.intermediaryFrictionCost * ratio;
 			const invested = decomp.netInvestedCapital * ratio;
-			
+			const mortalityPct = pct(mortality, premium);
+			const frictionPct = pct(friction, premium);
+			const investedPct = pct(invested, premium);
+
+			titleEl.innerHTML = `<span class="text-rose-600 dark:text-rose-400">Year ${row.year}</span> <span class="text-navy-400 dark:text-navy-500 text-xs font-normal ml-1">You → Insurer</span>`;
+
 			html = `
-				<div class="col-span-2 flex justify-between border-b border-navy-200 dark:border-navy-700 pb-2 mb-1">
-					<span class="text-navy-600 dark:text-navy-400">Total Premium</span>
-					<span class="font-bold text-rose-700 dark:text-rose-400">${money(premium)}</span>
-				</div>
-				<div class="flex justify-between col-span-2">
-					<span class="text-navy-600 dark:text-navy-400">Life Cover Premium</span>
-					<span class="font-medium text-navy-900 dark:text-white">${money(mortality)}</span>
-				</div>
-				<div class="flex justify-between col-span-2">
-					<span class="text-navy-600 dark:text-navy-400">GST & Commission</span>
-					<span class="font-medium text-navy-900 dark:text-white">${money(friction)}</span>
-				</div>
-				<div class="flex justify-between col-span-2 pt-2 mt-1 border-t border-navy-100 dark:border-navy-800">
-					<span class="font-semibold text-emerald-700 dark:text-emerald-400">Net Invested</span>
-					<span class="font-bold text-emerald-700 dark:text-emerald-400">${money(invested)}</span>
+				<div class="col-span-2 space-y-3">
+					<div class="flex justify-between items-baseline">
+						<span class="text-sm font-bold text-navy-900 dark:text-white">Premium Paid</span>
+						<span class="text-lg font-bold text-rose-600 dark:text-rose-400">${m(premium)}</span>
+					</div>
+					<div class="w-full h-3 rounded-full overflow-hidden flex bg-navy-100 dark:bg-navy-800">
+						<div class="h-full bg-amber-500" style="width:${mortalityPct}%" title="Life Cover"></div>
+						<div class="h-full bg-rose-400" style="width:${frictionPct}%" title="GST & Commission"></div>
+						<div class="h-full bg-emerald-500" style="width:${investedPct}%" title="Net Invested"></div>
+					</div>
+					<div class="space-y-1.5">
+						<div class="flex items-center justify-between">
+							<div class="flex items-center gap-2">
+								<span class="w-2.5 h-2.5 rounded-sm bg-amber-500 inline-block"></span>
+								<span class="text-navy-600 dark:text-navy-400">Life Cover</span>
+							</div>
+							<span class="font-medium text-navy-900 dark:text-white">${m(mortality)} <span class="text-navy-400 text-xs">(${mortalityPct}%)</span></span>
+						</div>
+						<div class="flex items-center justify-between">
+							<div class="flex items-center gap-2">
+								<span class="w-2.5 h-2.5 rounded-sm bg-rose-400 inline-block"></span>
+								<span class="text-navy-600 dark:text-navy-400">GST & Commission</span>
+							</div>
+							<span class="font-medium text-navy-900 dark:text-white">${m(friction)} <span class="text-navy-400 text-xs">(${frictionPct}%)</span></span>
+						</div>
+						<div class="flex items-center justify-between pt-1.5 mt-1.5 border-t border-navy-100 dark:border-navy-800">
+							<div class="flex items-center gap-2">
+								<span class="w-2.5 h-2.5 rounded-sm bg-emerald-500 inline-block"></span>
+								<span class="font-semibold text-emerald-700 dark:text-emerald-400">Actually Invested</span>
+							</div>
+							<span class="font-bold text-emerald-700 dark:text-emerald-400">${m(invested)} <span class="text-xs">(${investedPct}%)</span></span>
+						</div>
+					</div>
 				</div>
 			`;
-		} else if (row.net > 0) {
+		} else if (row.payoutIn > 0) {
+			// ── PAYOUT YEAR: Insurer → You ──
 			const gross = isReal ? row.realValue : row.payoutIn;
+			const taxAmt = isReal ? (row.realValue - row.realNet) : row.payoutTax;
 			const net = isReal ? row.realNet : row.payoutNet;
-			const tax = gross - net;
-			
+			const taxPct = pct(taxAmt, gross);
+			const netPct = pct(net, gross);
+
+			titleEl.innerHTML = `<span class="text-emerald-600 dark:text-emerald-400">Year ${row.year}</span> <span class="text-navy-400 dark:text-navy-500 text-xs font-normal ml-1">Insurer → You</span>`;
+
 			html = `
-				<div class="col-span-2 flex justify-between border-b border-navy-200 dark:border-navy-700 pb-2 mb-1">
-					<span class="text-navy-600 dark:text-navy-400">Gross Payout</span>
-					<span class="font-medium text-navy-900 dark:text-white">${money(gross)}</span>
-				</div>
-				<div class="flex justify-between col-span-2">
-					<span class="text-navy-600 dark:text-navy-400">Tax Deducted</span>
-					<span class="font-medium text-rose-700 dark:text-rose-400">${tax > 0 ? money(tax) : '₹0'}</span>
-				</div>
-				<div class="flex justify-between col-span-2 pt-2 mt-1 border-t border-navy-100 dark:border-navy-800">
-					<span class="font-semibold text-emerald-700 dark:text-emerald-400">Net In-Hand</span>
-					<span class="font-bold text-emerald-700 dark:text-emerald-400">${money(net)}</span>
+				<div class="col-span-2 space-y-3">
+					<div class="flex justify-between items-baseline">
+						<span class="text-sm font-bold text-navy-900 dark:text-white">Gross Payout</span>
+						<span class="text-lg font-bold text-navy-900 dark:text-white">${m(gross)}</span>
+					</div>
+					<div class="w-full h-3 rounded-full overflow-hidden flex bg-navy-100 dark:bg-navy-800">
+						<div class="h-full bg-emerald-500" style="width:${netPct}%" title="Net In-Hand"></div>
+						<div class="h-full bg-rose-400" style="width:${taxPct}%" title="Tax"></div>
+					</div>
+					<div class="space-y-1.5">
+						<div class="flex items-center justify-between">
+							<div class="flex items-center gap-2">
+								<span class="w-2.5 h-2.5 rounded-sm bg-rose-400 inline-block"></span>
+								<span class="text-navy-600 dark:text-navy-400">Tax Deducted</span>
+							</div>
+							<span class="font-medium ${taxAmt > 0 ? 'text-rose-600 dark:text-rose-400' : 'text-navy-500'}">${taxAmt > 0 ? m(taxAmt) + ' (' + taxPct + '%)' : 'Tax-free'}</span>
+						</div>
+						<div class="flex items-center justify-between pt-1.5 mt-1.5 border-t border-navy-100 dark:border-navy-800">
+							<div class="flex items-center gap-2">
+								<span class="w-2.5 h-2.5 rounded-sm bg-emerald-500 inline-block"></span>
+								<span class="font-semibold text-emerald-700 dark:text-emerald-400">Net In-Hand</span>
+							</div>
+							<span class="font-bold text-emerald-700 dark:text-emerald-400">${m(net)} <span class="text-xs">(${netPct}%)</span></span>
+						</div>
+					</div>
 				</div>
 			`;
 		} else {
-			html = `<div class="col-span-2 text-center text-navy-500 py-2">No cashflow this year.</div>`;
+			// ── COOLING-OFF YEAR ──
+			titleEl.innerHTML = `<span class="text-navy-500">Year ${row.year}</span> <span class="text-navy-400 dark:text-navy-500 text-xs font-normal ml-1">Cooling-off</span>`;
+			html = `
+				<div class="col-span-2 text-center py-3 space-y-1">
+					<p class="text-navy-500 dark:text-navy-400 text-sm">No money moves this year.</p>
+					<p class="text-navy-400 dark:text-navy-600 text-xs">You don't pay them and they don't pay you.</p>
+				</div>
+			`;
 		}
-		
+
 		content.innerHTML = html;
 		bd.classList.remove('hidden');
+		bd.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 		document.getElementById('closeBreakdown')?.addEventListener('click', () => bd.classList.add('hidden'), { once: true });
-		}
+	}
 
 	function calculate() {
 		const readiness = readinessOf();
