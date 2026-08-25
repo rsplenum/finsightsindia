@@ -2,6 +2,8 @@
 import { getCollection, render } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
 
+export const prerender = true;
+
 export async function getStaticPaths() {
 	const articles = await getCollection('direct-tax');
 	return articles.map((entry) => ({
