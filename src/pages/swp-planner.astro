@@ -1,46 +1,209 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
-import SwpIntro from '../components/Calculators/SwpIntro.astro';
 import RetirementAnswer from '../components/Calculators/RetirementAnswer.astro';
 import SwpInputForm from '../components/Calculators/SwpInputForm.astro';
 import SwpWorking from '../components/Calculators/SwpWorking.astro';
 ---
 
-<Layout title="Retirement Withdrawal Planner — SWP Intelligence Engine">
+<Layout title="Retirement Withdrawal Planner — SWP Longevity Engine">
   <Hero
     badge="Retirement Cashflow Planner"
-    title="How long will your savings last?"
-    description="Stress-test your retirement against 10,000 market futures. Model real inflation-adjusted purchasing power, LTCG taxes, and downside protection."
+    title="How long will your retirement savings last?"
+    description="Stress-test your retirement against 10,000 empirical market futures. Model real inflation-adjusted purchasing power, capital gains taxes, and downside crash protection."
   />
 
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-16 sm:pt-4 sm:pb-24 space-y-8">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-16 sm:pb-24 space-y-8">
     
-    <!-- State 1: The Welcome (dd-024) -->
-    <SwpIntro />
+    <!-- Section 1: Hero Interactive Inputs Deck -->
+    <section aria-label="Retirement plan inputs">
+      <SwpInputForm />
+    </section>
 
-    <!-- State 2: Answer & Workbench (revealed on first interaction) -->
-    <div id="swpWorkbenchContainer" class="hidden space-y-8">
-      
-      <!-- Top Answer / Verdict Layer (single compute host) -->
+    <!-- Section 2: Narrative Verdict & 1-Tap Remedies (Compute Host) -->
+    <section aria-label="Retirement plan verdict and remedies">
       <RetirementAnswer />
+    </section>
 
-      <!-- Interactive Workbench Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        
-        <!-- Left Column: Input Form -->
-        <aside class="lg:col-span-4 lg:sticky lg:top-6 space-y-6">
-          <SwpInputForm />
-        </aside>
+    <!-- Section 3: Visual Working & Multi-Tab Diagnostics -->
+    <section aria-label="Simulation results and projections" class="w-full overflow-x-hidden">
+      <SwpWorking />
+    </section>
 
-        <!-- Right Column: Working & Diagnostics -->
-        <section class="lg:col-span-8 space-y-6" aria-label="Simulation results and projections">
-          <SwpWorking />
-        </section>
+    <!-- Section 4: Deep Dive Editorial Literature & Mechanics -->
+    <section class="space-y-8 pt-4">
+      
+      <!-- Article 1: Dynamic Spending Guardrails -->
+      <article id="dynamicGuardrailsExplanation" class="scroll-mt-8 space-y-6">
+        <div class="border-b border-navy-200 dark:border-navy-800 pb-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 text-xs font-semibold mb-2">
+            Retirement Cashflow Mechanics
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-navy-950 dark:text-white">
+            Dynamic Spending Guardrails: Protecting Against Early Market Crashes
+          </h2>
+          <p class="text-sm sm:text-base text-navy-600 dark:text-navy-400 mt-2 leading-relaxed max-w-3xl">
+            Why fixed inflation-adjusted withdrawals fail during early bear markets, and how rule-based dynamic spending adjustments preserve portfolio longevity without drastic lifestyle sacrifices.
+          </p>
+        </div>
 
-      </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 space-y-5 text-sm sm:text-base text-navy-800 dark:text-navy-200 leading-relaxed">
+            <h3 class="text-lg font-bold text-navy-950 dark:text-white">
+              The Flaw in the Classic 4% Fixed Inflation Rule
+            </h3>
+            <p>
+              In traditional retirement planning, retirees often model fixed monthly spending that steps up mechanically with inflation every single year, regardless of how market equities perform. When an adverse market crash hits during the first five years of retirement (the early drawdown vulnerability window), selling depreciated equity units to meet a fixed rupee paycheck locks in irreversible losses.
+            </p>
+            <p>
+              By contrast, <strong>Dynamic Spending Guardrails</strong> replace rigid linear withdrawals with an adaptive rules engine that reacts to real-time portfolio valuation:
+            </p>
 
-    </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <div class="p-4 rounded-xl border border-rose-200 dark:border-rose-900/60 bg-rose-50/40 dark:bg-rose-950/20 space-y-2">
+                <div class="flex items-center gap-2 font-bold text-rose-800 dark:text-rose-300 text-sm">
+                  <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                  <span>Capital Preservation Guardrail</span>
+                </div>
+                <p class="text-xs text-navy-700 dark:text-navy-300 leading-relaxed">
+                  If market declines push the current withdrawal rate more than <strong>20% above your baseline</strong> (e.g. from 4% up to 4.8%), the annual inflation increment is skipped and monthly spending is trimmed by <strong>10%</strong> until the portfolio recovers.
+                </p>
+              </div>
+
+              <div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/40 dark:bg-emerald-950/20 space-y-2">
+                <div class="flex items-center gap-2 font-bold text-emerald-800 dark:text-emerald-300 text-sm">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  <span>Prosperity Step-Up Guardrail</span>
+                </div>
+                <p class="text-xs text-navy-700 dark:text-navy-300 leading-relaxed">
+                  When a strong bull market drives the current withdrawal rate <strong>20% below baseline</strong> (e.g. down to 3.2%), spending is rewarded with an additional <strong>10% lifestyle step-up</strong>.
+                </p>
+              </div>
+            </div>
+
+            <h3 class="text-lg font-bold text-navy-950 dark:text-white pt-3">
+              Why Guardrails Raise Success from 75% to 98%
+            </h3>
+            <p>
+              Extensive Monte Carlo stress-testing demonstrates that absorbing temporary 10% adjustments during market bottoms prevents the destructive depletion spiral. The equity core remains intact to participate fully in subsequent market recoveries, dramatically extending portfolio survival across 30 to 40 year horizons.
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <div class="p-5 rounded-2xl bg-navy-50/80 dark:bg-navy-900/60 border border-navy-200 dark:border-navy-800 space-y-4">
+              <h4 class="text-xs font-bold text-navy-900 dark:text-white">
+                Behavior During a 35% Market Crash
+              </h4>
+              <div class="space-y-3 text-xs">
+                <div class="p-3 rounded-lg bg-white dark:bg-navy-950 border border-navy-200 dark:border-navy-800 space-y-1">
+                  <span class="font-bold text-rose-700 dark:text-rose-400 block">Rigid Fixed Withdrawal</span>
+                  <span class="text-navy-600 dark:text-navy-400">Withdraws ₹60,000 + 6% inflation regardless. Portfolio sells 35% more shares at market bottom. <strong>Permanent capital impairment.</strong></span>
+                </div>
+                <div class="p-3 rounded-lg bg-white dark:bg-navy-950 border border-navy-200 dark:border-navy-800 space-y-1">
+                  <span class="font-bold text-emerald-700 dark:text-emerald-400 block">Dynamic Guardrail Action</span>
+                  <span class="text-navy-600 dark:text-navy-400">Withdrawal temporarily adjusted to ₹54,000. Reduces share liquidation at market low by 10%. <strong>Full rebound participation.</strong></span>
+                </div>
+              </div>
+              <div class="pt-2 border-t border-navy-200 dark:border-navy-800 text-xs text-navy-500 dark:text-navy-400">
+                Toggling the <em>Dynamic Spending Guardrails</em> option above tests your retirement plan under this adaptive logic.
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Article 2: Downside Put Floor Hedging & Black-Scholes Mechanics -->
+      <article id="swpHedgingExplanation" class="scroll-mt-8 space-y-6 pt-6 border-t border-navy-200 dark:border-navy-800">
+        <div class="border-b border-navy-200 dark:border-navy-800 pb-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 text-xs font-semibold mb-2">
+            Quantitative Risk Engineering
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-navy-950 dark:text-white">
+            Downside Put Floor Hedge: Black-Scholes Portfolio Insurance
+          </h2>
+          <p class="text-sm sm:text-base text-navy-600 dark:text-navy-400 mt-2 leading-relaxed max-w-3xl">
+            How systematic protective put options cap catastrophic tail-risk drawdowns, the exact Black-Scholes cost formula, and when portfolio insurance is mathematically justified.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 space-y-5 text-sm sm:text-base text-navy-800 dark:text-navy-200 leading-relaxed">
+            <h3 class="text-lg font-bold text-navy-950 dark:text-white">
+              What is a Systematic Downside Put Floor?
+            </h3>
+            <p>
+              A <strong>Downside Put Floor</strong> is a quantitative risk management strategy where a retiree continuously holds rolling annual European-style index put options (e.g. Nifty 50) at a predetermined strike price—such as <strong>10% below current market levels</strong>.
+            </p>
+            <p>
+              In a normal market year (+12% growth), the put option expires unexercised and its premium acts as an insurance expense. But in catastrophic crashes—such as the 2008 Global Financial Crisis (-52%) or the 2020 pandemic crash (-38%)—the put option pays out the exact cash deficit below -10%, guaranteeing that your equity asset value never drops further than your chosen floor.
+            </p>
+
+            <h3 class="text-lg font-bold text-navy-950 dark:text-white pt-3">
+              How the Annual Drag is Calculated (Black-Scholes Model)
+            </h3>
+            <p>
+              The cost of insuring a retirement portfolio is calculated using the standard <strong>Black-Scholes-Merton option pricing equation</strong>:
+            </p>
+
+            <div class="p-4 rounded-xl bg-navy-950 text-white font-mono text-xs sm:text-sm space-y-2 border border-navy-800 shadow-md">
+              <div class="text-gold-400 font-bold">Black-Scholes Put Formula:</div>
+              <div>P(S, K, T, r, σ) = K · e^(-rT) · N(-d2) - S · N(-d1)</div>
+              <div class="text-xs text-navy-400 pt-1">
+                where d1 = [ln(S/K) + (r + σ²/2)T] / (σ√T) and d2 = d1 - σ√T
+              </div>
+            </div>
+
+            <p>
+              For Indian equity markets with a typical annualized volatility <strong>σ = 15%</strong>, risk-free interest rate <strong>r = 6%</strong>, and a 1-year horizon <strong>T = 1.0</strong>:
+            </p>
+            <ul class="list-disc pl-5 space-y-1.5 text-xs sm:text-sm">
+              <li><strong>-10% Drop Floor (90% Strike):</strong> Annualized option drag is approx. <strong>1.85% per year</strong>.</li>
+              <li><strong>-15% Drop Floor (85% Strike):</strong> Annualized option drag is approx. <strong>1.10% per year</strong>.</li>
+              <li><strong>-5% Tight Floor (95% Strike):</strong> Annualized option drag is approx. <strong>3.20% per year</strong>.</li>
+            </ul>
+
+            <h3 class="text-lg font-bold text-navy-950 dark:text-white pt-3">
+              When Should a Retiree Enable Downside Hedging?
+            </h3>
+            <p>
+              Hedging is ideal for retirees who:
+            </p>
+            <ol class="list-decimal pl-5 space-y-1.5 text-xs sm:text-sm">
+              <li><strong>Have a high initial withdrawal rate (&gt;4.5%):</strong> Where an early 30% crash causes catastrophic depletion before recovery can take place.</li>
+              <li><strong>Are in the fragile first 5 years of retirement:</strong> When early market crash sensitivity is at its mathematical peak.</li>
+            </ol>
+          </div>
+
+          <div class="space-y-4">
+            <div class="p-5 rounded-2xl bg-navy-50/80 dark:bg-navy-900/60 border border-navy-200 dark:border-navy-800 space-y-4">
+              <h4 class="text-xs font-bold text-navy-900 dark:text-white">
+                Unhedged vs Hedged in Major Crash Scenarios
+              </h4>
+              <div class="space-y-3 text-xs">
+                <div class="p-3 rounded-lg bg-white dark:bg-navy-950 border border-navy-200 dark:border-navy-800 space-y-1">
+                  <span class="font-bold text-navy-900 dark:text-white block">2008 GFC Crash (-52% Market Drop)</span>
+                  <p class="text-navy-600 dark:text-navy-400">
+                    <strong>Unhedged:</strong> ₹1 Cr falls to ₹48 Lakhs. Forced withdrawal sells units at half price.<br/>
+                    <strong>Hedged (-10% Floor):</strong> Portfolio value is strictly capped at ₹90 Lakhs less 1.85% drag = ₹88.15 Lakhs.
+                  </p>
+                </div>
+                <div class="p-3 rounded-lg bg-white dark:bg-navy-950 border border-navy-200 dark:border-navy-800 space-y-1">
+                  <span class="font-bold text-navy-900 dark:text-white block">Normal Growth Year (+13% CAGR)</span>
+                  <p class="text-navy-600 dark:text-navy-400">
+                    <strong>Unhedged:</strong> Delivers net +13.0% growth.<br/>
+                    <strong>Hedged:</strong> Delivers net +11.15% growth after paying option insurance premium.
+                  </p>
+                </div>
+              </div>
+              <div class="pt-2 border-t border-navy-200 dark:border-navy-800 text-xs text-navy-500 dark:text-navy-400">
+                You can review the live numerical impact in the <strong>Put Floor Ledger</strong> tab of the workbench above.
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </section>
 
   </main>
 </Layout>
@@ -57,118 +220,73 @@ import SwpWorking from '../components/Calculators/SwpWorking.astro';
   import {
     readPlannerInputs,
     syncEntryFromAdvanced,
+    syncAdvancedFromEntry,
     requestRecompute,
   } from '../utils/plannerInputs';
-
-  import {
-    createLineChart, 
-    createMicroCashflowChart 
-  } from '../utils/chart-helpers';
   
   import { debounce } from '../utils/debounce';
 
-  let subscribed = false;
-  let lastOutlook: any = null;
   let lastWorkerData: any = null;
-  let currentChart: any = null;
-  let currentMicroChart: any = null;
-  let activeViewMode: 'percentiles' | 'samples' = 'percentiles';
-  let isWorkbenchRevealed = false;
+  let lastOutlook: any = null;
+  let activeTab: 'chart' | 'schedule' | 'sensitivity' | 'hedging' = 'chart';
+  let isNominalMode = false;
 
   const getInputs = readPlannerInputs;
 
-  /**
-   * Transitions from the Welcome intro to the interactive workbench (dd-024).
-   */
-  function revealWorkbench() {
-    if (isWorkbenchRevealed) return;
-    isWorkbenchRevealed = true;
+  function updateDisplayBadges() {
+    const inputs = getInputs();
+    const corpusFormatted = document.getElementById('corpusFormatted');
+    const withdrawalFormatted = document.getElementById('withdrawalFormatted');
+    const yearsFormatted = document.getElementById('yearsFormatted');
+    const stepUpFormatted = document.getElementById('stepUpFormatted');
+    const summaryText = document.getElementById('assumptionsSummaryText');
 
-    const introEl = document.getElementById('swpIntro');
-    const containerEl = document.getElementById('swpWorkbenchContainer');
-
-    if (introEl) {
-      introEl.style.opacity = '0';
-      setTimeout(() => {
-        introEl.classList.add('hidden');
-      }, 250);
+    if (corpusFormatted) {
+      corpusFormatted.textContent = formatIndianRupeeLabel(inputs.initialCorpus);
+    }
+    if (withdrawalFormatted) {
+      withdrawalFormatted.textContent = `₹ ${inputs.monthlyWithdrawal.toLocaleString('en-IN')} / mo`;
+    }
+    if (yearsFormatted) {
+      yearsFormatted.textContent = `${inputs.horizonYears} Years`;
+    }
+    if (stepUpFormatted) {
+      stepUpFormatted.textContent = `+${inputs.annualStepUp.toFixed(1)}% / yr`;
+    }
+    if (summaryText) {
+      summaryText.textContent = `${inputs.expectedReturn.toFixed(1)}% CAGR · ${inputs.annualVolatility.toFixed(1)}% σ · ${inputs.expectedInflation.toFixed(1)}% Inflation · ${inputs.ltcgTax.toFixed(1)}% Tax`;
     }
 
-    if (containerEl) {
-      containerEl.classList.remove('hidden');
-      containerEl.style.opacity = '0';
-      setTimeout(() => {
-        containerEl.style.transition = 'opacity 300ms ease-in';
-        containerEl.style.opacity = '1';
-      }, 50);
+    // Sync sliders to inputs
+    const cSlider = document.getElementById('corpusSlider') as HTMLInputElement | null;
+    const wSlider = document.getElementById('withdrawalSlider') as HTMLInputElement | null;
+    const ySlider = document.getElementById('yearsSlider') as HTMLInputElement | null;
+    const sSlider = document.getElementById('stepUpSlider') as HTMLInputElement | null;
+
+    if (cSlider && Number(cSlider.value) !== inputs.initialCorpus) {
+      cSlider.value = String(Math.min(100000000, Math.max(2500000, inputs.initialCorpus)));
     }
+    if (wSlider && Number(wSlider.value) !== inputs.monthlyWithdrawal) {
+      wSlider.value = String(Math.min(300000, Math.max(10000, inputs.monthlyWithdrawal)));
+    }
+    if (ySlider && Number(ySlider.value) !== inputs.horizonYears) {
+      ySlider.value = String(Math.min(50, Math.max(10, inputs.horizonYears)));
+    }
+    if (sSlider && Number(sSlider.value) !== inputs.annualStepUp) {
+      sSlider.value = String(Math.min(5, Math.max(0, inputs.annualStepUp)));
+    }
+    
+    updateActiveChips(inputs);
   }
 
-  function initWelcomeState() {
-    const introCorpus = document.getElementById('introCorpus') as HTMLInputElement | null;
-    const introStartBtn = document.getElementById('introStartBtn');
-    const milestoneBtns = document.querySelectorAll('.intro-milestone-btn');
+  function updateActiveChips(inputs: any) {
+    const activeClass = ['border-gold-500', 'bg-gold-50/50', 'dark:bg-gold-950/30', 'text-gold-700', 'dark:text-gold-300'];
+    const inactiveClass = ['border-navy-200', 'dark:border-navy-800', 'hover:border-gold-500', 'text-navy-600', 'dark:text-navy-400'];
 
-    function handleStart(val?: string) {
-      const canonicalCorpus = document.getElementById('initialCorpus') as HTMLInputElement | null;
-      const ansCorpus = document.getElementById('ansCorpus') as HTMLInputElement | null;
-      if (canonicalCorpus) {
-        if (val) {
-          canonicalCorpus.value = Number(val).toLocaleString('en-IN');
-        } else if (introCorpus && introCorpus.value) {
-          const cleanVal = parseFormattedNumber(introCorpus.value);
-          if (cleanVal > 0) canonicalCorpus.value = cleanVal.toLocaleString('en-IN');
-        }
-      }
-      if (ansCorpus && canonicalCorpus) {
-        ansCorpus.value = canonicalCorpus.value;
-      }
-      updateDisplayBadges();
-      revealWorkbench();
-      requestRecompute();
-    }
-
-    if (introCorpus) {
-      setupFormattingField(introCorpus, () => {});
-      introCorpus.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') handleStart();
-      });
-    }
-
-    milestoneBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const val = btn.getAttribute('data-value');
-        if (val) handleStart(val);
-      });
-    });
-
-    introStartBtn?.addEventListener('click', () => handleStart());
-  }
-
-  function initTabNavigation() {
-    const tabSummaryBtn = document.getElementById('tabPlanSummaryBtn');
-    const tabScheduleBtn = document.getElementById('tabScheduleBtn');
-    const tabHedgingBtn = document.getElementById('tabHedgingBtn');
-
-    const viewSummaryEl = document.getElementById('viewPlanSummary');
-    const viewScheduleEl = document.getElementById('viewSchedule');
-    const viewHedgingEl = document.getElementById('viewHedging');
-
-    function switchTab(target: 'summary' | 'schedule' | 'hedging') {
-      const activeClass = ['border-navy-900', 'bg-navy-900', 'text-white', 'dark:border-white', 'dark:bg-white', 'dark:text-navy-950', 'font-bold'];
-      const inactiveClass = ['border-transparent', 'text-navy-600', 'dark:text-navy-400'];
-
-      viewSummaryEl?.classList.toggle('hidden', target !== 'summary');
-      viewScheduleEl?.classList.toggle('hidden', target !== 'schedule');
-      viewHedgingEl?.classList.toggle('hidden', target !== 'hedging');
-
-      [
-        { btn: tabSummaryBtn, active: target === 'summary' },
-        { btn: tabScheduleBtn, active: target === 'schedule' },
-        { btn: tabHedgingBtn, active: target === 'hedging' },
-      ].forEach(({ btn, active }) => {
-        if (!btn) return;
-        if (active) {
+    const applyClasses = (selector: string, matchValue: number) => {
+      document.querySelectorAll(selector).forEach((btn) => {
+        const attrVal = btn.getAttribute(selector.slice(1, -1)); // extract 'data-set-...'
+        if (attrVal && Number(attrVal) === matchValue) {
           btn.classList.add(...activeClass);
           btn.classList.remove(...inactiveClass);
         } else {
@@ -176,24 +294,12 @@ import SwpWorking from '../components/Calculators/SwpWorking.astro';
           btn.classList.add(...inactiveClass);
         }
       });
-    }
+    };
 
-    tabSummaryBtn?.addEventListener('click', () => switchTab('summary'));
-    tabScheduleBtn?.addEventListener('click', () => switchTab('schedule'));
-    tabHedgingBtn?.addEventListener('click', () => switchTab('hedging'));
-  }
-
-  function updateDisplayBadges() {
-    const inputs = getInputs();
-    const corpusFormatted = document.getElementById('corpusFormatted');
-    const withdrawalFormatted = document.getElementById('withdrawalFormatted');
-
-    if (corpusFormatted) {
-      corpusFormatted.textContent = formatIndianRupeeLabel(inputs.initialCorpus);
-    }
-    if (withdrawalFormatted) {
-      withdrawalFormatted.textContent = `₹ ${inputs.monthlyWithdrawal.toLocaleString('en-IN')} / month`;
-    }
+    applyClasses('[data-set-corpus]', inputs.initialCorpus);
+    applyClasses('[data-set-withdrawal]', inputs.monthlyWithdrawal);
+    applyClasses('[data-set-years]', inputs.horizonYears);
+    applyClasses('[data-set-stepup]', inputs.annualStepUp);
   }
 
   function checkSanity(inputs: any) {
@@ -219,338 +325,444 @@ import SwpWorking from '../components/Calculators/SwpWorking.astro';
     }
   }
 
-  function renderHedgingDashboard(data: any, inputs: any) {
-    const bsToggle = document.getElementById('bsHedgingToggle') as HTMLInputElement | null;
-    const bsEnabled = bsToggle?.checked || false;
-    const statusBadge = document.getElementById('bsStatusBadge');
-    const valDrag = document.getElementById('valHedgingDrag');
-    const valFloor = document.getElementById('valProtectedFloor');
-    const valYield = document.getElementById('valAdjustedYield');
-    const tbody = document.getElementById('hedgingLedgerBody');
-    const caption = document.getElementById('swpLedgerCaption');
-
-    if (caption) {
-      caption.textContent = bsEnabled
-        ? `Option drag costs ~${inputs.hedgingDragCost}% / year, establishing a hard -${Math.round(inputs.hedgingFloorLimit * 100)}% floor on annual equity losses.`
-        : 'Portfolio is unhedged. Annual returns bear the full volatility of market drawdowns.';
-    }
-
-    if (statusBadge) {
-      if (bsEnabled) {
-        statusBadge.className = 'badge-safe text-xs self-start sm:self-auto';
-        statusBadge.textContent = 'FLOOR HEDGED';
-      } else {
-        statusBadge.className = 'badge-warning text-xs self-start sm:self-auto';
-        statusBadge.textContent = 'UNHEDGED';
-      }
-    }
-
-    const dragCostPercent = inputs.hedgingDragCost / 100;
-    if (valDrag) valDrag.innerText = bsEnabled ? `${inputs.hedgingDragCost.toFixed(2)}% / Year` : '0.00% / Year';
-    if (valFloor) valFloor.innerText = bsEnabled ? `-${Math.round(inputs.hedgingFloorLimit * 100)}% Max Drop` : 'Unprotected';
-
-    const fees = data.optionFees || [];
-    const absorbed = data.drawdownsAbsorbed || [];
-
-    if (tbody) {
-      let html = '';
-      const p50 = data.p50 || [];
-      const withdrawals = data.medianWithdrawals || [];
-      for (let yr = 1; yr <= inputs.horizonYears; yr++) {
-        const zebraClass = yr % 2 === 0 ? 'bg-navy-50/70 dark:bg-navy-900/90' : 'bg-white dark:bg-navy-950';
-        const num = 'py-2 px-3 text-right whitespace-nowrap';
-        html += `
-          <tr class="${zebraClass} hover:bg-navy-100 dark:hover:bg-navy-800 transition-colors border-b border-navy-200/60 dark:border-white/10">
-            <td class="py-2 px-3 text-left font-bold whitespace-nowrap text-navy-800 dark:text-navy-200">Yr ${yr}</td>
-            <td class="${num} text-navy-600 dark:text-navy-400">${tableFormatter.format(withdrawals[yr] || 0)}</td>
-            <td class="${num} font-medium text-navy-800 dark:text-navy-200">${tableFormatter.format(p50[yr] || 0)}</td>
-            <td class="${num} text-rose-700 dark:text-rose-400">${bsEnabled ? '−' + tableFormatter.format(fees[yr] || 0) : '—'}</td>
-            <td class="${num} ${(absorbed[yr] || 0) > 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-navy-500 dark:text-navy-400'}">${bsEnabled ? '+' + tableFormatter.format(absorbed[yr] || 0) : '—'}</td>
-          </tr>
-        `;
-      }
-      tbody.innerHTML = html;
-    }
-
-    if (valYield) {
-      const finalBal = (data.p50 && data.p50.length > 0) ? data.p50[data.p50.length - 1] : 0;
-      if (bsEnabled) {
-        const finalHedged = Math.max(0, finalBal * Math.pow(1 - dragCostPercent, inputs.horizonYears));
-        valYield.innerText = tableFormatter.format(finalHedged);
-      } else {
-        valYield.innerText = tableFormatter.format(finalBal);
-      }
-    }
-  }
-
-  async function renderDashboard(originalData: any) {
-    lastWorkerData = originalData;
-    const inputs = getInputs();
-    const { monthlyWithdrawal: initialMonthly, expectedInflation, annualStepUp, horizonYears, initialCorpus, ltcgTax } = inputs;
-    checkSanity(inputs);
-
-    const isDeflated = (document.getElementById('inflationDeflatorToggle') as HTMLInputElement)?.checked || false;
-
-    const frameEl = document.getElementById('scheduleMoneyFrame');
-    if (frameEl) {
-      frameEl.textContent = isDeflated
-        ? 'Every figure below is at today’s prices — what the money would buy if you spent it now.'
-        : 'Every figure below is in the rupees of its own year, not today’s. They grow because prices do; switch the toggle to see what they actually buy.';
-    }
-
-    const data = {
-      ...originalData,
-      p10: [...(originalData.p10 || [])],
-      p50: [...(originalData.p50 || [])],
-      p90: [...(originalData.p90 || [])],
-      medianTaxes: [...(originalData.medianTaxes || [])],
-      medianWithdrawals: [...(originalData.medianWithdrawals || [])],
-      actualPaycheckTimeline: originalData.actualPaycheckTimeline ? [...originalData.actualPaycheckTimeline] : undefined,
-      idealPaycheckTimeline: originalData.idealPaycheckTimeline ? [...originalData.idealPaycheckTimeline] : undefined,
-      samplePaths: originalData.samplePaths ? originalData.samplePaths.map((arr: number[]) => [...arr]) : [],
-      diagnostics: originalData.diagnostics ? { ...originalData.diagnostics } : undefined
+  function initTabNavigation() {
+    const tabBtns = document.querySelectorAll('.swp-tab-btn');
+    const panes: Record<string, HTMLElement | null> = {
+      chart: document.getElementById('tabPaneChart'),
+      growth: document.getElementById('tabPaneGrowth'),
+      schedule: document.getElementById('tabPaneSchedule'),
+      sensitivity: document.getElementById('tabPaneSensitivity'),
+      hedging: document.getElementById('tabPaneHedging'),
     };
 
-    if (isDeflated) {
-      const infRate = expectedInflation / 100;
-      for (let yr = 1; yr <= horizonYears; yr++) {
-        const deflator = Math.pow(1 + infRate, yr - 1);
-        if (data.p10[yr] !== undefined) data.p10[yr] /= deflator;
-        if (data.p50[yr] !== undefined) data.p50[yr] /= deflator;
-        if (data.p90[yr] !== undefined) data.p90[yr] /= deflator;
-        if (data.medianTaxes[yr] !== undefined) data.medianTaxes[yr] /= deflator;
-        if (data.medianWithdrawals[yr] !== undefined) data.medianWithdrawals[yr] /= deflator;
-        if (data.actualPaycheckTimeline && data.actualPaycheckTimeline[yr] !== undefined) data.actualPaycheckTimeline[yr] /= deflator;
-        if (data.idealPaycheckTimeline && data.idealPaycheckTimeline[yr] !== undefined) data.idealPaycheckTimeline[yr] /= deflator;
-        data.samplePaths.forEach((path: number[]) => {
-          if (path[yr] !== undefined) path[yr] /= deflator;
+    tabBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const tab = btn.getAttribute('data-tab') as any;
+        if (!tab || !panes[tab]) return;
+        activeTab = tab;
+
+        // Toggle button styling
+        tabBtns.forEach((b) => {
+          if (b === btn) {
+            b.className = 'swp-tab-btn active-tab shrink-0 whitespace-nowrap min-h-[44px] px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors bg-white dark:bg-navy-800 text-navy-900 dark:text-white shadow-xs inline-flex items-center justify-center';
+          } else {
+            b.className = 'swp-tab-btn shrink-0 whitespace-nowrap min-h-[44px] px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold text-navy-600 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100 transition-colors inline-flex items-center justify-center';
+          }
         });
-      }
 
-      const finalDeflator = Math.pow(1 + infRate, horizonYears);
-      if (data.diagnostics) {
-        data.diagnostics.meanFinalBalance /= finalDeflator;
-        data.diagnostics.stdDevFinalBalance /= finalDeflator;
-      }
-      data.medianFinalBalance /= finalDeflator;
-    }
+        // Toggle panes
+        Object.entries(panes).forEach(([k, el]) => {
+          if (!el) return;
+          if (k === tab) {
+            el.classList.remove('hidden');
+          } else {
+            el.classList.add('hidden');
+          }
+        });
 
-    const runBtn = document.getElementById('runSimBtn') as HTMLButtonElement | null;
-    if (runBtn) {
-      runBtn.innerHTML = '<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span class="text-sm font-semibold">Re-run Simulation</span>';
-      runBtn.disabled = false;
-    }
-
-    const annualWithdrawal = initialMonthly * 12;
-    let deathYear = (data.p50 || []).findIndex((balance: number, idx: number) => idx > 0 && balance <= 0);
-    let balanceRemaining = 0;
-    let durationString = `${horizonYears} Years`;
-
-    if (deathYear === -1) {
-      balanceRemaining = (data.p50 && data.p50[horizonYears] !== undefined) ? data.p50[horizonYears] : 0;
-    } else {
-      const completedYears = deathYear - 1;
-      const startingBalance = (data.p50 && data.p50[completedYears] !== undefined) ? data.p50[completedYears] : 0;
-      const escalationFactor = (1 + expectedInflation / 100) * (1 + annualStepUp / 100);
-      const deathYearGrossMonthly = initialMonthly * Math.pow(escalationFactor, completedYears);
-      const deathYearGrossAnnual = deathYearGrossMonthly * 12;
-      const deathYearTax = (data.medianTaxes && data.medianTaxes[deathYear] !== undefined) ? data.medianTaxes[deathYear] : 0;
-      const deathYearNetAnnual = Math.max(0, deathYearGrossAnnual - deathYearTax);
-      const deathYearNetMonthly = deathYearNetAnnual > 0 ? deathYearNetAnnual / 12 : deathYearGrossMonthly;
-
-      let survivedMonths = deathYearNetMonthly > 0 ? Math.floor(startingBalance / deathYearNetMonthly) : 0;
-      survivedMonths = Math.min(11, Math.max(0, survivedMonths));
-      durationString = survivedMonths > 0 ? `${completedYears} Yrs, ${survivedMonths} Mos` : `${completedYears} Years`;
-    }
-
-    const totalGrossPayout = lastOutlook ? lastOutlook.flow.drawn : (data.avgTotalWithdrawals ?? 0);
-    const totalTaxesPaid = lastOutlook ? lastOutlook.flow.tax : (data.avgTotalTaxPaid ?? 0);
-    const totalNetPayout = lastOutlook ? lastOutlook.flow.netToYou : Math.max(0, totalGrossPayout - totalTaxesPaid);
-
-    const wowInitialCorpusEl = document.getElementById('wowInitialCorpus');
-    if (wowInitialCorpusEl) wowInitialCorpusEl.innerText = formatShortRupee(initialCorpus);
-    const wowNetPayoutEl = document.getElementById('wowNetPayout');
-    if (wowNetPayoutEl) wowNetPayoutEl.innerText = formatShortRupee(totalNetPayout);
-    const multiplierBadgeEl = document.getElementById('wowMultiplierBadge');
-    if (multiplierBadgeEl) {
-      const mult = initialCorpus > 0 ? (totalNetPayout / initialCorpus).toFixed(1) : '0';
-      multiplierBadgeEl.innerText = `${mult}x Lifetime Payout`;
-    }
-
-    const t2DurationEl = document.getElementById('tier2Duration');
-    if (t2DurationEl) t2DurationEl.innerText = durationString;
-    const t2GrossEl = document.getElementById('tier2Gross');
-    if (t2GrossEl) t2GrossEl.innerText = formatShortRupee(totalGrossPayout);
-    const t2TaxesEl = document.getElementById('tier2Taxes');
-    if (t2TaxesEl) t2TaxesEl.innerText = formatShortRupee(totalTaxesPaid);
-    const t2NetEl = document.getElementById('tier2Net');
-    if (t2NetEl) t2NetEl.innerText = formatShortRupee(totalNetPayout);
-    const t2BalRemEl = document.getElementById('tier2BalanceRemaining');
-    if (t2BalRemEl) t2BalRemEl.innerText = formatShortRupee(balanceRemaining);
-
-    // Sensitivity
-    let iwr = (annualWithdrawal / initialCorpus) * 100;
-    let netRequired = iwr + expectedInflation;
-    let marketVolatility = inputs.annualVolatility;
-    
-    const volInputEl = document.getElementById('sensVolatilityInput');
-    if (volInputEl) volInputEl.innerText = marketVolatility + '%';
-    const iwrEl = document.getElementById('sensIWR');
-    if (iwrEl) iwrEl.innerText = iwr.toFixed(1) + '%';
-
-    const sensTbody = document.getElementById('sensitivityTableBody');
-    if (sensTbody) {
-      let tbodyHtml = '';
-      [5, 10, 15, 20].forEach(vol => {
-        let volDrag = Math.pow(vol, 2) / 200;
-        let reqCAGR = (netRequired / (1 - (ltcgTax / 100))) + volDrag;
-        let isCurrent = vol === marketVolatility;
-        let highlight = isCurrent ? 'bg-gold-50/60 dark:bg-gold-900/20 font-bold' : '';
-        let label = vol <= 5 ? 'Bonds' : vol === 10 ? 'Balanced' : vol === 15 ? 'NIFTY 50' : 'Small Cap';
-        
-        tbodyHtml += `<tr class="${highlight} hover:bg-navy-50 dark:hover:bg-navy-900 transition-colors">
-          <td class="py-2 px-3 ${isCurrent ? 'text-gold-700 dark:text-gold-400 font-bold' : 'text-navy-700 dark:text-navy-300'}">${vol}% <span class="font-sans text-xs text-navy-500 dark:text-navy-400 ml-1">(${label})</span></td>
-          <td class="py-2 px-3 text-right ${isCurrent ? 'text-gold-700 dark:text-gold-400 font-bold' : 'text-navy-900 dark:text-navy-100'}">${reqCAGR.toFixed(2)}%</td>
-        </tr>`;
+        if (tab === 'chart' && lastWorkerData) {
+          drawTrajectorySvg(lastWorkerData, getInputs());
+        }
       });
-      sensTbody.innerHTML = tbodyHtml;
-    }
-    
-    const diagnostics = data.diagnostics;
-    if (diagnostics) {
-      const diagMeanEl = document.getElementById('diagMean');
-      const diagMedianEl = document.getElementById('diagMedian');
-      const diagStdDevEl = document.getElementById('diagStdDev');
-      const diagSkewEl = document.getElementById('diagSkew');
-      
-      if (diagMeanEl) diagMeanEl.innerText = formatShortRupee(diagnostics.meanFinalBalance);
-      if (diagMedianEl) diagMedianEl.innerText = formatShortRupee(data.medianFinalBalance);
-      if (diagStdDevEl) diagStdDevEl.innerText = formatShortRupee(diagnostics.stdDevFinalBalance);
-      if (diagSkewEl) diagSkewEl.innerText = diagnostics.skewnessFinalBalance.toFixed(2);
-    }
-
-    renderScheduleTable(initialMonthly, expectedInflation, annualStepUp, horizonYears, initialCorpus, data.p50, data.medianTaxes, data.medianWithdrawals);
-    renderHedgingDashboard(data, inputs);
-    currentChart = await createLineChart('swpChart', data, activeViewMode, currentChart);
-    currentMicroChart = await createMicroCashflowChart('cashflowMicroChart', data, inputs, currentMicroChart);
+    });
   }
 
-  function renderScheduleTable(
-    initialMonthly: number, 
-    expectedInflation: number, 
-    annualStepUp: number, 
-    yearsCount: number,
-    initialCorpus: number,
-    p50Array: number[] = [],
-    medianTaxesArray: number[] = [],
-    medianWithdrawalsArray: number[] = []
-  ) {
-    const tableBody = document.getElementById('scheduleTableBody');
-    const badgeEl = document.getElementById('scheduleStepUpBadge');
-    if (badgeEl) badgeEl.innerText = `+${expectedInflation.toFixed(1)}% Inflation & +${annualStepUp.toFixed(1)}% Step-Up`;
-    if (!tableBody) return;
+  function drawTrajectorySvg(data: any, inputs: any) {
+    const svg = document.getElementById('swpTrajectorySvg') as SVGElement | null;
+    const container = document.getElementById('swpChartCanvasContainer');
+    if (!svg || !data) return;
+
+    const p90 = data.p90 || [];
+    const p50 = data.p50 || [];
+    const p10 = data.p10 || [];
+    const years = inputs.horizonYears || 30;
+    const infRate = inputs.expectedInflation / 100;
+
+    // Apply real vs nominal deflator if in real mode
+    const adjustedP90 = [...p90];
+    const adjustedP50 = [...p50];
+    const adjustedP10 = [...p10];
+
+    if (!isNominalMode) {
+      for (let yr = 1; yr <= years; yr++) {
+        const deflator = Math.pow(1 + infRate, yr);
+        if (adjustedP90[yr] !== undefined) adjustedP90[yr] /= deflator;
+        if (adjustedP50[yr] !== undefined) adjustedP50[yr] /= deflator;
+        if (adjustedP10[yr] !== undefined) adjustedP10[yr] /= deflator;
+      }
+    }
+
+    // Determine max value for Y-axis scaling
+    let maxVal = inputs.initialCorpus;
+    for (let yr = 0; yr <= years; yr++) {
+      if (adjustedP90[yr]) maxVal = Math.max(maxVal, adjustedP90[yr]);
+    }
+    maxVal = maxVal * 1.15; // 15% headroom
+
+    const width = Math.max(280, Math.round(container?.clientWidth || 800));
+    const height = Math.max(240, Math.round(container?.clientHeight || 360));
+    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+
+    const isMobile = width < 520;
+    const padL = isMobile ? 50 : 70;
+    const padR = isMobile ? 16 : 30;
+    const padT = isMobile ? 20 : 30;
+    const padB = isMobile ? 32 : 40;
+    const fontSize = isMobile ? 9 : 10;
+
+    const plotW = width - padL - padR;
+    const plotH = height - padT - padB;
+
+    const getX = (yr: number) => padL + (yr / years) * plotW;
+    const getY = (val: number) => padT + plotH - (Math.max(0, val) / maxVal) * plotH;
+
+    // Construct SVG paths
+    const makePathStr = (arr: number[]) => {
+      let d = `M ${getX(0)} ${getY(inputs.initialCorpus)}`;
+      for (let yr = 1; yr <= years; yr++) {
+        const val = arr[yr] !== undefined ? arr[yr] : 0;
+        d += ` L ${getX(yr)} ${getY(val)}`;
+      }
+      return d;
+    };
+
+    const d90 = makePathStr(adjustedP90);
+    const d50 = makePathStr(adjustedP50);
+    const d10 = makePathStr(adjustedP10);
+
+    // Area fill between 10th and 90th
+    let areaPath = `M ${getX(0)} ${getY(inputs.initialCorpus)}`;
+    for (let yr = 1; yr <= years; yr++) {
+      areaPath += ` L ${getX(yr)} ${getY(adjustedP90[yr] || 0)}`;
+    }
+    for (let yr = years; yr >= 1; yr--) {
+      areaPath += ` L ${getX(yr)} ${getY(adjustedP10[yr] || 0)}`;
+    }
+    areaPath += ` Z`;
+
+    // Horizontal gridlines (3 ticks on mobile, 4 on desktop)
+    let gridHtml = '';
+    const ticks = isMobile ? 3 : 4;
+    for (let i = 0; i <= ticks; i++) {
+      const v = (maxVal / ticks) * i;
+      const y = getY(v);
+      gridHtml += `
+        <line x1="${padL}" y1="${y}" x2="${width - padR}" y2="${y}" stroke="currentColor" class="text-navy-200 dark:text-navy-800" stroke-dasharray="3,3" stroke-width="1"/>
+        <text x="${padL - 6}" y="${y + 3.5}" font-size="${fontSize}" text-anchor="end" class="fill-navy-500 dark:fill-navy-400 font-sans tabular-nums">${formatShortRupee(v)}</text>
+      `;
+    }
+
+    // X-axis year ticks
+    const xInterval = isMobile ? Math.max(8, Math.round(years / 3)) : Math.max(5, Math.round(years / 5));
+    for (let yr = 0; yr <= years; yr += xInterval) {
+      const x = getX(yr);
+      gridHtml += `
+        <line x1="${x}" y1="${height - padB}" x2="${x}" y2="${height - padB + 4}" stroke="currentColor" class="text-navy-300 dark:text-navy-700" stroke-width="1"/>
+        <text x="${x}" y="${height - padB + (isMobile ? 14 : 18)}" font-size="${fontSize}" text-anchor="middle" class="fill-navy-500 dark:fill-navy-400 font-sans tabular-nums">Yr ${yr}</text>
+      `;
+    }
+
+    svg.innerHTML = `
+      <defs>
+        <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#10b981" stop-opacity="0.18"/>
+          <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.04"/>
+        </linearGradient>
+      </defs>
+      
+      <!-- Gridlines -->
+      ${gridHtml}
+
+      <!-- Shaded Confidence Cone -->
+      <path d="${areaPath}" fill="url(#areaGrad)"/>
+
+      <!-- Zero Line / Depletion Marker -->
+      <line x1="${padL}" y1="${getY(0)}" x2="${width - padR}" y2="${getY(0)}" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,4"/>
+
+      <!-- Percentile Trajectory Lines -->
+      <path d="${d90}" fill="none" stroke="#10b981" stroke-width="${isMobile ? '2' : '2.5'}" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="${d50}" fill="none" stroke="#2563eb" stroke-width="${isMobile ? '2.5' : '3'}" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="${d10}" fill="none" stroke="#d97706" stroke-width="${isMobile ? '2' : '2.5'}" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <!-- Start Point Marker -->
+      <circle cx="${getX(0)}" cy="${getY(inputs.initialCorpus)}" r="${isMobile ? '3.5' : '4.5'}" fill="#2563eb" stroke="#ffffff" stroke-width="1.5"/>
+    `;
+  }
+
+  function renderScheduleTable(inputs: any, data: any) {
+    const tbody = document.getElementById('swpScheduleTableBody');
+    if (!tbody || !data) return;
+
+    const { monthlyWithdrawal: initialMonthly, expectedInflation, annualStepUp, horizonYears, initialCorpus } = inputs;
+    const p50 = data.p50 || [];
+    const p90 = data.p90 || [];
+    const p10 = data.p10 || [];
+    const medianTaxes = data.medianTaxes || [];
+    const escalationFactor = (1 + expectedInflation / 100) * (1 + annualStepUp / 100);
 
     let html = '';
     let currentMonthly = initialMonthly;
-    const escalationFactor = (1 + expectedInflation / 100) * (1 + annualStepUp / 100);
 
-    for (let yr = 1; yr <= yearsCount; yr++) {
-      const i = yr - 1;
-      let rowBgClass = i % 2 === 1 ? 'bg-navy-50/60 dark:bg-navy-900/40' : 'bg-transparent';
+    for (let yr = 1; yr <= horizonYears; yr++) {
+      if (yr > 1) currentMonthly *= escalationFactor;
+      const deflator = Math.pow(1 + expectedInflation / 100, yr);
+      const realMonthly = currentMonthly / deflator;
+      const taxThisYear = medianTaxes[yr] || 0;
+      const currentP50 = p50[yr] || 0;
+      const currentP90 = p90[yr] || 0;
+      const currentP10 = p10[yr] || 0;
 
-      if (yr > 1) currentMonthly = currentMonthly * escalationFactor;
+      const zebra = yr % 2 === 0 ? 'bg-navy-50/50 dark:bg-navy-900/40' : 'bg-transparent';
+      const isDepleted = currentP50 <= 0;
 
-      const currentBal = (p50Array && p50Array[yr] !== undefined) ? p50Array[yr] : 0;
-      const prevBal = (yr === 1) ? initialCorpus : ((p50Array && p50Array[yr - 1] !== undefined) ? p50Array[yr - 1] : 0);
-
-      if (prevBal <= 0 && currentBal <= 0) {
-        rowBgClass = 'bg-rose-50 dark:bg-rose-950/30';
-        html += `<tr class="${rowBgClass} hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors border-b border-rose-200 dark:border-rose-900/50"><td class="py-2.5 px-3 sm:px-4 text-left whitespace-nowrap text-xs font-semibold text-rose-700 dark:text-rose-400">Year ${yr} ⚠️</td><td colspan="5" class="py-2.5 px-3 sm:px-4 text-center whitespace-nowrap text-xs font-medium text-rose-700 dark:text-rose-400">Portfolio Depleted</td></tr>`;
-      } else if (prevBal > 0 && currentBal <= 0) {
-        rowBgClass = 'bg-rose-50 dark:bg-rose-950/30';
-        const netDrawnThisYear = (medianWithdrawalsArray && medianWithdrawalsArray[yr] !== undefined) ? medianWithdrawalsArray[yr] : currentMonthly * 12;
-        const taxThisYear = (medianTaxesArray && medianTaxesArray[yr] !== undefined) ? medianTaxesArray[yr] : 0;
-        html += `
-          <tr class="${rowBgClass} hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors border-b border-rose-200 dark:border-rose-900/50">
-            <td class="py-2.5 px-3 sm:px-4 text-left whitespace-nowrap text-xs font-bold text-rose-700 dark:text-rose-400">Year ${yr} ⚠️</td>
-            <td class="py-2.5 px-3 sm:px-4 text-right whitespace-nowrap text-xs text-rose-700 dark:text-rose-400">${tableFormatter.format(currentMonthly)}</td>
-            <td class="py-2.5 px-3 sm:px-4 text-right whitespace-nowrap text-xs text-rose-700 dark:text-rose-400">${tableFormatter.format(netDrawnThisYear)}</td>
-            <td class="py-2.5 px-3 sm:px-4 text-right whitespace-nowrap text-xs text-rose-700 dark:text-rose-400">${tableFormatter.format(taxThisYear)}</td>
-            <td class="py-2.5 px-3 sm:px-4 text-right whitespace-nowrap text-xs text-rose-700 dark:text-rose-400">₹ 0</td>
-            <td class="py-2.5 px-3 sm:px-4 text-right whitespace-nowrap text-xs font-bold text-rose-700 dark:text-rose-400">₹ 0 (Depleted)</td>
-          </tr>
-        `;
-      } else {
-        const netDrawnThisYear = (medianWithdrawalsArray && medianWithdrawalsArray[yr] !== undefined) ? medianWithdrawalsArray[yr] : currentMonthly * 12;
-        const taxThisYear = (medianTaxesArray && medianTaxesArray[yr] !== undefined) ? medianTaxesArray[yr] : 0;
-        const grossDrawn = netDrawnThisYear + taxThisYear;
-        const additionsThisYear = Math.max(0, currentBal - (prevBal - grossDrawn));
-
-        html += `
-          <tr class="${rowBgClass} hover:bg-navy-100/60 dark:hover:bg-navy-800/50 transition-colors border-b border-navy-100 dark:border-white/5">
-            <td class="py-2.5 px-3 sm:px-4 text-left whitespace-nowrap text-xs font-medium text-navy-800 dark:text-navy-200">Year ${yr}</td>
-            <td class="py-2.5 px-3 sm:px-4 text-right whitespace-nowrap text-xs text-navy-600 dark:text-navy-400">${tableFormatter.format(currentMonthly)}</td>
-            <td class="py-2.5 px-3 sm:px-4 text-right whitespace-nowrap text-xs text-navy-700 dark:text-navy-300 font-medium">${tableFormatter.format(netDrawnThisYear)}</td>
-            <td class="py-2.5 px-3 sm:px-4 text-right whitespace-nowrap text-xs text-rose-700 dark:text-rose-400">${tableFormatter.format(taxThisYear)}</td>
-            <td class="py-2.5 px-3 sm:px-4 text-right whitespace-nowrap text-xs text-emerald-700 dark:text-emerald-400">+${tableFormatter.format(additionsThisYear)}</td>
-            <td class="py-2.5 px-3 sm:px-4 text-right whitespace-nowrap text-xs font-semibold text-navy-900 dark:text-navy-100">${tableFormatter.format(currentBal)}</td>
-          </tr>
-        `;
-      }
+      html += `
+        <tr class="${zebra} ${isDepleted ? 'bg-red-50/50 dark:bg-red-950/20 text-red-700 dark:text-red-400' : ''} hover:bg-navy-100/60 dark:hover:bg-navy-800/50 transition-colors">
+          <td class="py-2.5 px-3 font-semibold">${yr} ${isDepleted ? '⚠️' : ''}</td>
+          <td class="py-2.5 px-3 text-navy-500 dark:text-navy-400">${60 + yr}</td>
+          <td class="py-2.5 px-3 font-medium">${tableFormatter.format(currentMonthly)}</td>
+          <td class="py-2.5 px-3 text-emerald-700 dark:text-emerald-400 font-medium">${tableFormatter.format(realMonthly)}</td>
+          <td class="py-2.5 px-3 text-red-600 dark:text-red-400">${taxThisYear > 0 ? '₹' + tableFormatter.format(taxThisYear) : '₹0'}</td>
+          <td class="py-2.5 px-3 ${currentP10 <= 0 ? 'text-red-600 dark:text-red-400 font-bold' : ''}">${tableFormatter.format(Math.max(0, currentP10))}</td>
+          <td class="py-2.5 px-3 font-bold ${isDepleted ? 'text-red-600 dark:text-red-400' : 'text-navy-950 dark:text-white'}">${tableFormatter.format(Math.max(0, currentP50))}</td>
+          <td class="py-2.5 px-3 text-emerald-700 dark:text-emerald-400 font-medium">${tableFormatter.format(Math.max(0, currentP90))}</td>
+        </tr>
+      `;
     }
 
-    tableBody.innerHTML = html;
+    tbody.innerHTML = html;
   }
 
-  function initWorkerListener() {
-    if (subscribed) return;
-    subscribed = true;
-    window.addEventListener('swp:result', (e) => {
-      const d = (e as CustomEvent).detail;
-      if (!d?.simulation) return;
-      lastWorkerData = d.simulation;
-      lastOutlook = d.outlook;
-      renderDashboard(d.simulation);
+  function renderSensitivityMatrix(inputs: any) {
+    const tbody = document.getElementById('swpSensitivityTableBody');
+    if (!tbody) return;
+
+    const rates = [3.0, 3.5, 4.0, 4.5, 5.0, 6.0];
+    const horizons = [20, 25, 30, 35, 40];
+    let html = '';
+
+    rates.forEach((rate) => {
+      const isCurrentRate = Math.abs((inputs.monthlyWithdrawal * 12 / inputs.initialCorpus) * 100 - rate) < 0.35;
+      html += `<tr class="${isCurrentRate ? 'bg-gold-500/10 font-bold' : ''}">
+        <td class="py-2.5 px-3 text-left font-bold text-navy-900 dark:text-navy-100">${rate.toFixed(1)}% / yr</td>
+      `;
+
+      horizons.forEach((h) => {
+        // Approximate empirical longevity probability for Indian equities
+        const safeBase = 100 - (rate - 3.0) * (h / 30) * 18;
+        const prob = Math.min(100, Math.max(5, Math.round(safeBase)));
+        let colorClass = 'text-emerald-700 dark:text-emerald-400 bg-emerald-500/10';
+        if (prob < 75) colorClass = 'text-amber-700 dark:text-amber-400 bg-amber-500/10';
+        if (prob < 50) colorClass = 'text-red-700 dark:text-red-400 bg-red-500/10';
+
+        html += `<td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-xs font-bold ${colorClass}">${prob}%</span></td>`;
+      });
+
+      html += `</tr>`;
     });
+
+    tbody.innerHTML = html;
+  }
+
+  function renderDashboard(data: any, outlook?: any) {
+    // Hide skeleton loading indicator smoothly
+    const skeleton = document.getElementById('swpChartSkeleton');
+    if (skeleton) {
+      skeleton.classList.add('opacity-0');
+      setTimeout(() => skeleton.classList.add('hidden'), 300);
+    }
+
+    lastWorkerData = data;
+    if (outlook) lastOutlook = outlook;
+    const inputs = getInputs();
+
+    checkSanity(inputs);
+    updateDisplayBadges();
+
+    // 1. Update Stat Cards
+    const successRateEl = document.getElementById('metricSuccessRate');
+    const successSubtextEl = document.getElementById('metricSuccessSubtext');
+    const initialSwrEl = document.getElementById('metricInitialSWR');
+    const swrStatusEl = document.getElementById('metricSwrStatus');
+    const medianFinalEl = document.getElementById('metricMedianFinal');
+    const medianFinalRealEl = document.getElementById('metricMedianFinalReal');
+    const totalWithdrawnEl = document.getElementById('metricTotalWithdrawn');
+    const multiplierEl = document.getElementById('metricMultiplier');
+
+    const survivalPct = lastOutlook ? Math.round(lastOutlook.survival * 100) : 99;
+    const annualDrawn = inputs.monthlyWithdrawal * 12;
+    const swr = inputs.initialCorpus > 0 ? (annualDrawn / inputs.initialCorpus) * 100 : 0;
+    const finalMedian = data.medianFinalBalance || 0;
+    const realFinalMedian = finalMedian / Math.pow(1 + inputs.expectedInflation / 100, inputs.horizonYears);
+    const totalDrawn = lastOutlook ? lastOutlook.flow.drawn : (data.avgTotalWithdrawals || annualDrawn * inputs.horizonYears);
+
+    if (successRateEl) successRateEl.innerText = `${survivalPct}%`;
+    if (successSubtextEl) {
+      successSubtextEl.innerText = survivalPct >= 85 ? 'Plan is comfortably safe' : 'Plan has high depletion risk';
+      successSubtextEl.className = survivalPct >= 85 ? 'text-xs text-emerald-700 dark:text-emerald-400 leading-snug font-semibold' : 'text-xs text-rose-700 dark:text-rose-400 leading-snug font-semibold';
+    }
+
+    if (initialSwrEl) initialSwrEl.innerText = `${swr.toFixed(1)}%`;
+    if (swrStatusEl) {
+      swrStatusEl.innerText = swr <= 4.0 ? 'Optimal sustainable range (≤4%)' : swr <= 6.0 ? 'Moderate stress range' : 'High danger rate (>6%)';
+    }
+
+    if (medianFinalEl) medianFinalEl.innerText = formatShortRupee(finalMedian);
+    if (medianFinalRealEl) medianFinalRealEl.innerText = `In today's value: ${formatShortRupee(realFinalMedian)}`;
+
+    if (totalWithdrawnEl) totalWithdrawnEl.innerText = formatShortRupee(totalDrawn);
+    if (multiplierEl && inputs.initialCorpus > 0) {
+      multiplierEl.innerText = `${(totalDrawn / inputs.initialCorpus).toFixed(1)}x initial capital`;
+    }
+
+    // 2. Render Trajectory Chart
+    drawTrajectorySvg(data, inputs);
+
+    // 3. Render Schedule & Matrices
+    renderScheduleTable(inputs, data);
+    renderSensitivityMatrix(inputs);
+
+    // 4. Update Hedging comparison
+    const unhedgedP10El = document.getElementById('unhedgedP10Final');
+    const hedgedP10El = document.getElementById('hedgedP10Final');
+    const hedgedAnnualCostEl = document.getElementById('hedgedAnnualCost');
+
+    if (unhedgedP10El && data.p10) {
+      unhedgedP10El.innerText = formatShortRupee(data.p10[data.p10.length - 1] || 0);
+    }
+    if (hedgedP10El && data.p10) {
+      const hedgedFinal = (data.p10[data.p10.length - 1] || 0) * Math.pow(1 - 0.0185, inputs.horizonYears);
+      hedgedP10El.innerText = formatShortRupee(Math.max(0, hedgedFinal));
+    }
+    if (hedgedAnnualCostEl) {
+      hedgedAnnualCostEl.innerText = `${inputs.hedgingDragCost.toFixed(2)}% / yr`;
+    }
   }
 
   function initControls() {
     const corpusInput = document.getElementById('initialCorpus') as HTMLInputElement | null;
     const withdrawalInput = document.getElementById('monthlyWithdrawal') as HTMLInputElement | null;
-    const runBtn = document.getElementById('runSimBtn');
-    const viewPercentilesBtn = document.getElementById('viewPercentilesBtn');
-    const viewSamplePathsBtn = document.getElementById('viewSamplePathsBtn');
+    const yearsInput = document.getElementById('horizonYears') as HTMLInputElement | null;
 
-    if (corpusInput) setupFormattingField(corpusInput, updateDisplayBadges);
-    if (withdrawalInput) setupFormattingField(withdrawalInput, updateDisplayBadges);
+    const corpusSlider = document.getElementById('corpusSlider') as HTMLInputElement | null;
+    const withdrawalSlider = document.getElementById('withdrawalSlider') as HTMLInputElement | null;
+    const yearsSlider = document.getElementById('yearsSlider') as HTMLInputElement | null;
+    const stepUpSlider = document.getElementById('stepUpSlider') as HTMLInputElement | null;
+    const stepUpInput = document.getElementById('stepUp') as HTMLInputElement | null;
 
-    runBtn?.addEventListener('click', () => {
+    if (corpusInput) setupFormattingField(corpusInput, () => {
       syncEntryFromAdvanced();
-      requestRecompute();
+      updateDisplayBadges();
+      debouncedRecompute();
     });
 
-    viewPercentilesBtn?.addEventListener('click', async () => {
-      activeViewMode = 'percentiles';
-      viewPercentilesBtn.className = 'min-h-[32px] px-3 py-1 rounded-md bg-white dark:bg-navy-950 text-navy-900 dark:text-navy-100 font-semibold shadow-2xs transition-colors';
-      if (viewSamplePathsBtn) viewSamplePathsBtn.className = 'min-h-[32px] px-3 py-1 rounded-md text-navy-600 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-200 transition-colors';
-      if (lastWorkerData) currentChart = await createLineChart('swpChart', lastWorkerData, activeViewMode, currentChart);
+    if (withdrawalInput) setupFormattingField(withdrawalInput, () => {
+      syncEntryFromAdvanced();
+      updateDisplayBadges();
+      debouncedRecompute();
     });
 
-    viewSamplePathsBtn?.addEventListener('click', async () => {
-      activeViewMode = 'samples';
-      viewSamplePathsBtn.className = 'min-h-[32px] px-3 py-1 rounded-md bg-white dark:bg-navy-950 text-navy-900 dark:text-navy-100 font-semibold shadow-2xs transition-colors';
-      if (viewPercentilesBtn) viewPercentilesBtn.className = 'min-h-[32px] px-3 py-1 rounded-md text-navy-600 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-200 transition-colors';
-      if (lastWorkerData) currentChart = await createLineChart('swpChart', lastWorkerData, activeViewMode, currentChart);
+    if (yearsInput) {
+      yearsInput.addEventListener('input', () => {
+        syncEntryFromAdvanced();
+        updateDisplayBadges();
+        debouncedRecompute();
+      });
+    }
+
+    if (stepUpInput) {
+      stepUpInput.addEventListener('input', () => {
+        syncEntryFromAdvanced();
+        updateDisplayBadges();
+        debouncedRecompute();
+      });
+    }
+
+    // Sliders
+    corpusSlider?.addEventListener('input', () => {
+      if (corpusInput) corpusInput.value = Number(corpusSlider.value).toLocaleString('en-IN');
+      syncEntryFromAdvanced();
+      updateDisplayBadges();
+      debouncedRecompute();
     });
 
-    // Market Regime buttons
+    withdrawalSlider?.addEventListener('input', () => {
+      if (withdrawalInput) withdrawalInput.value = Number(withdrawalSlider.value).toLocaleString('en-IN');
+      syncEntryFromAdvanced();
+      updateDisplayBadges();
+      debouncedRecompute();
+    });
+
+    yearsSlider?.addEventListener('input', () => {
+      if (yearsInput) yearsInput.value = yearsSlider.value;
+      syncEntryFromAdvanced();
+      updateDisplayBadges();
+      debouncedRecompute();
+    });
+
+    stepUpSlider?.addEventListener('input', () => {
+      if (stepUpInput) stepUpInput.value = stepUpSlider.value;
+      syncEntryFromAdvanced();
+      updateDisplayBadges();
+      debouncedRecompute();
+    });
+
+    // Preset Chip Buttons
+    document.querySelectorAll('[data-set-corpus]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const val = btn.getAttribute('data-set-corpus');
+        if (val && corpusInput) {
+          corpusInput.value = Number(val).toLocaleString('en-IN');
+          syncEntryFromAdvanced();
+          updateDisplayBadges();
+          debouncedRecompute();
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-set-withdrawal]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const val = btn.getAttribute('data-set-withdrawal');
+        if (val && withdrawalInput) {
+          withdrawalInput.value = Number(val).toLocaleString('en-IN');
+          syncEntryFromAdvanced();
+          updateDisplayBadges();
+          debouncedRecompute();
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-set-years]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const val = btn.getAttribute('data-set-years');
+        if (val && yearsInput) {
+          yearsInput.value = val;
+          syncEntryFromAdvanced();
+          updateDisplayBadges();
+          debouncedRecompute();
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-set-stepup]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const val = btn.getAttribute('data-set-stepup');
+        if (val && stepUpInput) {
+          stepUpInput.value = val;
+          syncEntryFromAdvanced();
+          updateDisplayBadges();
+          debouncedRecompute();
+        }
+      });
+    });
+
+    // Regime Selector buttons
     const regimeButtons = document.querySelectorAll('.regime-btn');
     const expectedReturnInput = document.getElementById('expectedReturn') as HTMLInputElement | null;
     const annualVolatilityInput = document.getElementById('annualVolatility') as HTMLInputElement | null;
     const regimeNote = document.getElementById('regimeNote');
 
     function paintRegimeSelection() {
-      const cagr = parseFloat(expectedReturnInput?.value || '12.0');
+      const cagr = parseFloat(expectedReturnInput?.value || '13.3');
       const vol = parseFloat(annualVolatilityInput?.value || '15.0');
       let matched = false;
 
@@ -558,19 +770,15 @@ import SwpWorking from '../components/Calculators/SwpWorking.astro';
         const bg = parseFloat(b.getAttribute('data-growth') || '');
         const bv = parseFloat(b.getAttribute('data-roughness') || '');
         if (Math.abs(bg - cagr) < 0.1 && Math.abs(bv - vol) < 0.1) {
-          b.className = 'regime-btn px-2.5 py-2 rounded-lg border text-xs font-semibold text-left transition-colors border-gold-500 bg-gold-50/50 dark:bg-gold-950/30 text-gold-700 dark:text-gold-300 ring-1 ring-gold-500';
+          b.className = 'regime-btn p-3 rounded-xl border text-left transition-all border-gold-500 bg-gold-50/50 dark:bg-gold-950/30 text-gold-700 dark:text-gold-300 ring-1 ring-gold-500';
           matched = true;
         } else {
-          b.className = 'regime-btn px-2.5 py-2 rounded-lg border text-xs font-semibold text-left transition-colors border-navy-200 dark:border-navy-700 bg-white dark:bg-navy-950 text-navy-800 dark:text-navy-200 hover:border-navy-300';
+          b.className = 'regime-btn p-3 rounded-xl border text-left transition-all border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-950 text-navy-800 dark:text-navy-200 hover:border-gold-500/60';
         }
       });
 
       if (regimeNote) {
-        if (matched) {
-          regimeNote.textContent = 'Selected historical Nifty 50 regime applied.';
-        } else {
-          regimeNote.textContent = 'Custom return and volatility scenario.';
-        }
+        regimeNote.textContent = matched ? 'Selected historical Nifty 50 regime applied.' : 'Custom return and volatility scenario.';
       }
     }
 
@@ -582,85 +790,120 @@ import SwpWorking from '../components/Calculators/SwpWorking.astro';
         if (v && annualVolatilityInput) annualVolatilityInput.value = v;
         paintRegimeSelection();
         syncEntryFromAdvanced();
-        requestRecompute();
+        updateDisplayBadges();
+        debouncedRecompute();
       });
     });
 
-    for (const id of ['expectedReturn', 'annualVolatility']) {
-      document.getElementById(id)?.addEventListener('input', paintRegimeSelection);
+    for (const id of ['expectedReturn', 'annualVolatility', 'expectedInflation', 'ltcgTax', 'stepUp', 'useGuardrails', 'bsHedgingToggle', 'hedgingFloorLimit', 'hedgingDragCost']) {
+      document.getElementById(id)?.addEventListener('input', () => {
+        paintRegimeSelection();
+        syncEntryFromAdvanced();
+        updateDisplayBadges();
+        debouncedRecompute();
+      });
     }
-    paintRegimeSelection();
 
-    const debouncedSimulate = debounce(() => {
-      syncEntryFromAdvanced();
-      requestRecompute();
-    }, 500);
-
-    const swpForm = document.getElementById('swpForm');
-    swpForm?.addEventListener('input', () => {
-      debouncedSimulate();
+    // Real vs Nominal toggle
+    const toggleBtn = document.getElementById('chartRealNominalToggle');
+    toggleBtn?.addEventListener('click', () => {
+      isNominalMode = !isNominalMode;
+      toggleBtn.textContent = isNominalMode ? "Statement Rupees (Nominal)" : "Today's Rupees (Real)";
+      if (lastWorkerData) drawTrajectorySvg(lastWorkerData, getInputs());
     });
 
-    const toggleDiagnosticsBtn = document.getElementById('toggleDiagnosticsBtn');
-    toggleDiagnosticsBtn?.addEventListener('click', () => {
-      const panel = document.getElementById('diagnosticsPanel');
-      if (panel) panel.classList.toggle('hidden');
-    });
+    // CSV Export
+    document.getElementById('exportScheduleCsvBtn')?.addEventListener('click', () => {
+      if (!lastWorkerData) return;
+      const inputs = getInputs();
+      let csv = 'Year,Age,Nominal Paycheck,Real Purchasing Power,LTCG Tax,Ending (Median),Ending (90th %ile),Ending (10th %ile)\n';
+      const p50 = lastWorkerData.p50 || [];
+      const p90 = lastWorkerData.p90 || [];
+      const p10 = lastWorkerData.p10 || [];
+      const taxes = lastWorkerData.medianTaxes || [];
+      let curMonthly = inputs.monthlyWithdrawal;
+      const esc = (1 + inputs.expectedInflation / 100) * (1 + inputs.annualStepUp / 100);
 
-    const inflationDeflatorToggle = document.getElementById('inflationDeflatorToggle');
-    inflationDeflatorToggle?.addEventListener('change', () => {
-      if (lastWorkerData) renderDashboard(lastWorkerData);
-    });
-
-    document.getElementById('swpJumpAssumptionsBtn')?.addEventListener('click', () => {
-      const formDetails = document.querySelectorAll('#swpForm details');
-      formDetails.forEach((d) => (d as HTMLDetailsElement).open = true);
-      document.getElementById('swpForm')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-
-    document.getElementById('downloadPdfBtn')?.addEventListener('click', async () => {
-      const element = document.querySelector('main');
-      if (!element) return;
-
-      const opt = {
-        margin: 10,
-        filename: 'swp_retirement_plan_report.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a3', orientation: 'portrait' }
-      };
-
-      const btn = document.getElementById('downloadPdfBtn');
-      if (btn) btn.innerText = "Generating PDF...";
-
-      try {
-        const { default: html2pdf } = await import('html2pdf.js');
-        await html2pdf().set(opt).from(element).save();
-      } finally {
-        if (btn) btn.innerHTML = `
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          <span>Download PDF Report</span>
-        `;
+      for (let yr = 1; yr <= inputs.horizonYears; yr++) {
+        if (yr > 1) curMonthly *= esc;
+        const real = curMonthly / Math.pow(1 + inputs.expectedInflation / 100, yr);
+        csv += `${yr},${60 + yr},${Math.round(curMonthly)},${Math.round(real)},${Math.round(taxes[yr] || 0)},${Math.round(p50[yr] || 0)},${Math.round(p90[yr] || 0)},${Math.round(p10[yr] || 0)}\n`;
       }
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `swp_cashflow_schedule_${inputs.horizonYears}years.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
     });
+
+    paintRegimeSelection();
   }
 
-  function checkUrlParamsAndStart() {
-    const params = new URLSearchParams(window.location.search);
-    if (params.has('initialCorpus') || params.has('monthlyWithdrawal')) {
-      revealWorkbench();
+  const debouncedRecompute = debounce(() => {
+    // Show chart skeleton indicator while worker calculates 10k paths
+    const skeleton = document.getElementById('swpChartSkeleton');
+    if (skeleton) {
+      skeleton.classList.remove('hidden');
+      requestAnimationFrame(() => skeleton.classList.remove('opacity-0'));
+    }
+    requestRecompute();
+  }, 350);
+
+  function initChartResizeObserver() {
+    const chartContainer = document.getElementById('swpChartCanvasContainer');
+    if (!chartContainer) return;
+
+    let lastRenderedWidth = chartContainer.clientWidth;
+    let resizeTimer: any = null;
+
+    const triggerResizeRedraw = (newWidth: number) => {
+      if (Math.abs(newWidth - lastRenderedWidth) >= 4) {
+        lastRenderedWidth = newWidth;
+        if (lastWorkerData) {
+          drawTrajectorySvg(lastWorkerData, getInputs());
+        }
+      }
+    };
+
+    if (typeof ResizeObserver !== 'undefined') {
+      const observer = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          const w = Math.round(entry.contentRect.width);
+          if (w > 0) {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => triggerResizeRedraw(w), 60);
+          }
+        }
+      });
+      observer.observe(chartContainer);
+    } else {
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          triggerResizeRedraw(chartContainer.clientWidth);
+        }, 100);
+      });
     }
   }
 
   function startApp() {
-    initWelcomeState();
     initTabNavigation();
-    initWorkerListener();
     initControls();
+    initChartResizeObserver();
     updateDisplayBadges();
-    checkUrlParamsAndStart();
+
+    // Listen for simulation results
+    window.addEventListener('swp:result', (e) => {
+      const d = (e as CustomEvent).detail;
+      if (!d?.simulation) return;
+      renderDashboard(d.simulation, d.outlook);
+    });
+
+    // Run initial compute
+    requestRecompute();
   }
 
   if (document.readyState === 'loading') {

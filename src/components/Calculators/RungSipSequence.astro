@@ -209,8 +209,10 @@
   function paint() {
     if (!risk?.profiles?.length) return;
     const p = profile();
+    if (!p?.points?.length) return;
     const first = p.points[0];
     const last = p.points[p.points.length - 1];
+    if (!first || !last) return;
 
     paintDurations();
     paintBars();

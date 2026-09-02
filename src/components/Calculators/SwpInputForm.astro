@@ -1,352 +1,365 @@
 ---
-/**
- * Progressive input form for the reimagined SWP planner — dd-022, dd-023.
- *
- * Starts with the 3 core inputs (Corpus, Monthly Income, Horizon), with clean
- * progressive accordions for Inflation & Step-up, Market Regimes, Taxes, and Downside Put Protection.
- *
- * Design settled before the component in `SwpInputForm.checks.md`.
- */
+// SwpInputForm.astro — Reimagined Intuitive Input Deck
+// Human-centric 3-card layout with live sliders, quick chips, and collapsible assumptions.
 import CardPremium from '../CardPremium.astro';
+import { REGIME_PRESETS, DEFAULT_REGIME } from '../../utils/regimePresets';
 ---
 
 <div class="space-y-6">
-  <CardPremium class="p-5 sm:p-6 space-y-6">
-    <div class="flex items-center justify-between pb-3 border-b border-navy-100 dark:border-white/10">
+  <!-- Core 4 Inputs Grid using fractional unit system (1 col mobile, 2 col desktop) -->
+  <div class="grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-4 sm:gap-6 transition-all duration-300 ease-in-out" style="transition: all 0.3s ease-in-out;">
+    
+    <!-- Card 1: Retirement Corpus -->
+    <CardPremium glass={true} class="p-4 sm:p-5 flex flex-col space-y-3.5 hover:border-gold-500/40 transition-colors">
       <div>
-        <h3 class="text-base sm:text-lg font-bold text-navy-900 dark:text-navy-100">
-          Your Retirement Levers
-        </h3>
-        <p class="text-xs text-navy-500 dark:text-navy-400 mt-0.5">
-          Adjust your savings, withdrawal amount, and assumptions.
-        </p>
-      </div>
-      <span class="text-xs font-semibold px-2.5 py-1 rounded bg-gold-500/10 text-gold-700 dark:text-gold-400 border border-gold-500/20">
-        Live Model
-      </span>
-    </div>
-
-    <!-- Sanity Warning Container -->
-    <div id="inputSanityWarning" class="hidden p-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-xl text-xs text-rose-800 dark:text-rose-200">
-      <div class="flex items-start gap-2.5">
-        <svg class="w-4 h-4 text-rose-700 dark:text-rose-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-        </svg>
-        <div id="inputSanityMessage" class="leading-relaxed"></div>
-      </div>
-    </div>
-
-    <!-- Form container -->
-    <form id="swpForm" class="space-y-5" onsubmit="return false;">
-      
-      <!-- CORE INPUT 1: Initial Savings Corpus -->
-      <div class="space-y-1.5">
         <div class="flex items-center justify-between">
-          <label for="initialCorpus" class="text-xs sm:text-sm font-bold text-navy-800 dark:text-navy-200">
-            Initial Retirement Corpus
+          <label for="initialCorpus" class="text-xs font-bold text-navy-800 dark:text-navy-200">
+            Retirement Corpus
           </label>
-          <span id="corpusFormatted" class="text-xs font-semibold text-gold-700 dark:text-gold-400">
+          <span id="corpusFormatted" class="text-xs font-semibold px-2 py-0.5 rounded bg-gold-50 dark:bg-gold-950/40 text-gold-800 dark:text-gold-300 border border-gold-200/60 dark:border-gold-800/60">
             ₹ 1.50 Crore
           </span>
         </div>
-        <div class="relative">
-          <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-navy-500 dark:text-navy-400">₹</span>
+        <div class="mt-2 relative rounded-lg border border-navy-200 dark:border-navy-800 focus-within:border-gold-500 dark:focus-within:border-gold-500 bg-white dark:bg-navy-950 transition-colors">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-navy-400 font-semibold text-sm">₹</span>
           <input
             id="initialCorpus"
             type="text"
             inputmode="numeric"
             value="1,50,00,000"
-            class="w-full bg-white dark:bg-navy-950 border border-navy-300 dark:border-navy-700 rounded-xl pl-8 pr-3 py-2.5 text-sm sm:text-base font-semibold tabular-nums text-navy-900 dark:text-white shadow-2xs focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition-all"
+            class="w-full pl-7 pr-3 py-2 text-base sm:text-lg font-bold tabular-nums text-navy-950 dark:text-white bg-transparent focus:outline-none"
           />
         </div>
+        <input
+          id="corpusSlider"
+          type="range"
+          min="2500000"
+          max="100000000"
+          step="500000"
+          value="15000000"
+          class="w-full mt-2.5 accent-gold-600 dark:accent-gold-500 cursor-pointer"
+        />
       </div>
 
-      <!-- CORE INPUT 2: Monthly Withdrawal -->
-      <div class="space-y-1.5">
+      <!-- Quick Preset Selection Pills (Uniform, Compact & Aligned) -->
+      <div class="grid grid-cols-5 gap-1.5 sm:gap-2 pt-2.5 border-t border-navy-100/80 dark:border-navy-900/80">
+        <button type="button" data-set-corpus="5000000" class="corpus-preset-btn min-h-[36px] px-1.5 sm:px-2 py-1.5 rounded-lg text-xs font-semibold border border-navy-200 dark:border-navy-800 hover:border-gold-500 text-navy-600 dark:text-navy-400 transition-all inline-flex items-center justify-center text-center whitespace-nowrap truncate w-full">₹50 L</button>
+        <button type="button" data-set-corpus="10000000" class="corpus-preset-btn min-h-[36px] px-1.5 sm:px-2 py-1.5 rounded-lg text-xs font-semibold border border-navy-200 dark:border-navy-800 hover:border-gold-500 text-navy-600 dark:text-navy-400 transition-all inline-flex items-center justify-center text-center whitespace-nowrap truncate w-full">₹1 Cr</button>
+        <button type="button" data-set-corpus="15000000" class="corpus-preset-btn min-h-[36px] px-1.5 sm:px-2 py-1.5 rounded-lg text-xs font-semibold border border-gold-500 bg-gold-50/50 dark:bg-gold-950/30 text-gold-700 dark:text-gold-300 transition-all inline-flex items-center justify-center text-center whitespace-nowrap truncate w-full">₹1.5 Cr</button>
+        <button type="button" data-set-corpus="25000000" class="corpus-preset-btn min-h-[36px] px-1.5 sm:px-2 py-1.5 rounded-lg text-xs font-semibold border border-navy-200 dark:border-navy-800 hover:border-gold-500 text-navy-600 dark:text-navy-400 transition-all inline-flex items-center justify-center text-center whitespace-nowrap truncate w-full">₹2.5 Cr</button>
+        <button type="button" data-set-corpus="50000000" class="corpus-preset-btn min-h-[36px] px-1.5 sm:px-2 py-1.5 rounded-lg text-xs font-semibold border border-navy-200 dark:border-navy-800 hover:border-gold-500 text-navy-600 dark:text-navy-400 transition-all inline-flex items-center justify-center text-center whitespace-nowrap truncate w-full">₹5 Cr</button>
+      </div>
+    </CardPremium>
+
+    <!-- Card 2: Monthly Income -->
+    <CardPremium glass={true} class="p-4 sm:p-5 flex flex-col space-y-3.5 hover:border-gold-500/40 transition-colors">
+      <div>
         <div class="flex items-center justify-between">
-          <label for="monthlyWithdrawal" class="text-xs sm:text-sm font-bold text-navy-800 dark:text-navy-200">
+          <label for="monthlyWithdrawal" class="text-xs font-bold text-navy-800 dark:text-navy-200">
             Monthly Paycheck (Today's Value)
           </label>
-          <span id="withdrawalFormatted" class="text-xs font-semibold text-gold-700 dark:text-gold-400">
-            ₹ 40,000 / month
+          <span id="withdrawalFormatted" class="text-xs font-semibold px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300 border border-blue-200/60 dark:border-blue-800/60">
+            ₹ 40,000 / mo
           </span>
         </div>
-        <div class="relative">
-          <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-navy-500 dark:text-navy-400">₹</span>
+        <div class="mt-2 relative rounded-lg border border-navy-200 dark:border-navy-800 focus-within:border-gold-500 dark:focus-within:border-gold-500 bg-white dark:bg-navy-950 transition-colors">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-navy-400 font-semibold text-sm">₹</span>
           <input
             id="monthlyWithdrawal"
             type="text"
             inputmode="numeric"
             value="40,000"
-            class="w-full bg-white dark:bg-navy-950 border border-navy-300 dark:border-navy-700 rounded-xl pl-8 pr-3 py-2.5 text-sm sm:text-base font-semibold tabular-nums text-navy-900 dark:text-white shadow-2xs focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition-all"
+            class="w-full pl-7 pr-12 py-2 text-base sm:text-lg font-bold tabular-nums text-navy-950 dark:text-white bg-transparent focus:outline-none"
           />
-        </div>
-        <p class="text-xs text-navy-500 dark:text-navy-400 leading-tight">
-          Will automatically escalate every year to maintain constant purchasing power.
-        </p>
-      </div>
-
-      <!-- CORE INPUT 3: Horizon Years -->
-      <div class="space-y-1.5">
-        <div class="flex items-center justify-between">
-          <label for="horizonYears" class="text-xs sm:text-sm font-bold text-navy-800 dark:text-navy-200">
-            Retirement Horizon (Years)
-          </label>
-          <span class="text-xs font-medium text-navy-500 dark:text-navy-400">
-            Typical: 25 - 35 Years
-          </span>
+          <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-xs text-navy-400">/ mo</span>
         </div>
         <input
-          id="horizonYears"
-          type="number"
-          min="5"
-          max="50"
-          value="30"
-          class="w-full bg-white dark:bg-navy-950 border border-navy-300 dark:border-navy-700 rounded-xl px-3.5 py-2.5 text-sm sm:text-base font-semibold tabular-nums text-navy-900 dark:text-white shadow-2xs focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition-all"
+          id="withdrawalSlider"
+          type="range"
+          min="10000"
+          max="300000"
+          step="5000"
+          value="40000"
+          class="w-full mt-2.5 accent-gold-600 dark:accent-gold-500 cursor-pointer"
         />
       </div>
 
-      <!-- PROGRESSIVE ACCORDION 1: Inflation & Step-Up -->
-      <details class="group rounded-xl border border-navy-200 dark:border-white/10 bg-navy-50/50 dark:bg-navy-900/40 overflow-hidden">
-        <summary class="flex items-center justify-between p-3.5 cursor-pointer font-bold text-xs sm:text-sm text-navy-800 dark:text-navy-200 select-none hover:bg-navy-100/50 dark:hover:bg-navy-800/40 transition-colors">
-          <span class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-gold-700 dark:text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-            </svg>
-            Inflation & Step-Up Adjustments
-          </span>
-          <svg class="w-4 h-4 text-navy-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </summary>
-        <div class="p-3.5 pt-1 space-y-4 border-t border-navy-200/60 dark:border-white/5">
-          <div class="space-y-1">
-            <div class="flex justify-between text-xs">
-              <label for="expectedInflation" class="font-medium text-navy-700 dark:text-navy-300">Expected Annual Inflation</label>
-              <span class="font-bold text-navy-900 dark:text-navy-100">6.0%</span>
-            </div>
-            <div class="relative">
-              <input
-                id="expectedInflation"
-                type="number"
-                step="0.1"
-                min="0"
-                max="15"
-                value="6.0"
-                class="w-full bg-white dark:bg-navy-950 border border-navy-300 dark:border-navy-700 rounded-lg px-3 py-2 text-sm tabular-nums text-navy-900 dark:text-white"
-              />
-              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-navy-400">%</span>
-            </div>
-          </div>
+      <!-- Quick Preset Selection Pills (Uniform, Compact & Aligned) -->
+      <div class="grid grid-cols-5 gap-1.5 sm:gap-2 pt-2.5 border-t border-navy-100/80 dark:border-navy-900/80">
+        <button type="button" data-set-withdrawal="25000" class="withdrawal-preset-btn min-h-[36px] px-1.5 sm:px-2 py-1.5 rounded-lg text-xs font-semibold border border-navy-200 dark:border-navy-800 hover:border-gold-500 text-navy-600 dark:text-navy-400 transition-all inline-flex items-center justify-center text-center whitespace-nowrap truncate w-full">₹25k</button>
+        <button type="button" data-set-withdrawal="40000" class="withdrawal-preset-btn min-h-[36px] px-1.5 sm:px-2 py-1.5 rounded-lg text-xs font-semibold border border-gold-500 bg-gold-50/50 dark:bg-gold-950/30 text-gold-700 dark:text-gold-300 transition-all inline-flex items-center justify-center text-center whitespace-nowrap truncate w-full">₹40k</button>
+        <button type="button" data-set-withdrawal="60000" class="withdrawal-preset-btn min-h-[36px] px-1.5 sm:px-2 py-1.5 rounded-lg text-xs font-semibold border border-navy-200 dark:border-navy-800 hover:border-gold-500 text-navy-600 dark:text-navy-400 transition-all inline-flex items-center justify-center text-center whitespace-nowrap truncate w-full">₹60k</button>
+        <button type="button" data-set-withdrawal="100000" class="withdrawal-preset-btn min-h-[36px] px-1.5 sm:px-2 py-1.5 rounded-lg text-xs font-semibold border border-navy-200 dark:border-navy-800 hover:border-gold-500 text-navy-600 dark:text-navy-400 transition-all inline-flex items-center justify-center text-center whitespace-nowrap truncate w-full">₹1 Lakh</button>
+        <button type="button" data-set-withdrawal="150000" class="withdrawal-preset-btn min-h-[36px] px-1.5 sm:px-2 py-1.5 rounded-lg text-xs font-semibold border border-navy-200 dark:border-navy-800 hover:border-gold-500 text-navy-600 dark:text-navy-400 transition-all inline-flex items-center justify-center text-center whitespace-nowrap truncate w-full">₹1.5 L</button>
+      </div>
+    </CardPremium>
 
-          <div class="space-y-1">
-            <div class="flex justify-between text-xs">
-              <label for="stepUp" class="font-medium text-navy-700 dark:text-navy-300">Real Lifestyle Step-Up (Beyond Inflation)</label>
-              <span class="font-bold text-navy-900 dark:text-navy-100">0.0%</span>
-            </div>
-            <div class="relative">
-              <input
-                id="stepUp"
-                type="number"
-                step="0.5"
-                min="0"
-                max="10"
-                value="0.0"
-                class="w-full bg-white dark:bg-navy-950 border border-navy-300 dark:border-navy-700 rounded-lg px-3 py-2 text-sm tabular-nums text-navy-900 dark:text-white"
-              />
-              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-navy-400">%</span>
-            </div>
-            <p class="text-xs text-navy-500 dark:text-navy-400 leading-tight">
-              0% means your paycheck rises exactly with inflation to keep purchasing power constant.
-            </p>
-          </div>
-        </div>
-      </details>
-
-      <!-- PROGRESSIVE ACCORDION 2: Market Regimes & Historical Returns -->
-      <details class="group rounded-xl border border-navy-200 dark:border-white/10 bg-navy-50/50 dark:bg-navy-900/40 overflow-hidden">
-        <summary class="flex items-center justify-between p-3.5 cursor-pointer font-bold text-xs sm:text-sm text-navy-800 dark:text-navy-200 select-none hover:bg-navy-100/50 dark:hover:bg-navy-800/40 transition-colors">
-          <span class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-gold-700 dark:text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-            Market Regime & Returns
-          </span>
-          <svg class="w-4 h-4 text-navy-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </summary>
-        <div class="p-3.5 pt-1 space-y-3.5 border-t border-navy-200/60 dark:border-white/5">
-          <div class="space-y-1.5">
-            <label class="text-xs font-semibold text-navy-700 dark:text-navy-300">
-              Nifty 50 Historical Eras
-            </label>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-              <button
-                type="button"
-                class="regime-btn px-2.5 py-2 rounded-lg border text-xs font-semibold text-left transition-colors border-navy-200 dark:border-navy-700 bg-white dark:bg-navy-950 text-navy-800 dark:text-navy-200"
-                data-growth="12.0"
-                data-roughness="15.0"
-              >
-                <span class="block font-bold">2014–2024</span>
-                <span class="text-xs text-navy-500 dark:text-navy-400">12% / 15% Vol</span>
-              </button>
-              <button
-                type="button"
-                class="regime-btn px-2.5 py-2 rounded-lg border text-xs font-semibold text-left transition-colors border-navy-200 dark:border-navy-700 bg-white dark:bg-navy-950 text-navy-800 dark:text-navy-200"
-                data-growth="14.5"
-                data-roughness="22.0"
-              >
-                <span class="block font-bold">2004–2024</span>
-                <span class="text-xs text-navy-500 dark:text-navy-400">14.5% / 22% Vol</span>
-              </button>
-              <button
-                type="button"
-                class="regime-btn px-2.5 py-2 rounded-lg border text-xs font-semibold text-left transition-colors border-navy-200 dark:border-navy-700 bg-white dark:bg-navy-950 text-navy-800 dark:text-navy-200"
-                data-growth="13.5"
-                data-roughness="28.0"
-              >
-                <span class="block font-bold">1994–2024</span>
-                <span class="text-xs text-navy-500 dark:text-navy-400">13.5% / 28% Vol</span>
-              </button>
-            </div>
-            <p id="regimeNote" class="text-xs text-navy-500 dark:text-navy-400 italic"></p>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3 pt-1">
-            <div class="space-y-1">
-              <label for="expectedReturn" class="text-xs font-medium text-navy-700 dark:text-navy-300">Expected CAGR</label>
-              <div class="relative">
-                <input
-                  id="expectedReturn"
-                  type="number"
-                  step="0.5"
-                  min="4"
-                  max="25"
-                  value="12.0"
-                  class="w-full bg-white dark:bg-navy-950 border border-navy-300 dark:border-navy-700 rounded-lg px-3 py-2 text-sm tabular-nums text-navy-900 dark:text-white"
-                />
-                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-navy-400">%</span>
-              </div>
-            </div>
-
-            <div class="space-y-1">
-              <label for="annualVolatility" class="text-xs font-medium text-navy-700 dark:text-navy-300">Annual Volatility</label>
-              <div class="relative">
-                <input
-                  id="annualVolatility"
-                  type="number"
-                  step="0.5"
-                  min="2"
-                  max="40"
-                  value="15.0"
-                  class="w-full bg-white dark:bg-navy-950 border border-navy-300 dark:border-navy-700 rounded-lg px-3 py-2 text-sm tabular-nums text-navy-900 dark:text-white"
-                />
-                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-navy-400">%</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </details>
-
-      <!-- PROGRESSIVE ACCORDION 3: LTCG Taxes -->
-      <details class="group rounded-xl border border-navy-200 dark:border-white/10 bg-navy-50/50 dark:bg-navy-900/40 overflow-hidden">
-        <summary class="flex items-center justify-between p-3.5 cursor-pointer font-bold text-xs sm:text-sm text-navy-800 dark:text-navy-200 select-none hover:bg-navy-100/50 dark:hover:bg-navy-800/40 transition-colors">
-          <span class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-gold-700 dark:text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
-            </svg>
-            Taxes on Growth (LTCG)
-          </span>
-          <svg class="w-4 h-4 text-navy-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </summary>
-        <div class="p-3.5 pt-1 space-y-3 border-t border-navy-200/60 dark:border-white/5">
-          <div class="space-y-1">
-            <div class="flex justify-between text-xs">
-              <label for="ltcgTax" class="font-medium text-navy-700 dark:text-navy-300">Equity LTCG Tax Rate</label>
-              <span class="font-bold text-navy-900 dark:text-navy-100">12.5%</span>
-            </div>
-            <div class="relative">
-              <input
-                id="ltcgTax"
-                type="number"
-                step="0.5"
-                min="0"
-                max="30"
-                value="12.5"
-                class="w-full bg-white dark:bg-navy-950 border border-navy-300 dark:border-navy-700 rounded-lg px-3 py-2 text-sm tabular-nums text-navy-900 dark:text-white"
-              />
-              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-navy-400">%</span>
-            </div>
-            <p class="text-xs text-navy-500 dark:text-navy-400 leading-tight">
-              Section 112A: 12.5% tax on equity capital gains above ₹1.25 Lakh/year.
-            </p>
-          </div>
-        </div>
-      </details>
-
-      <!-- PROGRESSIVE ACCORDION 4: Put Option Downside Protection -->
-      <details class="group rounded-xl border border-navy-200 dark:border-white/10 bg-navy-50/50 dark:bg-navy-900/40 overflow-hidden">
-        <summary class="flex items-center justify-between p-3.5 cursor-pointer font-bold text-xs sm:text-sm text-navy-800 dark:text-navy-200 select-none hover:bg-navy-100/50 dark:hover:bg-navy-800/40 transition-colors">
-          <span class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-emerald-700 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
-            Downside Put Protection (Hedging)
-          </span>
-          <svg class="w-4 h-4 text-navy-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </summary>
-        <div class="p-3.5 pt-1 space-y-3.5 border-t border-navy-200/60 dark:border-white/5">
-          <label class="flex items-center justify-between cursor-pointer">
-            <div>
-              <span class="text-xs font-bold text-navy-800 dark:text-navy-200 block">European Put Protection</span>
-              <span class="text-xs text-navy-500 dark:text-navy-400">Caps maximum equity drawdown in severe crashes</span>
-            </div>
-            <input id="bsHedgingToggle" type="checkbox" class="toggle-checkbox w-5 h-5 accent-emerald-600 rounded" />
+    <!-- Card 3: Duration / Horizon -->
+    <CardPremium glass={true} class="p-4 sm:p-5 flex flex-col space-y-3.5 hover:border-gold-500/40 transition-colors">
+      <div>
+        <div class="flex items-center justify-between">
+          <label for="horizonYears" class="text-xs font-bold text-navy-800 dark:text-navy-200">
+            Retirement Horizon
           </label>
+          <span id="yearsFormatted" class="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/60">
+            30 Years
+          </span>
+        </div>
+        <div class="mt-2 relative rounded-lg border border-navy-200 dark:border-navy-800 focus-within:border-gold-500 dark:focus-within:border-gold-500 bg-white dark:bg-navy-950 transition-colors">
+          <input
+            id="horizonYears"
+            type="number"
+            min="5"
+            max="60"
+            step="1"
+            value="30"
+            class="w-full px-3 py-2 text-base sm:text-lg font-bold tabular-nums text-navy-950 dark:text-white bg-transparent focus:outline-none"
+          />
+          <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-xs text-navy-400">Years</span>
+        </div>
+        <input
+          id="yearsSlider"
+          type="range"
+          min="10"
+          max="50"
+          step="1"
+          value="30"
+          class="w-full mt-2.5 accent-gold-600 dark:accent-gold-500 cursor-pointer"
+        />
+      </div>
 
-          <div class="grid grid-cols-2 gap-3 pt-1">
+      <!-- Quick Preset Selection Pills (Uniform, Compact & Aligned) -->
+      <div class="grid grid-cols-5 gap-1.5 sm:gap-2 pt-2.5 border-t border-navy-100/80 dark:border-navy-900/80">
+        <button type="button" data-set-years="20" class="years-preset-btn min-h-[36px] px-1.5 sm:px-2 py-1.5 rounded-lg text-xs font-semibold border border-navy-200 dark:border-navy-800 hover:border-gold-500 text-navy-600 dark:text-navy-400 transition-all inline-flex items-center justify-center text-center whitespace-nowrap truncate w-full">20 Yrs</button>
+        <button type="button" data-set-years="25" class="years-preset-btn min-h-[36px] px-1.5 sm:px-2 py-1.5 rounded-lg text-xs font-semibold border border-navy-200 dark:border-navy-800 hover:border-gold-500 text-navy-600 dark:text-navy-400 transition-all inline-flex items-center justify-center text-center whitespace-nowrap truncate w-full">25 Yrs</button>
+        <button type="button" data-set-years="30" class="years-preset-btn min-h-[36px] px-1.5 sm:px-2 py-1.5 rounded-lg text-xs font-semibold border border-gold-500 bg-gold-50/50 dark:bg-gold-950/30 text-gold-700 dark:text-gold-300 transition-all inline-flex items-center justify-center text-center whitespace-nowrap truncate w-full">30 Yrs</button>
+        <button type="button" data-set-years="35" class="years-preset-btn min-h-[36px] px-1.5 sm:px-2 py-1.5 rounded-lg text-xs font-semibold border border-navy-200 dark:border-navy-800 hover:border-gold-500 text-navy-600 dark:text-navy-400 transition-all inline-flex items-center justify-center text-center whitespace-nowrap truncate w-full">35 Yrs</button>
+        <button type="button" data-set-years="40" class="years-preset-btn min-h-[36px] px-1.5 sm:px-2 py-1.5 rounded-lg text-xs font-semibold border border-navy-200 dark:border-navy-800 hover:border-gold-500 text-navy-600 dark:text-navy-400 transition-all inline-flex items-center justify-center text-center whitespace-nowrap truncate w-full">40 Yrs</button>
+      </div>
+    </CardPremium>
+
+    <!-- Card 4: Lifestyle Step-Up -->
+    <CardPremium glass={true} class="p-4 sm:p-5 flex flex-col space-y-3.5 hover:border-gold-500/40 transition-colors">
+      <div>
+        <div class="flex items-center justify-between">
+          <label for="stepUp" class="text-xs font-bold text-navy-800 dark:text-navy-200">
+            Lifestyle Step-Up (Above Inflation)
+          </label>
+          <span id="stepUpFormatted" class="text-xs font-semibold px-2 py-0.5 rounded bg-purple-50 dark:bg-purple-950/40 text-purple-800 dark:text-purple-300 border border-purple-200/60 dark:border-purple-800/60">
+            +0.0% / yr
+          </span>
+        </div>
+        <div class="mt-2 relative rounded-lg border border-navy-200 dark:border-navy-800 focus-within:border-gold-500 dark:focus-within:border-gold-500 bg-white dark:bg-navy-950 transition-colors">
+          <input
+            id="stepUp"
+            type="number"
+            value="0.0"
+            step="0.5"
+            min="0"
+            max="10"
+            class="w-full px-3 py-2 text-base sm:text-lg font-bold tabular-nums text-navy-950 dark:text-white bg-transparent focus:outline-none"
+          />
+          <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-xs text-navy-400">% / yr</span>
+        </div>
+        <input
+          id="stepUpSlider"
+          type="range"
+          min="0"
+          max="5"
+          step="0.5"
+          value="0"
+          class="w-full mt-2.5 accent-gold-600 dark:accent-gold-500 cursor-pointer"
+        />
+      </div>
+
+      <!-- Quick Preset Selection Pills (Uniform, Compact & Aligned) -->
+      <div class="grid grid-cols-4 gap-1.5 sm:gap-2 pt-2.5 border-t border-navy-100/80 dark:border-navy-900/80">
+        <button type="button" data-set-stepup="0" class="stepup-preset-btn min-h-[36px] px-1.5 sm:px-2 py-1.5 rounded-lg text-xs font-semibold border border-gold-500 bg-gold-50/50 dark:bg-gold-950/30 text-gold-700 dark:text-gold-300 transition-all inline-flex items-center justify-center text-center whitespace-nowrap truncate w-full">0%</button>
+        <button type="button" data-set-stepup="1" class="stepup-preset-btn min-h-[36px] px-1.5 sm:px-2 py-1.5 rounded-lg text-xs font-semibold border border-navy-200 dark:border-navy-800 hover:border-gold-500 text-navy-600 dark:text-navy-400 transition-all inline-flex items-center justify-center text-center whitespace-nowrap truncate w-full">+1% / yr</button>
+        <button type="button" data-set-stepup="2" class="stepup-preset-btn min-h-[36px] px-1.5 sm:px-2 py-1.5 rounded-lg text-xs font-semibold border border-navy-200 dark:border-navy-800 hover:border-gold-500 text-navy-600 dark:text-navy-400 transition-all inline-flex items-center justify-center text-center whitespace-nowrap truncate w-full">+2% / yr</button>
+        <button type="button" data-set-stepup="3" class="stepup-preset-btn min-h-[36px] px-1.5 sm:px-2 py-1.5 rounded-lg text-xs font-semibold border border-navy-200 dark:border-navy-800 hover:border-gold-500 text-navy-600 dark:text-navy-400 transition-all inline-flex items-center justify-center text-center whitespace-nowrap truncate w-full">+3% / yr</button>
+      </div>
+    </CardPremium>
+
+  </div>
+
+  <!-- Sanity Warning Notice (if applicable) -->
+  <div id="inputSanityWarning" class="hidden p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs leading-relaxed space-y-1">
+    <div class="flex items-center gap-2 font-bold">
+      <svg class="w-4 h-4 shrink-0 text-amber-700 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+      </svg>
+      <span>Retirement Plan Note</span>
+    </div>
+    <p id="inputSanityMessage"></p>
+  </div>
+
+  <!-- Assumptions & Protections Drawer (Sol-019 Layer 3) -->
+  <details id="assumptionsDrawer" class="group rounded-2xl border border-navy-200 dark:border-navy-800 bg-white/70 dark:bg-navy-950/70 backdrop-blur-sm shadow-xs overflow-hidden transition-all">
+    <summary class="cursor-pointer list-none flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 hover:bg-navy-50/70 dark:hover:bg-navy-900/60 transition-colors">
+      <div class="flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-navy-100 dark:bg-navy-900 flex items-center justify-center text-navy-700 dark:text-navy-300 shrink-0">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+        </span>
+        <div>
+          <span class="text-sm font-bold text-navy-900 dark:text-navy-100 block">
+            Market Assumptions & Protections
+          </span>
+          <span id="assumptionsSummaryText" class="text-xs text-navy-500 dark:text-navy-400">
+            Nifty 50 Historical (13.3% CAGR, 15% Volatility) · 6.0% Inflation · 12.5% LTCG Tax
+          </span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 self-end sm:self-center">
+        <span class="text-xs font-semibold text-gold-700 dark:text-gold-400 group-open:hidden">Customize</span>
+        <span class="text-xs font-semibold text-gold-700 dark:text-gold-400 hidden group-open:inline">Hide</span>
+        <svg class="w-4 h-4 text-navy-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+    </summary>
+
+    <!-- Expanded Drawer Content -->
+    <div class="p-5 sm:p-6 border-t border-navy-200/80 dark:border-navy-800/80 space-y-6 bg-navy-50/40 dark:bg-navy-950/40">
+      
+      <!-- Regime Selector -->
+      <div class="space-y-3">
+        <label class="text-xs font-bold text-navy-800 dark:text-navy-200">
+          Historical Market Regimes (Nifty 50)
+        </label>
+        <div role="radiogroup" aria-label="Select market regime" class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          {REGIME_PRESETS.map((p) => (
+            <button
+              type="button"
+              data-regime={p.id}
+              data-growth={String(p.growth)}
+              data-roughness={String(p.roughness)}
+              class="regime-btn p-3 rounded-xl border text-left transition-all border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-950 text-navy-800 dark:text-navy-200 hover:border-gold-500/60"
+            >
+              <span class="block text-xs font-bold text-navy-900 dark:text-white">{p.label}</span>
+              <span class="block text-xs text-navy-500 dark:text-navy-400 mt-0.5 tabular-nums">{p.growth}% CAGR · {p.roughness}% σ swings</span>
+            </button>
+          ))}
+        </div>
+        <p id="regimeNote" class="text-xs text-navy-500 dark:text-navy-400"></p>
+      </div>
+
+      <!-- Fine-tuning Parameters Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        
+        <div class="space-y-1">
+          <label for="expectedReturn" class="text-xs font-semibold text-navy-700 dark:text-navy-300">Expected CAGR</label>
+          <div class="relative rounded-lg border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-950">
+            <input id="expectedReturn" type="number" step="0.5" value={DEFAULT_REGIME.growth.toFixed(1)} class="w-full px-3 py-1.5 text-xs font-bold tabular-nums text-navy-900 dark:text-white bg-transparent focus:outline-none" />
+            <span class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-xs text-navy-400">%</span>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label for="annualVolatility" class="text-xs font-semibold text-navy-700 dark:text-navy-300">Volatility (σ)</label>
+          <div class="relative rounded-lg border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-950">
+            <input id="annualVolatility" type="number" step="0.5" value={DEFAULT_REGIME.roughness.toFixed(1)} class="w-full px-3 py-1.5 text-xs font-bold tabular-nums text-navy-900 dark:text-white bg-transparent focus:outline-none" />
+            <span class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-xs text-navy-400">%</span>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label for="expectedInflation" class="text-xs font-semibold text-navy-700 dark:text-navy-300">CPI Inflation</label>
+          <div class="relative rounded-lg border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-950">
+            <input id="expectedInflation" type="number" step="0.5" value="6.0" class="w-full px-3 py-1.5 text-xs font-bold tabular-nums text-navy-900 dark:text-white bg-transparent focus:outline-none" />
+            <span class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-xs text-navy-400">%</span>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label for="ltcgTax" class="text-xs font-semibold text-navy-700 dark:text-navy-300">LTCG Tax Rate</label>
+          <div class="relative rounded-lg border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-950">
+            <input id="ltcgTax" type="number" step="0.1" value="12.5" class="w-full px-3 py-1.5 text-xs font-bold tabular-nums text-navy-900 dark:text-white bg-transparent focus:outline-none" />
+            <span class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-xs text-navy-400">%</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Advanced Protections Strip -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+        
+        <!-- Guardrail Rules -->
+        <label for="useGuardrails" class="p-4 rounded-xl border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-950 flex items-start justify-between gap-4 cursor-pointer min-h-[52px]">
+          <div class="space-y-1">
+            <span class="text-xs sm:text-sm font-bold text-navy-900 dark:text-white block">Dynamic Spending Guardrails</span>
+            <p class="text-xs text-navy-500 dark:text-navy-400 leading-snug">
+              Trim monthly withdrawals by 10% during adverse market drawdowns to preserve portfolio life.
+            </p>
+            <div class="pt-1">
+              <a href="#dynamicGuardrailsExplanation" class="text-xs font-semibold text-gold-700 dark:text-gold-400 hover:underline underline-offset-2">Learn more</a>
+            </div>
+          </div>
+          <div class="flex items-center justify-center min-w-[44px] min-h-[44px] shrink-0">
+            <input
+              type="checkbox"
+              id="useGuardrails"
+              name="useGuardrails"
+              class="w-5 h-5 rounded text-gold-700 focus:ring-gold-500 border-navy-300 dark:border-navy-700 bg-white dark:bg-navy-900 cursor-pointer"
+            />
+          </div>
+        </label>
+
+        <!-- Downside Put Floor Protection -->
+        <div class="p-4 rounded-xl border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-950 flex flex-col gap-3 min-h-[52px]">
+          <div class="flex items-start justify-between gap-4">
             <div class="space-y-1">
-              <label for="hedgingFloorLimit" class="text-xs font-medium text-navy-700 dark:text-navy-300">Protected Floor</label>
-              <select id="hedgingFloorLimit" class="w-full bg-white dark:bg-navy-950 border border-navy-300 dark:border-navy-700 rounded-lg px-2.5 py-2 text-xs font-medium text-navy-900 dark:text-white">
-                <option value="0.10">-10% Drop</option>
-                <option value="0.15">-15% Drop</option>
-                <option value="0.20">-20% Drop</option>
-              </select>
+              <span class="text-xs sm:text-sm font-bold text-navy-900 dark:text-white block">Downside Put Floor Hedge</span>
+              <p class="text-xs text-navy-500 dark:text-navy-400 leading-snug">
+                Roll annual put floor options at -10% drop limit to cap catastrophic market crash risk.
+              </p>
+              <div class="flex items-center gap-3 pt-1">
+                <a href="#swpHedgingExplanation" class="text-xs font-semibold text-gold-700 dark:text-gold-400 hover:underline underline-offset-2">Learn more</a>
+                <button type="button" id="toggleHedgeCustomizer" class="text-xs font-semibold text-navy-600 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100 min-h-[44px] inline-flex items-center">Customize</button>
+              </div>
+            </div>
+            <label class="relative inline-flex items-center justify-center min-w-[44px] min-h-[44px] cursor-pointer shrink-0">
+              <input type="checkbox" id="bsHedgingToggle" name="bsHedgingToggle" class="sr-only peer" />
+              <div class="w-11 h-6 bg-navy-200 dark:bg-navy-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[12px] after:left-[4px] after:bg-white after:border-navy-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-700 dark:peer-checked:bg-emerald-500"></div>
+            </label>
+          </div>
+          
+          <div id="hedgeCustomizer" class="hidden grid grid-cols-2 gap-3 pt-3 border-t border-navy-100 dark:border-navy-800/50">
+            <div class="space-y-1">
+              <label for="hedgingFloorLimit" class="text-xs font-semibold text-navy-600 dark:text-navy-400">Max Drop Floor</label>
+              <div class="relative rounded border border-navy-200 dark:border-navy-700 bg-navy-50/50 dark:bg-navy-900">
+                <span class="absolute inset-y-0 left-0 pl-2 flex items-center text-xs text-navy-400">-</span>
+                <input id="hedgingFloorLimit" type="number" step="0.5" value="10.0" class="w-full pl-5 pr-2 py-1.5 text-xs font-bold tabular-nums text-navy-900 dark:text-white bg-transparent focus:outline-none" />
+                <span class="absolute inset-y-0 right-0 pr-2 flex items-center text-xs text-navy-400">%</span>
+              </div>
             </div>
             <div class="space-y-1">
-              <label for="hedgingDragCost" class="text-xs font-medium text-navy-700 dark:text-navy-300">Annual Option Drag</label>
-              <div class="relative">
-                <input
-                  id="hedgingDragCost"
-                  type="number"
-                  step="0.1"
-                  min="0.5"
-                  max="5"
-                  value="1.85"
-                  class="w-full bg-white dark:bg-navy-950 border border-navy-300 dark:border-navy-700 rounded-lg px-3 py-2 text-xs tabular-nums text-navy-900 dark:text-white"
-                />
-                <span class="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-navy-400">%</span>
+              <label for="hedgingDragCost" class="text-xs font-semibold text-navy-600 dark:text-navy-400">Computed Annual Drag (read-only)</label>
+              <div class="relative rounded border border-navy-200 dark:border-navy-700 bg-navy-50/50 dark:bg-navy-900">
+                <input id="hedgingDragCost" type="number" step="0.05" value="1.85" disabled class="w-full px-2 py-1.5 text-xs font-bold tabular-nums text-navy-500 dark:text-navy-400 bg-transparent focus:outline-none cursor-not-allowed" />
+                <span class="absolute inset-y-0 right-0 pr-2 flex items-center text-xs text-navy-400">%</span>
               </div>
             </div>
           </div>
         </div>
-      </details>
 
-      <!-- Run / Recompute Button -->
-      <button
-        id="runSimBtn"
-        type="button"
-        class="w-full py-3 px-4 rounded-xl bg-navy-900 hover:bg-navy-800 dark:bg-gold-500 dark:hover:bg-gold-400 text-white dark:text-navy-950 font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-2"
-      >
-        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        <span>Re-run Simulation</span>
-      </button>
+      </div>
 
-    </form>
-  </CardPremium>
+    </div>
+  </details>
+
 </div>
+
+<script>
+  if (typeof window !== 'undefined') {
+    const btn = document.getElementById('toggleHedgeCustomizer');
+    const customizer = document.getElementById('hedgeCustomizer');
+    if (btn && customizer) {
+      btn.addEventListener('click', () => {
+        customizer.classList.toggle('hidden');
+        btn.textContent = customizer.classList.contains('hidden') ? 'Customize' : 'Hide Options';
+      });
+    }
+  }
+</script>
+

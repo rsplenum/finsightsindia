@@ -4,330 +4,391 @@
  * two do-it-yourself routes does, what the policy costs in friction, and how
  * fragile the whole thing is to the one assumption that is not a fact.
  *
- * WHY THIS IS ONE COMPONENT AND NOT FIVE CARDS. The old page scattered this
- * across an "Engine A" card, two "Engine B / C" cards, a bottom line, a
- * frictions X-ray and a sensitivity table — each with its own heading style,
- * and between them FOUR DIFFERENT QUANTITIES wearing the phrase "in today's
- * prices" (F-12). Two bold figures 500px apart shared a label while counting
- * different things, so a reader's first thought was that one was a typo. That
- * was not a wording defect: it was five surfaces each labelling its own figure
- * correctly, with nobody responsible for whether they could be told apart.
- *
- * So the frames are column headers over tables whose rows name their quantity —
- * T8's adjacent-columns pattern, which dd-019's own note says explicitly does
- * pass — and the phrase appears once per table rather than once per figure.
- *
- * THE THREE COSTS THIS SURFACE ADDED, all of them figures of zero typed in by
- * omission:
- *
- *  - the fund's expense ratio, which the growth route was not paying while the
- *    bond route's zero was a genuine fact (sol-028's fault a third time);
- *  - s.10(10D), which was assumed to exempt every policy whatever its cover;
- *  - an escalating income, which was priced as though it were level.
- *
- * Two of those favour the policy and one favours the replica. That is not a
- * balancing act — each was fixed because it was wrong — but it is the evidence
- * for dd-021 that the corrections were not all pointing one way.
- *
- * Design settled before the component in `InsuranceRoutes.checks.md`.
+ * Multi-tabbed analytical workspace with deep transparency.
  */
 import { SAFE_RATE_PCT, EQUITY_RATE_PCT } from '../../utils/insuranceInputs';
 
 const cardClass =
-  'rounded-2xl border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-950 p-5 sm:p-6 space-y-4';
-const headingClass = 'text-base font-bold text-navy-900 dark:text-navy-100';
-const ledeClass = 'text-sm text-navy-600 dark:text-navy-400 leading-relaxed';
-const frameHeadClass = 'py-2 text-right text-sm font-semibold text-navy-600 dark:text-navy-400';
-const rowHeadClass = 'py-2 pr-3 text-sm text-navy-700 dark:text-navy-300 align-baseline';
-const cellClass = 'py-2 pl-3 text-right text-sm font-bold tabular-nums text-navy-900 dark:text-navy-100 align-baseline';
+  'rounded-2xl border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-950 p-5 sm:p-7 space-y-5 shadow-xs';
+const headingClass = 'text-base sm:text-lg font-bold text-navy-950 dark:text-white';
+const ledeClass = 'text-xs sm:text-sm text-navy-600 dark:text-navy-400 leading-relaxed';
+const frameHeadClass = 'py-2.5 px-3 text-right text-xs font-semibold text-navy-600 dark:text-navy-400';
+const rowHeadClass = 'py-2.5 pr-3 text-sm text-navy-700 dark:text-navy-300 align-baseline';
+const cellClass = 'py-2.5 pl-3 text-right text-sm font-bold tabular-nums text-navy-900 dark:text-navy-100 align-baseline';
 ---
 
 <div id="insuranceRoutes" class="space-y-6">
 
-  <!-- 1. The policy, on its own terms. -->
-  <section class={cardClass} aria-label="What the policy itself does">
-    <div class="space-y-1">
-      <h3 class={headingClass}>What this policy does</h3>
+  <!-- Interactive Analytical Workspace Tab Bar -->
+  <div class="border-b border-navy-200 dark:border-navy-800 flex overflow-x-auto gap-2 pb-px" id="routesTabBar">
+    <button
+      type="button"
+      data-tab-target="tabSectionHeadToHead"
+      class="routes-tab-btn active px-4 py-2.5 text-xs sm:text-sm font-bold border-b-2 border-navy-900 dark:border-white text-navy-950 dark:text-white whitespace-nowrap focus:outline-none transition-colors"
+    >
+      Head-to-Head Matrix
+    </button>
+    <button
+      type="button"
+      data-tab-target="tabSectionAnatomy"
+      class="routes-tab-btn px-4 py-2.5 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-navy-500 hover:text-navy-800 dark:hover:text-navy-200 whitespace-nowrap focus:outline-none transition-colors"
+    >
+      Premium Anatomy & Friction
+    </button>
+    <button
+      type="button"
+      data-tab-target="tabSectionSurrender"
+      class="routes-tab-btn px-4 py-2.5 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-navy-500 hover:text-navy-800 dark:hover:text-navy-200 whitespace-nowrap focus:outline-none transition-colors"
+    >
+      Exit & Sunk-Cost Arbitrage
+    </button>
+    <button
+      type="button"
+      data-tab-target="tabSectionCashflow"
+      class="routes-tab-btn px-4 py-2.5 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-navy-500 hover:text-navy-800 dark:hover:text-navy-200 whitespace-nowrap focus:outline-none transition-colors"
+    >
+      Cash Flow & Wealth Projection
+    </button>
+    <button
+      type="button"
+      data-tab-target="tabSectionSensitivity"
+      class="routes-tab-btn px-4 py-2.5 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-navy-500 hover:text-navy-800 dark:hover:text-navy-200 whitespace-nowrap focus:outline-none transition-colors"
+    >
+      Macro Stress-Test
+    </button>
+  </div>
+
+  <!-- TAB 1: HEAD-TO-HEAD BATTLE & POLICY LEDGER -->
+  <div id="tabSectionHeadToHead" class="routes-tab-pane space-y-6">
+    <!-- 1. The policy, on its own terms. -->
+    <section class={cardClass} aria-label="What the policy itself does">
+      <div class="space-y-1">
+        <h3 class={headingClass}>What this policy does</h3>
+        <p class={ledeClass}>
+          Everything you pay in, and everything it hands back, set against what those rupees will
+          actually buy by the time they arrive.
+        </p>
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-navy-100 dark:border-navy-800/80 bg-navy-50/40 dark:bg-navy-900/30 p-1">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-navy-200/80 dark:border-navy-800">
+              <th class="py-2.5 px-3 text-xs font-semibold text-navy-500 dark:text-navy-400">Over the whole policy</th>
+              <th class={frameHeadClass}>in rupees of each year</th>
+              <th class={frameHeadClass}>in today's prices</th>
+            </tr>
+          </thead>
+          <tbody id="policyLedgerRows" class="divide-y divide-navy-100 dark:divide-navy-800/60"></tbody>
+        </table>
+      </div>
+
+      <p id="policyTaxLine" class="text-xs sm:text-sm leading-relaxed text-navy-600 dark:text-navy-400 empty:hidden"></p>
+      <p id="policyBreakEvenLine" class="text-xs sm:text-sm leading-relaxed text-navy-600 dark:text-navy-400 empty:hidden"></p>
+    </section>
+
+    <!-- 2. The two replicas. Stacked at mobile; side by side on desktop. -->
+    <section class="space-y-4" aria-label="The two do-it-yourself routes">
+      <div class="space-y-1">
+        <h3 class={headingClass}>Doing it yourself, two ways</h3>
+        <p class={ledeClass}>
+          Buy the same cover on the open market, invest what is left of each premium, and take out
+          exactly what the policy would have paid you, in exactly the years it would have paid it.
+          The only difference between these two is where the money in the middle sits.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- Safe Bond Route -->
+        <div class={`${cardClass} flex flex-col justify-between`}>
+          <div class="space-y-3">
+            <div class="flex items-start justify-between gap-3 border-b border-navy-100 dark:border-navy-800 pb-3">
+              <div class="space-y-0.5">
+                <h4 class={headingClass}>The safe route</h4>
+                <p class="text-xs text-navy-500 dark:text-navy-400">Term cover + government bonds at {SAFE_RATE_PCT}%</p>
+              </div>
+              <span id="safeBadge" class="shrink-0 px-2.5 py-0.5 text-xs font-bold tracking-tight rounded bg-navy-100 dark:bg-navy-800 text-navy-700 dark:text-navy-300 border border-navy-200 dark:border-navy-700/60">—</span>
+            </div>
+            <div class="space-y-1 pt-1">
+              <p id="safeLabel" class="text-xs font-semibold text-navy-500 dark:text-navy-400">Left over at the end</p>
+              <p id="safeFigure" class="text-2xl sm:text-3xl font-extrabold tracking-tight tabular-nums text-navy-950 dark:text-white">₹0</p>
+              <p id="safeFigureReal" class="text-xs sm:text-sm text-navy-600 dark:text-navy-400">&nbsp;</p>
+            </div>
+            <p id="safeText" class="text-xs sm:text-sm text-navy-600 dark:text-navy-400 leading-relaxed">&nbsp;</p>
+          </div>
+          <dl class="mt-4 pt-3 border-t border-navy-100 dark:border-navy-800 space-y-2 text-xs sm:text-sm">
+            <div class="flex items-baseline justify-between gap-3">
+              <dt class="text-navy-600 dark:text-navy-400">Cover bought, over paying years</dt>
+              <dd id="safeRiskCost" class="font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
+            </div>
+            <div class="flex items-baseline justify-between gap-3">
+              <dt class="text-navy-600 dark:text-navy-400">Tax on interest, as earned</dt>
+              <dd id="safeTaxDrag" class="font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
+            </div>
+            <div class="flex items-baseline justify-between gap-3">
+              <dt class="text-navy-600 dark:text-navy-400">What bonds charge to hold</dt>
+              <dd class="font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- Growth Equity Route -->
+        <div class={`${cardClass} flex flex-col justify-between`}>
+          <div class="space-y-3">
+            <div class="flex items-start justify-between gap-3 border-b border-navy-100 dark:border-navy-800 pb-3">
+              <div class="space-y-0.5">
+                <h4 class={headingClass}>The growth route</h4>
+                <p class="text-xs text-navy-500 dark:text-navy-400">Term cover + index fund at {EQUITY_RATE_PCT}%</p>
+              </div>
+              <span id="growthBadge" class="shrink-0 px-2.5 py-0.5 text-xs font-bold tracking-tight rounded bg-navy-100 dark:bg-navy-800 text-navy-700 dark:text-navy-300 border border-navy-200 dark:border-navy-700/60">—</span>
+            </div>
+            <div class="space-y-1 pt-1">
+              <p id="growthLabel" class="text-xs font-semibold text-navy-500 dark:text-navy-400">Left over at the end</p>
+              <p id="growthFigure" class="text-2xl sm:text-3xl font-extrabold tracking-tight tabular-nums text-navy-950 dark:text-white">₹0</p>
+              <p id="growthFigureReal" class="text-xs sm:text-sm text-navy-600 dark:text-navy-400">&nbsp;</p>
+            </div>
+            <p id="growthText" class="text-xs sm:text-sm text-navy-600 dark:text-navy-400 leading-relaxed">&nbsp;</p>
+          </div>
+          <dl class="mt-4 pt-3 border-t border-navy-100 dark:border-navy-800 space-y-2 text-xs sm:text-sm">
+            <div class="flex items-baseline justify-between gap-3">
+              <dt class="text-navy-600 dark:text-navy-400">Cover bought, over paying years</dt>
+              <dd id="growthRiskCost" class="font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
+            </div>
+            <div class="flex items-baseline justify-between gap-3">
+              <dt class="text-navy-600 dark:text-navy-400">Tax on gains, as sold</dt>
+              <dd id="growthTaxDrag" class="font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
+            </div>
+            <div class="flex items-baseline justify-between gap-3">
+              <dt class="text-navy-600 dark:text-navy-400">What fund charges to hold</dt>
+              <dd id="growthFeeDrag" class="font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+
+      <p id="routesTakeaway" class="text-xs sm:text-sm text-navy-700 dark:text-navy-300 leading-relaxed rounded-xl border border-navy-200 dark:border-navy-800 bg-navy-50/70 dark:bg-navy-900/60 p-4 font-medium"></p>
+    </section>
+  </div>
+
+  <!-- TAB 2: PREMIUM ANATOMY & 3-WAY FRICTION X-RAY -->
+  <div id="tabSectionAnatomy" class="routes-tab-pane space-y-6" hidden>
+    <section class={cardClass} aria-label="Where your premium actually goes">
+      <div class="space-y-1">
+        <h3 class={headingClass}>Where your premium actually goes: 3-Way Unbundling</h3>
+        <p class={ledeClass}>
+          Every traditional policy bundles three distinct cash flows behind one gross premium: pure life risk cover,
+          distributor commissions & taxes, and net invested capital. Here is the exact decomposition of your annual premium.
+        </p>
+      </div>
+
+      <!-- Visual Decomposition Bar -->
+      <div class="space-y-3 pt-2">
+        <div class="h-4 w-full rounded-full bg-slate-100 dark:bg-navy-900 overflow-hidden flex border border-navy-200 dark:border-navy-800">
+          <div id="decompBarMortality" class="h-full bg-sky-500 transition-all duration-300" style="width: 0%" title="Pure Protection"></div>
+          <div id="decompBarFriction" class="h-full bg-amber-500 transition-all duration-300" style="width: 0%" title="Intermediary Friction & GST"></div>
+          <div id="decompBarInvested" class="h-full bg-emerald-500 transition-all duration-300" style="width: 0%" title="Net Invested Capital"></div>
+        </div>
+        <div class="flex flex-wrap items-center justify-between text-xs font-semibold text-navy-600 dark:text-navy-400 gap-2">
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-sky-500 inline-block"></span> Pure Cover (<span id="decompPctMortality" class="tabular-nums">0%</span>)</span>
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block"></span> Friction & GST (<span id="decompPctFriction" class="tabular-nums">0%</span>)</span>
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Net Invested (<span id="decompPctInvested" class="tabular-nums">0%</span>)</span>
+        </div>
+      </div>
+
+      <dl class="space-y-3 pt-2">
+        <div class="flex items-baseline justify-between gap-4 border-b border-navy-100 dark:border-navy-900 pb-3">
+          <dt class="text-sm text-navy-700 dark:text-navy-300">
+            Pure Life & Health Protection
+            <span class="block text-xs text-navy-500 dark:text-navy-400">Open-market term cost for the same Sum Assured</span>
+          </dt>
+          <dd id="decompCostMortality" class="text-base sm:text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
+        </div>
+        <div class="flex items-baseline justify-between gap-4 border-b border-navy-100 dark:border-navy-900 pb-3">
+          <dt class="text-sm text-navy-700 dark:text-navy-300">
+            Intermediary Friction & GST Loading
+            <span class="block text-xs text-navy-500 dark:text-navy-400">GST on premium + agent commissions & administrative overhead</span>
+          </dt>
+          <dd id="decompCostFriction" class="text-base sm:text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
+        </div>
+        <div class="flex items-baseline justify-between gap-4">
+          <dt class="text-sm text-navy-700 dark:text-navy-300">
+            Net Capital Actually Compounding
+            <span class="block text-xs text-navy-500 dark:text-navy-400">The actual portion of your annual premium working in the insurer's fund</span>
+          </dt>
+          <dd id="decompCostInvested" class="text-base sm:text-lg font-bold tabular-nums text-emerald-700 dark:text-emerald-400">₹0</dd>
+        </div>
+      </dl>
+
+      <div class="pt-3 border-t border-navy-100 dark:border-navy-900 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="rounded-xl border border-navy-200 dark:border-navy-800 bg-slate-50 dark:bg-navy-900/50 p-4 space-y-1">
+          <p class="text-xs font-semibold text-navy-600 dark:text-navy-400">Total GST over paying term</p>
+          <p id="frictionGst" class="text-base font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</p>
+          <p class="text-xs text-navy-500 dark:text-navy-400">4.5% in year 1, 2.25% thereafter</p>
+        </div>
+        <div class="rounded-xl border border-navy-200 dark:border-navy-800 bg-slate-50 dark:bg-navy-900/50 p-4 space-y-1">
+          <p class="text-xs font-semibold text-navy-600 dark:text-navy-400">Estimated Year 1 Commission</p>
+          <p id="frictionCommission" class="text-base font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</p>
+          <p class="text-xs text-navy-500 dark:text-navy-400">Paid to distributor/agent</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- TAB 3: EXIT & SUNK-COST ARBITRAGE (for existing policies) -->
+  <div id="tabSectionSurrender" class="routes-tab-pane space-y-6" hidden>
+    <section id="insuranceSurrenderSection" class={cardClass} aria-label="Sunk-Cost and Exit Arbitrage Matrix">
+      <div class="space-y-1">
+        <div class="flex items-center justify-between gap-3">
+          <h3 class={headingClass}>Sunk-Cost & Exit Arbitrage Matrix</h3>
+          <span id="surrenderVerdictBadge" class="px-2.5 py-1 text-xs font-bold tracking-tight rounded-md bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60">Surrender & Reinvest</span>
+        </div>
+        <p id="surrenderLede" class={ledeClass}>
+          You have already paid for some years. Surrendering triggers an immediate penalty under IRDAI Special Surrender Value (SSV) curves — but continuing may cost far more in lost compound growth.
+        </p>
+      </div>
+
+      <!-- Sunk Cost Summary Card -->
+      <div class="rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/50 dark:bg-amber-950/20 p-4 space-y-2">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+          <div>
+            <span class="text-xs text-amber-800 dark:text-amber-400 font-semibold block">Total Premiums Paid</span>
+            <span id="surrenderPaidToDate" class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</span>
+            <span id="surrenderYearsLabel" class="text-xs text-navy-600 dark:text-navy-400 block">Across 0 years</span>
+          </div>
+          <div>
+            <span class="text-xs text-amber-800 dark:text-amber-400 font-semibold block">Cashout Available Today (SSV)</span>
+            <span id="surrenderValueToday" class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</span>
+            <span id="surrenderSsvFactor" class="text-xs text-navy-600 dark:text-navy-400 block">0% of paid premiums</span>
+          </div>
+          <div>
+            <span class="text-xs text-rose-800 dark:text-rose-400 font-semibold block">Immediate Sunk-Cost Loss</span>
+            <span id="surrenderHaircut" class="text-lg font-bold tabular-nums text-rose-700 dark:text-rose-400">₹0</span>
+            <span class="text-xs text-navy-600 dark:text-navy-400 block">Surrender penalty</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3-Way Trajectory Comparison Table -->
+      <div class="overflow-x-auto rounded-xl border border-navy-200 dark:border-navy-800">
+        <table class="w-full text-left border-collapse">
+          <thead class="bg-navy-50 dark:bg-navy-900">
+            <tr>
+              <th class="px-3 py-2.5 text-xs sm:text-sm font-semibold text-navy-600 dark:text-navy-400">Strategy</th>
+              <th class="px-3 py-2.5 text-xs sm:text-sm font-semibold text-navy-600 dark:text-navy-400">Next Step</th>
+              <th class="px-3 py-2.5 text-right text-xs sm:text-sm font-semibold text-navy-600 dark:text-navy-400">Final Wealth</th>
+              <th class="px-3 py-2.5 text-right text-xs sm:text-sm font-semibold text-navy-600 dark:text-navy-400">In Today's Money</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-navy-100 dark:divide-navy-800 text-xs sm:text-sm">
+            <tr id="surrenderRowOptA">
+              <td class="px-3 py-3 font-semibold text-navy-900 dark:text-navy-100">Option A: Surrender & Reinvest</td>
+              <td class="px-3 py-3 text-navy-600 dark:text-navy-400">Take SSV today + invest future premiums in index replica</td>
+              <td id="surrenderOptANominal" class="px-3 py-3 text-right font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</td>
+              <td id="surrenderOptAReal" class="px-3 py-3 text-right font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</td>
+            </tr>
+            <tr id="surrenderRowOptB">
+              <td class="px-3 py-3 font-semibold text-navy-900 dark:text-navy-100">Option B: Make Paid-Up</td>
+              <td class="px-3 py-3 text-navy-600 dark:text-navy-400">Stop paying; keep reduced policy payout + invest saved premiums</td>
+              <td id="surrenderOptBNominal" class="px-3 py-3 text-right font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</td>
+              <td id="surrenderOptBReal" class="px-3 py-3 text-right font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</td>
+            </tr>
+            <tr id="surrenderRowOptC">
+              <td class="px-3 py-3 font-semibold text-navy-900 dark:text-navy-100">Option C: Hold to Maturity</td>
+              <td class="px-3 py-3 text-navy-600 dark:text-navy-400">Pay all remaining premiums; collect full policy benefits</td>
+              <td id="surrenderOptCNominal" class="px-3 py-3 text-right font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</td>
+              <td id="surrenderOptCReal" class="px-3 py-3 text-right font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Takeaway Banner -->
+      <div id="surrenderArbitrageBanner" class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/50 dark:bg-emerald-950/20 text-xs sm:text-sm leading-relaxed text-emerald-900 dark:text-emerald-200 font-medium">
+      </div>
+    </section>
+  </div>
+
+  <!-- TAB 4: CASH FLOW & WEALTH PROJECTION CHART -->
+  <div id="tabSectionCashflow" class="routes-tab-pane space-y-6" hidden>
+    <section class={cardClass} aria-label="The cash flow, year by year">
+      <div class="space-y-1">
+        <h3 class={headingClass}>The shape of it, year by year</h3>
+        <p class={ledeClass}>
+          Money out during the premium-paying term, then money back during the payout phase.
+          The years of paying are the reason the comparison exists: that is when the DIY alternative is compounding.
+        </p>
+      </div>
+      <div class="relative w-full h-[280px] sm:h-[320px] rounded-xl border border-navy-100 dark:border-navy-800/80 bg-navy-50/30 dark:bg-navy-900/30 p-2">
+        <canvas id="cashflowChart" class="w-full h-full"></canvas>
+      </div>
+    </section>
+  </div>
+
+  <!-- TAB 5: SENSITIVITY & STRESS-TEST -->
+  <div id="tabSectionSensitivity" class="routes-tab-pane space-y-6" hidden>
+    <section class={cardClass} aria-label="How fragile the comparison is">
+      <div class="space-y-1">
+        <h3 class={headingClass}>What if the market does not deliver {EQUITY_RATE_PCT}%?</h3>
+        <p class={ledeClass}>
+          The policy's income is a contract and the index fund's is not. Here is the same
+          comparison at returns either side of the one assumed — and note that a lower return does
+          not merely leave less over, it can mean the income stops arriving at all.
+        </p>
+      </div>
+      <div class="overflow-x-auto rounded-xl border border-navy-200 dark:border-navy-800">
+        <table class="w-full text-left border-collapse">
+          <thead class="bg-navy-50 dark:bg-navy-900">
+            <tr>
+              <th class="px-3 py-2.5 text-xs sm:text-sm font-semibold text-navy-600 dark:text-navy-400">If the index returns</th>
+              <th class="px-3 py-2.5 text-right text-xs sm:text-sm font-semibold text-navy-600 dark:text-navy-400">Left over at the end</th>
+              <th class="px-3 py-2.5 text-right text-xs sm:text-sm font-semibold text-navy-600 dark:text-navy-400">Did it fund the promise?</th>
+            </tr>
+          </thead>
+          <tbody id="insuranceSensitivityBody" class="divide-y divide-navy-100 dark:divide-navy-800 text-xs sm:text-sm"></tbody>
+        </table>
+      </div>
       <p class={ledeClass}>
-        Everything you pay in, and everything it hands back, set against what those rupees will
-        actually buy by the time they arrive.
+        Each row is charged the same fund fee as the comparison above, so the rate in the first
+        column is what the index does and not what you keep.
       </p>
-    </div>
-
-    <div class="overflow-x-auto">
-      <table class="w-full text-left border-collapse">
-        <thead>
-          <tr class="border-b border-navy-200 dark:border-navy-800">
-            <th class="py-2 pr-3 text-sm font-semibold text-navy-600 dark:text-navy-400">Over the whole policy</th>
-            <th class={frameHeadClass}>in the rupees of each year</th>
-            <th class={frameHeadClass}>in today's prices</th>
-          </tr>
-        </thead>
-        <tbody id="policyLedgerRows" class="divide-y divide-navy-100 dark:divide-navy-900"></tbody>
-      </table>
-    </div>
-
-    <p id="policyTaxLine" class="text-sm leading-relaxed text-navy-600 dark:text-navy-400 empty:hidden"></p>
-    <p id="policyBreakEvenLine" class="text-sm leading-relaxed text-navy-600 dark:text-navy-400 empty:hidden"></p>
-  </section>
-
-  <!-- 2. The two replicas. Stacked at 375; side by side only when there is room. -->
-  <section class="space-y-4" aria-label="The two do-it-yourself routes">
-    <div class="space-y-1">
-      <h3 class={headingClass}>Doing it yourself, two ways</h3>
-      <p class={ledeClass}>
-        Buy the same cover on the open market, invest what is left of each premium, and take out
-        exactly what the policy would have paid you, in exactly the years it would have paid it.
-        The only difference between these two is where the money in the middle sits.
-      </p>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div class={`${cardClass} flex flex-col`}>
-        <div class="flex items-start justify-between gap-3">
-          <div class="space-y-0.5">
-            <h4 class={headingClass}>The safe route</h4>
-            <p class="text-sm text-navy-600 dark:text-navy-400">Term cover, and government bonds at {SAFE_RATE_PCT}%</p>
-          </div>
-          <span id="safeBadge" class="shrink-0 px-2 py-0.5 text-xs font-bold tracking-tight rounded bg-navy-100 dark:bg-navy-800 text-navy-600 dark:text-navy-400">—</span>
-        </div>
-        <div class="space-y-1 pt-2">
-          <p id="safeLabel" class="text-sm font-semibold text-navy-600 dark:text-navy-400">Left over at the end</p>
-          <p id="safeFigure" class="text-2xl font-extrabold tracking-tight tabular-nums text-navy-900 dark:text-navy-100">₹0</p>
-          <p id="safeFigureReal" class="text-sm text-navy-600 dark:text-navy-400">&nbsp;</p>
-        </div>
-        <p id="safeText" class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed pt-2">&nbsp;</p>
-        <dl class="mt-auto pt-4 border-t border-navy-100 dark:border-navy-800 space-y-1.5 text-sm">
-          <div class="flex items-baseline justify-between gap-3">
-            <dt class="text-navy-600 dark:text-navy-400">Cover bought, over the paying years</dt>
-            <dd id="safeRiskCost" class="font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
-          </div>
-          <div class="flex items-baseline justify-between gap-3">
-            <dt class="text-navy-600 dark:text-navy-400">Tax on the interest, as it was earned</dt>
-            <dd id="safeTaxDrag" class="font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
-          </div>
-          <div class="flex items-baseline justify-between gap-3">
-            <dt class="text-navy-600 dark:text-navy-400">What the bonds charge to hold</dt>
-            <dd class="font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
-          </div>
-        </dl>
-      </div>
-
-      <div class={`${cardClass} flex flex-col`}>
-        <div class="flex items-start justify-between gap-3">
-          <div class="space-y-0.5">
-            <h4 class={headingClass}>The growth route</h4>
-            <p class="text-sm text-navy-600 dark:text-navy-400">Term cover, and an index fund at {EQUITY_RATE_PCT}%</p>
-          </div>
-          <!-- dd-007: two routes shown as equals. Only one of them used to carry a badge. -->
-          <span id="growthBadge" class="shrink-0 px-2 py-0.5 text-xs font-bold tracking-tight rounded bg-navy-100 dark:bg-navy-800 text-navy-600 dark:text-navy-400">—</span>
-        </div>
-        <div class="space-y-1 pt-2">
-          <p id="growthLabel" class="text-sm font-semibold text-navy-600 dark:text-navy-400">Left over at the end</p>
-          <p id="growthFigure" class="text-2xl font-extrabold tracking-tight tabular-nums text-navy-900 dark:text-navy-100">₹0</p>
-          <p id="growthFigureReal" class="text-sm text-navy-600 dark:text-navy-400">&nbsp;</p>
-        </div>
-        <p id="growthText" class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed pt-2">&nbsp;</p>
-        <dl class="mt-auto pt-4 border-t border-navy-100 dark:border-navy-800 space-y-1.5 text-sm">
-          <div class="flex items-baseline justify-between gap-3">
-            <dt class="text-navy-600 dark:text-navy-400">Cover bought, over the paying years</dt>
-            <dd id="growthRiskCost" class="font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
-          </div>
-          <div class="flex items-baseline justify-between gap-3">
-            <dt class="text-navy-600 dark:text-navy-400">Tax on the gains, as they were sold</dt>
-            <dd id="growthTaxDrag" class="font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
-          </div>
-          <!--
-            THE ROW THAT DID NOT EXIST. A reader told the fund returns 12% and
-            shown a balance built at 11.8% has been handed a figure that does not
-            follow from a stated assumption (dd-009/dont-1). The fee is its own
-            line, with the plan that produced it named.
-          -->
-          <div class="flex items-baseline justify-between gap-3">
-            <dt class="text-navy-600 dark:text-navy-400">What the fund charges to hold</dt>
-            <dd id="growthFeeDrag" class="font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
-          </div>
-        </dl>
-      </div>
-    </div>
-
-    <p id="routesTakeaway" class="text-sm text-navy-600 dark:text-navy-400 leading-relaxed rounded-xl border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900 px-4 py-3"></p>
-  </section>
-
-  <!-- 3. Where your premium actually goes: 3-Way Decomposition -->
-  <section class={cardClass} aria-label="Where your premium actually goes">
-    <div class="space-y-1">
-      <h3 class={headingClass}>Where your premium actually goes: 3-Way Unbundling</h3>
-      <p class={ledeClass}>
-        Every traditional policy bundles three distinct cash flows behind one gross premium: pure life risk cover,
-        distributor commissions & taxes, and net invested capital. Here is the exact decomposition of your annual premium.
-      </p>
-    </div>
-
-    <!-- Visual Decomposition Bar -->
-    <div class="space-y-2 pt-2">
-      <div class="h-3.5 w-full rounded-full bg-slate-100 dark:bg-navy-900 overflow-hidden flex border border-navy-200 dark:border-navy-800">
-        <div id="decompBarMortality" class="h-full bg-sky-500 transition-all duration-300" style="width: 0%" title="Pure Protection"></div>
-        <div id="decompBarFriction" class="h-full bg-amber-500 transition-all duration-300" style="width: 0%" title="Intermediary Friction & GST"></div>
-        <div id="decompBarInvested" class="h-full bg-emerald-500 transition-all duration-300" style="width: 0%" title="Net Invested Capital"></div>
-      </div>
-      <div class="flex flex-wrap items-center justify-between text-xs font-semibold text-navy-600 dark:text-navy-400 gap-2">
-        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-sky-500 inline-block"></span> Pure Cover (<span id="decompPctMortality" class="tabular-nums">0%</span>)</span>
-        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block"></span> Friction & GST (<span id="decompPctFriction" class="tabular-nums">0%</span>)</span>
-        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Net Invested (<span id="decompPctInvested" class="tabular-nums">0%</span>)</span>
-      </div>
-    </div>
-
-    <dl class="space-y-3 pt-2">
-      <div class="flex items-baseline justify-between gap-4 border-b border-navy-100 dark:border-navy-900 pb-3">
-        <dt class="text-sm text-navy-700 dark:text-navy-300">
-          Pure Life & Health Protection
-          <span class="block text-sm text-navy-600 dark:text-navy-400">Open-market term cost for the same Sum Assured</span>
-        </dt>
-        <dd id="decompCostMortality" class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
-      </div>
-      <div class="flex items-baseline justify-between gap-4 border-b border-navy-100 dark:border-navy-900 pb-3">
-        <dt class="text-sm text-navy-700 dark:text-navy-300">
-          Intermediary Friction & GST Loading
-          <span class="block text-sm text-navy-600 dark:text-navy-400">GST on premium + agent commissions & administrative overhead</span>
-        </dt>
-        <dd id="decompCostFriction" class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</dd>
-      </div>
-      <div class="flex items-baseline justify-between gap-4">
-        <dt class="text-sm text-navy-700 dark:text-navy-300">
-          Net Capital Actually Compounding
-          <span class="block text-sm text-navy-600 dark:text-navy-400">The actual portion of your annual premium working in the insurer's fund</span>
-        </dt>
-        <dd id="decompCostInvested" class="text-lg font-bold tabular-nums text-emerald-700 dark:text-emerald-400">₹0</dd>
-      </div>
-    </dl>
-
-    <div class="pt-3 border-t border-navy-100 dark:border-navy-900 grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div class="rounded-xl border border-navy-200 dark:border-navy-800 bg-slate-50 dark:bg-navy-900/50 p-3.5 space-y-1">
-        <p class="text-xs font-semibold text-navy-600 dark:text-navy-400">Total GST over paying term</p>
-        <p id="frictionGst" class="text-base font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</p>
-        <p class="text-xs text-navy-500 dark:text-navy-400">4.5% in year 1, 2.25% thereafter</p>
-      </div>
-      <div class="rounded-xl border border-navy-200 dark:border-navy-800 bg-slate-50 dark:bg-navy-900/50 p-3.5 space-y-1">
-        <p class="text-xs font-semibold text-navy-600 dark:text-navy-400">Estimated Year 1 Commission</p>
-        <p id="frictionCommission" class="text-base font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</p>
-        <p class="text-xs text-navy-500 dark:text-navy-400">Paid to distributor/agent</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4. Sunk-Cost & Exit Arbitrage Matrix (for existing policyholders) -->
-  <section id="insuranceSurrenderSection" class={cardClass} aria-label="Sunk-Cost and Exit Arbitrage Matrix" hidden>
-    <div class="space-y-1">
-      <div class="flex items-center justify-between gap-3">
-        <h3 class={headingClass}>Sunk-Cost & Exit Arbitrage Matrix</h3>
-        <span id="surrenderVerdictBadge" class="px-2.5 py-1 text-xs font-bold tracking-tight rounded-md bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300">Surrender & Reinvest</span>
-      </div>
-      <p id="surrenderLede" class={ledeClass}>
-        You have already paid for some years. Surrendering triggers an immediate penalty under IRDAI Special Surrender Value (SSV) curves — but continuing may cost far more in lost compound growth.
-      </p>
-    </div>
-
-    <!-- Sunk Cost Summary Card -->
-    <div class="rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/50 dark:bg-amber-950/20 p-4 space-y-2">
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
-        <div>
-          <span class="text-xs text-amber-800 dark:text-amber-400 font-semibold block">Total Premiums Paid</span>
-          <span id="surrenderPaidToDate" class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</span>
-          <span id="surrenderYearsLabel" class="text-xs text-navy-600 dark:text-navy-400 block">Across 0 years</span>
-        </div>
-        <div>
-          <span class="text-xs text-amber-800 dark:text-amber-400 font-semibold block">Cashout Available Today (SSV)</span>
-          <span id="surrenderValueToday" class="text-lg font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</span>
-          <span id="surrenderSsvFactor" class="text-xs text-navy-600 dark:text-navy-400 block">0% of paid premiums</span>
-        </div>
-        <div>
-          <span class="text-xs text-rose-800 dark:text-rose-400 font-semibold block">Immediate Sunk-Cost Loss</span>
-          <span id="surrenderHaircut" class="text-lg font-bold tabular-nums text-rose-700 dark:text-rose-400">₹0</span>
-          <span class="text-xs text-navy-600 dark:text-navy-400 block">Surrender penalty</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3-Way Trajectory Comparison Table -->
-    <div class="overflow-x-auto rounded-xl border border-navy-200 dark:border-navy-800">
-      <table class="w-full text-left border-collapse">
-        <thead class="bg-navy-50 dark:bg-navy-900">
-          <tr>
-            <th class="px-3 py-2.5 text-sm font-semibold text-navy-600 dark:text-navy-400">Strategy</th>
-            <th class="px-3 py-2.5 text-sm font-semibold text-navy-600 dark:text-navy-400">Next Step</th>
-            <th class="px-3 py-2.5 text-right text-sm font-semibold text-navy-600 dark:text-navy-400">Final Wealth</th>
-            <th class="px-3 py-2.5 text-right text-sm font-semibold text-navy-600 dark:text-navy-400">In Today's Money</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-navy-100 dark:divide-navy-800 text-sm">
-          <tr id="surrenderRowOptA">
-            <td class="px-3 py-3 font-semibold text-navy-900 dark:text-navy-100">Option A: Surrender & Reinvest</td>
-            <td class="px-3 py-3 text-navy-600 dark:text-navy-400">Take SSV today + invest future premiums in index replica</td>
-            <td id="surrenderOptANominal" class="px-3 py-3 text-right font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</td>
-            <td id="surrenderOptAReal" class="px-3 py-3 text-right font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</td>
-          </tr>
-          <tr id="surrenderRowOptB">
-            <td class="px-3 py-3 font-semibold text-navy-900 dark:text-navy-100">Option B: Make Paid-Up</td>
-            <td class="px-3 py-3 text-navy-600 dark:text-navy-400">Stop paying; keep reduced policy payout + invest saved premiums</td>
-            <td id="surrenderOptBNominal" class="px-3 py-3 text-right font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</td>
-            <td id="surrenderOptBReal" class="px-3 py-3 text-right font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</td>
-          </tr>
-          <tr id="surrenderRowOptC">
-            <td class="px-3 py-3 font-semibold text-navy-900 dark:text-navy-100">Option C: Hold to Maturity</td>
-            <td class="px-3 py-3 text-navy-600 dark:text-navy-400">Pay all remaining premiums; collect full policy benefits</td>
-            <td id="surrenderOptCNominal" class="px-3 py-3 text-right font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</td>
-            <td id="surrenderOptCReal" class="px-3 py-3 text-right font-bold tabular-nums text-navy-900 dark:text-navy-100">₹0</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Takeaway Banner -->
-    <div id="surrenderArbitrageBanner" class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/50 dark:bg-emerald-950/20 text-sm leading-relaxed text-emerald-900 dark:text-emerald-200">
-    </div>
-  </section>
-
-  <!-- 5. The one assumption that is not a fact. -->
-  <section class={cardClass} aria-label="How fragile the comparison is">
-    <div class="space-y-1">
-      <h3 class={headingClass}>What if the market does not deliver {EQUITY_RATE_PCT}%?</h3>
-      <p class={ledeClass}>
-        The policy's income is a contract and the index fund's is not. Here is the same
-        comparison at returns either side of the one assumed — and note that a lower return does
-        not merely leave less over, it can mean the income stops arriving at all.
-      </p>
-    </div>
-    <div class="overflow-x-auto rounded-xl border border-navy-200 dark:border-navy-800">
-      <table class="w-full text-left border-collapse">
-        <thead class="bg-navy-50 dark:bg-navy-900">
-          <tr>
-            <th class="px-3 py-2.5 text-sm font-semibold text-navy-600 dark:text-navy-400">If the index returns</th>
-            <th class="px-3 py-2.5 text-right text-sm font-semibold text-navy-600 dark:text-navy-400">Left over at the end</th>
-            <th class="px-3 py-2.5 text-right text-sm font-semibold text-navy-600 dark:text-navy-400">Did it fund the promise?</th>
-          </tr>
-        </thead>
-        <tbody id="insuranceSensitivityBody" class="divide-y divide-navy-100 dark:divide-navy-800"></tbody>
-      </table>
-    </div>
-    <p class={ledeClass}>
-      Each row is charged the same fund fee as the comparison above, so the rate in the first
-      column is what the index does and not what you keep.
-    </p>
-  </section>
-
-  <!-- 6. The shape of the whole thing, at a glance. -->
-  <section class={cardClass} aria-label="The cash flow, year by year">
-    <div class="space-y-1">
-      <h3 class={headingClass}>The shape of it, year by year</h3>
-      <p class={ledeClass}>
-        Money out, then money back. The years of paying are the reason the comparison exists:
-        that is when the alternative is compounding.
-      </p>
-    </div>
-    <div class="relative w-full h-[250px]">
-      <canvas id="cashflowChart" class="w-full h-full"></canvas>
-    </div>
-  </section>
+    </section>
+  </div>
 
 </div>
+
+<script>
+  // Tab switching handler for InsuranceRoutes
+  function initRoutesTabs() {
+    const tabBtns = document.querySelectorAll('.routes-tab-btn');
+    const tabPanes = document.querySelectorAll('.routes-tab-pane');
+
+    tabBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-tab-target');
+        if (!targetId) return;
+
+        tabBtns.forEach((b) => {
+          b.classList.remove('active', 'border-navy-900', 'dark:border-white', 'text-navy-950', 'dark:text-white');
+          b.classList.add('border-transparent', 'text-navy-500');
+        });
+
+        btn.classList.add('active', 'border-navy-900', 'dark:border-white', 'text-navy-950', 'dark:text-white');
+        btn.classList.remove('border-transparent', 'text-navy-500');
+
+        tabPanes.forEach((pane) => {
+          if (pane.id === targetId) {
+            pane.removeAttribute('hidden');
+          } else {
+            pane.setAttribute('hidden', '');
+          }
+        });
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initRoutesTabs);
+  } else {
+    initRoutesTabs();
+  }
+</script>

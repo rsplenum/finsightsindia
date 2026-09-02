@@ -344,7 +344,7 @@ describe('sol-051 - no page declares an id that nothing references', () => {
     // no ids found, or a `referenced` set so permissive that it contains
     // everything. One assertion each.
     expect(pages.length).toBeGreaterThan(10);
-    expect(idsIn(fs.readFileSync('src/pages/sip-engine.astro', 'utf-8')).length)
+    expect(files.flatMap((f) => idsIn(fs.readFileSync(f, 'utf-8'))).length)
       .toBeGreaterThan(40);
     expect(referenced.has('downloadPdfBtn')).toBe(true);
     expect(referenced.has('tier3ActionableFooter')).toBe(false);

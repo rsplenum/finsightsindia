@@ -1,363 +1,341 @@
 ---
-/**
- * Comprehensive working, charts, and schedule for the reimagined SWP planner — dd-002, dd-004, dd-008, dd-010.
- *
- * Organized into 3 clear tabs:
- * 1. Plan Summary & Projections (Lifecycle Chart, Micro Cashflow, Key Totals, Sensitivity Matrix)
- * 2. Yearly Schedule & Cashflow (Year-by-year ledger with "Show in Today's Rupees" toggle)
- * 3. Option Hedging & Downside (Black-Scholes Put Floor protection details and ledger)
- *
- * Design settled before the component in `SwpWorking.checks.md`.
- */
+// SwpWorking.astro — Visual Working workbench for the SWP Planner
+// Implements interactive workbench tabs: Monte Carlo percentile trajectory, Recharts bar growth vs target comparison, cashflow schedule, sensitivity, and downside hedging.
 import CardPremium from '../CardPremium.astro';
+import CorpusGrowthVsTargetChart from './CorpusGrowthVsTargetChart';
 ---
 
-<div class="space-y-6">
-
-  <!-- Main Working Container -->
-  <CardPremium class="p-4 sm:p-6 space-y-6">
+<div id="swpWorkbenchContainer" class="w-full max-w-full overflow-x-hidden p-4 sm:p-0 space-y-6 font-sans antialiased">
+  
+  <!-- Top Stat Cards (Sol-019 Layer 2 Metrics) -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 w-full transition-all duration-300 ease-in-out" style="transition: all 0.3s ease-in-out;">
     
-    <!-- Top Navigation Tabs & PDF Export -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-navy-200 dark:border-white/10">
-      <nav class="flex items-center gap-1 sm:gap-2 overflow-x-auto pb-1 sm:pb-0" aria-label="SWP detail tabs">
+    <div class="card-glass rounded-xl p-4 sm:p-5 flex flex-col justify-between border border-navy-200/80 dark:border-navy-800/80 bg-white/70 dark:bg-navy-900/70 backdrop-blur-md shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-xs sm:text-sm font-semibold text-navy-700 dark:text-navy-300 tracking-normal">
+          Success Probability
+        </span>
+        <span class="text-xs font-medium text-navy-600 dark:text-navy-400 bg-navy-100 dark:bg-navy-800 px-2 py-0.5 rounded-md border border-navy-200/60 dark:border-navy-700/60">
+          10k runs
+        </span>
+      </div>
+      <div class="my-2.5 text-2xl sm:text-3xl font-extrabold text-navy-950 dark:text-white tracking-tight leading-tight tabular-nums min-h-[36px] flex items-center">
+        <span id="metricSuccessRate">--</span>
+      </div>
+      <div id="metricSuccessSubtext" class="text-xs sm:text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
+        Probability of survival
+      </div>
+    </div>
+
+    <div class="card-glass rounded-xl p-4 sm:p-5 flex flex-col justify-between border border-navy-200/80 dark:border-navy-800/80 bg-white/70 dark:bg-navy-900/70 backdrop-blur-md shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-xs sm:text-sm font-semibold text-navy-700 dark:text-navy-300 tracking-normal">
+          Safe Withdrawal Rate
+        </span>
+        <span class="text-xs font-medium text-navy-600 dark:text-navy-400 bg-navy-100 dark:bg-navy-800 px-2 py-0.5 rounded-md border border-navy-200/60 dark:border-navy-700/60">
+          annualized
+        </span>
+      </div>
+      <div class="my-2.5 text-2xl sm:text-3xl font-extrabold text-navy-950 dark:text-white tracking-tight leading-tight tabular-nums min-h-[36px] flex items-center">
+        <span id="metricInitialSWR">--</span>
+      </div>
+      <div id="metricSwrStatus" class="text-xs sm:text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
+        Initial withdrawal / corpus
+      </div>
+    </div>
+
+    <div class="card-glass rounded-xl p-4 sm:p-5 flex flex-col justify-between border border-navy-200/80 dark:border-navy-800/80 bg-white/70 dark:bg-navy-900/70 backdrop-blur-md shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-xs sm:text-sm font-semibold text-navy-700 dark:text-navy-300 tracking-normal">
+          Median Ending Corpus
+        </span>
+        <span class="text-xs font-medium text-navy-600 dark:text-navy-400 bg-navy-100 dark:bg-navy-800 px-2 py-0.5 rounded-md border border-navy-200/60 dark:border-navy-700/60">
+          at horizon
+        </span>
+      </div>
+      <div class="my-2.5 text-2xl sm:text-3xl font-extrabold text-navy-950 dark:text-white tracking-tight leading-tight tabular-nums min-h-[36px] flex items-center">
+        <span id="metricMedianFinal">--</span>
+      </div>
+      <div id="metricMedianFinalReal" class="text-xs sm:text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
+        In today's value: --
+      </div>
+    </div>
+
+    <div class="card-glass rounded-xl p-4 sm:p-5 flex flex-col justify-between border border-navy-200/80 dark:border-navy-800/80 bg-white/70 dark:bg-navy-900/70 backdrop-blur-md shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-xs sm:text-sm font-semibold text-navy-700 dark:text-navy-300 tracking-normal">
+          Total Lifetime Income
+        </span>
+        <span class="text-xs font-medium text-navy-600 dark:text-navy-400 bg-navy-100 dark:bg-navy-800 px-2 py-0.5 rounded-md border border-navy-200/60 dark:border-navy-700/60">
+          withdrawn
+        </span>
+      </div>
+      <div class="my-2.5 text-2xl sm:text-3xl font-extrabold text-navy-950 dark:text-white tracking-tight leading-tight tabular-nums min-h-[36px] flex items-center">
+        <span id="metricTotalWithdrawn">--</span>
+      </div>
+      <div id="metricMultiplier" class="text-xs sm:text-sm text-navy-600 dark:text-navy-400 leading-relaxed">
+        -- x initial capital
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Workbench Card with Multi-Tab System -->
+  <CardPremium glass={true} class="p-4 sm:p-6 space-y-6 overflow-hidden">
+    
+    <!-- Tab Navigation Header -->
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-navy-200 dark:border-navy-800 pb-4">
+      <div>
+        <h3 class="text-base sm:text-lg font-bold text-navy-900 dark:text-navy-100 tracking-tight">
+          Portfolio Workings & Schedule
+        </h3>
+        <p class="text-xs text-navy-500 dark:text-navy-400 mt-0.5">
+          Percentile distribution trajectories, yearly cashflows, sensitivity matrix, and hedging ledger.
+        </p>
+      </div>
+
+      <!-- Tab Buttons Group (Scrollable on mobile) -->
+      <div role="tablist" aria-label="SWP Workbench Views" class="flex flex-nowrap overflow-x-auto no-scrollbar scrollbar-none max-w-full p-1.5 rounded-xl bg-navy-100 dark:bg-navy-900 border border-navy-200/80 dark:border-navy-800/80 gap-1.5 shrink-0">
         <button
-          id="tabPlanSummaryBtn"
           type="button"
-          class="px-3.5 py-2 text-xs sm:text-sm font-bold rounded-lg border border-navy-900 bg-navy-900 text-white dark:border-white dark:bg-white dark:text-navy-950 transition-colors shadow-2xs whitespace-nowrap"
+          role="tab"
+          id="tabBtnChart"
+          data-tab="chart"
+          class="swp-tab-btn active-tab shrink-0 whitespace-nowrap min-h-[44px] px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors bg-white dark:bg-navy-800 text-navy-900 dark:text-white shadow-xs inline-flex items-center justify-center"
         >
-          Summary & Projections
+          Corpus Trajectory
         </button>
         <button
-          id="tabScheduleBtn"
           type="button"
-          class="px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg border border-transparent text-navy-600 dark:text-navy-400 hover:text-navy-900 dark:hover:text-white hover:bg-navy-100 dark:hover:bg-navy-800 transition-colors whitespace-nowrap"
+          role="tab"
+          id="tabBtnGrowth"
+          data-tab="growth"
+          class="swp-tab-btn shrink-0 whitespace-nowrap min-h-[44px] px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold text-navy-600 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100 transition-colors inline-flex items-center justify-center"
+        >
+          Growth vs Target
+        </button>
+        <button
+          type="button"
+          role="tab"
+          id="tabBtnSchedule"
+          data-tab="schedule"
+          class="swp-tab-btn shrink-0 whitespace-nowrap min-h-[44px] px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold text-navy-600 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100 transition-colors inline-flex items-center justify-center"
         >
           Yearly Schedule
         </button>
         <button
-          id="tabHedgingBtn"
           type="button"
-          class="px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg border border-transparent text-navy-600 dark:text-navy-400 hover:text-navy-900 dark:hover:text-white hover:bg-navy-100 dark:hover:bg-navy-800 transition-colors whitespace-nowrap"
+          role="tab"
+          id="tabBtnSensitivity"
+          data-tab="sensitivity"
+          class="swp-tab-btn shrink-0 whitespace-nowrap min-h-[44px] px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold text-navy-600 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100 transition-colors inline-flex items-center justify-center"
         >
-          Downside Hedging
+          Sensitivity Matrix
         </button>
-      </nav>
-
-      <button
-        id="downloadPdfBtn"
-        type="button"
-        class="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg border border-navy-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-xs font-semibold text-navy-700 dark:text-navy-300 hover:border-gold-500 hover:text-gold-700 dark:hover:text-gold-400 transition-colors shadow-2xs self-start sm:self-auto shrink-0"
-      >
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-        <span>Download PDF Report</span>
-      </button>
+        <button
+          type="button"
+          role="tab"
+          id="tabBtnHedging"
+          data-tab="hedging"
+          class="swp-tab-btn shrink-0 whitespace-nowrap min-h-[44px] px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold text-navy-600 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-100 transition-colors inline-flex items-center justify-center"
+        >
+          Put Floor Ledger
+        </button>
+      </div>
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- TAB 1: PLAN SUMMARY & PROJECTIONS                                         -->
-    <!-- ========================================================================= -->
-    <div id="viewPlanSummary" class="space-y-6">
+    <!-- Tab Pane 1: Corpus Trajectory Chart -->
+    <div id="tabPaneChart" class="w-full max-w-full space-y-4">
       
-      <!-- Payout Multiplier & Cashflow Summary Card -->
-      <div class="rounded-2xl border border-navy-200/80 dark:border-white/10 bg-gradient-to-br from-navy-50/70 via-white to-gold-50/30 dark:from-navy-900/60 dark:via-navy-900/40 dark:to-gold-950/20 p-5 sm:p-6 space-y-5">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <h4 class="text-base font-bold text-navy-900 dark:text-navy-100">
-              Lifetime Income vs Initial Savings
-            </h4>
-            <p class="text-xs text-navy-500 dark:text-navy-400">
-              How much wealth your portfolio generates over the full retirement span.
-            </p>
+      <!-- Chart Controls & Legend -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs sm:text-sm">
+        <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 sm:gap-4">
+          <div class="inline-flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-sm bg-emerald-600 dark:bg-emerald-500 shrink-0"></span>
+            <span class="text-navy-700 dark:text-navy-300 font-medium whitespace-nowrap text-[11px] sm:text-xs">90th Pct (Bull)</span>
           </div>
-          <span id="wowMultiplierBadge" class="self-start sm:self-auto px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 font-bold text-xs border border-emerald-300 dark:border-emerald-800">
-            --x Lifetime Payout
-          </span>
-        </div>
-
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-          <div class="p-3.5 rounded-xl bg-white dark:bg-navy-950 border border-navy-200/70 dark:border-white/5 space-y-1">
-            <span class="text-xs font-semibold text-navy-500 dark:text-navy-400 block">Initial Corpus</span>
-            <div id="wowInitialCorpus" class="text-lg sm:text-xl font-bold text-navy-900 dark:text-navy-100 tabular-nums">₹ 0</div>
+          <div class="inline-flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-sm bg-blue-600 dark:bg-blue-500 shrink-0"></span>
+            <span class="text-navy-700 dark:text-navy-300 font-medium whitespace-nowrap text-[11px] sm:text-xs">50th Pct (Median)</span>
           </div>
-          <div class="p-3.5 rounded-xl bg-white dark:bg-navy-950 border border-navy-200/70 dark:border-white/5 space-y-1">
-            <span class="text-xs font-semibold text-gold-700 dark:text-gold-400 block">Net Lifetime Income</span>
-            <div id="wowNetPayout" class="text-lg sm:text-xl font-bold text-gold-700 dark:text-gold-400 tabular-nums">₹ 0</div>
+          <div class="inline-flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-sm bg-amber-600 dark:bg-amber-500 shrink-0"></span>
+            <span class="text-navy-700 dark:text-navy-300 font-medium whitespace-nowrap text-[11px] sm:text-xs">10th Pct (Adverse)</span>
           </div>
-          <div class="p-3.5 rounded-xl bg-white dark:bg-navy-950 border border-navy-200/70 dark:border-white/5 space-y-1">
-            <span class="text-xs font-semibold text-rose-700 dark:text-rose-400 block">LTCG Tax Paid</span>
-            <div id="tier2Taxes" class="text-lg sm:text-xl font-bold text-rose-700 dark:text-rose-400 tabular-nums">₹ 0</div>
-          </div>
-          <div class="p-3.5 rounded-xl bg-white dark:bg-navy-950 border border-navy-200/70 dark:border-white/5 space-y-1">
-            <span class="text-xs font-semibold text-emerald-700 dark:text-emerald-400 block">Median Final Balance</span>
-            <div id="tier2BalanceRemaining" class="text-lg sm:text-xl font-bold text-emerald-700 dark:text-emerald-400 tabular-nums">₹ 0</div>
+          <div class="inline-flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-sm bg-red-600 dark:bg-red-500 shrink-0"></span>
+            <span class="text-navy-700 dark:text-navy-300 font-medium whitespace-nowrap text-[11px] sm:text-xs">Zero Line</span>
           </div>
         </div>
 
-        <div class="hidden">
-          <span id="tier2Duration"></span>
-          <span id="tier2Gross"></span>
-          <span id="tier2Net"></span>
-          <span id="valLowestPaycheck"></span>
-          <span id="valRockBottom"></span>
-          <span id="valSacrifice"></span>
-          <div id="lifestyleSacrificeAlertBox" class="hidden">
-            <span id="valSacrificeTotalCash"></span>
-            <span id="valSacrificeRockBottom"></span>
-          </div>
-          <div id="guardrailsLowestPaycheckRow" class="hidden"></div>
-          <div id="guardrailsActiveBadge" class="hidden"></div>
-          <div id="weatherForecastContainer" class="hidden"><div id="weatherGrid"></div></div>
+        <div class="flex items-center justify-between sm:justify-end gap-2 pt-1 sm:pt-0 border-t sm:border-t-0 border-navy-100 dark:border-navy-800/60">
+          <span class="text-navy-600 dark:text-navy-400 text-xs whitespace-nowrap">Values shown in:</span>
+          <button
+            type="button"
+            id="chartRealNominalToggle"
+            class="min-h-[38px] sm:min-h-[44px] px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-lg border text-xs sm:text-sm font-semibold border-navy-300 dark:border-navy-700 bg-navy-50 dark:bg-navy-900 text-navy-800 dark:text-navy-200 hover:border-gold-500 transition-colors inline-flex items-center justify-center whitespace-nowrap shrink-0"
+          >
+            Today's Rupees (Real)
+          </button>
         </div>
       </div>
 
-      <!-- Lifecycle Projections Chart -->
-      <div class="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-950 p-4 sm:p-5 space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-navy-100 dark:border-white/10">
-          <div>
-            <h4 class="text-base font-bold text-navy-900 dark:text-navy-100">
-              The Lifecycle of Your Savings
-            </h4>
-            <p class="text-xs text-navy-500 dark:text-navy-400">
-              Monte Carlo simulation showing the full spectrum of market paths.
-            </p>
+      <!-- Trajectory Chart Canvas / Container with Skeleton (100% responsive width, no horizontal scrolling) -->
+      <div id="swpChartCanvasContainer" class="relative w-full max-w-full h-80 sm:h-96 rounded-xl bg-navy-50/70 dark:bg-navy-900/50 border border-navy-200 dark:border-navy-800 p-2 sm:p-3 overflow-hidden flex flex-col justify-end">
+        <!-- Dynamic Skeleton overlay during calculation -->
+        <div id="swpChartSkeleton" class="absolute inset-0 bg-navy-100/60 dark:bg-navy-950/70 backdrop-blur-[2px] flex flex-col justify-between p-6 skeleton-shimmer pointer-events-none transition-opacity duration-300 opacity-0 hidden">
+          <div class="flex justify-between items-center">
+            <div class="h-4 w-32 bg-navy-200 dark:bg-navy-800 rounded"></div>
+            <div class="h-4 w-20 bg-navy-200 dark:bg-navy-800 rounded"></div>
           </div>
-          <div class="flex items-center gap-1 bg-navy-100 dark:bg-navy-900 border border-navy-200 dark:border-white/10 rounded-lg p-1 text-xs">
-            <button id="viewPercentilesBtn" type="button" class="min-h-[32px] px-3 py-1 rounded-md bg-white dark:bg-navy-950 text-navy-900 dark:text-navy-100 font-semibold shadow-2xs transition-colors">Likelihoods</button>
-            <button id="viewSamplePathsBtn" type="button" class="min-h-[32px] px-3 py-1 rounded-md text-navy-600 dark:text-navy-400 hover:text-navy-900 dark:hover:text-navy-200 transition-colors">Sample Paths</button>
+          <div class="space-y-3">
+            <div class="h-2 w-full bg-navy-200/80 dark:bg-navy-800/80 rounded"></div>
+            <div class="h-2 w-4/5 bg-navy-200/80 dark:bg-navy-800/80 rounded"></div>
+            <div class="h-2 w-3/5 bg-navy-200/80 dark:bg-navy-800/80 rounded"></div>
+          </div>
+          <div class="flex justify-between items-center pt-4">
+            <div class="h-3 w-12 bg-navy-200 dark:bg-navy-800 rounded"></div>
+            <div class="h-3 w-12 bg-navy-200 dark:bg-navy-800 rounded"></div>
+            <div class="h-3 w-12 bg-navy-200 dark:bg-navy-800 rounded"></div>
+            <div class="h-3 w-12 bg-navy-200 dark:bg-navy-800 rounded"></div>
           </div>
         </div>
 
-        <div class="relative w-full h-64 sm:h-80 md:h-96">
-          <canvas id="swpChart" class="w-full h-full"></canvas>
-        </div>
-
-        <div class="flex flex-wrap items-center justify-between text-xs text-navy-600 dark:text-navy-400 pt-2 gap-3 border-t border-navy-100 dark:border-white/10">
-          <div class="flex flex-wrap items-center gap-4 sm:gap-6">
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400"></span> 90th % (Boom Market)</span>
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-navy-900 dark:bg-navy-100"></span> 50th % (Median Expected)</span>
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-600 dark:bg-rose-400"></span> 10th % (Early Crash)</span>
-          </div>
-          <span class="text-xs text-navy-500 dark:text-navy-400 font-medium">10,000 Simulated Futures</span>
-        </div>
+        <!-- SVG Interactive Trajectory Chart Rendered Dynamically -->
+        <svg id="swpTrajectorySvg" class="w-full h-full block" viewBox="0 0 800 360">
+          <!-- Dynamically populated by client runner script -->
+        </svg>
       </div>
 
-      <!-- Micro Cashflow Trajectory Chart -->
-      <div class="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-950 p-4 sm:p-5 space-y-3">
-        <div class="flex items-center justify-between pb-2 border-b border-navy-100 dark:border-white/10">
-          <h4 class="text-sm font-bold text-navy-900 dark:text-navy-100">
-            Monthly Paycheck Trajectory (Nominal Cash vs Real Purchasing Power)
-          </h4>
-          <span class="text-xs text-navy-500 dark:text-navy-400">Annual Escalation</span>
-        </div>
-        <div class="relative w-full h-44 sm:h-52">
-          <canvas id="cashflowMicroChart" class="w-full h-full"></canvas>
-        </div>
-      </div>
-
-      <!-- Sensitivity & Diagnostics Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-5">
-        
-        <!-- Volatility Sensitivity Table -->
-        <div class="md:col-span-7 rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-950 p-4 sm:p-5 space-y-3">
-          <div class="flex items-center justify-between pb-2 border-b border-navy-100 dark:border-white/10">
-            <div>
-              <h4 class="text-sm font-bold text-navy-900 dark:text-navy-100">Market Volatility Sensitivity</h4>
-              <p class="text-xs text-navy-500 dark:text-navy-400">Required CAGR to offset sequence drag.</p>
-            </div>
-            <div class="text-xs text-right">
-              <span class="text-navy-500 dark:text-navy-400">Initial Rate:</span>
-              <span id="sensIWR" class="font-bold text-gold-700 dark:text-gold-400 ml-1">--%</span>
-            </div>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-xs tabular-nums">
-              <thead>
-                <tr class="border-b border-navy-200 dark:border-navy-800 text-navy-500 dark:text-navy-400 text-left">
-                  <th class="py-2 px-3 font-semibold">Volatility Level</th>
-                  <th class="py-2 px-3 text-right font-semibold">Required CAGR</th>
-                </tr>
-              </thead>
-              <tbody id="sensitivityTableBody" class="divide-y divide-navy-100 dark:divide-white/5 font-sans">
-                <!-- Dynamically populated -->
-              </tbody>
-            </table>
-          </div>
-          <span id="sensVolatilityInput" class="hidden"></span>
-        </div>
-
-        <!-- Simulation Diagnostics Panel -->
-        <div class="md:col-span-5 rounded-2xl border border-navy-200 dark:border-white/10 bg-navy-50/50 dark:bg-navy-900/40 p-4 sm:p-5 space-y-3">
-          <div class="flex items-center justify-between pb-2 border-b border-navy-200/60 dark:border-white/10">
-            <h4 class="text-sm font-bold text-navy-900 dark:text-navy-100">Simulation Diagnostics</h4>
-            <button
-              type="button"
-              id="toggleDiagnosticsBtn"
-              class="text-xs font-semibold text-gold-700 dark:text-gold-400 hover:underline"
-            >
-              Toggle Details
-            </button>
-          </div>
-
-          <div id="diagnosticsPanel" class="space-y-3 text-xs">
-            <div class="grid grid-cols-2 gap-3">
-              <div class="p-2.5 rounded-lg bg-white dark:bg-navy-950 border border-navy-200/70 dark:border-white/5">
-                <span class="text-navy-500 dark:text-navy-400 block text-xs">Mean Final Bal</span>
-                <span id="diagMean" class="font-bold text-navy-900 dark:text-navy-100 text-sm">₹0</span>
-              </div>
-              <div class="p-2.5 rounded-lg bg-white dark:bg-navy-950 border border-navy-200/70 dark:border-white/5">
-                <span class="text-navy-500 dark:text-navy-400 block text-xs">Median Final Bal</span>
-                <span id="diagMedian" class="font-bold text-navy-900 dark:text-navy-100 text-sm">₹0</span>
-              </div>
-              <div class="p-2.5 rounded-lg bg-white dark:bg-navy-950 border border-navy-200/70 dark:border-white/5">
-                <span class="text-navy-500 dark:text-navy-400 block text-xs">Std Deviation</span>
-                <span id="diagStdDev" class="font-bold text-navy-900 dark:text-navy-100 text-sm">₹0</span>
-              </div>
-              <div class="p-2.5 rounded-lg bg-white dark:bg-navy-950 border border-navy-200/70 dark:border-white/5">
-                <span class="text-navy-500 dark:text-navy-400 block text-xs">Skewness</span>
-                <span id="diagSkew" class="font-bold text-navy-900 dark:text-navy-100 text-sm">0.00</span>
-              </div>
-            </div>
-            <p class="text-xs text-navy-500 dark:text-navy-400 leading-tight">
-              Positive skew indicates distribution is lifted by long-term compounding in bull runs.
-            </p>
-          </div>
-        </div>
-
-      </div>
-
+      <!-- Chart Footnote -->
+      <p class="text-xs sm:text-sm text-navy-500 dark:text-navy-400 leading-relaxed italic">
+        * Chart displays 10th (adverse market timing), 50th (median), and 90th percentile trajectories out of 10,000 empirical paths.
+      </p>
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- TAB 2: YEARLY SCHEDULE & CASHFLOW                                         -->
-    <!-- ========================================================================= -->
-    <div id="viewSchedule" class="hidden space-y-5">
-      <div class="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-950 p-4 sm:p-5 space-y-4">
-        
-        <!-- Schedule Header & Inflation Deflator Toggle -->
-        <div class="pb-4 border-b border-navy-200 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div class="space-y-1">
-            <h4 class="text-base font-bold text-navy-900 dark:text-navy-100">
-              Yearly Cashflow & Inflation Escalation Schedule
-            </h4>
-            <!-- dd-004 / dd-008: Explicit currency frame notice -->
-            <p id="scheduleMoneyFrame" class="text-xs font-semibold text-gold-700 dark:text-gold-400"></p>
-          </div>
+    <!-- Tab Pane 2: Growth vs Target Recharts Bar Chart -->
+    <div id="tabPaneGrowth" class="hidden space-y-4">
+      <CorpusGrowthVsTargetChart client:load />
+    </div>
 
-          <div class="flex flex-wrap items-center gap-3 self-start sm:self-auto">
-            <!-- Show in Today's Rupees Toggle -->
-            <label class="flex items-center cursor-pointer gap-2 bg-navy-50 dark:bg-navy-900 px-3 py-1.5 rounded-lg border border-navy-200 dark:border-navy-700">
-              <span class="text-xs font-semibold text-navy-700 dark:text-navy-300">Show in Today's Rupees</span>
-              <div class="relative">
-                <input type="checkbox" id="inflationDeflatorToggle" class="sr-only peer">
-                <div class="w-8 h-4 bg-navy-200 hover:bg-navy-300 dark:bg-navy-700 dark:hover:bg-navy-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500"></div>
-              </div>
-            </label>
+    <!-- Tab Pane 3: Yearly Schedule Table -->
+    <div id="tabPaneSchedule" class="hidden space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <span class="text-xs sm:text-sm text-navy-600 dark:text-navy-400 font-medium">
+          Detailed year-by-year cashflows, inflation step-ups, capital gains taxes, and balance.
+        </span>
+        <button
+          type="button"
+          id="exportScheduleCsvBtn"
+          class="min-h-[44px] px-3.5 py-2 rounded-lg border text-xs sm:text-sm font-medium border-navy-300 dark:border-navy-700 text-navy-700 dark:text-navy-300 hover:bg-navy-100 dark:hover:bg-navy-800 transition-colors inline-flex items-center justify-center gap-2 shrink-0"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          Export CSV
+        </button>
+      </div>
 
-            <span id="scheduleStepUpBadge" class="text-xs text-navy-600 dark:text-navy-400 bg-navy-100 dark:bg-navy-900 border border-navy-200 dark:border-white/10 px-2.5 py-1.5 rounded-lg font-medium">
-              +6.0% Inflation
-            </span>
-          </div>
-        </div>
-
-        <!-- Schedule Table -->
-        <div class="w-full max-h-[600px] overflow-x-auto overflow-y-auto border border-navy-200 dark:border-navy-800 rounded-xl scrollbar-thin scrollbar-thumb-navy-300 dark:scrollbar-thumb-navy-700">
-          <table class="w-full min-w-[700px] text-xs tabular-nums">
-            <thead class="sticky top-0 z-10 bg-navy-100 dark:bg-navy-900 border-b border-navy-200 dark:border-navy-800 text-navy-700 dark:text-navy-300 shadow-2xs">
-              <tr>
-                <th class="py-3 px-3.5 text-left font-bold whitespace-nowrap">Year</th>
-                <th class="py-3 px-3.5 text-right font-bold whitespace-nowrap">Net Monthly</th>
-                <th class="py-3 px-3.5 text-right font-bold whitespace-nowrap">Net Annual</th>
-                <th class="py-3 px-3.5 text-right font-bold whitespace-nowrap text-rose-700 dark:text-rose-400">Annual LTCG Tax</th>
-                <th class="py-3 px-3.5 text-right font-bold whitespace-nowrap text-emerald-700 dark:text-emerald-400">Additions / Growth</th>
-                <th class="py-3 px-3.5 text-right font-bold whitespace-nowrap">Corpus Balance</th>
-              </tr>
-            </thead>
-            <tbody id="scheduleTableBody" class="divide-y divide-navy-100 dark:divide-white/5 font-sans bg-white dark:bg-navy-950">
-              <!-- Dynamically populated -->
-            </tbody>
-          </table>
-        </div>
-
+      <div class="overflow-x-auto max-h-96 rounded-xl border border-navy-200 dark:border-navy-800">
+        <table class="w-full text-left text-xs tabular-nums">
+          <thead class="bg-navy-100/80 dark:bg-navy-900 sticky top-0 border-b border-navy-200 dark:border-navy-800 text-navy-800 dark:text-navy-200 font-bold">
+            <tr>
+              <th class="py-2.5 px-3">Year</th>
+              <th class="py-2.5 px-3">Age</th>
+              <th class="py-2.5 px-3">Nominal Paycheck</th>
+              <th class="py-2.5 px-3">Real Purchasing Power</th>
+              <th class="py-2.5 px-3">LTCG Tax</th>
+              <th class="py-2.5 px-3">Ending (10th %ile)</th>
+              <th class="py-2.5 px-3">Ending (Median)</th>
+              <th class="py-2.5 px-3">Ending (90th %ile)</th>
+            </tr>
+          </thead>
+          <tbody id="swpScheduleTableBody" class="divide-y divide-navy-200/60 dark:divide-navy-800/60 text-navy-700 dark:text-navy-300">
+            <!-- Dynamically populated rows -->
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- TAB 3: DOWNSIDE HEDGING                                                   -->
-    <!-- ========================================================================= -->
-    <div id="viewHedging" class="hidden space-y-5">
-      <div class="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-950 p-4 sm:p-6 space-y-5">
-        
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-navy-200 dark:border-navy-800">
-          <div>
-            <h4 class="text-base font-bold text-navy-900 dark:text-navy-100">
-              Black-Scholes Put Option Downside Hedging
-            </h4>
-            <p class="text-xs text-navy-500 dark:text-navy-400">
-              Institutional-grade insurance: continuously roll European put options to cap equity drawdowns.
-            </p>
-          </div>
-          <span id="bsStatusBadge" class="badge-warning text-xs self-start sm:self-auto">
-            UNHEDGED PORTFOLIO
-          </span>
-        </div>
+    <!-- Tab Pane 3: Sensitivity Matrix -->
+    <div id="tabPaneSensitivity" class="hidden space-y-4">
+      <div class="space-y-1">
+        <h4 class="text-xs font-bold text-navy-900 dark:text-navy-100">
+          Withdrawal Rate vs. Horizon Longevity Matrix
+        </h4>
+        <p class="text-xs text-navy-500 dark:text-navy-400">
+          Success probability (%) across varying initial withdrawal rates (3.0% to 6.5%) and retirement durations.
+        </p>
+      </div>
 
-        <!-- Strategy Description -->
-        <div class="rounded-xl border border-navy-200 dark:border-navy-800 bg-navy-50 dark:bg-navy-900/60 p-4 space-y-2 text-xs text-navy-600 dark:text-navy-400 leading-relaxed font-sans">
-          <p>
-            <strong class="text-navy-900 dark:text-navy-100">How Put Hedging Works:</strong> By purchasing out-of-the-money (OTM) Nifty 50 LEAPS put options rolling every 12 to 18 months, severe market drawdowns (e.g. beyond -10%) are absorbed by option payoffs.
-          </p>
-          <p>
-            <strong class="text-navy-900 dark:text-navy-100">Hedging vs Guardrails:</strong> Dynamic guardrails force you to cut your lifestyle when markets crash. Option hedging sacrifices a minor 1.5%–2.0% annual yield drag to protect your monthly living standard permanently.
-          </p>
-        </div>
+      <div class="overflow-x-auto rounded-xl border border-navy-200 dark:border-navy-800">
+        <table id="swpSensitivityTable" class="w-full text-center text-xs tabular-nums">
+          <thead class="bg-navy-100/80 dark:bg-navy-900 text-navy-800 dark:text-navy-200 font-bold border-b border-navy-200 dark:border-navy-800">
+            <tr>
+              <th class="py-2.5 px-3 text-left">Initial SWR</th>
+              <th class="py-2.5 px-3">20 Years</th>
+              <th class="py-2.5 px-3">25 Years</th>
+              <th class="py-2.5 px-3">30 Years</th>
+              <th class="py-2.5 px-3">35 Years</th>
+              <th class="py-2.5 px-3">40 Years</th>
+            </tr>
+          </thead>
+          <tbody id="swpSensitivityTableBody" class="divide-y divide-navy-200/60 dark:divide-navy-800/60 text-navy-700 dark:text-navy-300">
+            <!-- Dynamically computed sensitivity matrix -->
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-        <!-- Hedging Metric Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-          <div class="p-3.5 rounded-xl bg-navy-50/60 dark:bg-navy-900/40 border border-navy-200/70 dark:border-white/5 space-y-1">
-            <span class="text-xs font-semibold text-navy-500 dark:text-navy-400 block">Option Premium Drag</span>
-            <div id="valHedgingDrag" class="text-lg font-bold text-navy-900 dark:text-navy-100 tabular-nums">0.00% / Year</div>
-          </div>
-          <div class="p-3.5 rounded-xl bg-navy-50/60 dark:bg-navy-900/40 border border-navy-200/70 dark:border-white/5 space-y-1">
-            <span class="text-xs font-semibold text-navy-500 dark:text-navy-400 block">Protected Floor</span>
-            <div id="valProtectedFloor" class="text-lg font-bold text-navy-900 dark:text-navy-100 tabular-nums">Unprotected</div>
-          </div>
-          <div class="p-3.5 rounded-xl bg-navy-50/60 dark:bg-navy-900/40 border border-navy-200/70 dark:border-white/5 space-y-1">
-            <span class="text-xs font-semibold text-emerald-700 dark:text-emerald-400 block">Expected Final Balance</span>
-            <div id="valAdjustedYield" class="text-lg font-bold text-emerald-700 dark:text-emerald-400 tabular-nums">₹ 0</div>
-          </div>
-        </div>
+    <!-- Tab Pane 4: Put Floor Ledger -->
+    <div id="tabPaneHedging" class="hidden space-y-4">
+      <div class="space-y-1">
+        <h4 class="text-xs font-bold text-navy-900 dark:text-navy-100">
+          Black-Scholes Downside Protection Ledger
+        </h4>
+        <p class="text-xs text-navy-500 dark:text-navy-400">
+          Comparison between Unhedged and Put-Floored portfolio performance during extreme tail crashes.
+        </p>
+      </div>
 
-        <!-- Hedging Ledger -->
-        <div class="space-y-2 pt-2">
-          <div class="flex items-center justify-between">
-            <h5 class="text-xs font-bold tracking-wide text-navy-700 dark:text-navy-300">
-              Year-by-Year Option Cost & Floor Protection Ledger
-            </h5>
-            <span class="text-xs font-semibold text-gold-700 dark:text-gold-400">In rupees of each year</span>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="p-4 rounded-xl border border-navy-200 dark:border-navy-800 bg-white dark:bg-navy-950 space-y-3">
+          <div class="text-xs font-bold text-navy-800 dark:text-navy-200">
+            Unhedged Strategy Performance
           </div>
-          <p id="swpLedgerCaption" class="text-xs text-navy-500 dark:text-navy-400"></p>
-
-          <div class="w-full max-h-[360px] overflow-x-auto overflow-y-auto border border-navy-200 dark:border-navy-800 rounded-xl scrollbar-thin scrollbar-thumb-navy-300 dark:scrollbar-thumb-navy-700">
-            <table class="w-full min-w-[560px] text-xs tabular-nums">
-              <thead class="sticky top-0 z-10 bg-navy-100 dark:bg-navy-900 border-b border-navy-200 dark:border-navy-800 text-navy-700 dark:text-navy-300 shadow-2xs">
-                <tr>
-                  <th class="py-2.5 px-3 text-left font-bold whitespace-nowrap">Year</th>
-                  <th class="py-2.5 px-3 text-right font-bold whitespace-nowrap">Annual Withdrawal</th>
-                  <th class="py-2.5 px-3 text-right font-bold whitespace-nowrap">Corpus Balance</th>
-                  <th class="py-2.5 px-3 text-right font-bold whitespace-nowrap text-rose-700 dark:text-rose-400">Option Fee Paid</th>
-                  <th class="py-2.5 px-3 text-right font-bold whitespace-nowrap text-emerald-700 dark:text-emerald-400">Floor Protection Absorbed</th>
-                </tr>
-              </thead>
-              <tbody id="hedgingLedgerBody" class="divide-y divide-navy-100 dark:divide-white/5 font-sans bg-white dark:bg-navy-950">
-                <!-- Dynamically populated -->
-              </tbody>
-            </table>
+          <div class="space-y-2 text-xs">
+            <div class="flex justify-between py-1 border-b border-navy-100 dark:border-navy-900">
+              <span class="text-navy-500 dark:text-navy-400">Adverse 10th Percentile Run</span>
+              <span id="unhedgedP10Final" class="font-bold text-navy-900 dark:text-navy-100 tabular-nums">--</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-navy-100 dark:border-navy-900">
+              <span class="text-navy-500 dark:text-navy-400">Max Peak-to-Trough Drawdown</span>
+              <span class="font-bold text-red-600 dark:text-red-400 tabular-nums">-48.5%</span>
+            </div>
+            <div class="flex justify-between py-1">
+              <span class="text-navy-500 dark:text-navy-400">Protection Cost Drag</span>
+              <span class="font-bold text-navy-900 dark:text-navy-100 tabular-nums">0.00%</span>
+            </div>
           </div>
         </div>
 
+        <div class="p-4 rounded-xl border border-emerald-500/30 bg-emerald-50/20 dark:bg-emerald-950/20 space-y-3">
+          <div class="text-xs font-bold text-emerald-800 dark:text-emerald-300">
+            Put-Floored Strategy Performance
+          </div>
+          <div class="space-y-2 text-xs">
+            <div class="flex justify-between py-1 border-b border-emerald-100 dark:border-emerald-900/50">
+              <span class="text-navy-600 dark:text-navy-400">Floor-Protected 10th %ile</span>
+              <span id="hedgedP10Final" class="font-bold text-emerald-700 dark:text-emerald-300 tabular-nums">--</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-emerald-100 dark:border-emerald-900/50">
+              <span class="text-navy-600 dark:text-navy-400">Max Absorbed Crash Drop</span>
+              <span id="hedgedMaxDrop" class="font-bold text-emerald-700 dark:text-emerald-300 tabular-nums">-10.0%</span>
+            </div>
+            <div class="flex justify-between py-1">
+              <span class="text-navy-600 dark:text-navy-400">Annual Option Cost Drag</span>
+              <span id="hedgedAnnualCost" class="font-bold text-navy-800 dark:text-navy-200 tabular-nums">--</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 

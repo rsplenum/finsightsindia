@@ -3,17 +3,26 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
+import react from '@astrojs/react';
 import AstroPWA from '@vite-pwa/astro';
 
 // https://astro.build/config
 export default defineConfig({
+  server: {
+    host: '0.0.0.0',
+    port: 3000
+  },
   site: 'https://finsightindia.in',
   integrations: [
+    react(),
     mdx(), 
     sitemap(),
     AstroPWA({
       registerType: 'autoUpdate',
-      injectRegister: 'script',
+      injectRegister: null,
+      devOptions: {
+        enabled: false,
+      },
       manifest: {
         name: 'FinSight India',
         short_name: 'FinSight',

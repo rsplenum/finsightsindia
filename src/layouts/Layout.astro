@@ -3,7 +3,6 @@ import '../styles/global.css';
 import '@fontsource/geist-sans';
 import '@fontsource/geist-mono';
 import defaultOgImage from '../assets/images/crypto-mining-rig.jpg';
-import { pwaInfo } from 'virtual:pwa-info';
 
 interface Props {
 	title?: string;
@@ -39,7 +38,7 @@ const currentPath = Astro.url.pathname;
 		<meta name="theme-color" content="#0A192F" />
 		
 		<!-- PWA Manifest -->
-		{ pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} /> }
+		<link rel="manifest" href="/manifest.webmanifest" />
 
 		<!-- RSS Auto-Discovery -->
 		<link rel="alternate" type="application/rss+xml" title="FinSight India - Direct Tax Guide" href={new URL("rss.xml", Astro.site)} />
@@ -400,14 +399,17 @@ const currentPath = Astro.url.pathname;
 				}
 				if (e.key === 'Tab' && mobileDrawer) {
 					const focusable = mobileDrawer.querySelectorAll('a, button');
-					const first = focusable[0];
-					const last = focusable[focusable.length - 1];
-					if (e.shiftKey && document.activeElement === first) {
-						e.preventDefault();
-						last.focus();
-					} else if (!e.shiftKey && document.activeElement === last) {
-						e.preventDefault();
-						first.focus();
+					if (focusable.length === 0) return;
+					const first = focusable[0] as HTMLElement | undefined;
+					const last = focusable[focusable.length - 1] as HTMLElement | undefined;
+					if (first && last) {
+						if (e.shiftKey && document.activeElement === first) {
+							e.preventDefault();
+							last.focus();
+						} else if (!e.shiftKey && document.activeElement === last) {
+							e.preventDefault();
+							first.focus();
+						}
 					}
 				}
 			}

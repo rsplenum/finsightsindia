@@ -191,6 +191,41 @@
   font-weight: 600;
 }
 
+/* Range Slider Touch Usability */
+input[type="range"] {
+  min-height: 44px;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+/* Skeleton Loading Animation */
+@keyframes shimmerPulse {
+  0% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0.45;
+  }
+}
+
+.skeleton-shimmer {
+  animation: shimmerPulse 1.4s ease-in-out infinite;
+}
+
 /* ============================================================
    PREMIUM CARD SYSTEM (Etihad Bureau-inspired)
    ============================================================ */

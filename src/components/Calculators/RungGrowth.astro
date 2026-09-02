@@ -113,8 +113,9 @@
   function pointAt(growth: number) {
     if (!curve?.points?.length) return null;
     let best = curve.points[0];
+    if (!best) return null;
     for (const p of curve.points) {
-      if (Math.abs(p.growth - growth) < Math.abs(best.growth - growth)) best = p;
+      if (p && Math.abs(p.growth - growth) < Math.abs(best.growth - growth)) best = p;
     }
     return best;
   }

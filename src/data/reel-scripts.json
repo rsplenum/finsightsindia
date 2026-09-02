@@ -1868,5 +1868,39 @@
         "audio": "Read the full forensic deconstruction of AIF pass-through taxation on FinSight India. Link in bio."
       }
     ]
+  },
+  {
+    "id": "reel-056",
+    "title": "The Senior Citizen Section 80TTB Dropdown Error",
+    "articleSlug": "senior-citizen-80ttb-dropdown-error",
+    "duration": "90s",
+    "hook": "Are you or your parents over 60 with Fixed Deposits? A single dropdown mistake in your ITR could quietly evaporate a ₹40,000 deduction without triggering any error.",
+    "script": [
+      {
+        "time": "0:00 - 0:15",
+        "visual": "Close-up of ITR dropdown menu switching rapidly between '80TTA' and '80TTB'. Red warning icon appears.",
+        "audio": "Are you or your parents over 60 with Fixed Deposits? A single dropdown mistake in your ITR could quietly evaporate a 40,000 rupee tax deduction without throwing a single error."
+      },
+      {
+        "time": "0:15 - 0:35",
+        "visual": "Split graphic: Left 'Section 80TTA: Up to ₹10,000 (Savings Only, Under 60)'. Right 'Section 80TTB: Up to ₹50,000 (Savings + FDs + RDs, 60+)'",
+        "audio": "Here is why: Section 80TTA only caps savings interest at 10,000 rupees for individuals under 60. But resident senior citizens qualify for Section 80TTB, which allows a massive 50,000 rupee deduction across all bank deposits including FDs."
+      },
+      {
+        "time": "0:35 - 0:55",
+        "visual": "Suitcase analogy illustration: Inspector checking the passenger's age badge before looking at the luggage.",
+        "audio": "If your CA or tax portal defaults to 80TTA, you lose 40,000 rupees of deduction. At a 30% tax slab, that is over 12,000 rupees of unnecessary tax paid on safe retirement income."
+      },
+      {
+        "time": "0:55 - 1:15",
+        "visual": "Checklist showing: Resident? 60+? Old Regime selected? 80TTB claimed?",
+        "audio": "Remember: 80TTB is only available under the Old Tax Regime. Verify your age, verify residency, and ensure 80TTB is chosen before submitting."
+      },
+      {
+        "time": "1:15 - 1:30",
+        "visual": "FinSight India logo and 'Read the Full Guide' call to action.",
+        "audio": "Protect your retirement yield. Read the full forensic breakdown of Section 80TTB on FinSight India. Link in bio."
+      }
+    ]
   }
 ]
