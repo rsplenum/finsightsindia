@@ -1,0 +1,79 @@
+[
+  {
+    "slug": "chafing-dishes",
+    "name": "Chafing Dishes",
+    "singular": "Chafing Dish",
+    "tagline": "Heat that holds, hinges that stay quiet.",
+    "intro": "The centrepiece of every buffet line and the hardest-working piece in the room. Ours are built around the failure points — the hinge, the fuel holder, the food-pan seat — because that is where a chafer dies first.",
+    "buyer_note": "Specify by pan size (GN 1/1 or 2/3), fuel type and lid action. Roll-top for a long line where staff pass in one direction; lift-off for tight corners.",
+    "seo_terms": ["chafing dish", "chafing dishes", "buffet chafer", "food warmer"],
+    "hero": "/lifestyle/category-chafing-dishes.jpg",
+    "order": 1
+  },
+  {
+    "slug": "wine-coolers-ice-buckets",
+    "name": "Wine Coolers & Ice Buckets",
+    "singular": "Wine Cooler",
+    "tagline": "Cold held long enough to matter.",
+    "intro": "Double-walled where it counts, weighted at the base so a bottle cannot tip it, and finished on the inside as carefully as the outside — because in a wine cooler the inside is what the guest sees.",
+    "buyer_note": "Double-wall holds temperature roughly twice as long as single-wall and never sweats onto linen. For banquet volume, ask about the stand-mounted party tub.",
+    "seo_terms": ["wine cooler", "champagne bucket", "ice bucket", "wine chiller"],
+    "hero": "/lifestyle/category-wine-coolers.jpg",
+    "order": 2
+  },
+  {
+    "slug": "trays-platters",
+    "name": "Trays & Platters",
+    "singular": "Tray",
+    "tagline": "Balanced in the hand before it is beautiful on the table.",
+    "intro": "A tray is judged by a server carrying it one-handed across a full room. We set the handle height and the rim angle for that, then hammer the face for the light.",
+    "buyer_note": "Hand-hammered faces hide scuffing far better than mirror-polished ones — the single most useful thing to know when buying for daily service.",
+    "seo_terms": ["serving tray", "hotel tray", "butler tray", "platter"],
+    "hero": "/lifestyle/category-trays.jpg",
+    "order": 3
+  },
+  {
+    "slug": "charger-plates",
+    "name": "Charger Plates",
+    "singular": "Charger Plate",
+    "tagline": "The frame around the plate.",
+    "intro": "A charger never holds food; it holds attention. Thirteen inches of worked metal under a white dinner plate is the cheapest way a banquet hall can look twice its price.",
+    "buyer_note": "Order in multiples of your table count plus 10% for rotation and repair. Ask for the rim profile that suits your plate diameter — a 13\" charger under a 12\" plate leaves no reveal.",
+    "seo_terms": ["charger plate", "charger plates bulk", "under plate", "service plate"],
+    "hero": "/lifestyle/category-charger-plates.jpg",
+    "order": 4
+  },
+  {
+    "slug": "serveware-bowls",
+    "name": "Serveware & Bowls",
+    "singular": "Serving Bowl",
+    "tagline": "For the food that arrives at the table, not the buffet.",
+    "intro": "Handis, gravy boats, salad bowls, dessert stands. The pieces that leave the kitchen full and come back empty, several times a night.",
+    "buyer_note": "Insulated double-wall bowls keep a salad crisp through a two-hour brunch and never ring with condensation on the tablecloth.",
+    "seo_terms": ["serving bowl", "copper handi", "gravy boat", "hotel serveware"],
+    "hero": "/lifestyle/category-serveware.jpg",
+    "order": 5
+  },
+  {
+    "slug": "buffet-stands-risers",
+    "name": "Buffet Stands & Risers",
+    "singular": "Buffet Stand",
+    "tagline": "Height is what makes a buffet look designed.",
+    "intro": "A flat buffet reads as a canteen. Three heights and a cloche read as a hotel. These are the pieces that do that work.",
+    "buyer_note": "Buy risers as a set of graduated heights rather than singly — the proportion between them is the whole effect.",
+    "seo_terms": ["buffet riser", "buffet stand", "display stand", "cloche"],
+    "hero": "/lifestyle/category-buffet-stands.jpg",
+    "order": 6
+  },
+  {
+    "slug": "barware-accessories",
+    "name": "Barware & Accessories",
+    "singular": "Barware",
+    "tagline": "The small metal on the bar and the table.",
+    "intro": "Shakers, pitchers, napkin rings, menu holders. Individually minor, collectively the difference between a room that was furnished and a room that was styled.",
+    "buyer_note": "This is the category to use for branding — a logo embossed on a napkin ring or a menu holder costs little and is seen at every cover.",
+    "seo_terms": ["copper cocktail shaker", "bar accessories", "napkin rings", "menu holder"],
+    "hero": "/lifestyle/category-barware.jpg",
+    "order": 7
+  }
+]

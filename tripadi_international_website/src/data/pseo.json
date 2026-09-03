@@ -1,0 +1,422 @@
+{
+  "_note": "The pSEO matrix. Pages are the cross-product of topics with intents, markets and buyer types. Every axis carries its own written content, so a generated page is roughly half unique prose rather than a template with a keyword swapped in. Add a row here and the page builds itself. Do NOT expand this into thousands of combinations — thin pages at scale are a penalty, not a strategy.",
+  "topics": [
+    {
+      "slug": "chafing-dish",
+      "plural": "chafing dishes",
+      "singular": "chafing dish",
+      "title": "Chafing Dishes",
+      "filter": {
+        "category": "chafing-dishes"
+      },
+      "lede": "Roll-top, hydraulic, glass-lid and split-pan chafers in stainless steel, brass and hammered copper, built around the hinge and the fuel holder because that is where a chafer fails first.",
+      "expertise": "We build to standard Gastronorm pans, so you are never locked to one supplier for a replacement food pan, and we run a machined stainless hinge pin rather than a folded tab.",
+      "faq": [
+        {
+          "q": "Do your chafing dishes take standard GN pans?",
+          "a": "Yes. Every chafer we make takes a standard Gastronorm pan — GN 1/1 on full-size units, GN 2/3 and round pans on the smaller ones. You are never locked to us for a replacement pan."
+        },
+        {
+          "q": "Fuel or induction?",
+          "a": "Both, on most models. We fit an induction-compatible base plate and a fuel holder, so a property runs induction where there is power and gel fuel where there is not."
+        }
+      ],
+      "plural_slug": "chafing-dishes",
+      "keyword_label": "Chafing dish"
+    },
+    {
+      "slug": "wine-cooler",
+      "plural": "wine coolers",
+      "singular": "wine cooler",
+      "title": "Wine Coolers & Champagne Buckets",
+      "filter": {
+        "category": "wine-coolers-ice-buckets"
+      },
+      "lede": "Double-walled single-bottle coolers, hammered copper champagne buckets, brass party baths on stands, and bar ice buckets with drain inserts.",
+      "expertise": "Double-wall construction is the whole argument: the outer skin never reaches dew point, so there is no ring of water on the linen forty minutes into service.",
+      "faq": [
+        {
+          "q": "Is double-wall worth the difference in price?",
+          "a": "For any table-service property, yes. A single-wall cooler sweats onto the tablecloth and holds ice roughly half as long. The difference in linen laundry alone usually covers the difference in price inside a season."
+        },
+        {
+          "q": "Can you make a cooler to hold two or six bottles?",
+          "a": "Yes — two-bottle buckets and six-bottle floor-standing baths are both in the range, and other capacities are a tooling conversation rather than a refusal."
+        }
+      ],
+      "plural_slug": "wine-coolers",
+      "keyword_label": "Wine cooler"
+    },
+    {
+      "slug": "charger-plate",
+      "plural": "charger plates",
+      "singular": "charger plate",
+      "title": "Charger Plates",
+      "filter": {
+        "category": "charger-plates"
+      },
+      "lede": "Thirteen-inch hammered, beaded, smooth and two-tone chargers in antique brass, silver over steel, copper and PVD finishes.",
+      "expertise": "We plate silver over stainless steel rather than over brass, so a scratch in year two shows steel rather than a bright yellow line across a white table.",
+      "faq": [
+        {
+          "q": "How many charger plates should we order?",
+          "a": "Your table count plus about 10% for rotation, repair and refinishing. Order in one batch — a later top-up in an antiqued finish will never match perfectly, because chemical antiquing varies."
+        },
+        {
+          "q": "What size charger suits our dinner plates?",
+          "a": "A 13-inch charger leaves a correct 12–18 mm reveal under a 10.5-inch dinner plate. Send us your plate diameter and we will tell you which rim profile sits best."
+        }
+      ],
+      "plural_slug": "charger-plates",
+      "keyword_label": "Charger plate"
+    },
+    {
+      "slug": "serving-tray",
+      "plural": "serving trays",
+      "singular": "serving tray",
+      "title": "Serving Trays & Platters",
+      "filter": {
+        "category": "trays-platters"
+      },
+      "lede": "Hammered rounds, gallery-rim butler trays, hand-raised copper ovals and non-slip bar trays with a vulcanised deck.",
+      "expertise": "Our rims are rolled over a wire rather than simply folded, which is why they do not go wavy after a year of being stacked, dropped and washed at speed.",
+      "faq": [
+        {
+          "q": "Which finish survives daily service best?",
+          "a": "Hammered. A hand-hammered face scatters light in the same way that service scuffing does, so marks disappear into the surface instead of sitting on it. Mirror polish looks best on day one and worst on day ninety."
+        },
+        {
+          "q": "Do you make non-slip bar trays?",
+          "a": "Yes, with the rubber deck vulcanised to the steel rather than glued to it — which is the reason ours survive a commercial dishwasher and most do not."
+        }
+      ],
+      "plural_slug": "serving-trays",
+      "keyword_label": "Serving tray"
+    },
+    {
+      "slug": "copper-serveware",
+      "plural": "copper serveware pieces",
+      "singular": "copper serveware piece",
+      "title": "Copper Serveware",
+      "filter": {
+        "metal": "copper"
+      },
+      "lede": "Hand-hammered copper handis, platters, pitchers, champagne buckets, shakers and chafing dishes — every food-contact surface lined in 304 stainless.",
+      "expertise": "Copper is hand-raised and planished here rather than machine-spun on most shapes. An 18-inch oval platter takes a craftsman about five hours.",
+      "faq": [
+        {
+          "q": "Is your copper safe for food?",
+          "a": "Every copper piece we make that touches food or drink is lined in 304 stainless steel. Unlined copper reacts with anything acidic and has no place in a commercial kitchen. If a supplier offers you unlined copper serveware, that is an audit failure waiting to happen."
+        },
+        {
+          "q": "Does lacquered copper need polishing?",
+          "a": "No. While the lacquer is intact it needs only a damp cloth. It fails if scoured with an abrasive pad or run through a dishwasher, after which it tarnishes in patches — so brief the housekeeping team once and it will last years."
+        }
+      ],
+      "plural_slug": "copper-serveware",
+      "keyword_label": "Copper serveware"
+    },
+    {
+      "slug": "brass-tableware",
+      "plural": "brass tableware pieces",
+      "singular": "brass tableware piece",
+      "title": "Brass Tableware",
+      "filter": {
+        "metal": "brass"
+      },
+      "lede": "Cast and spun brass chafers, cloches, gallery trays, dessert stands and charger plates in antique, polished, bronze and nickel finishes.",
+      "expertise": "Brass is the only one of our three metals we can cast, which is why every finial, handle and tripod leg in the range is brass even when the body is not.",
+      "faq": [
+        {
+          "q": "Will antique brass wear off?",
+          "a": "No. Our antiquing is a chemical process that goes into the metal, so it cannot chip. It also means pieces vary very slightly across a batch — a set of five hundred identical 'antique' plates has been sprayed, and spray does come off. Never polish an antiqued piece; polishing is what removes it."
+        },
+        {
+          "q": "Can you match brass to an existing scheme?",
+          "a": "Yes. Send us a physical sample rather than a photograph — finish is about how a surface handles light, which a photograph cannot carry. We produce a swatch for approval before any production runs."
+        }
+      ],
+      "plural_slug": "brass-tableware",
+      "keyword_label": "Brass tableware"
+    },
+    {
+      "slug": "stainless-steel-hotelware",
+      "plural": "stainless steel hotelware pieces",
+      "singular": "stainless steel hotelware piece",
+      "title": "Stainless Steel Hotelware",
+      "filter": {
+        "metal": "stainless-steel"
+      },
+      "lede": "Grade 304 chafers, coolers, insulated bowls, butler trays, risers and dispensers, in mirror, satin, hammered and PVD finishes.",
+      "expertise": "304 wherever food touches, 201 only in frames where it is honestly disclosed. Grade substitution is the most common quiet defect in this industry.",
+      "faq": [
+        {
+          "q": "Do you use 304 or 201 steel?",
+          "a": "Grade 304 for every food-contact surface, and grade 201 only in frames and structural parts where we tell you it is 201. The substitution of 201 for 304 is the most common hidden defect in this trade — it costs about a fifth less, looks identical, and pits within a season in coastal or chlorinated environments. We will supply mill test certificates on request."
+        },
+        {
+          "q": "What is PVD and is it better than plating?",
+          "a": "PVD is a vacuum-deposited coating, harder than the steel beneath it, dishwasher-safe and non-tarnishing. For hospitality volume it outlasts electroplating several times over. Genuine plating is for presentation pieces where a real precious-metal surface matters."
+        }
+      ],
+      "plural_slug": "stainless-steel-hotelware",
+      "keyword_label": "Stainless steel hotelware"
+    },
+    {
+      "slug": "buffet-equipment",
+      "plural": "pieces of buffet equipment",
+      "singular": "piece of buffet equipment",
+      "title": "Buffet Equipment",
+      "filter": {
+        "categories": [
+          "chafing-dishes",
+          "buffet-stands-risers",
+          "serveware-bowls"
+        ]
+      },
+      "lede": "Chafers, risers, cloches, soup stations, juice dispensers, tiered stands and insulated bowls — the whole hot and cold line.",
+      "expertise": "The difference between a buffet that reads as a hotel and one that reads as a canteen is almost entirely height. We supply the risers as graduated sets because the proportion between them is the whole effect.",
+      "faq": [
+        {
+          "q": "How many chafers do we need per hundred covers?",
+          "a": "As a working number, one full-size chafer per 40–50 covers per hot dish over a two-hour service, plus one soup station per 100 covers at the head of the line, plus about 10% for rotation. Tell us your cover count and the menu and we will spec the line."
+        },
+        {
+          "q": "Can you supply a complete buffet line as one order?",
+          "a": "Yes, and it is the sensible way to buy — finishes match across the line, everything ships together, and we quote it as a package rather than item by item."
+        }
+      ],
+      "plural_slug": "buffet-equipment",
+      "keyword_label": "Buffet equipment"
+    },
+    {
+      "slug": "hotel-barware",
+      "plural": "pieces of hotel barware",
+      "singular": "piece of hotel barware",
+      "title": "Hotel Barware",
+      "filter": {
+        "categories": [
+          "barware-accessories",
+          "wine-coolers-ice-buckets"
+        ]
+      },
+      "lede": "Copper shakers with one-piece drawn linings, hammered pitchers, ice buckets with drain inserts and non-slip bar trays.",
+      "expertise": "Bar metal is handled more than anything else in a hotel, by wet hands, at speed, eighteen inches from a paying guest. We draw shaker linings as one piece because a seam is where a dropped shaker splits.",
+      "faq": [
+        {
+          "q": "Why copper for a bar rather than steel?",
+          "a": "Under the low warm light most lounges use, copper and antique brass hold their colour where steel reads grey and clinical. It is a lighting decision more than a taste one."
+        },
+        {
+          "q": "Can you brand barware with our logo?",
+          "a": "Yes — chased, etched or embossed depending on the metal and finish. Barware is the best-value place to brand, because a shaker or a napkin ring is seen at close range at every cover."
+        }
+      ],
+      "plural_slug": "hotel-barware",
+      "keyword_label": "Hotel barware"
+    },
+    {
+      "slug": "hotel-metalware",
+      "plural": "pieces of hotel metalware",
+      "singular": "piece of hotel metalware",
+      "title": "Hotel Metalware",
+      "filter": {},
+      "lede": "The full range — chafing dishes, wine coolers, trays, charger plates, serveware, buffet stands and barware in stainless steel, brass and copper.",
+      "expertise": "Nine processes under one roof, from sheet and ingot to finished piece, including our own tool room. Nothing is jobbed out and nothing is bought in and re-badged.",
+      "faq": [
+        {
+          "q": "Can we order across categories in one shipment?",
+          "a": "Yes. MOQ applies per item, not per order, so a mixed order across chafers, trays and chargers is normal and is how most properties buy."
+        },
+        {
+          "q": "Are you a factory or a trading house?",
+          "a": "A factory. We own the building, the machinery and the tool room, and we will walk you through it on an unscheduled video call whenever you want to check."
+        }
+      ],
+      "plural_slug": "hotel-metalware",
+      "keyword_label": "Hotel metalware"
+    }
+  ],
+  "intents": [
+    {
+      "slug": "manufacturer",
+      "label": "Manufacturer",
+      "url_pattern": "{topic}-manufacturer",
+      "h1": "{Topic} manufacturer in Moradabad, India",
+      "angle": "We make these ourselves. Nine processes under one roof in Moradabad — spinning, casting, hammering, welding, polishing, plating, PVD, lacquering and our own tool room — which is why a change of finish is a conversation rather than a three-week delay, and why we can quote a bespoke die at two hundred pieces.",
+      "proof_heading": "What being the manufacturer changes",
+      "proof": [
+        "The person answering your technical question is the person who decided how the piece is made.",
+        "Bespoke tooling is cut in this building, stays in this building, and is not offered to another buyer.",
+        "No agent margin and no trading-house margin between the factory price and yours.",
+        "A mid-order change of finish or handle profile is possible, because nothing is jobbed out across town."
+      ]
+    },
+    {
+      "slug": "exporter",
+      "label": "Exporter",
+      "url_pattern": "{topic}-exporter",
+      "h1": "{Topic} exporter from India",
+      "angle": "We have been shipping out of Moradabad for three decades. The manufacturing is the easy half — what separates a good Indian supplier from a difficult one is the packing, the documentation and whether the container leaves when they said it would.",
+      "proof_heading": "How we export",
+      "proof": [
+        "EXW Moradabad, FOB Nhava Sheva, CIF and DDP on request, quoted in USD, EUR, GBP or INR.",
+        "Export-grade packing: individual poly and bubble, master carton, 5-ply outer, pallets on request. Plated and lacquered pieces are interleaved so nothing touches in transit.",
+        "Commercial invoice, packing list, certificate of origin and any buyer-specific certificate, drafted for your forwarder's approval before the shipment moves.",
+        "Third-party pre-shipment inspection welcome on any order — SGS, Bureau Veritas, Intertek or your own agent, at no obstruction and no charge for access."
+      ]
+    },
+    {
+      "slug": "wholesale-supplier",
+      "label": "Wholesale supplier",
+      "url_pattern": "{topic}-wholesale-supplier",
+      "h1": "Wholesale {topic_lower} supplier — direct factory pricing",
+      "angle": "Buying wholesale from the factory removes two margins and one layer of distance. MOQ applies per item rather than per order, so a mixed list across categories is normal, and samples are credited against your first production order.",
+      "proof_heading": "How wholesale works here",
+      "proof": [
+        "MOQ from 10 pieces on cast items and 20–50 on pressed items. Per item, not per order.",
+        "Unit price quoted by quantity band, so you can see exactly where the next break sits.",
+        "Samples in 7–10 days, credited in full against your first production order.",
+        "30% advance against proforma invoice, balance against copy B/L. L/C at sight above a threshold."
+      ]
+    }
+  ],
+  "markets": [
+    {
+      "slug": "india",
+      "label": "India",
+      "in_label": "India",
+      "note": "We ship domestically from Moradabad by road and rail, typically 3–8 working days depending on the city. GST invoicing, e-way bills and your GSTIN on the invoice as standard.",
+      "logistics": "Road freight from Moradabad · 3–8 working days · GST invoice with e-way bill",
+      "detail": "Moradabad sits about 170 km from Delhi, which puts most of north India inside two days and the metros inside a week. For a property opening on a fixed date we phase deliveries against your pre-opening schedule rather than dumping the whole order on one pallet at the wrong moment."
+    },
+    {
+      "slug": "delhi-ncr",
+      "label": "Delhi NCR",
+      "in_label": "Delhi NCR",
+      "note": "Four hours by road from our factory. Same-week delivery on stock items and a factory visit that is comfortably a day trip.",
+      "logistics": "Road freight · 1–2 working days · Factory visit is a day trip from Delhi",
+      "detail": "Delhi NCR is our closest major market and the easiest place for us to serve properly. Hotels and banquet operators here regularly come to the factory, choose finishes in person against a physical swatch, and have stock items on site the same week."
+    },
+    {
+      "slug": "mumbai",
+      "label": "Mumbai",
+      "in_label": "Mumbai",
+      "note": "Road freight from Moradabad, typically 4–6 working days, or air for an urgent pre-opening requirement.",
+      "logistics": "Road freight · 4–6 working days · Air freight available for urgent requirements",
+      "detail": "Mumbai's humidity and coastal air are a genuine materials consideration rather than a sales point: specify 304 rather than 201 for anything structural, and be careful with electroplated finishes on pieces that live near an open terrace or a sea-facing deck."
+    },
+    {
+      "slug": "dubai-uae",
+      "label": "Dubai & the UAE",
+      "in_label": "Dubai and the UAE",
+      "note": "Sea freight from Nhava Sheva or Mundra to Jebel Ali is typically 7–12 days, and air freight from Delhi is next-day. The UAE is our busiest export market.",
+      "logistics": "Nhava Sheva / Mundra → Jebel Ali · 7–12 days sea · Air ex-Delhi next-day",
+      "detail": "The UAE hospitality market buys at a scale and a specification level that suits us: large banquet volumes, high finish expectations, and buyers who understand the difference between 304 and 201. Sun and salt matter here — for terrace and poolside service we will steer you to 304 and PVD rather than to a lacquered brass that will chalk within a year."
+    },
+    {
+      "slug": "saudi-arabia",
+      "label": "Saudi Arabia",
+      "in_label": "Saudi Arabia",
+      "note": "Sea freight to Jeddah or Dammam, typically 10–16 days. We prepare SASO/SABER documentation with your importer.",
+      "logistics": "Nhava Sheva → Jeddah / Dammam · 10–16 days sea · SASO / SABER documentation prepared",
+      "detail": "Saudi hospitality projects tend to be large, phased and heavily documented. We work to your importer's SABER requirements and will draft the certificate set for approval before anything ships, because a consignment held at the port over a document is the most expensive kind of avoidable delay."
+    },
+    {
+      "slug": "united-kingdom",
+      "label": "the United Kingdom",
+      "in_label": "the United Kingdom",
+      "note": "Sea freight to Felixstowe or Southampton, typically 18–25 days. UKCA and food-contact declarations supplied.",
+      "logistics": "Nhava Sheva → Felixstowe / Southampton · 18–25 days sea · UKCA and food-contact declarations",
+      "detail": "UK buyers ask more questions about material traceability than any other market, which suits a factory and frustrates a trader. We supply mill test certificates for steel grade, food-contact declarations for lined pieces, and will accommodate an inspection agent at any stage."
+    },
+    {
+      "slug": "united-states",
+      "label": "the United States",
+      "in_label": "the United States",
+      "note": "Sea freight to New York, Savannah or Los Angeles, typically 22–35 days. FDA food-contact compliance documentation supplied.",
+      "logistics": "Nhava Sheva / Mundra → NY, Savannah, LA · 22–35 days sea · FDA food-contact documentation",
+      "detail": "For US buyers the two questions that matter are food-contact compliance on lined pieces and consistency across a large batch. Both are factory questions rather than trading questions — the lining is a manufacturing decision and batch consistency comes from doing the plating and antiquing in one building rather than three."
+    }
+  ],
+  "buyers": [
+    {
+      "slug": "hotels",
+      "label": "Hotels",
+      "for_label": "hotels",
+      "angle": "A hotel buys metalware three times: at pre-opening, at refurbishment, and continuously as replacement stock. The second and third are where a supplier earns the relationship.",
+      "points": [
+        "Property-wide specification, so finishes match across banquet, restaurant, bar and in-room dining.",
+        "Phased delivery against a pre-opening schedule rather than one pallet at the wrong moment.",
+        "Your SKU list held on file, so a replacement order in year three matches what is already on the floor.",
+        "Logo branding — etched, embossed or chased — from 50 pieces."
+      ]
+    },
+    {
+      "slug": "banquet-halls",
+      "label": "Banquet halls",
+      "for_label": "banquet halls",
+      "angle": "Banquet volume is brutal on metal. Everything is loaded fast, washed fast, stacked badly and photographed constantly.",
+      "points": [
+        "Hammered and satin finishes over mirror, because service scuffing disappears into them.",
+        "Rolled-wire rims and machined hinge pins — the two details that decide whether a piece survives its second season.",
+        "Graduated riser sets, which are the cheapest way to make a twelve-metre line photograph well.",
+        "Repeat top-ups quoted in the same price band, so a later order does not become a renegotiation."
+      ]
+    },
+    {
+      "slug": "restaurants",
+      "label": "Restaurants",
+      "for_label": "restaurants",
+      "angle": "A restaurant's metalware is seen at close range, at the table, by a guest who has nothing else to look at while they wait.",
+      "points": [
+        "Finishes chosen against your room's colour temperature — warm metals under 2700K, mirror under cool light.",
+        "Smaller quantities than a hotel spec, without a hotel-scale MOQ attached.",
+        "Copper handis and hand-raised platters for family-style and live service.",
+        "Matching barware and table accessories, which is the cheapest coherence a room can buy."
+      ]
+    },
+    {
+      "slug": "caterers",
+      "label": "Caterers & event companies",
+      "for_label": "caterers and event companies",
+      "angle": "Catering equipment travels, gets loaded by whoever is nearest the van, and has to look immaculate in a venue you did not design.",
+      "points": [
+        "Knock-down stands and nesting risers, so a full line fits in a van rather than a lorry.",
+        "Fuel and induction on the same chafer, because you cannot rely on a venue's power.",
+        "Hammered faces and weighted bases — transport damage and outdoor wind are your two real enemies.",
+        "Replacement parts held against your order, so one damaged hinge does not retire a unit."
+      ]
+    },
+    {
+      "slug": "resorts",
+      "label": "Resorts",
+      "for_label": "resorts",
+      "angle": "A resort runs its best service outdoors, which turns finish selection from an aesthetic decision into a materials one.",
+      "points": [
+        "304 stainless and PVD for anything in direct sun, salt air or near a chlorinated pool.",
+        "Hammered faces that hide the water spotting a poolside wipe-down leaves behind.",
+        "Double-wall coolers and insulated bowls, which do not sweat onto an outdoor cloth.",
+        "Weighted bases on anything tall enough for wind to take."
+      ]
+    }
+  ],
+  "combinations": {
+    "_note": "Which topics get which axes. Deliberately not the full cross-product — every page here has to earn its place.",
+    "intents_for_all_topics": true,
+    "market_topics": [
+      "chafing-dish",
+      "wine-cooler",
+      "charger-plate",
+      "serving-tray",
+      "hotel-metalware",
+      "buffet-equipment"
+    ],
+    "buyer_topics": [
+      "chafing-dish",
+      "charger-plate",
+      "buffet-equipment",
+      "hotel-metalware"
+    ]
+  }
+}

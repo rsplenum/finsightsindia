@@ -1,0 +1,129 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { organisationSchema } from '../lib/seo';
+import { allProducts } from '../lib/catalog';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  schema?: Record<string, unknown> | Record<string, unknown>[];
+  noindex?: boolean;
+  wide?: boolean;
+}
+
+const { title, description, image = '/brand/og-default.jpg', schema, noindex = false } = Astro.props;
+
+const siteUrl = Astro.site?.toString() ?? 'https://www.tripadiinternational.com';
+const canonical = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', siteUrl).toString();
+const ogImage = new URL(image, siteUrl).toString();
+
+const schemas = [organisationSchema(siteUrl), ...(schema ? (Array.isArray(schema) ? schema : [schema]) : [])];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/brand/favicon.svg" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="Tripadi International" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Set before first paint so reveal sections never flash in. Without
+         JS the class is never added and every section simply renders. -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
+
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="geo.region" content="IN-UP" />
+    <meta name="geo.placename" content="Moradabad" />
+
+    {schemas.map((s) => (
+      <script type="application/ld+json" set:html={JSON.stringify(s)} />
+    ))}
+  </head>
+  <body class="antialiased">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:shadow-lg"
+      >Skip to content</a
+    >
+    <!-- The one place the form endpoint is published to the client, so the
+         RFQ form and the checkout fallback read the same value. -->
+    <script is:inline define:vars={{ endpoint: import.meta.env.PUBLIC_FORM_ENDPOINT ?? '' }}>
+      window.__FORM_ENDPOINT__ = endpoint;
+    </script>
+
+    <!-- id -> name for every SKU. Used by the enquiry basket and the RFQ form
+         so a client-rendered list can name a product without a fetch. -->
+    <script type="application/json" id="product-index" set:html={JSON.stringify(Object.fromEntries(allProducts.map((p) => [p.id, { name: p.name, slug: p.slug, moq: p.moq, price: p.retail?.price_inr ?? null, image: p.images.hero }])))} />
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      import { init } from '../scripts/basket';
+      init();
+      // Re-bind after any client navigation or dynamic render.
+      document.addEventListener('basket:rendered', () => init());
+    </script>
+
+    <script>
+      // Reveal-on-scroll. One observer for the whole page, unobserving as it
+      // goes — a page with 60 product tiles should not hold 60 live observers.
+      const items = document.querySelectorAll('.reveal');
+      if (items.length) {
+        if (!('IntersectionObserver' in window)) {
+          items.forEach((el) => el.classList.add('is-visible'));
+        } else {
+          const reveal = (el: Element) => {
+            el.classList.add('is-visible');
+            io.unobserve(el);
+          };
+          const io = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) reveal(entry.target);
+              });
+            },
+            { rootMargin: '0px 0px -6% 0px', threshold: 0.02 }
+          );
+          items.forEach((el) => io.observe(el));
+
+          // Safety sweep. An anchor jump or a PageDown can move an element
+          // entirely past the viewport between two frames, and the observer
+          // never sees it — leaving a blank section on a page the visitor has
+          // already scrolled through. On scroll idle, reveal anything that is
+          // at or above the fold regardless.
+          let idle: number;
+          const sweep = () => {
+            document.querySelectorAll('.reveal:not(.is-visible)').forEach((el) => {
+              if (el.getBoundingClientRect().top < window.innerHeight) reveal(el);
+            });
+          };
+          window.addEventListener(
+            'scroll',
+            () => {
+              window.clearTimeout(idle);
+              idle = window.setTimeout(sweep, 140);
+            },
+            { passive: true }
+          );
+        }
+      }
+    </script>
+  </body>
+</html>

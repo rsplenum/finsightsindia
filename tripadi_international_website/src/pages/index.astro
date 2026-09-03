@@ -1,0 +1,265 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Photo from '../components/Photo.astro';
+import ProductCard from '../components/ProductCard.astro';
+import InquiryForm from '../components/InquiryForm.astro';
+import { allCategories, allUseCases, featuredProducts, companyInfo } from '../lib/catalog';
+
+const featured = featuredProducts(6);
+const primaryUseCase = allUseCases[0];
+---
+<BaseLayout
+  title="Tripadi International — Hotel Chafing Dishes, Wine Coolers & Metalware Manufacturer, Moradabad"
+  description="Manufacturer and exporter of stainless steel, brass and copper hospitality metalware — chafing dishes, wine coolers, trays and charger plates. Own factory in Moradabad, India. Thirty years. Wholesale and retail."
+>
+  <!-- Hero. One photograph, one sentence, two doors: trade and retail. -->
+  <section class="relative">
+    <Photo
+      src="/lifestyle/hero-buffet.jpg"
+      alt="A hotel buffet line set with polished chafing dishes"
+      label="Hero — buffet line"
+      tone="dark"
+      ratio="16 / 9"
+      priority={true}
+      sizes="100vw"
+      class="min-h-[70vh] w-full md:min-h-[78vh]"
+    />
+    <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent"></div>
+    <div class="absolute inset-x-0 bottom-0">
+      <div class="container-page pb-12 md:pb-20">
+        <div class="max-w-2xl">
+          <p class="text-[12px] font-semibold tracking-[0.14em] text-white/80 uppercase">
+            Manufacturer & exporter · Moradabad, India
+          </p>
+          <h1 class="mt-4 text-4xl leading-[1.05] font-semibold tracking-[-0.025em] text-white sm:text-5xl md:text-6xl">
+            Hotel metalware,<br />made in Moradabad.
+          </h1>
+          <p class="mt-5 max-w-lg text-[16px] leading-relaxed text-white/85 md:text-[17px]">
+            Chafing dishes, wine coolers, trays and charger plates in stainless steel, brass and
+            copper. Thirty years, one factory, every piece made under our own roof.
+          </p>
+          <div class="pointer-events-auto mt-8 flex flex-wrap gap-3">
+            <a href="/collections" class="rounded-full bg-white px-6 py-3 text-[14px] font-medium text-ink-900 transition-opacity hover:opacity-90">
+              See the collection
+            </a>
+            <a href="/wholesale" class="rounded-full border border-white/50 px-6 py-3 text-[14px] font-medium text-white transition-colors hover:bg-white/10">
+              Wholesale enquiry
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The four facts a trade buyer checks before they read anything else. -->
+  <section class="border-b border-ink-200">
+    <div class="container-page">
+      <dl class="grid grid-cols-2 divide-ink-200 py-10 md:grid-cols-4 md:divide-x">
+        {[
+          { n: '30+', l: 'Years at the bench' },
+          { n: 'Own', l: 'Factory, not a trading house' },
+          { n: '3', l: 'Metals — steel, brass, copper' },
+          { n: '10', l: 'Pieces — where our MOQ starts' },
+        ].map((stat, i) => (
+          <div class={`px-4 py-4 md:px-8 ${i === 0 ? 'md:pl-0' : ''}`}>
+            <dt class="text-3xl font-semibold tracking-[-0.02em] text-ink-900 md:text-4xl">{stat.n}</dt>
+            <dd class="mt-1.5 text-[13px] leading-snug text-ink-600">{stat.l}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- Collections. The primary navigation of the whole site, given room. -->
+  <section class="section">
+    <div class="container-page">
+      <div class="max-w-2xl">
+        <p class="eyebrow">The collection</p>
+        <h2 class="mt-3 text-3xl font-semibold tracking-[-0.022em] text-ink-900 md:text-[42px] md:leading-[1.1]">
+          Seven categories. One standard.
+        </h2>
+        <p class="mt-4 text-[16px] leading-relaxed text-ink-600">
+          Everything a hotel puts on a buffet, a bar or a covered table — and nothing we cannot make
+          ourselves.
+        </p>
+      </div>
+
+      <div class="mt-14 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        {allCategories.map((c, i) => (
+          <a href={`/collections/${c.slug}`} class="reveal group block">
+            <Photo
+              src={c.hero}
+              alt={c.name}
+              label={c.name}
+              ratio={i === 0 ? '4 / 3' : '4 / 3'}
+              priority={i < 3}
+              class="rounded-xl transition-shadow duration-500 group-hover:shadow-[0_18px_50px_-24px_rgba(0,0,0,0.35)]"
+            />
+            <h3 class="mt-4 text-[18px] font-medium tracking-[-0.01em] text-ink-900">{c.name}</h3>
+            <p class="mt-1.5 text-[14px] leading-relaxed text-ink-600">{c.tagline}</p>
+            <span class="mt-2.5 inline-block text-[13px] text-brass-600 transition-transform duration-300 group-hover:translate-x-0.5">
+              Browse →
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- In use. The brief called this out specifically: bridge the gap between
+       inspiration and purchase by showing the piece doing its job. -->
+  <section class="bg-mist section">
+    <div class="container-page">
+      <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+        <div class="reveal">
+          <Photo
+            src={primaryUseCase.hero}
+            alt={primaryUseCase.name}
+            label={primaryUseCase.name}
+            ratio="4 / 5"
+            class="rounded-2xl"
+            sizes="(min-width: 1024px) 50vw, 100vw"
+          />
+        </div>
+        <div class="reveal">
+          <p class="eyebrow">In use</p>
+          <h2 class="mt-3 text-3xl font-semibold tracking-[-0.022em] text-ink-900 md:text-[42px] md:leading-[1.1]">
+            {primaryUseCase.headline}
+          </h2>
+          <p class="mt-5 text-[16px] leading-relaxed text-ink-600">{primaryUseCase.intro}</p>
+          <ul class="mt-8 space-y-4">
+            {primaryUseCase.what_to_specify.slice(0, 3).map((point) => (
+              <li class="flex gap-3.5">
+                <span class="mt-2 h-1 w-1 shrink-0 rounded-full bg-brass-500"></span>
+                <span class="text-[15px] leading-relaxed text-ink-700">{point}</span>
+              </li>
+            ))}
+          </ul>
+          <div class="mt-9 flex flex-wrap gap-3">
+            <a href={`/in-use/${primaryUseCase.slug}`} class="rounded-full bg-ink-900 px-5 py-2.5 text-[14px] font-medium text-white transition-opacity hover:opacity-85">
+              See the full setting
+            </a>
+            <a href="/in-use" class="rounded-full border border-ink-300 px-5 py-2.5 text-[14px] font-medium text-ink-800 transition-colors hover:border-ink-900">
+              All seven settings
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured pieces. -->
+  <section class="section">
+    <div class="container-page">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <div class="max-w-xl">
+          <p class="eyebrow">Selected pieces</p>
+          <h2 class="mt-3 text-3xl font-semibold tracking-[-0.022em] text-ink-900 md:text-[42px] md:leading-[1.1]">
+            Where we would start.
+          </h2>
+        </div>
+        <a href="/collections" class="text-[14px] font-medium text-brass-600 hover:text-brass-700">View all 29 pieces →</a>
+      </div>
+
+      <div class="mt-14 grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+        {featured.map((p, i) => <ProductCard product={p} eager={i < 3} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- The factory. The single strongest differentiator he has. -->
+  <section class="bg-ink-900 py-20 text-white md:py-28">
+    <div class="container-page">
+      <div class="grid items-center gap-14 lg:grid-cols-12 lg:gap-20">
+        <div class="reveal lg:col-span-5">
+          <Photo
+            src="/lifestyle/factory-floor.jpg"
+            alt="The Tripadi International factory floor in Moradabad"
+            label="Factory floor"
+            ratio="4 / 3"
+            class="rounded-2xl"
+            sizes="(min-width: 1024px) 42vw, 100vw"
+          />
+        </div>
+        <div class="reveal lg:col-span-7">
+          <p class="text-[12px] font-semibold tracking-[0.14em] text-brass-300 uppercase">The factory</p>
+          <h2 class="mt-4 text-3xl font-semibold tracking-[-0.022em] md:text-[40px] md:leading-[1.1]">
+            You are buying from the man who makes it.
+          </h2>
+          <p class="mt-6 max-w-xl text-[16px] leading-relaxed text-white/70">
+            {companyInfo.owner.bio_short}
+          </p>
+          <p class="mt-4 max-w-xl text-[16px] leading-relaxed text-white/70">
+            Most of what is sold as Moradabad metalware passes through three hands before it reaches
+            a buyer. Ours passes through one. That is why we can quote a bespoke rim die at two
+            hundred pieces, change a handle profile mid-order, and tell you exactly why a lid is
+            hinged the way it is.
+          </p>
+          <div class="mt-10 grid gap-6 sm:grid-cols-3">
+            {[
+              { t: 'In-house tooling', d: 'Our own dies. Your pattern stays yours.' },
+              { t: 'Nine processes', d: 'Spinning to plating, all under one roof.' },
+              { t: 'Direct pricing', d: 'No agent, no trading-house margin.' },
+            ].map((f) => (
+              <div>
+                <p class="text-[14px] font-medium text-white">{f.t}</p>
+                <p class="mt-1.5 text-[13px] leading-relaxed text-white/60">{f.d}</p>
+              </div>
+            ))}
+          </div>
+          <a href="/factory" class="mt-10 inline-block rounded-full bg-white px-6 py-3 text-[14px] font-medium text-ink-900 transition-opacity hover:opacity-90">
+            Inside the factory
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Two doors: trade and retail, stated plainly so neither buyer feels lost. -->
+  <section class="section">
+    <div class="container-page">
+      <div class="grid gap-6 md:grid-cols-2">
+        <div class="reveal flex flex-col rounded-2xl border border-ink-200 p-8 md:p-12">
+          <p class="eyebrow">For the trade</p>
+          <h3 class="mt-3 text-2xl font-semibold tracking-[-0.02em] text-ink-900 md:text-3xl">
+            Wholesale & bulk orders
+          </h3>
+          <p class="mt-4 flex-1 text-[15px] leading-relaxed text-ink-600">
+            Hotels, banquet halls, caterers, distributors and importers. Build an enquiry list as you
+            browse, send it in one form, and get prices, MOQs and a lead time back within a working
+            day. Custom finishes and your logo on the piece.
+          </p>
+          <ul class="mt-6 space-y-2 text-[14px] text-ink-700">
+            <li>· MOQ from 10 pieces on cast items</li>
+            <li>· Samples credited against your first order</li>
+            <li>· EXW, FOB, CIF and DDP</li>
+          </ul>
+          <a href="/wholesale" class="mt-8 inline-block self-start rounded-full bg-ink-900 px-6 py-3 text-[14px] font-medium text-white transition-opacity hover:opacity-85">
+            Request a quote
+          </a>
+        </div>
+
+        <div class="reveal flex flex-col rounded-2xl border border-ink-200 bg-mist p-8 md:p-12">
+          <p class="eyebrow">For your own table</p>
+          <h3 class="mt-3 text-2xl font-semibold tracking-[-0.02em] text-ink-900 md:text-3xl">
+            Buy a single piece
+          </h3>
+          <p class="mt-4 flex-1 text-[15px] leading-relaxed text-ink-600">
+            The same pieces we ship to hotels, one at a time, at a price that skips the retailer.
+            Secure card, UPI and netbanking checkout. Shipped across India.
+          </p>
+          <ul class="mt-6 space-y-2 text-[14px] text-ink-700">
+            <li>· Free delivery above ₹{companyInfo.retail.free_shipping_above_inr.toLocaleString('en-IN')}</li>
+            <li>· {companyInfo.retail.returns_days}-day returns</li>
+            <li>· Direct from the factory</li>
+          </ul>
+          <a href="/shop" class="mt-8 inline-block self-start rounded-full border border-ink-900 px-6 py-3 text-[14px] font-medium text-ink-900 transition-colors hover:bg-ink-900 hover:text-white">
+            Visit the shop
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <InquiryForm variant="wholesale" />
+</BaseLayout>

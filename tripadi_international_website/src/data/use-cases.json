@@ -1,0 +1,109 @@
+[
+  {
+    "slug": "banquet-and-wedding-buffet",
+    "name": "Banquet & Wedding Buffet",
+    "headline": "Three hundred covers, one line, no cold food.",
+    "intro": "A wedding buffet is a logistics problem dressed as a design problem. The metal has to hold heat for two hours, survive being loaded by staff who are moving fast, and photograph well in a room lit for people rather than for food.",
+    "scenario": "A 300-cover reception with a twelve-metre buffet line, live counters at both ends and a dessert island in the centre.",
+    "what_to_specify": [
+      "Roll-top chafers along the main line — servers pass in one direction and never lift a lid.",
+      "One soup station per 100 covers, positioned at the head of the line where the queue forms.",
+      "Graduated risers under the cold section so the line has a horizon rather than a flat run.",
+      "Charger plates on the seated tables in a finish that answers the chafers, not the linen."
+    ],
+    "products": ["TRI-CD-101", "TRI-CD-103", "TRI-CD-105", "TRI-BS-125", "TRI-CP-117", "TRI-BS-126"],
+    "hero": "/lifestyle/use-banquet-buffet.jpg",
+    "order": 1
+  },
+  {
+    "slug": "fine-dining-table-setting",
+    "name": "Fine Dining Table Setting",
+    "headline": "The metal a guest touches before the food arrives.",
+    "intro": "At a covered table the metalware is doing its work during the ten minutes before service — the charger, the napkin ring, the water pitcher. It is the room's first statement about price.",
+    "scenario": "A 60-cover restaurant setting for dinner service, white linen, low warm light.",
+    "what_to_specify": [
+      "A charger plate with a reveal of 12–18 mm around your dinner plate.",
+      "Antique or satin finishes under warm light; mirror finishes under cool light.",
+      "Matching napkin rings and menu holders — the cheapest coherence you can buy."
+    ],
+    "products": ["TRI-CP-118", "TRI-CP-120", "TRI-BA-128", "TRI-BA-129"],
+    "hero": "/lifestyle/use-fine-dining.jpg",
+    "order": 2
+  },
+  {
+    "slug": "poolside-and-outdoor-brunch",
+    "name": "Poolside & Outdoor Brunch",
+    "headline": "Sun, chlorine and salt air are a materials problem.",
+    "intro": "Outdoors, finish decides lifespan. Lacquered brass chalks in direct sun, and mirror polish shows every water spot within an hour of a wipe-down.",
+    "scenario": "A resort Sunday brunch on an open deck, 11am to 3pm, in direct sun.",
+    "what_to_specify": [
+      "Stainless steel 304 or PVD-coated pieces for anything left in the sun.",
+      "Hammered faces over mirror — they hide water spotting between wipe-downs.",
+      "Double-wall coolers and insulated bowls, which do not sweat onto the cloth.",
+      "Weighted bases on anything tall enough for wind to take."
+    ],
+    "products": ["TRI-WC-107", "TRI-WC-109", "TRI-SB-121", "TRI-BS-127"],
+    "hero": "/lifestyle/use-poolside-brunch.jpg",
+    "order": 3
+  },
+  {
+    "slug": "room-service-and-in-room-dining",
+    "name": "Room Service & In-Room Dining",
+    "headline": "It travels a corridor, a lift and a threshold.",
+    "intro": "In-room dining is the only service where the metalware is carried further than it is looked at. Non-slip surfaces and a cloche that seals are worth more here than any decorative detail.",
+    "scenario": "A 180-key hotel running in-room dining from a single kitchen floor.",
+    "what_to_specify": [
+      "Non-slip butler trays with a raised gallery rim.",
+      "Cloches that sit dead flat and do not ring when set down.",
+      "Insulated pieces — the food is plated eight minutes before the guest sees it."
+    ],
+    "products": ["TRI-TR-113", "TRI-TR-116", "TRI-BS-126", "TRI-SB-123"],
+    "hero": "/lifestyle/use-room-service.jpg",
+    "order": 4
+  },
+  {
+    "slug": "bar-and-lounge",
+    "name": "Bar & Lounge",
+    "headline": "Metal under low light, handled all night.",
+    "intro": "Bar metal is handled more than any other category in a hotel, by wet hands, at speed. It is also the most visible: a shaker is worked at eye level, eighteen inches from a paying guest.",
+    "scenario": "A 40-seat hotel lounge bar, low warm light, cocktail-led programme.",
+    "what_to_specify": [
+      "Copper and antique brass, which read warm under low light where steel reads clinical.",
+      "Non-slip bar trays — the single most-replaced item behind any bar.",
+      "Ice buckets with a drain insert if the bar serves bottles at the table."
+    ],
+    "products": ["TRI-BA-128", "TRI-TR-116", "TRI-WC-110", "TRI-BA-129"],
+    "hero": "/lifestyle/use-bar-lounge.jpg",
+    "order": 5
+  },
+  {
+    "slug": "breakfast-buffet-live-counter",
+    "name": "Breakfast Buffet & Live Counter",
+    "headline": "Four hours, continuous refill, one attendant.",
+    "intro": "Breakfast is the longest continuous service in a hotel and the one guests judge most consistently. Everything on the counter is refilled while guests are standing at it.",
+    "scenario": "A 120-key business hotel serving breakfast 6:30–10:30, egg counter live.",
+    "what_to_specify": [
+      "Split-pan mini chafers for condiments and sides — refilled without closing the station.",
+      "A juice dispenser with a stand rather than jugs; jugs are a labour cost.",
+      "A tiered stand for pastry, which halves the counter length you need."
+    ],
+    "products": ["TRI-CD-106", "TRI-BS-127", "TRI-SB-124", "TRI-CD-104"],
+    "hero": "/lifestyle/use-breakfast-buffet.jpg",
+    "order": 6
+  },
+  {
+    "slug": "home-entertaining",
+    "name": "Home Entertaining",
+    "headline": "Hotel metal, domestic scale.",
+    "intro": "The same pieces, bought one or two at a time. A copper handi on a dining table at home is doing exactly what it does in a hotel — it is simply not being washed forty times a week.",
+    "scenario": "A dinner for eight at home, served family-style from the table.",
+    "what_to_specify": [
+      "Copper handis and hammered platters, which go from oven to table.",
+      "One good tray. It becomes the piece you use most and think about least.",
+      "Lacquered brass indoors — it does not need the weekly polish that raw brass does."
+    ],
+    "products": ["TRI-SB-122", "TRI-TR-112", "TRI-BA-129", "TRI-SB-124"],
+    "hero": "/lifestyle/use-home-entertaining.jpg",
+    "order": 7
+  }
+]

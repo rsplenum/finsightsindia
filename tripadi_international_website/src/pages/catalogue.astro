@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InquiryForm from '../components/InquiryForm.astro';
+import { allCategories, allProducts } from '../lib/catalog';
+---
+<BaseLayout
+  title="Download the Catalogue — Hotel Metalware PDF | Tripadi International"
+  description="The full Tripadi International catalogue: 29 pieces across seven categories, with specifications, finishes and MOQs. Sent to your inbox."
+>
+  <section class="section-tight">
+    <div class="container-page">
+      <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-6">
+          <p class="eyebrow">Catalogue</p>
+          <h1 class="mt-3 text-4xl font-semibold tracking-[-0.025em] text-ink-900 md:text-5xl">
+            The whole range, on paper.
+          </h1>
+          <p class="mt-6 text-[16px] leading-relaxed text-ink-600">
+            {allProducts.length} pieces across {allCategories.length} categories, with dimensions, capacities,
+            finish options, MOQs and lead times. The version a purchase committee can print and pass
+            around.
+          </p>
+          <ul class="mt-8 space-y-3 text-[15px] text-ink-700">
+            <li>· Full specification for every piece</li>
+            <li>· Finish and customisation options</li>
+            <li>· MOQs, lead times and packing data</li>
+            <li>· Our export terms and process</li>
+          </ul>
+          <p class="mt-8 text-[13px] leading-relaxed text-ink-500">
+            Tell us where to send it and we will email the PDF straight away, along with a price list
+            matched to the quantities you are considering.
+          </p>
+        </div>
+        <div class="lg:col-span-6">
+          <InquiryForm variant="sample" compact={true} id="catalogue" />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

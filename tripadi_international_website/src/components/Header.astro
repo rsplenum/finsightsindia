@@ -1,0 +1,153 @@
+---
+import { allCategories, allUseCases, companyInfo } from '../lib/catalog';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) => path === href || (href !== '/' && path.startsWith(href));
+---
+<header
+  class="sticky top-0 z-40 border-b border-ink-200/70 bg-white/85 backdrop-blur-xl backdrop-saturate-150"
+>
+  <div class="container-page">
+    <div class="flex h-16 items-center justify-between gap-6">
+      <a href="/" class="flex shrink-0 items-baseline gap-2" aria-label="Tripadi International — home">
+        <span class="text-[17px] font-semibold tracking-[-0.02em] text-ink-900">Tripadi</span>
+        <span class="hidden text-[13px] font-medium tracking-[0.14em] text-ink-500 uppercase sm:inline"
+          >International</span
+        >
+      </a>
+
+      <nav class="hidden items-center gap-1 lg:flex" aria-label="Primary">
+        <div class="group relative">
+          <a
+            href="/collections"
+            class={`px-3 py-2 text-[13px] font-medium transition-colors ${isActive('/collections') ? 'text-ink-900' : 'text-ink-600 hover:text-ink-900'}`}
+            >Collections</a
+          >
+          <div
+            class="invisible absolute top-full left-1/2 w-[300px] -translate-x-1/2 pt-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100"
+          >
+            <div class="rounded-xl border border-ink-200 bg-white p-2 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.18)]">
+              {allCategories.map((c) => (
+                <a
+                  href={`/collections/${c.slug}`}
+                  class="block rounded-lg px-3 py-2.5 transition-colors hover:bg-mist"
+                >
+                  <span class="block text-[13px] font-medium text-ink-900">{c.name}</span>
+                  <span class="block text-[12px] text-ink-500">{c.tagline}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div class="group relative">
+          <a
+            href="/in-use"
+            class={`px-3 py-2 text-[13px] font-medium transition-colors ${isActive('/in-use') ? 'text-ink-900' : 'text-ink-600 hover:text-ink-900'}`}
+            >In Use</a
+          >
+          <div
+            class="invisible absolute top-full left-1/2 w-[280px] -translate-x-1/2 pt-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100"
+          >
+            <div class="rounded-xl border border-ink-200 bg-white p-2 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.18)]">
+              {allUseCases.map((u) => (
+                <a href={`/in-use/${u.slug}`} class="block rounded-lg px-3 py-2 text-[13px] text-ink-700 transition-colors hover:bg-mist hover:text-ink-900">{u.name}</a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <a href="/wholesale" class={`px-3 py-2 text-[13px] font-medium transition-colors ${isActive('/wholesale') ? 'text-ink-900' : 'text-ink-600 hover:text-ink-900'}`}>Wholesale</a>
+        <a href="/shop" class={`px-3 py-2 text-[13px] font-medium transition-colors ${isActive('/shop') ? 'text-ink-900' : 'text-ink-600 hover:text-ink-900'}`}>Shop</a>
+        <a href="/factory" class={`px-3 py-2 text-[13px] font-medium transition-colors ${isActive('/factory') ? 'text-ink-900' : 'text-ink-600 hover:text-ink-900'}`}>The Factory</a>
+        <a href="/contact" class={`px-3 py-2 text-[13px] font-medium transition-colors ${isActive('/contact') ? 'text-ink-900' : 'text-ink-600 hover:text-ink-900'}`}>Contact</a>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <a
+          href="/enquiry"
+          data-basket-link="enquiry"
+          class="hidden items-center gap-2 rounded-full border border-ink-300 px-3.5 py-1.5 text-[13px] font-medium text-ink-800 transition-colors hover:border-ink-900 sm:inline-flex"
+        >
+          Enquiry
+          <span
+            data-basket-count="enquiry"
+            class="hidden min-w-[18px] rounded-full bg-brass-600 px-1.5 text-center text-[11px] leading-[18px] font-semibold text-white"
+            >0</span
+          >
+        </a>
+        <a
+          href="/shop/cart"
+          class="relative hidden rounded-full p-2 text-ink-700 transition-colors hover:bg-mist sm:block"
+          aria-label="Shopping bag"
+        >
+          <svg viewBox="0 0 20 20" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.4">
+            <path d="M4 6.5h12l-1 10.5H5L4 6.5Z" stroke-linejoin="round" />
+            <path d="M7.25 6.5V5a2.75 2.75 0 0 1 5.5 0v1.5" stroke-linecap="round" />
+          </svg>
+          <span
+            data-basket-count="cart"
+            class="absolute -top-0.5 -right-0.5 hidden min-w-[16px] rounded-full bg-ink-900 px-1 text-center text-[10px] leading-4 font-semibold text-white"
+            >0</span
+          >
+        </a>
+        <a
+          href="/wholesale"
+          class="hidden rounded-full bg-ink-900 px-4 py-2 text-[13px] font-medium text-white transition-opacity hover:opacity-85 md:inline-block"
+          >Get a quote</a
+        >
+        <button
+          type="button"
+          data-menu-toggle
+          class="rounded-full p-2 text-ink-800 transition-colors hover:bg-mist lg:hidden"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <svg viewBox="0 0 20 20" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 6h14M3 10h14M3 14h14" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="mobile-menu" hidden class="border-t border-ink-200 bg-white lg:hidden">
+    <div class="container-page max-h-[70vh] overflow-y-auto py-6">
+      <p class="eyebrow mb-3">Collections</p>
+      <div class="mb-6 grid gap-1">
+        {allCategories.map((c) => (
+          <a href={`/collections/${c.slug}`} class="py-1.5 text-[15px] text-ink-800">{c.name}</a>
+        ))}
+      </div>
+      <p class="eyebrow mb-3">In Use</p>
+      <div class="mb-6 grid gap-1">
+        {allUseCases.map((u) => (
+          <a href={`/in-use/${u.slug}`} class="py-1.5 text-[15px] text-ink-800">{u.name}</a>
+        ))}
+      </div>
+      <div class="hairline grid gap-1 pt-5">
+        <a href="/wholesale" class="py-1.5 text-[15px] font-medium text-ink-900">Wholesale & Bulk Orders</a>
+        <a href="/shop" class="py-1.5 text-[15px] font-medium text-ink-900">Shop (Retail)</a>
+        <a href="/enquiry" class="py-1.5 text-[15px] font-medium text-ink-900">My Enquiry List</a>
+        <a href="/factory" class="py-1.5 text-[15px] font-medium text-ink-900">The Factory</a>
+        <a href="/contact" class="py-1.5 text-[15px] font-medium text-ink-900">Contact</a>
+      </div>
+      <a
+        href={`https://wa.me/${companyInfo.whatsapp}`}
+        class="mt-6 block rounded-full bg-ink-900 px-4 py-3 text-center text-[14px] font-medium text-white"
+        >WhatsApp us</a
+      >
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector('[data-menu-toggle]');
+  const menu = document.getElementById('mobile-menu');
+  toggle?.addEventListener('click', () => {
+    const open = menu?.hidden;
+    if (menu) menu.hidden = !open;
+    toggle.setAttribute('aria-expanded', String(Boolean(open)));
+  });
+</script>

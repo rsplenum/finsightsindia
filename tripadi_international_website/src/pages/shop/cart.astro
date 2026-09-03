@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { companyInfo } from '../../lib/catalog';
+
+const { free_shipping_above_inr, shipping_flat_inr } = companyInfo.retail;
+---
+<BaseLayout title="Your Bag | Tripadi International" description="Your shopping bag." noindex={true}>
+  <section class="section-tight">
+    <div class="container-page">
+      <h1 class="text-4xl font-semibold tracking-[-0.025em] text-ink-900 md:text-5xl">Your bag</h1>
+
+      <div class="mt-12 grid gap-12 lg:grid-cols-12 lg:gap-16" data-cart-page
+        data-free-above={free_shipping_above_inr} data-shipping={shipping_flat_inr}>
+        <div class="lg:col-span-7">
+          <div class="hidden rounded-2xl border border-ink-200 p-10 text-center" data-empty>
+            <p class="text-[16px] text-ink-700">Your bag is empty.</p>
+            <a href="/shop" class="mt-6 inline-block rounded-full bg-ink-900 px-6 py-3 text-[14px] font-medium text-white transition-opacity hover:opacity-85">
+              Visit the shop
+            </a>
+          </div>
+          <ul class="hidden divide-y divide-ink-200 border-y border-ink-200" data-list></ul>
+        </div>
+
+        <aside class="hidden lg:col-span-5" data-summary>
+          <div class="rounded-2xl border border-ink-200 bg-mist p-6">
+            <h2 class="text-[17px] font-medium text-ink-900">Order summary</h2>
+            <dl class="mt-5 space-y-3 text-[14px]">
+              <div class="flex justify-between"><dt class="text-ink-600">Subtotal</dt><dd class="text-ink-900" data-subtotal>—</dd></div>
+              <div class="flex justify-between"><dt class="text-ink-600">Delivery</dt><dd class="text-ink-900" data-shipping-line>—</dd></div>
+              <div class="hairline flex justify-between pt-3 text-[16px] font-semibold">
+                <dt class="text-ink-900">Total</dt><dd class="text-ink-900" data-total>—</dd>
+              </div>
+            </dl>
+            <p class="mt-3 text-[12px] leading-relaxed text-ink-500">
+              Prices include GST at {Math.round(companyInfo.retail.gst_rate * 100)}%. Delivery is free
+              above ₹{free_shipping_above_inr.toLocaleString('en-IN')}.
+            </p>
+            <a href="/shop/checkout" class="mt-6 block rounded-full bg-ink-900 px-6 py-3 text-center text-[14px] font-medium text-white transition-opacity hover:opacity-85">
+              Checkout
+            </a>
+            <p class="mt-4 text-center text-[12px] text-ink-500">
+              Buying ten or more? <a href="/wholesale" class="text-brass-600 underline">Ask for a trade price</a>.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { read, setQty, remove } from '../../scripts/basket';
+  import { renderCart } from '../../scripts/cart-render';
+  renderCart(document.querySelector('[data-cart-page]'), { read, setQty, remove });
+</script>

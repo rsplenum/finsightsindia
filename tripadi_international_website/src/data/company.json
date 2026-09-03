@@ -1,0 +1,117 @@
+{
+  "_note": "Single source of truth for every company fact on the site. Any value whose key is listed in `_provisional` is a PLACEHOLDER written by the build, not a fact supplied by Rajendra Sharma. Run `npm run audit:data` to list them. Answer docs/questionnaire.md to clear the list.",
+  "_provisional": [
+    "legal_name", "founded", "address", "phone", "whatsapp", "email",
+    "sales_email", "gstin", "iec", "factory", "certifications",
+    "capacity", "export_markets", "clients", "domain", "social",
+    "bank_terms", "team_size"
+  ],
+
+  "name": "Tripadi International",
+  "legal_name": "Tripadi International (proprietorship — CONFIRM legal constitution)",
+  "tagline": "Hotel metalware, made in Moradabad.",
+  "positioning": "Manufacturer and exporter of stainless steel, brass and copper hospitality metalware — chafing dishes, wine coolers, trays, charger plates and buffet service.",
+  "owner": {
+    "name": "Rajendra Sharma",
+    "role": "Founder & Managing Director",
+    "experience_years": 30,
+    "bio_short": "Rajendra Sharma has spent over thirty years at the bench and on the factory floor in Moradabad, India's metal-craft city. Tripadi International is his own factory — every piece that carries the name is made under his roof and passes his hand before it ships.",
+    "photo": "/brand/rajendra-sharma.jpg"
+  },
+  "founded": "1995",
+  "domain": "www.tripadiinternational.com",
+
+  "address": {
+    "line1": "PLOT / STREET — TO CONFIRM",
+    "area": "TO CONFIRM",
+    "city": "Moradabad",
+    "state": "Uttar Pradesh",
+    "postal_code": "244001",
+    "country": "India",
+    "maps_url": ""
+  },
+
+  "phone": "+91 00000 00000",
+  "whatsapp": "910000000000",
+  "email": "info@tripadiinternational.com",
+  "sales_email": "sales@tripadiinternational.com",
+
+  "gstin": "TO CONFIRM",
+  "iec": "TO CONFIRM",
+  "team_size": "TO CONFIRM",
+
+  "factory": {
+    "location": "Moradabad, Uttar Pradesh, India",
+    "owned": true,
+    "area_sqft": "TO CONFIRM",
+    "processes": [
+      "Sheet metal spinning and deep drawing",
+      "Sand casting and gravity die casting (brass)",
+      "Hand hammering and chasing",
+      "TIG welding and seam finishing",
+      "Buffing, mirror polishing and satin finishing",
+      "Electroplating — nickel, chrome, silver, gold, antique",
+      "PVD coating",
+      "Lacquering and anti-tarnish treatment",
+      "In-house tool and die making"
+    ],
+    "monthly_capacity_units": "TO CONFIRM",
+    "in_house_percentage": "TO CONFIRM"
+  },
+
+  "certifications": [
+    { "name": "ISO 9001", "status": "TO CONFIRM" },
+    { "name": "EPCH membership (Export Promotion Council for Handicrafts)", "status": "TO CONFIRM" },
+    { "name": "FDA / LFGB food-contact compliance", "status": "TO CONFIRM" },
+    { "name": "SEDEX / social audit", "status": "TO CONFIRM" },
+    { "name": "REACH declaration", "status": "TO CONFIRM" }
+  ],
+
+  "capacity": {
+    "sample_lead_time_days": "7-10",
+    "production_lead_time_days": "30-45",
+    "moq_policy": "MOQ varies by item and finish. Stock finishes start lower; custom finishes and branding carry a higher minimum."
+  },
+
+  "export_markets": [
+    "United Arab Emirates", "Saudi Arabia", "Qatar", "Oman",
+    "United States", "United Kingdom", "Germany", "France",
+    "Australia", "Singapore", "Kenya", "Nigeria"
+  ],
+
+  "trade": {
+    "incoterms": ["EXW Moradabad", "FOB Nhava Sheva", "CIF", "DDP (on request)"],
+    "ports": ["Nhava Sheva (JNPT)", "Mundra", "Delhi ICD Tughlakabad"],
+    "payment_terms": "30% advance against Proforma Invoice, balance against copy of B/L. L/C at sight accepted for orders above a threshold.",
+    "packing": "Individual poly + bubble, master carton, 5-ply export carton. Pallets on request.",
+    "currencies": ["USD", "EUR", "GBP", "INR"]
+  },
+
+  "bank_terms": "TO CONFIRM",
+
+  "clients": [],
+
+  "social": {
+    "instagram": "",
+    "linkedin": "",
+    "facebook": "",
+    "youtube": "",
+    "pinterest": "",
+    "indiamart": "",
+    "alibaba": ""
+  },
+
+  "hours": "Monday to Saturday, 10:00–18:30 IST",
+
+  "retail": {
+    "enabled": true,
+    "currency": "INR",
+    "gst_rate": 0.18,
+    "gst_note": "Prices shown are inclusive of GST at 18%. CONFIRM the correct HSN-wise rate before go-live.",
+    "free_shipping_above_inr": 5000,
+    "shipping_flat_inr": 249,
+    "provider": "razorpay",
+    "provider_status": "not_connected",
+    "returns_days": 7
+  }
+}

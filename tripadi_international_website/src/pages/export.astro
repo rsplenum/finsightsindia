@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InquiryForm from '../components/InquiryForm.astro';
+import { companyInfo } from '../lib/catalog';
+import { faqSchema, breadcrumbSchema } from '../lib/seo';
+const siteUrl = Astro.site?.toString() ?? '';
+const t = companyInfo.trade;
+const faqs = [
+  { q: 'Which Incoterms do you quote?', a: `${t.incoterms.join(', ')}. For a first order we usually recommend FOB — it keeps the freight decision with you and your own forwarder, who will almost always beat a manufacturer's freight rate.` },
+  { q: 'What are your payment terms?', a: t.payment_terms },
+  { q: 'How is it packed?', a: `${t.packing} Anything plated or lacquered is interleaved so pieces never touch in transit — the most common cause of a rejected consignment is not manufacturing, it is packing.` },
+  { q: 'What documentation do you provide?', a: 'Commercial invoice, packing list, certificate of origin, and any buyer-specific certificate you need. We will work to your forwarder\'s document set and send drafts for approval before the shipment moves.' },
+  { q: 'Can we appoint our own inspection agency?', a: 'Yes, on any order. SGS, Bureau Veritas, Intertek or your own agent — we accommodate pre-shipment inspection as standard and we do not charge for the access.' },
+  { q: 'Do you consolidate with other suppliers?', a: 'Yes. If you are buying from several Moradabad workshops we can receive, check and consolidate into one container here, which usually saves more than it costs.' },
+];
+---
+<BaseLayout
+  title="Export & Shipping — Hospitality Metalware from India | Tripadi International"
+  description="Export terms, packing, documentation and shipping for hotel metalware from Moradabad. EXW, FOB, CIF and DDP through Nhava Sheva, Mundra and ICD Tughlakabad."
+  schema={[faqSchema(faqs), breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Export', url: '/export' }], siteUrl)]}
+>
+  <section class="section-tight border-b border-ink-200">
+    <div class="container-page">
+      <p class="eyebrow">Export & shipping</p>
+      <h1 class="mt-3 max-w-3xl text-4xl font-semibold tracking-[-0.025em] text-ink-900 md:text-[52px] md:leading-[1.06]">
+        We have been shipping out of this city for three decades.
+      </h1>
+      <p class="mt-6 max-w-2xl text-[16px] leading-relaxed text-ink-600">
+        The manufacturing is the easy half. What separates a good Indian supplier from a difficult
+        one is the paperwork, the packing and whether the container leaves when they said it would.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container-page">
+      <div class="grid gap-10 lg:grid-cols-3">
+        <div>
+          <p class="text-[12px] font-semibold tracking-[0.1em] text-ink-500 uppercase">Terms</p>
+          <ul class="mt-4 space-y-2 text-[15px] text-ink-800">{t.incoterms.map((i) => <li>{i}</li>)}</ul>
+        </div>
+        <div>
+          <p class="text-[12px] font-semibold tracking-[0.1em] text-ink-500 uppercase">Ports</p>
+          <ul class="mt-4 space-y-2 text-[15px] text-ink-800">{t.ports.map((i) => <li>{i}</li>)}</ul>
+        </div>
+        <div>
+          <p class="text-[12px] font-semibold tracking-[0.1em] text-ink-500 uppercase">Currencies</p>
+          <ul class="mt-4 space-y-2 text-[15px] text-ink-800">{t.currencies.map((i) => <li>{i}</li>)}</ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-mist section-tight">
+    <div class="container-page">
+      <p class="eyebrow">Where we ship</p>
+      <h2 class="mt-3 text-2xl font-semibold tracking-[-0.02em] text-ink-900 md:text-3xl">Markets we already serve</h2>
+      <div class="mt-8 flex flex-wrap gap-2.5">
+        {companyInfo.export_markets.map((m) => (
+          <span class="rounded-full border border-ink-300 bg-white px-4 py-2 text-[13px] text-ink-700">{m}</span>
+        ))}
+      </div>
+      <p class="mt-8 max-w-2xl text-[15px] leading-relaxed text-ink-600">
+        Not on the list? It is not an obstacle — it simply means we will check the documentation
+        requirements for your market before quoting rather than after.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container-page">
+      <div class="mx-auto max-w-3xl">
+        <h2 class="text-2xl font-semibold tracking-[-0.02em] text-ink-900 md:text-3xl">Export questions</h2>
+        <div class="mt-8 divide-y divide-ink-200 border-y border-ink-200">
+          {faqs.map((f) => (
+            <details class="group py-4">
+              <summary class="flex cursor-pointer list-none items-start justify-between gap-6 text-[15px] font-medium text-ink-900">
+                {f.q}
+                <span class="mt-1 shrink-0 text-ink-400 transition-transform duration-300 group-open:rotate-45">
+                  <svg viewBox="0 0 14 14" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 1v12M1 7h12" stroke-linecap="round"/></svg>
+                </span>
+              </summary>
+              <p class="mt-3 text-[14px] leading-relaxed text-ink-700">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <InquiryForm variant="wholesale" />
+</BaseLayout>

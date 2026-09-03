@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Photo from '../../components/Photo.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { allCategories, allProducts, productsInCategory, metalLabels } from '../../lib/catalog';
+import { breadcrumbSchema } from '../../lib/seo';
+
+const siteUrl = Astro.site?.toString() ?? '';
+const metals = ['stainless-steel', 'brass', 'copper'];
+---
+<BaseLayout
+  title="The Collection — 29 Pieces of Hotel Metalware | Tripadi International"
+  description="Browse all 29 pieces: chafing dishes, wine coolers, trays, charger plates, serveware, buffet stands and barware in stainless steel, brass and copper. Made in our own factory in Moradabad."
+  schema={breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Collections', url: '/collections' }], siteUrl)}
+>
+  <section class="section-tight border-b border-ink-200">
+    <div class="container-page">
+      <p class="eyebrow">The collection</p>
+      <h1 class="mt-3 max-w-3xl text-4xl font-semibold tracking-[-0.025em] text-ink-900 md:text-[52px] md:leading-[1.06]">
+        Twenty-nine pieces, seven categories, three metals.
+      </h1>
+      <p class="mt-5 max-w-xl text-[16px] leading-relaxed text-ink-600">
+        Everything here is made in our own factory. Filter by category or by metal — or send the whole
+        list to us as an enquiry and we will price it.
+      </p>
+    </div>
+  </section>
+
+  <!-- Category index. Photograph-led, because that is how a buyer shops metal. -->
+  <section class="section">
+    <div class="container-page">
+      <div class="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        {allCategories.map((c, i) => (
+          <a href={`/collections/${c.slug}`} class="reveal group block">
+            <Photo src={c.hero} alt={c.name} label={c.name} ratio="4 / 3" priority={i < 3} class="rounded-xl transition-shadow duration-500 group-hover:shadow-[0_18px_50px_-24px_rgba(0,0,0,0.35)]" />
+            <div class="mt-4 flex items-baseline justify-between gap-4">
+              <h2 class="text-[18px] font-medium tracking-[-0.01em] text-ink-900">{c.name}</h2>
+              <span class="shrink-0 text-[12px] text-ink-500">{productsInCategory(c.slug).length} pieces</span>
+            </div>
+            <p class="mt-1.5 text-[14px] leading-relaxed text-ink-600">{c.tagline}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- By metal. A second axis, because plenty of buyers arrive knowing the
+       material before they know the item. -->
+  <section class="bg-mist section">
+    <div class="container-page">
+      <p class="eyebrow">By metal</p>
+      <h2 class="mt-3 text-3xl font-semibold tracking-[-0.022em] text-ink-900 md:text-4xl">Choose the material first.</h2>
+      <div class="mt-12 grid gap-6 md:grid-cols-3">
+        {metals.map((m) => {
+          const count = allProducts.filter((p) => p.metal === m).length;
+          const blurb: Record<string, string> = {
+            'stainless-steel': 'Grade 304 where food touches it. The default for anything that lives in a dishwasher or in the sun.',
+            brass: 'Cast, spun and antiqued in house. Warm under low light; the material for a room that wants to look expensive.',
+            copper: 'Hand-hammered over a form, always lined in steel. The most photographed metal we work in.',
+          };
+          return (
+            <a href={`/materials-and-finishes#${m}`} class="reveal rounded-2xl border border-ink-200 bg-white p-8 transition-colors hover:border-ink-900">
+              <h3 class="text-[20px] font-medium text-ink-900">{metalLabels[m]}</h3>
+              <p class="mt-3 text-[14px] leading-relaxed text-ink-600">{blurb[m]}</p>
+              <p class="mt-5 text-[13px] text-brass-600">{count} pieces →</p>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- The whole catalogue on one page. A trade buyer wants to see it all. -->
+  <section class="section">
+    <div class="container-page">
+      <p class="eyebrow">Everything</p>
+      <h2 class="mt-3 text-3xl font-semibold tracking-[-0.022em] text-ink-900 md:text-4xl">All 29 pieces</h2>
+      <div class="mt-14 grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+        {allProducts.map((p) => <ProductCard product={p} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

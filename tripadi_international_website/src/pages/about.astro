@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Photo from '../components/Photo.astro';
+import { companyInfo } from '../lib/catalog';
+import { breadcrumbSchema } from '../lib/seo';
+const siteUrl = Astro.site?.toString() ?? '';
+---
+<BaseLayout
+  title="About Tripadi International — Thirty Years of Moradabad Metalware"
+  description="Rajendra Sharma founded Tripadi International in Moradabad and has spent over thirty years making hospitality metalware. Manufacturer and exporter, own factory, no middlemen."
+  schema={breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'About', url: '/about' }], siteUrl)}
+>
+  <section class="section-tight">
+    <div class="container-page">
+      <div class="mx-auto max-w-3xl">
+        <p class="eyebrow">About</p>
+        <h1 class="mt-3 text-4xl font-semibold tracking-[-0.025em] text-ink-900 md:text-[52px] md:leading-[1.06]">
+          Moradabad has made metal for four hundred years. We have been at it for thirty of them.
+        </h1>
+        <p class="mt-8 text-[19px] leading-[1.6] text-ink-700 md:text-[21px]">
+          The city is called Peetal Nagri — the brass city. Almost every hotel in the world that puts
+          a chafing dish on a buffet is, at some remove, buying from here. The question is how many
+          hands the piece passed through on the way, and whether any of them was the maker's.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-page">
+    <Photo src="/lifestyle/moradabad-workshop.jpg" alt="Metalworking in Moradabad" label="Moradabad workshop" ratio="21 / 9" class="rounded-2xl" sizes="100vw" />
+  </section>
+
+  <section class="section-tight">
+    <div class="container-page">
+      <div class="mx-auto max-w-3xl space-y-6 text-[16px] leading-relaxed text-ink-700">
+        <p>
+          {companyInfo.owner.name} started at the bench. Thirty years on he owns the factory, and the
+          thing that has not changed is that he still walks the floor. There is no version of an
+          order here that he has not seen.
+        </p>
+        <p>
+          That matters more than it sounds. Most Moradabad metalware reaches a hotel through an
+          export house that owns no machinery, an agent who owns no inventory, and a distributor who
+          owns no relationship with either. Every one of those is a margin. More importantly, every
+          one of them is a layer between a buyer with a question and the only person who can answer
+          it — the man who decided how the hinge was made.
+        </p>
+        <p>
+          We sell directly. To a hotel fitting out a banquet hall, to a distributor filling a
+          container, and to a person who wants one copper handi for their own table. The price is
+          different in each case. The piece is not.
+        </p>
+        <p class="text-[19px] leading-[1.6] font-medium text-ink-900">
+          Everything on this site is made by us. Nothing is bought in and re-badged. If we cannot
+          make it, we will tell you that rather than sell it to you.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-mist section-tight">
+    <div class="container-page">
+      <div class="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-5">
+          <Photo src={companyInfo.owner.photo} alt={companyInfo.owner.name} label={companyInfo.owner.name} ratio="4 / 5" class="rounded-2xl" sizes="(min-width: 1024px) 40vw, 100vw" />
+        </div>
+        <div class="lg:col-span-7">
+          <p class="eyebrow">The founder</p>
+          <h2 class="mt-3 text-3xl font-semibold tracking-[-0.022em] text-ink-900 md:text-4xl">{companyInfo.owner.name}</h2>
+          <p class="mt-2 text-[14px] text-ink-500">{companyInfo.owner.role}</p>
+          <p class="mt-6 text-[16px] leading-relaxed text-ink-700">{companyInfo.owner.bio_short}</p>
+          <p class="mt-4 text-[16px] leading-relaxed text-ink-700">
+            He will take the call himself. For a bespoke piece, a difficult finish or a distribution
+            conversation, that is the fastest route to an answer you will find in this city.
+          </p>
+          <a href="/contact" class="mt-8 inline-block rounded-full bg-ink-900 px-6 py-3 text-[14px] font-medium text-white transition-opacity hover:opacity-85">
+            Speak to Rajendra
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container-page">
+      <div class="mx-auto max-w-4xl">
+        <p class="eyebrow">What we hold ourselves to</p>
+        <div class="mt-10 grid gap-10 md:grid-cols-2">
+          {[
+            { t: 'Food contact is always steel', d: 'Copper and brass are beautiful and neither belongs against food. Every piece we make that holds something edible is lined in 304 stainless. There is no exception to this and no cheaper version of it.' },
+            { t: 'The finish is in the metal', d: 'Antiquing is a chemical process here, not a spray. Plating goes into a bath, not onto a pad. A finish that sits on the surface will leave the surface, usually in year two, usually in front of a guest.' },
+            { t: 'We quote what we can make', d: 'A lead time we can hold, a price that survives a currency move, an MOQ that is real. A quote we have to renegotiate later costs us more than the order was worth.' },
+            { t: 'The die stays yours', d: 'If we cut a tool for your pattern, that pattern is not offered to anyone else. It is the single most common complaint buyers have about this city and it is the easiest one to fix.' },
+          ].map((v) => (
+            <div class="reveal">
+              <h3 class="text-[18px] font-medium text-ink-900">{v.t}</h3>
+              <p class="mt-2.5 text-[15px] leading-relaxed text-ink-600">{v.d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
