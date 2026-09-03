@@ -14,7 +14,8 @@
     "audit:data": "node scripts/audit-data.mjs",
     "check:slugs": "node scripts/check-slug-collisions.mjs",
     "verify": "npm run audit:data && npm run check:slugs && npm run build",
-    "test:e2e": "node scripts/e2e-basket.mjs"
+    "test:e2e": "node scripts/e2e-basket.mjs",
+    "preview:bundle": "node scripts/build-preview.mjs preview.html"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
