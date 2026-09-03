@@ -1,0 +1,73 @@
+---
+import { photoExists } from '../lib/images';
+
+interface Props {
+  src: string;
+  alt: string;
+  /** Aspect ratio as a CSS value, e.g. "4 / 3". */
+  ratio?: string;
+  /** Shown inside the placeholder when the photograph is not yet in /public. */
+  label?: string;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+  sizes?: string;
+  priority?: boolean;
+  /** "dark" for placeholders that sit under white hero type. */
+  tone?: 'light' | 'dark';
+}
+
+const {
+  src,
+  alt,
+  ratio = '4 / 3',
+  label,
+  class: className = '',
+  loading,
+  sizes = '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw',
+  priority = false,
+  tone = 'light',
+} = Astro.props;
+
+const has = photoExists(src);
+const loadAttr = loading ?? (priority ? 'eager' : 'lazy');
+---
+{
+  has ? (
+    <div class={`photo-tile ${className}`} style={`aspect-ratio: ${ratio};`}>
+      <img
+        src={src}
+        alt={alt}
+        sizes={sizes}
+        loading={loadAttr}
+        decoding={priority ? 'sync' : 'async'}
+        fetchpriority={priority ? 'high' : 'auto'}
+        class="h-full w-full object-cover"
+      />
+    </div>
+  ) : (
+    /*
+      No photograph yet. Rather than a broken image, draw a quiet plate that
+      reads as a deliberate placeholder: the monogram, the piece's name, and a
+      note for whoever is loading the images. Replaced automatically the moment
+      the file appears in /public.
+    */
+    <div
+      class={`flex flex-col items-center justify-center gap-3 overflow-hidden px-6 text-center ${
+        tone === 'dark' ? 'bg-ink-800' : 'photo-tile border border-ink-200/80'
+      } ${className}`}
+      style={`aspect-ratio: ${ratio};`}
+      role="img"
+      aria-label={`${alt} — photograph pending`}
+    >
+      <svg viewBox="0 0 40 40" class={`h-8 w-8 ${tone === 'dark' ? 'text-brass-500' : 'text-brass-300'}`} fill="none" stroke="currentColor" stroke-width="1">
+        <rect x="4.5" y="4.5" width="31" height="31" />
+        <path d="M4.5 27.5 14 18l7.5 7.5L27 20l8.5 8.5" stroke-linejoin="round" />
+        <circle cx="26" cy="13" r="2.5" />
+      </svg>
+      <span class={`text-[11px] leading-snug font-medium tracking-[0.1em] uppercase ${tone === 'dark' ? 'text-white/50' : 'text-ink-500'}`}>
+        {label ?? alt}
+      </span>
+      <span class={`text-[10px] tracking-wide ${tone === 'dark' ? 'text-white/30' : 'text-ink-300'}`}>Photograph pending</span>
+    </div>
+  )
+}

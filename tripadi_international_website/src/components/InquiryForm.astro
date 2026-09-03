@@ -1,0 +1,291 @@
+---
+import { allCategories, companyInfo } from '../lib/catalog';
+
+interface Props {
+  /** Changes the heading, the intent field and which questions are asked. */
+  variant?: 'wholesale' | 'contact' | 'sample' | 'private-label';
+  compact?: boolean;
+  id?: string;
+}
+const { variant = 'wholesale', compact = false, id = 'inquiry' } = Astro.props;
+
+const headings: Record<string, { title: string; blurb: string; cta: string }> = {
+  wholesale: {
+    title: 'Request a wholesale quote',
+    blurb:
+      'Tell us what you are specifying and we will come back with prices, MOQs and a lead time. If you already built an enquiry list, it is attached automatically.',
+    cta: 'Send enquiry',
+  },
+  sample: {
+    title: 'Request samples',
+    blurb:
+      'We ship samples worldwide. Sample cost is credited against your first production order.',
+    cta: 'Request samples',
+  },
+  'private-label': {
+    title: 'Discuss a private-label programme',
+    blurb:
+      'Your design or ours, your mark on the piece. Tell us the programme and we will send a development plan and a tooling quote.',
+    cta: 'Start a programme',
+  },
+  contact: {
+    title: 'Write to us',
+    blurb: 'Whatever the question, it reaches the factory directly.',
+    cta: 'Send message',
+  },
+};
+const h = headings[variant];
+
+// When this is set at build time the form POSTs as JSON. When it is not, the
+// form composes an email and a WhatsApp message instead — so the site is
+// never in a state where a buyer fills it in and nothing happens.
+const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
+---
+<section id={id} class={compact ? '' : 'section bg-mist'}>
+  <div class={compact ? '' : 'container-page'}>
+    <div class={compact ? '' : 'mx-auto max-w-3xl'}>
+      {!compact && (
+        <>
+          <p class="eyebrow">Trade enquiry</p>
+          <h2 class="mt-3 text-3xl font-semibold tracking-[-0.02em] text-ink-900 md:text-4xl">{h.title}</h2>
+          <p class="mt-4 max-w-xl text-[15px] leading-relaxed text-ink-600">{h.blurb}</p>
+        </>
+      )}
+
+      <form
+        class="mt-10 grid gap-5 sm:grid-cols-2"
+        data-inquiry-form
+        data-endpoint={endpoint}
+        data-variant={variant}
+        data-mailto={companyInfo.sales_email}
+        data-whatsapp={companyInfo.whatsapp}
+        novalidate
+      >
+        <!-- Anti-spam: a field no person sees and a form-open timestamp.
+             Together they stop essentially all drive-by bot submissions
+             without putting a CAPTCHA in front of a real buyer. -->
+        <input type="text" name="company_website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+        <input type="hidden" name="_t" data-open-time />
+
+        <div class="sm:col-span-1">
+          <label class="block text-[13px] font-medium text-ink-800" for={`${id}-name`}>Your name *</label>
+          <input id={`${id}-name`} name="name" required autocomplete="name"
+            class="mt-2 w-full rounded-lg border border-ink-300 bg-white px-3.5 py-2.5 text-[14px] text-ink-900 outline-none transition-colors focus:border-brass-500" />
+        </div>
+
+        <div class="sm:col-span-1">
+          <label class="block text-[13px] font-medium text-ink-800" for={`${id}-company`}>Company</label>
+          <input id={`${id}-company`} name="company" autocomplete="organization"
+            class="mt-2 w-full rounded-lg border border-ink-300 bg-white px-3.5 py-2.5 text-[14px] text-ink-900 outline-none transition-colors focus:border-brass-500" />
+        </div>
+
+        <div class="sm:col-span-1">
+          <label class="block text-[13px] font-medium text-ink-800" for={`${id}-email`}>Email *</label>
+          <input id={`${id}-email`} name="email" type="email" required autocomplete="email"
+            class="mt-2 w-full rounded-lg border border-ink-300 bg-white px-3.5 py-2.5 text-[14px] text-ink-900 outline-none transition-colors focus:border-brass-500" />
+        </div>
+
+        <div class="sm:col-span-1">
+          <label class="block text-[13px] font-medium text-ink-800" for={`${id}-phone`}>Phone / WhatsApp</label>
+          <input id={`${id}-phone`} name="phone" type="tel" autocomplete="tel" placeholder="+00 000 000 0000"
+            class="mt-2 w-full rounded-lg border border-ink-300 bg-white px-3.5 py-2.5 text-[14px] text-ink-900 outline-none transition-colors focus:border-brass-500" />
+        </div>
+
+        <div class="sm:col-span-1">
+          <label class="block text-[13px] font-medium text-ink-800" for={`${id}-country`}>Country / city</label>
+          <input id={`${id}-country`} name="country" autocomplete="country-name"
+            class="mt-2 w-full rounded-lg border border-ink-300 bg-white px-3.5 py-2.5 text-[14px] text-ink-900 outline-none transition-colors focus:border-brass-500" />
+        </div>
+
+        <div class="sm:col-span-1">
+          <label class="block text-[13px] font-medium text-ink-800" for={`${id}-buyer`}>You are</label>
+          <select id={`${id}-buyer`} name="buyer_type"
+            class="mt-2 w-full rounded-lg border border-ink-300 bg-white px-3.5 py-2.5 text-[14px] text-ink-900 outline-none transition-colors focus:border-brass-500">
+            <option value="">Select…</option>
+            <option>Hotel / resort</option>
+            <option>Restaurant / caterer</option>
+            <option>Banquet or event company</option>
+            <option>Distributor / importer</option>
+            <option>Retailer / e-commerce</option>
+            <option>Interior designer / consultant</option>
+            <option>Individual buyer</option>
+          </select>
+        </div>
+
+        {variant !== 'contact' && (
+          <>
+            <div class="sm:col-span-1">
+              <label class="block text-[13px] font-medium text-ink-800" for={`${id}-category`}>Main interest</label>
+              <select id={`${id}-category`} name="category"
+                class="mt-2 w-full rounded-lg border border-ink-300 bg-white px-3.5 py-2.5 text-[14px] text-ink-900 outline-none transition-colors focus:border-brass-500">
+                <option value="">Select…</option>
+                {allCategories.map((c) => <option value={c.slug}>{c.name}</option>)}
+                <option value="mixed">A mix — see my enquiry list</option>
+              </select>
+            </div>
+
+            <div class="sm:col-span-1">
+              <label class="block text-[13px] font-medium text-ink-800" for={`${id}-qty`}>Approximate quantity</label>
+              <input id={`${id}-qty`} name="quantity" placeholder="e.g. 200 charger plates, 20 chafers"
+                class="mt-2 w-full rounded-lg border border-ink-300 bg-white px-3.5 py-2.5 text-[14px] text-ink-900 outline-none transition-colors focus:border-brass-500" />
+            </div>
+
+            <div class="sm:col-span-1">
+              <label class="block text-[13px] font-medium text-ink-800" for={`${id}-when`}>Needed by</label>
+              <input id={`${id}-when`} name="required_by" type="month"
+                class="mt-2 w-full rounded-lg border border-ink-300 bg-white px-3.5 py-2.5 text-[14px] text-ink-900 outline-none transition-colors focus:border-brass-500" />
+            </div>
+
+            <div class="sm:col-span-1">
+              <label class="block text-[13px] font-medium text-ink-800" for={`${id}-terms`}>Preferred terms</label>
+              <select id={`${id}-terms`} name="incoterm"
+                class="mt-2 w-full rounded-lg border border-ink-300 bg-white px-3.5 py-2.5 text-[14px] text-ink-900 outline-none transition-colors focus:border-brass-500">
+                <option value="">Not sure yet</option>
+                {companyInfo.trade.incoterms.map((t) => <option>{t}</option>)}
+              </select>
+            </div>
+
+            <fieldset class="sm:col-span-2">
+              <legend class="text-[13px] font-medium text-ink-800">Also interested in</legend>
+              <div class="mt-3 flex flex-wrap gap-x-6 gap-y-2.5">
+                {['Custom finishes', 'Logo branding / engraving', 'Private label', 'Bespoke design', 'Samples first'].map((opt) => (
+                  <label class="flex items-center gap-2 text-[13px] text-ink-700">
+                    <input type="checkbox" name="interests" value={opt} class="h-4 w-4 rounded border-ink-300 accent-brass-600" />
+                    {opt}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          </>
+        )}
+
+        <div class="sm:col-span-2">
+          <label class="block text-[13px] font-medium text-ink-800" for={`${id}-message`}>
+            {variant === 'contact' ? 'Message' : 'Anything else we should know'}
+          </label>
+          <textarea id={`${id}-message`} name="message" rows="4"
+            placeholder="Finish, branding, the property you are fitting out, a competitor quote you want us to beat — anything helps."
+            class="mt-2 w-full rounded-lg border border-ink-300 bg-white px-3.5 py-2.5 text-[14px] text-ink-900 outline-none transition-colors focus:border-brass-500"></textarea>
+        </div>
+
+        <!-- Populated from the enquiry basket at render time. -->
+        <input type="hidden" name="enquiry_list" data-enquiry-payload />
+        <div class="sm:col-span-2 hidden rounded-lg border border-ink-200 bg-white p-4" data-enquiry-summary>
+          <p class="text-[12px] font-medium tracking-[0.08em] text-ink-500 uppercase">Attached from your enquiry list</p>
+          <ul class="mt-2.5 space-y-1 text-[13px] text-ink-700" data-enquiry-summary-list></ul>
+        </div>
+
+        <div class="sm:col-span-2 flex flex-col gap-4 sm:flex-row sm:items-center">
+          <button type="submit"
+            class="rounded-full bg-ink-900 px-6 py-3 text-[14px] font-medium text-white transition-opacity hover:opacity-85 disabled:opacity-50">
+            {h.cta}
+          </button>
+          <p class="text-[12px] leading-relaxed text-ink-500">
+            We reply to every enquiry within one working day.
+          </p>
+        </div>
+
+        <p class="sm:col-span-2 hidden rounded-lg bg-white p-4 text-[14px] text-ink-800" data-form-status role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { read, clear } from '../scripts/basket';
+
+  interface IndexEntry { name: string; slug: string; moq: number; price: number | null; image: string }
+  const PRODUCTS: Record<string, IndexEntry> = JSON.parse(
+    document.getElementById('product-index')?.textContent || '{}'
+  );
+
+  document.querySelectorAll<HTMLFormElement>('[data-inquiry-form]').forEach((form) => {
+    const status = form.querySelector<HTMLElement>('[data-form-status]');
+    const openTime = form.querySelector<HTMLInputElement>('[data-open-time]');
+    if (openTime) openTime.value = String(Date.now());
+
+    // Attach whatever is in the enquiry basket, and show it, so the buyer can
+    // see exactly what they are sending.
+    const items = read('enquiry');
+    const payload = form.querySelector<HTMLInputElement>('[data-enquiry-payload]');
+    const summary = form.querySelector<HTMLElement>('[data-enquiry-summary]');
+    const list = form.querySelector<HTMLElement>('[data-enquiry-summary-list]');
+    const lines = items.map((i) => `${PRODUCTS[i.id]?.name ?? i.id} (${i.id}) × ${i.qty}`);
+    if (payload) payload.value = lines.join('\n');
+    if (items.length && summary && list) {
+      summary.classList.remove('hidden');
+      list.innerHTML = lines.map((l) => `<li>${l.replace(/</g, '&lt;')}</li>`).join('');
+    }
+
+    const show = (msg: string) => {
+      if (!status) return;
+      status.textContent = '';
+      status.innerHTML = msg;
+      status.classList.remove('hidden');
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+
+      // Honeypot filled, or submitted inside three seconds: a bot.
+      if (data.get('company_website')) return;
+      const opened = Number(data.get('_t') || 0);
+      if (opened && Date.now() - opened < 3000) return;
+
+      const name = String(data.get('name') || '').trim();
+      const email = String(data.get('email') || '').trim();
+      if (!name || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+        show('Please add your name and a valid email address so we can reply.');
+        return;
+      }
+
+      const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (btn) btn.disabled = true;
+
+      const body: Record<string, unknown> = { _form: form.dataset.variant, _page: location.pathname };
+      data.forEach((value, key) => {
+        if (key === 'company_website' || key === '_t') return;
+        if (key === 'interests') {
+          body.interests = [...(body.interests as string[] | undefined ?? []), String(value)];
+        } else {
+          body[key] = value;
+        }
+      });
+
+      const endpoint = form.dataset.endpoint;
+      if (endpoint) {
+        try {
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify(body),
+          });
+          if (!res.ok) throw new Error(String(res.status));
+          form.reset();
+          clear('enquiry');
+          show('<strong>Thank you.</strong> Your enquiry has reached the factory. We reply within one working day — usually the same day.');
+          return;
+        } catch {
+          // Fall through to the handoff below rather than losing the enquiry.
+        }
+      }
+
+      // No endpoint configured, or the endpoint failed. Compose the message and
+      // hand it to email and WhatsApp. The buyer never hits a dead end.
+      const lines2 = Object.entries(body)
+        .filter(([k, v]) => !k.startsWith('_') && v)
+        .map(([k, v]) => `${k.replace(/_/g, ' ')}: ${Array.isArray(v) ? v.join(', ') : v}`)
+        .join('\n');
+      const subject = encodeURIComponent(`Trade enquiry — ${name}${body.company ? ' / ' + body.company : ''}`);
+      const mail = `mailto:${form.dataset.mailto || 'sales@tripadiinternational.com'}?subject=${subject}&body=${encodeURIComponent(lines2)}`;
+      const wa = `https://wa.me/${form.dataset.whatsapp || ''}?text=${encodeURIComponent(lines2)}`;
+      show(
+        `<strong>Almost there.</strong> Send your enquiry now by <a class="text-brass-600 underline" href="${mail}">email</a>` +
+          (form.dataset.whatsapp ? ` or <a class="text-brass-600 underline" href="${wa}">WhatsApp</a>` : '') +
+          `. Your details are already filled in.`
+      );
+      if (btn) btn.disabled = false;
+    });
+  });
+</script>

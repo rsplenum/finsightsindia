@@ -1,0 +1,220 @@
+@import "tailwindcss";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+
+/* ============================================================
+   TRIPADI INTERNATIONAL — DESIGN SYSTEM
+   ------------------------------------------------------------
+   The brief: "simple colors like apple.com with plenty of
+   whitespace and high-quality photography."
+
+   The discipline that follows from it:
+   1. The photograph is the only saturated thing on the page.
+      Everything else is white, near-white, ink and hairline.
+   2. Brass is an accent, never a background. It appears on a
+      link, a rule, a focus ring — never behind a headline.
+   3. Whitespace is structural, not decorative. Sections breathe
+      at 96px on mobile and 128px+ on desktop.
+   4. Type does the hierarchy work. Weight and size, not colour
+      and boxes.
+   ============================================================ */
+
+@theme {
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+
+  /* Ink — the only greys on the site. Borrowed tonality from a
+     printed catalogue rather than a UI kit. */
+  --color-ink-900: #1d1d1f;
+  --color-ink-800: #2f2f31;
+  --color-ink-600: #6e6e73;
+  --color-ink-500: #86868b;
+  --color-ink-300: #d2d2d7;
+  --color-ink-200: #e3e3e6;
+  --color-ink-100: #f0f0f2;
+
+  /* Ground */
+  --color-canvas: #ffffff;
+  --color-mist: #f5f5f7;
+
+  /* Brass — the single accent. Used on links, rules, focus. */
+  --color-brass-700: #6f5228;
+  --color-brass-600: #8a6a3b;
+  --color-brass-500: #a8823f;
+  --color-brass-300: #d9c39a;
+  --color-brass-100: #f4ecdd;
+
+  /* Copper — used only where a page is specifically about copper. */
+  --color-copper-600: #9a5b3a;
+
+  --ease-quiet: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --text-display: 3.5rem;
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.022em;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink-900);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  /* Display type is set tight, the way a headline is set in print.
+     Tailwind's default tracking is tuned for UI, not for a 56px
+     headline over a photograph. */
+  h1, h2, h3 {
+    letter-spacing: -0.021em;
+    text-wrap: balance;
+  }
+
+  p { text-wrap: pretty; }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brass-600);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--color-brass-100);
+    color: var(--color-ink-900);
+  }
+}
+
+@utility container-page {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 1180px;
+  padding-inline: 1.5rem;
+  @media (width >= 48rem) { padding-inline: 2.5rem; }
+}
+
+@utility container-prose {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 46rem;
+  padding-inline: 1.5rem;
+}
+
+/* Section rhythm. One utility so the whitespace is consistent
+   everywhere and cannot drift page by page. */
+@utility section {
+  padding-block: 5rem;
+  @media (width >= 48rem) { padding-block: 7.5rem; }
+}
+
+@utility section-tight {
+  padding-block: 3.5rem;
+  @media (width >= 48rem) { padding-block: 5rem; }
+}
+
+/* The eyebrow: small, uppercase, wide. The one place we use
+   letterspacing in the positive direction. */
+@utility eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-brass-600);
+}
+
+@utility hairline {
+  border-top: 1px solid var(--color-ink-300);
+}
+
+/* Reveal-on-scroll. Deliberately restrained: 12px of travel and an opacity
+   fade. No scale, no bounce, no stagger theatrics.
+
+   Critically, .reveal is VISIBLE by default. The hidden state is applied only
+   under `.js`, which an inline script in the head sets. A section that starts
+   at opacity 0 and waits for an observer is a section that is blank to a
+   crawler, blank in print, and blank to anyone whose JavaScript failed. */
+@layer components {
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 0.7s var(--ease-quiet),
+      transform 0.7s var(--ease-quiet);
+  }
+
+  .js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .js .reveal { opacity: 1; transform: none; }
+  }
+}
+
+/* Product photography sits on mist, never on pure white — a
+   polished metal object shot on white disappears into the page
+   edge. The tile supplies the edge. */
+@utility photo-tile {
+  background-color: var(--color-mist);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Long-form editorial type. We do not load the typography plugin for this —
+   the site has exactly one prose context and it wants tighter control than a
+   generic prose reset gives. */
+@utility prose-editorial {
+  color: var(--color-ink-700);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+
+  & h2 {
+    margin-block: 2.75rem 0.875rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-ink-900);
+  }
+  & h3 {
+    margin-block: 2rem 0.625rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-ink-900);
+  }
+  & p { margin-block: 1.125rem; }
+  & ul, & ol { margin-block: 1.125rem; padding-inline-start: 1.25rem; }
+  & ul { list-style: disc; }
+  & ol { list-style: decimal; }
+  & li { margin-block: 0.5rem; padding-inline-start: 0.25rem; }
+  & li::marker { color: var(--color-brass-500); }
+  & strong { font-weight: 600; color: var(--color-ink-900); }
+  & a { color: var(--color-brass-600); text-decoration: underline; text-underline-offset: 2px; }
+  & a:hover { color: var(--color-brass-700); }
+  & blockquote {
+    margin-block: 1.75rem;
+    border-inline-start: 2px solid var(--color-brass-300);
+    padding-inline-start: 1.25rem;
+    font-size: 1.1875rem;
+    line-height: 1.6;
+    color: var(--color-ink-900);
+  }
+  & table { width: 100%; margin-block: 1.75rem; border-collapse: collapse; font-size: 0.9375rem; }
+  & th { text-align: start; font-weight: 600; color: var(--color-ink-900); }
+  & th, & td { border-block-end: 1px solid var(--color-ink-200); padding-block: 0.75rem; padding-inline-end: 1rem; vertical-align: top; }
+}

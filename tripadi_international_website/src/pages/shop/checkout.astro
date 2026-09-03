@@ -1,0 +1,288 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { companyInfo } from '../../lib/catalog';
+
+// Razorpay is wired but not switched on. Set both variables in .env and the
+// page runs a real card/UPI/netbanking checkout; leave them empty and it takes
+// the order and sends a secure payment link instead. Both paths are complete —
+// see docs/payments.md.
+const razorpayKey = import.meta.env.PUBLIC_RAZORPAY_KEY_ID ?? '';
+const orderEndpoint = import.meta.env.PUBLIC_ORDER_ENDPOINT ?? '';
+const gatewayLive = Boolean(razorpayKey && orderEndpoint);
+const { free_shipping_above_inr, shipping_flat_inr, gst_rate } = companyInfo.retail;
+---
+<BaseLayout title="Checkout | Tripadi International" description="Secure checkout." noindex={true}>
+  <section class="section-tight">
+    <div class="container-page">
+      <h1 class="text-4xl font-semibold tracking-[-0.025em] text-ink-900 md:text-5xl">Checkout</h1>
+
+      <div
+        class="mt-12 grid gap-12 lg:grid-cols-12 lg:gap-16"
+        data-checkout
+        data-free-above={free_shipping_above_inr}
+        data-shipping={shipping_flat_inr}
+        data-gateway={gatewayLive ? 'razorpay' : 'offline'}
+        data-rzp-key={razorpayKey}
+        data-order-endpoint={orderEndpoint}
+        data-mailto={companyInfo.sales_email}
+        data-whatsapp={companyInfo.whatsapp}
+      >
+        <form class="lg:col-span-7" data-checkout-form novalidate>
+          <input type="text" name="company_website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+
+          <fieldset>
+            <legend class="text-[17px] font-medium text-ink-900">Contact</legend>
+            <div class="mt-5 grid gap-5 sm:grid-cols-2">
+              <div>
+                <label class="block text-[13px] font-medium text-ink-800" for="c-name">Full name *</label>
+                <input id="c-name" name="name" required autocomplete="name" class="mt-2 w-full rounded-lg border border-ink-300 px-3.5 py-2.5 text-[14px] outline-none focus:border-brass-500" />
+              </div>
+              <div>
+                <label class="block text-[13px] font-medium text-ink-800" for="c-phone">Phone *</label>
+                <input id="c-phone" name="phone" required type="tel" autocomplete="tel" class="mt-2 w-full rounded-lg border border-ink-300 px-3.5 py-2.5 text-[14px] outline-none focus:border-brass-500" />
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block text-[13px] font-medium text-ink-800" for="c-email">Email *</label>
+                <input id="c-email" name="email" required type="email" autocomplete="email" class="mt-2 w-full rounded-lg border border-ink-300 px-3.5 py-2.5 text-[14px] outline-none focus:border-brass-500" />
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="mt-10">
+            <legend class="text-[17px] font-medium text-ink-900">Delivery address</legend>
+            <div class="mt-5 grid gap-5 sm:grid-cols-2">
+              <div class="sm:col-span-2">
+                <label class="block text-[13px] font-medium text-ink-800" for="c-addr1">Address *</label>
+                <input id="c-addr1" name="address1" required autocomplete="address-line1" class="mt-2 w-full rounded-lg border border-ink-300 px-3.5 py-2.5 text-[14px] outline-none focus:border-brass-500" />
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block text-[13px] font-medium text-ink-800" for="c-addr2">Apartment, landmark</label>
+                <input id="c-addr2" name="address2" autocomplete="address-line2" class="mt-2 w-full rounded-lg border border-ink-300 px-3.5 py-2.5 text-[14px] outline-none focus:border-brass-500" />
+              </div>
+              <div>
+                <label class="block text-[13px] font-medium text-ink-800" for="c-city">City *</label>
+                <input id="c-city" name="city" required autocomplete="address-level2" class="mt-2 w-full rounded-lg border border-ink-300 px-3.5 py-2.5 text-[14px] outline-none focus:border-brass-500" />
+              </div>
+              <div>
+                <label class="block text-[13px] font-medium text-ink-800" for="c-state">State *</label>
+                <input id="c-state" name="state" required autocomplete="address-level1" class="mt-2 w-full rounded-lg border border-ink-300 px-3.5 py-2.5 text-[14px] outline-none focus:border-brass-500" />
+              </div>
+              <div>
+                <label class="block text-[13px] font-medium text-ink-800" for="c-pin">PIN code *</label>
+                <input id="c-pin" name="postal_code" required inputmode="numeric" autocomplete="postal-code" class="mt-2 w-full rounded-lg border border-ink-300 px-3.5 py-2.5 text-[14px] outline-none focus:border-brass-500" />
+              </div>
+              <div>
+                <label class="block text-[13px] font-medium text-ink-800" for="c-country">Country *</label>
+                <input id="c-country" name="country" required value="India" autocomplete="country-name" class="mt-2 w-full rounded-lg border border-ink-300 px-3.5 py-2.5 text-[14px] outline-none focus:border-brass-500" />
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block text-[13px] font-medium text-ink-800" for="c-gst">GSTIN (for a business invoice)</label>
+                <input id="c-gst" name="gstin" class="mt-2 w-full rounded-lg border border-ink-300 px-3.5 py-2.5 text-[14px] outline-none focus:border-brass-500" />
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block text-[13px] font-medium text-ink-800" for="c-notes">Delivery notes</label>
+                <textarea id="c-notes" name="notes" rows="3" class="mt-2 w-full rounded-lg border border-ink-300 px-3.5 py-2.5 text-[14px] outline-none focus:border-brass-500"></textarea>
+              </div>
+            </div>
+          </fieldset>
+
+          <p class="mt-8 hidden rounded-lg bg-mist p-4 text-[14px] text-ink-800" data-checkout-status role="status" aria-live="polite"></p>
+        </form>
+
+        <aside class="lg:col-span-5">
+          <div class="rounded-2xl border border-ink-200 bg-mist p-6">
+            <h2 class="text-[17px] font-medium text-ink-900">Your order</h2>
+            <ul class="mt-5 space-y-3 text-[14px]" data-lines></ul>
+            <dl class="hairline mt-5 space-y-3 pt-5 text-[14px]">
+              <div class="flex justify-between"><dt class="text-ink-600">Subtotal</dt><dd data-subtotal>—</dd></div>
+              <div class="flex justify-between"><dt class="text-ink-600">Delivery</dt><dd data-shipping-line>—</dd></div>
+              <div class="hairline flex justify-between pt-3 text-[16px] font-semibold"><dt>Total</dt><dd data-total>—</dd></div>
+            </dl>
+            <p class="mt-3 text-[12px] leading-relaxed text-ink-500">
+              Inclusive of GST at {Math.round(gst_rate * 100)}%.
+            </p>
+
+            <button type="button" data-pay
+              class="mt-6 w-full rounded-full bg-ink-900 px-6 py-3.5 text-[14px] font-medium text-white transition-opacity hover:opacity-85 disabled:opacity-50">
+              {gatewayLive ? 'Pay securely' : 'Place order'}
+            </button>
+
+            <div class="mt-5 space-y-2 text-[12px] leading-relaxed text-ink-500">
+              {gatewayLive ? (
+                <p>
+                  Payment is processed by Razorpay over an encrypted connection. Card, UPI, netbanking
+                  and wallets accepted. We never see or store your card details.
+                </p>
+              ) : (
+                <p>
+                  Place the order and we will send you a secure payment link — card, UPI or
+                  netbanking — along with the invoice. Nothing is charged until you pay that link.
+                </p>
+              )}
+              <p><a href="/shipping-and-returns" class="text-brass-600 underline">Shipping & returns</a> · <a href="/terms" class="text-brass-600 underline">Terms</a></p>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  {gatewayLive && <script is:inline src="https://checkout.razorpay.com/v1/checkout.js" defer></script>}
+</BaseLayout>
+
+<script>
+  import { read, clear } from '../../scripts/basket';
+  import { productIndex, computeTotals, inr } from '../../scripts/cart-render';
+
+  const root = document.querySelector<HTMLElement>('[data-checkout]');
+  const form = root?.querySelector<HTMLFormElement>('[data-checkout-form]');
+  const payBtn = root?.querySelector<HTMLButtonElement>('[data-pay]');
+  const status = root?.querySelector<HTMLElement>('[data-checkout-status]');
+
+  if (root && form && payBtn) {
+    const products = productIndex();
+    const freeAbove = Number(root.dataset.freeAbove || 0);
+    const flat = Number(root.dataset.shipping || 0);
+
+    const show = (html: string) => {
+      if (!status) return;
+      status.innerHTML = html;
+      status.classList.remove('hidden');
+      status.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    };
+
+    function paint() {
+      const items = read('cart');
+      const t = computeTotals(items, products, freeAbove, flat);
+      const lines = root!.querySelector<HTMLElement>('[data-lines]');
+      if (lines) {
+        lines.innerHTML = items.length
+          ? items
+              .map((i) => {
+                const p = products[i.id];
+                return `<li class="flex justify-between gap-4"><span class="text-ink-700">${p?.name ?? i.id} <span class="text-ink-500">× ${i.qty}</span></span><span class="shrink-0 text-ink-900">${inr((p?.price ?? 0) * i.qty)}</span></li>`;
+              })
+              .join('')
+          : '<li class="text-ink-500">Your bag is empty. <a class="text-brass-600 underline" href="/shop">Visit the shop</a>.</li>';
+      }
+      const set = (sel: string, v: string) => {
+        const el = root!.querySelector<HTMLElement>(sel);
+        if (el) el.textContent = v;
+      };
+      set('[data-subtotal]', inr(t.subtotal));
+      set('[data-shipping-line]', t.shipping === 0 ? 'Free' : inr(t.shipping));
+      set('[data-total]', inr(t.total));
+      payBtn!.disabled = items.length === 0;
+      return t;
+    }
+
+    let totals = paint();
+
+    payBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      totals = paint();
+
+      if (form.querySelector<HTMLInputElement>('[name="company_website"]')?.value) return;
+      if (!form.reportValidity()) return;
+
+      const items = read('cart');
+      if (!items.length) return;
+
+      const data = new FormData(form);
+      const customer: Record<string, string> = {};
+      data.forEach((v, k) => {
+        if (k !== 'company_website') customer[k] = String(v);
+      });
+
+      const order = {
+        items: items.map((i) => ({
+          sku: i.id,
+          name: products[i.id]?.name ?? i.id,
+          qty: i.qty,
+          unit_price_inr: products[i.id]?.price ?? null,
+        })),
+        totals,
+        customer,
+        placed_at: new Date().toISOString(),
+      };
+
+      payBtn.disabled = true;
+
+      // --- Path A: the gateway is configured. -------------------------------
+      if (root.dataset.gateway === 'razorpay') {
+        try {
+          const res = await fetch(root.dataset.orderEndpoint!, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(order),
+          });
+          if (!res.ok) throw new Error('order-create-failed');
+          const { razorpay_order_id, amount_paise } = await res.json();
+
+          const Razorpay = (window as any).Razorpay;
+          if (!Razorpay) throw new Error('gateway-script-missing');
+
+          const rzp = new Razorpay({
+            key: root.dataset.rzpKey,
+            order_id: razorpay_order_id,
+            amount: amount_paise,
+            currency: 'INR',
+            name: 'Tripadi International',
+            description: `${totals.count} item${totals.count === 1 ? '' : 's'}`,
+            prefill: { name: customer.name, email: customer.email, contact: customer.phone },
+            notes: { address: `${customer.address1}, ${customer.city}` },
+            theme: { color: '#8a6a3b' },
+            handler(response: { razorpay_payment_id: string }) {
+              clear('cart');
+              location.href = `/shop/order-received?ref=${encodeURIComponent(response.razorpay_payment_id)}`;
+            },
+            modal: {
+              ondismiss() {
+                payBtn.disabled = false;
+                show('Payment was cancelled. Your bag is still here whenever you are ready.');
+              },
+            },
+          });
+          rzp.open();
+          return;
+        } catch {
+          // Never strand a paying customer on a gateway error — fall through
+          // to the offline path, which still captures the order.
+        }
+      }
+
+      // --- Path B: no gateway, or the gateway failed. ------------------------
+      const summary =
+        `New retail order\n\n` +
+        order.items.map((i) => `${i.name} (${i.sku}) × ${i.qty} — ${inr((i.unit_price_inr ?? 0) * i.qty)}`).join('\n') +
+        `\n\nSubtotal: ${inr(totals.subtotal)}\nDelivery: ${totals.shipping === 0 ? 'Free' : inr(totals.shipping)}\nTotal: ${inr(totals.total)}\n\n` +
+        Object.entries(customer).filter(([, v]) => v).map(([k, v]) => `${k.replace(/_/g, ' ')}: ${v}`).join('\n');
+
+      const endpoint = (window as any).__FORM_ENDPOINT__ || '';
+      if (endpoint) {
+        try {
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ _form: 'retail-order', ...order }),
+          });
+          if (res.ok) {
+            clear('cart');
+            location.href = '/shop/order-received';
+            return;
+          }
+        } catch {
+          /* fall through to the handoff */
+        }
+      }
+
+      const subject = encodeURIComponent(`Order — ${customer.name}`);
+      const mail = `mailto:${root.dataset.mailto}?subject=${subject}&body=${encodeURIComponent(summary)}`;
+      const wa = `https://wa.me/${root.dataset.whatsapp}?text=${encodeURIComponent(summary)}`;
+      show(
+        `<strong>One last step.</strong> Send your order by <a class="text-brass-600 underline" href="${mail}">email</a> or <a class="text-brass-600 underline" href="${wa}">WhatsApp</a> — everything is filled in already. We will reply with a secure payment link and the invoice.`
+      );
+      payBtn.disabled = false;
+    });
+  }
+</script>

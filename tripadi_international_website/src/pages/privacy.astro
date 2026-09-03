@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { companyInfo } from '../lib/catalog';
+---
+<BaseLayout title="Privacy Policy | Tripadi International" description="What Tripadi International does with the information you give us, and what we do not do with it.">
+  <section class="section-tight">
+    <div class="container-prose">
+      <h1 class="text-4xl font-semibold tracking-[-0.025em] text-ink-900 md:text-5xl">Privacy</h1>
+      <p class="mt-4 text-[16px] text-ink-600">The short version: we use what you tell us to answer you and to ship to you. We do not sell it.</p>
+    </div>
+    <div class="container-prose prose-editorial mt-10">
+      <h2>What we collect</h2>
+      <ul>
+        <li><strong>When you send an enquiry:</strong> your name, company, email, phone, country and whatever you write in the message.</li>
+        <li><strong>When you place a retail order:</strong> the above plus your delivery address and, if you give it, your GSTIN for the invoice.</li>
+        <li><strong>In your own browser:</strong> your enquiry list and shopping bag are stored on your device so they survive a refresh. They stay on your device and are only sent to us when you submit a form.</li>
+      </ul>
+      <p>We do not collect card details. Payment is handled by our payment provider and card data never reaches us.</p>
+
+      <h2>What we do with it</h2>
+      <p>
+        We use it to reply to you, to quote, to make and ship your order, to raise the invoice and to
+        keep the records Indian tax and export law requires us to keep. If you have asked us for a
+        quote, we may follow up on it — and we will stop the moment you ask.
+      </p>
+
+      <h2>Who else sees it</h2>
+      <p>Only the parties who have to, in order to do the thing you asked for:</p>
+      <ul>
+        <li>Our payment provider, for a payment you make.</li>
+        <li>Our courier or freight forwarder, for a delivery.</li>
+        <li>Our accountants and the tax authorities, where the law requires it.</li>
+      </ul>
+      <p>We do not sell, rent or trade your details to anyone, and we do not send them to a marketing list you did not ask to join.</p>
+
+      <h2>How long we keep it</h2>
+      <p>
+        Enquiries: up to three years, because purchase cycles in this trade are long and a buyer often
+        returns. Order and invoice records: as long as Indian tax and export law requires. You can ask
+        us to delete anything we are not legally required to keep.
+      </p>
+
+      <h2>Your choices</h2>
+      <p>
+        Write to <a href={`mailto:${companyInfo.email}`}>{companyInfo.email}</a> to see what we hold, to
+        correct it, to have it deleted, or to tell us to stop contacting you. We will act on it within
+        30 days.
+      </p>
+
+      <h2>Cookies and analytics</h2>
+      <p>
+        This site sets no advertising cookies and does not track you across other websites. The
+        enquiry list and bag use your browser's local storage, which is not a cookie and is not sent
+        anywhere until you submit a form. If we add analytics later, this page will say so before we
+        do.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        {companyInfo.name}, {companyInfo.address.city}, {companyInfo.address.state}, India ·
+        <a href={`mailto:${companyInfo.email}`}>{companyInfo.email}</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

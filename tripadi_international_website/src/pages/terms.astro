@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { companyInfo } from '../lib/catalog';
+---
+<BaseLayout title="Terms & Conditions | Tripadi International" description="Terms and conditions for use of the Tripadi International website and for retail orders placed through it.">
+  <section class="section-tight">
+    <div class="container-prose">
+      <h1 class="text-4xl font-semibold tracking-[-0.025em] text-ink-900 md:text-5xl">Terms & conditions</h1>
+      <p class="mt-4 text-[14px] text-ink-500">Applies to this website and to retail orders placed through it.</p>
+    </div>
+    <div class="container-prose prose-editorial mt-10">
+      <h2>Who we are</h2>
+      <p>
+        {companyInfo.name}, a manufacturer and exporter of metalware, of {companyInfo.address.city},
+        {companyInfo.address.state}, India. Contact: <a href={`mailto:${companyInfo.email}`}>{companyInfo.email}</a>.
+      </p>
+
+      <h2>Products and descriptions</h2>
+      <p>
+        Our pieces are made by hand. Hammered, cast and antiqued finishes vary slightly from piece to
+        piece, and that variation is a property of the process rather than a defect. Photographs show
+        a representative piece; colour on a screen is not a colour match. If an exact match matters,
+        ask us for a physical sample before ordering.
+      </p>
+      <p>
+        Dimensions and weights are nominal and subject to normal manufacturing tolerance.
+      </p>
+
+      <h2>Prices and payment</h2>
+      <p>
+        Retail prices are in Indian rupees and, where stated, include GST. We may change prices at any
+        time, but never after you have paid for an order. Payment is processed by our payment provider
+        over an encrypted connection; we do not receive or store your card details.
+      </p>
+      <p>
+        If a price is displayed in error we will tell you before dispatch and you may cancel for a
+        full refund.
+      </p>
+
+      <h2>Orders</h2>
+      <p>
+        Your order is an offer to buy. A contract is formed when we confirm dispatch. We may decline
+        an order — for example where a piece is unavailable or a delivery address is outside the area
+        we can serve — and will refund anything paid.
+      </p>
+
+      <h2>Trade and export orders</h2>
+      <p>
+        Wholesale, export and bespoke orders are not governed by this page. They are governed by the
+        proforma invoice and the specification agreed for that order, which take precedence over
+        anything stated here.
+      </p>
+
+      <h2>Intellectual property</h2>
+      <p>
+        The content of this site — photographs, text, designs and product drawings — belongs to
+        {companyInfo.name}. Where we manufacture to a customer's drawing, that drawing and any tooling
+        made from it remain the customer's, and we do not offer that design to another buyer.
+      </p>
+
+      <h2>Liability</h2>
+      <p>
+        We stand behind our manufacturing. Nothing here limits liability for death, personal injury or
+        fraud, or any liability that cannot be limited under Indian law. Beyond that, our liability
+        for any order is limited to the value of that order. We are not liable for indirect or
+        consequential loss such as lost profit or lost business.
+      </p>
+
+      <h2>Governing law</h2>
+      <p>
+        These terms are governed by the laws of India. The courts at Moradabad, Uttar Pradesh have
+        jurisdiction.
+      </p>
+
+      <h2>Changes</h2>
+      <p>
+        We may update these terms. The version in force is the one published here on the day you place
+        your order.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

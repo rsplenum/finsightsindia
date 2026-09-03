@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InquiryForm from '../components/InquiryForm.astro';
+import { companyInfo, whatsappLink } from '../lib/catalog';
+import { breadcrumbSchema } from '../lib/seo';
+const siteUrl = Astro.site?.toString() ?? '';
+const a = companyInfo.address;
+---
+<BaseLayout
+  title="Contact Tripadi International — Moradabad, India"
+  description="Speak to the factory directly. Tripadi International, manufacturer and exporter of hospitality metalware, Moradabad, Uttar Pradesh, India."
+  schema={breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Contact', url: '/contact' }], siteUrl)}
+>
+  <section class="section-tight">
+    <div class="container-page">
+      <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-5">
+          <p class="eyebrow">Contact</p>
+          <h1 class="mt-3 text-4xl font-semibold tracking-[-0.025em] text-ink-900 md:text-5xl">
+            Talk to the factory.
+          </h1>
+          <p class="mt-5 text-[16px] leading-relaxed text-ink-600">
+            Not a call centre and not an agent. Whatever you ask reaches the people who make the
+            pieces, and usually {companyInfo.owner.name.split(' ')[0]} himself.
+          </p>
+
+          <dl class="mt-10 space-y-7">
+            <div>
+              <dt class="text-[12px] font-semibold tracking-[0.1em] text-ink-500 uppercase">Factory & office</dt>
+              <dd class="mt-2 text-[15px] leading-relaxed text-ink-800">
+                {a.line1}<br />{a.area}<br />{a.city}, {a.state} {a.postal_code}<br />{a.country}
+              </dd>
+            </div>
+            <div>
+              <dt class="text-[12px] font-semibold tracking-[0.1em] text-ink-500 uppercase">Phone & WhatsApp</dt>
+              <dd class="mt-2 text-[15px] text-ink-800">
+                <a href={`tel:${companyInfo.phone.replace(/\s/g, '')}`} class="hover:text-brass-600">{companyInfo.phone}</a>
+              </dd>
+            </div>
+            <div>
+              <dt class="text-[12px] font-semibold tracking-[0.1em] text-ink-500 uppercase">Email</dt>
+              <dd class="mt-2 space-y-1 text-[15px] text-ink-800">
+                <p><a href={`mailto:${companyInfo.sales_email}`} class="hover:text-brass-600">{companyInfo.sales_email}</a> — trade & export</p>
+                <p><a href={`mailto:${companyInfo.email}`} class="hover:text-brass-600">{companyInfo.email}</a> — everything else</p>
+              </dd>
+            </div>
+            <div>
+              <dt class="text-[12px] font-semibold tracking-[0.1em] text-ink-500 uppercase">Hours</dt>
+              <dd class="mt-2 text-[15px] text-ink-800">{companyInfo.hours}</dd>
+            </div>
+          </dl>
+
+          <a href={whatsappLink('Hello Tripadi International,')} class="mt-10 inline-block rounded-full bg-ink-900 px-6 py-3 text-[14px] font-medium text-white transition-opacity hover:opacity-85">
+            Message us on WhatsApp
+          </a>
+
+          <div class="mt-10 rounded-xl border border-ink-200 bg-mist p-6">
+            <p class="text-[15px] font-medium text-ink-900">Visiting Moradabad?</p>
+            <p class="mt-2 text-[14px] leading-relaxed text-ink-600">
+              We are about four hours from Delhi by road. Buyers are welcome at the factory — tell us
+              when you are coming and we will keep the day free and arrange the pickup.
+            </p>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7">
+          <InquiryForm variant="contact" compact={true} id="contact" />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
